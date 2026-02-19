@@ -1,0 +1,39 @@
+GitHub:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**/*'
+
+APIScanner:
+  - changed-files:
+    - any-glob-to-any-file: 'ApiScanner/**/*'
+
+AsyncRequests:
+  - changed-files:
+    - any-glob-to-any-file: 'AsyncRequests/**/*'
+
+BarCodeScanner:
+  - changed-files:
+    - any-glob-to-any-file: 'BarCodeScanner/**/*'
+
+PdfSharp:
+  - changed-files:
+    - any-glob-to-any-file: 'PdfSharp/**/*'
+
+RegScan:
+  - changed-files:
+    - any-glob-to-any-file: ['RegScan/**/*', 'RegScan.sln']
+
+VSTTwain:
+  - changed-files:
+    - any-glob-to-any-file: 'VSTTwain/**/*'
+
+VisualStudio:
+  - changed-files:
+    - any-glob-to-any-file: '.vs/**/*'
+
+Documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['Notes/**/*', README.md]
+
+Dependencies:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/**/*'
