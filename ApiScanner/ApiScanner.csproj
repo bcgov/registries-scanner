@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2BB8B401-F03A-404E-B96A-0CBE1BE48DEF}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>ApiScanner</RootNamespace>
     <AssemblyName>ApiScanner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
