@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AsyncRequests">
-      <HintPath>..\AsyncRequests\bin\Debug\AsyncRequests.exe</HintPath>
+      <HintPath>..\AsyncRequests\AsyncRequests\bin\Debug\AsyncRequests.dll</HintPath>
     </Reference>
     <Reference Include="Json">
       <HintPath>..\packages\JSON.1.0.1\lib\net40\Json.dll</HintPath>
