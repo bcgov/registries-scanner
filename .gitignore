@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+## Ignore sensitive configuration files
+# Sensitive Configuration Files
+Sensitive.config
+
 # production
 /build
 
@@ -34,7 +38,7 @@ mono_crash.*
 # Build results
 **/obj
 **/[Oo]ut
-**/Properties
+#**/Properties
 **/[Dd]ebug
 **/[Dd]ebugPublic/
 **/[Rr]elease/
