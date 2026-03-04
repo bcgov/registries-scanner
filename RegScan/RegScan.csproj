@@ -55,13 +55,6 @@
     <ApplicationIcon>ScanningDashboard.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ApiScanner">
-      <HintPath>..\ApiScanner\bin\Debug\ApiScanner.exe</HintPath>
-    </Reference>
-    <Reference Include="AsyncRequests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\AsyncRequests\bin\Debug\AsyncRequests.exe</HintPath>
-    </Reference>
     <Reference Include="Cyotek.GhostScript">
       <HintPath>..\External Dlls\Cyotek.GhostScript.dll</HintPath>
     </Reference>
@@ -247,6 +240,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiScanner\ApiScanner.csproj">
+      <Project>{2bb8b401-f03a-404e-b96a-0cbe1be48def}</Project>
+      <Name>ApiScanner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AsyncRequests\AsyncRequests\AsyncRequests.csproj">
+      <Project>{2aa594f5-08a2-40e3-b733-b28b4527250b}</Project>
+      <Name>AsyncRequests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BarCodeScanner\BarCodeScanner.csproj">
       <Project>{bd27739d-f7b8-4b24-9373-fafda26703c6}</Project>
       <Name>BarCodeScanner</Name>
