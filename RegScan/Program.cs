@@ -14,6 +14,7 @@ namespace RegScan
         {            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Security.EncryptExternalSection("appSettings");//Encrypt the appSettings section in App.config to secure sensitive information
             Application.Run(new frmMDIMain());
         }
     }
