@@ -111,4 +111,4 @@ jobs:
         with:
           name: full-build-output
           path: '*/bin/Debug/'  # Point to the directory, not a file
-          retention-days: 5 
+          retention-days: 2 
