@@ -1,5 +1,8 @@
 name: Build (TEST) - MSBuild
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ main ]
