@@ -178,6 +178,7 @@
     <Compile Include="ScannerSettingObj.cs" />
     <Compile Include="ScanningInfoObj.cs" />
     <Compile Include="ScheduleObj.cs" />
+    <Compile Include="Security.cs" />
     <Compile Include="UtilityObj.cs" />
     <EmbeddedResource Include="frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
