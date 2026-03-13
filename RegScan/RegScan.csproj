@@ -245,6 +245,10 @@
       <Project>{2bb8b401-f03a-404e-b96a-0cbe1be48def}</Project>
       <Name>ApiScanner</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj">
+      <Project>{91b5b3a5-f022-46cf-aa68-b63196e1aa73}</Project>
+      <Name>AppConfiguration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AsyncRequests\AsyncRequests\AsyncRequests.csproj">
       <Project>{2aa594f5-08a2-40e3-b733-b28b4527250b}</Project>
       <Name>AsyncRequests</Name>
