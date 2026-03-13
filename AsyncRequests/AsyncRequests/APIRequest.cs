@@ -169,7 +169,7 @@ namespace AsyncRequests
 
             if (enviroment == "prod")
             {
-                apikey = Base64Decode(ConfigurationManager.AppSettings["PROD_X-APIKEY"]);
+                apikey = ConfigurationManager.AppSettings["PROD_X-APIKEY"];
                 account_id = ConfigurationManager.AppSettings["PROD_ACCOUNT_ID"];
 
                 token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
@@ -181,7 +181,7 @@ namespace AsyncRequests
             }
             else if (enviroment == "test")
             {
-                apikey = Base64Decode(ConfigurationManager.AppSettings["TEST_X-APIKEY"]);
+                apikey = ConfigurationManager.AppSettings["TEST_X-APIKEY"];
                 account_id = ConfigurationManager.AppSettings["TEST_ACCOUNT_ID"];
 
                 token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
@@ -193,7 +193,7 @@ namespace AsyncRequests
             }
             else
             {
-                apikey = Base64Decode(ConfigurationManager.AppSettings["TEST_X-APIKEY"]);
+                apikey = ConfigurationManager.AppSettings["TEST_X-APIKEY"];
                 account_id = ConfigurationManager.AppSettings["TEST_ACCOUNT_ID"];
 
                 token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
@@ -203,12 +203,6 @@ namespace AsyncRequests
 
                 api_url = ConfigurationManager.AppSettings["PROD_API_URL"];
             }
-        }
-
-        private static string Base64Decode(string base64)
-        {
-            var base64Bytes = System.Convert.FromBase64String(base64);
-            return System.Text.Encoding.UTF8.GetString(base64Bytes);
         }
 
     }  //end class
