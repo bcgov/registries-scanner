@@ -234,6 +234,7 @@
     <None Include="Sensitive.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="sensitive.config.template" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
