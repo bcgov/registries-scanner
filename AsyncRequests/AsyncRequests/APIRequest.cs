@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using AppConfiguration;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -164,45 +165,13 @@ namespace AsyncRequests
 
         private void SetEnvironment()
         {
-            // Initialize environment
-            string enviroment = ConfigurationManager.AppSettings["ENV"];
-
-            if (enviroment == "prod")
-            {
-                apikey = ConfigurationManager.AppSettings["PROD_X-APIKEY"];
-                account_id = ConfigurationManager.AppSettings["PROD_ACCOUNT_ID"];
-
-                token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
-                timeout = ConfigurationManager.AppSettings["AUTH_TIMEOUT"];
-                client_id = ConfigurationManager.AppSettings["TEST_CLIENT_ID"];
-                client_secret = ConfigurationManager.AppSettings["TEST_CLIENT_ACCOUNT"];
-
-                api_url = ConfigurationManager.AppSettings["DEV_API_URL"];
-            }
-            else if (enviroment == "test")
-            {
-                apikey = ConfigurationManager.AppSettings["TEST_X-APIKEY"];
-                account_id = ConfigurationManager.AppSettings["TEST_ACCOUNT_ID"];
-
-                token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
-                timeout = ConfigurationManager.AppSettings["AUTH_TIMEOUT"];
-                client_id = ConfigurationManager.AppSettings["TEST_CLIENT_ID"];
-                client_secret = ConfigurationManager.AppSettings["TEST_CLIENT_ACCOUNT"];
-
-                api_url = ConfigurationManager.AppSettings["TEST_API_URL"];
-            }
-            else
-            {
-                apikey = ConfigurationManager.AppSettings["TEST_X-APIKEY"];
-                account_id = ConfigurationManager.AppSettings["TEST_ACCOUNT_ID"];
-
-                token_url = ConfigurationManager.AppSettings["TEST_AUTH_SVC_URL"];
-                timeout = ConfigurationManager.AppSettings["AUTH_TIMEOUT"];
-                client_id = ConfigurationManager.AppSettings["TEST_CLIENT_ID"];
-                client_secret = ConfigurationManager.AppSettings["TEST_CLIENT_ACCOUNT"];
-
-                api_url = ConfigurationManager.AppSettings["PROD_API_URL"];
-            }
+            apikey = ConfigKeys.APIKEY;
+            api_url = ConfigKeys.API_URL;
+            account_id = ConfigKeys.ACCOUNT_ID;
+            token_url = ConfigKeys.AUTH_SVC_URL;
+            timeout = ConfigKeys.AUTH_TIMEOUT;
+            client_id = ConfigKeys.CLIENT_ID;
+            client_secret = ConfigKeys.CLIENT_ACCOUNT;
         }
 
     }  //end class
