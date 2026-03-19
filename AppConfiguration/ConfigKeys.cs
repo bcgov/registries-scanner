@@ -41,6 +41,11 @@ namespace AppConfiguration
             HOST = ConfigurationManager.AppSettings[nameof(ConfigKeys.HOST)];
             PORT = ConfigurationManager.AppSettings[nameof(ConfigKeys.PORT)];
             SID = ConfigurationManager.AppSettings[nameof(ConfigKeys.SID)];
+            ENV = ConfigurationManager.AppSettings[nameof(ConfigKeys.ENV)];
+
+            TWAINSDKUSERNAME = ConfigurationManager.AppSettings[nameof(ConfigKeys.TWAINSDKUSERNAME)];
+            TWAINSDKEMAIL = ConfigurationManager.AppSettings[nameof(ConfigKeys.TWAINSDKEMAIL)];
+            TWAINSDKKEY = ConfigurationManager.AppSettings[nameof(ConfigKeys.TWAINSDKKEY)];
         }
 
     }
