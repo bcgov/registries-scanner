@@ -19,7 +19,6 @@ jobs:
   build:
     runs-on: windows-latest
     environment: TEST
-
     env:
       APP_CONFIG_DIR: RegScan
       SOLUTION_FILE: RegScan.sln
@@ -36,10 +35,22 @@ jobs:
 #3. Setup Nuget
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
-#4. Create sensitive.config for appSettings
-      - name: Create sensitive.config for appSettings
+#4. Create sensitive.config from template for appSettings
+      - name: Copy sensitive.config.template -> sensitive.config
         shell: pwsh
+        working-directory: .\RegScan
+        run: |
+          Copy-Item -Path ".\sensitive.config.template" `
+                    -Destination ".\sensitive.config" `
+                    -Force
+#5. Populate key values with secrets      
+      - name: Hydrate sensitive.config (all keys)
+        shell: pwsh
+        working-directory: .\RegScan
         env:
+          PORT: ${{ secrets.PORT }}
+          ENV: ${{ secrets.ENV }}
+          AUTH_TIMEOUT: ${{ secrets.AUTH_TIMEOUT }}
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
           HOST: ${{ secrets.HOST }}
@@ -50,57 +61,62 @@ jobs:
           ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
           APIKEY: ${{ secrets.APIKEY }}
           API_URL: ${{ secrets.API_URL }}
+          ClientSettingsProvider_ServiceUri: ${{ secrets.ClientSettingsProvider_ServiceUri }}
           TwainSDKUserName: ${{ secrets.TwainSDKUserName }}
           TwainSDKEmail: ${{ secrets.TwainSDKEmail }}
           TwainSDKKey: ${{ secrets.TwainSDKKey }}
         run: |
-          $required = @(
-            'USERNAME','PASSWORD','HOST','SID','AUTH_SVC_URL','CLIENT_ID','CLIENT_ACCOUNT',
-            'ACCOUNT_ID','APIKEY','API_URL','TwainSDKUserName','TwainSDKEmail','TwainSDKKey'
-          )
-
-          $missing = @()
-          foreach ($k in $required) {
-            $val = [System.Environment]::GetEnvironmentVariable($k)
-            if ([string]::IsNullOrWhiteSpace($val)) { $missing += $k }
+          $path = ".\sensitive.config"
+          if (!(Test-Path $path)) {
+            throw "sensitive.config not found at $path"
           }
-
-          if ($missing.Count -gt 0) {
-            throw "Missing required secrets in TEST environment: $($missing -join ', ')"
+      
+          # Root element is <appSettings>
+          [xml]$xml = Get-Content $path
+      
+          # Map EXACT template keys -> values
+          $valuesByKey = @{
+            "PORT" = $env:PORT
+            "ENV" = $env:ENV
+            "AUTH_TIMEOUT" = $env:AUTH_TIMEOUT
+            "USERNAME" = $env:USERNAME
+            "PASSWORD" = $env:PASSWORD
+            "HOST" = $env:HOST
+            "SID" = $env:SID
+            "AUTH_SVC_URL" = $env:AUTH_SVC_URL
+            "CLIENT_ID" = $env:CLIENT_ID
+            "CLIENT_ACCOUNT" = $env:CLIENT_ACCOUNT
+            "ACCOUNT_ID" = $env:ACCOUNT_ID
+            "APIKEY" = $env:APIKEY
+            "API_URL" = $env:API_URL
+            "ClientSettingsProvider.ServiceUri" = $env:ClientSettingsProvider_ServiceUri
+            "TwainSDKUserName" = $env:TwainSDKUserName
+            "TwainSDKEmail" = $env:TwainSDKEmail
+            "TwainSDKKey" = $env:TwainSDKKey
           }
-
-          function XmlEscape([string]$s) {
-            return [System.Security.SecurityElement]::Escape($s)
+      
+          foreach ($key in $valuesByKey.Keys) {
+            $value = $valuesByKey[$key]
+      
+            if ([string]::IsNullOrWhiteSpace($value)) {
+              throw "Configuration value for '$key' is missing or empty."
+            }
+      
+            $node = $xml.SelectSingleNode("/appSettings/add[@key='$key']")
+            if ($null -eq $node) {
+              throw "Key '$key' not found in sensitive.config.template"
+            }
+      
+            $node.SetAttribute("value", $value)
           }
-
-          $content = @()
-          $content += '<?xml version="1.0" encoding="utf-8"?>'
-          $content += '<appSettings>'
-
-          foreach ($k in $required) {
-            $v = XmlEscape([System.Environment]::GetEnvironmentVariable($k))
-            $content += "  <add key=`"$k`" value=`"$v`" />"
-          }
-
-          $content += '</appSettings>'
-
-          $targetDir = Join-Path $env:GITHUB_WORKSPACE $env:APP_CONFIG_DIR
-          $appConfig = Join-Path $targetDir 'app.config'
-
-          if (!(Test-Path $appConfig)) {
-            throw "app.config not found at $appConfig"
-          }
-
-          $outFile = Join-Path $targetDir 'sensitive.config'
-          $content | Out-File -FilePath $outFile -Encoding utf8 -NoNewline
-
-          Write-Host "sensitive.config created at $outFile"
-#5. Restore NuGet packages
+      
+          $xml.Save($path)
+#6. Restore NuGet packages
       - name: Restore NuGet packages
         shell: pwsh
         run: |
           nuget restore "$env:SOLUTION_FILE"
-#6. Build
+#7. Build
       - name: Build with MSBuild
         shell: pwsh
         run: |
@@ -110,7 +126,7 @@ jobs:
             /p:Configuration="$env:BUILD_CONFIGURATION" `
             /p:Platform="$env:BUILD_PLATFORM" `
             /verbosity:minimal
-#7. Store files in folder for export. Uncomment if required
+#8. Store files in folder for export. Uncomment if required
 #      - name: Save build folder
 #        uses: actions/upload-artifact@v4
 #        with:
