@@ -25,7 +25,7 @@ jobs:
       SOLUTION_FILE: RegScan.sln
       BUILD_CONFIGURATION: Debug
       BUILD_PLATFORM: "Any CPU"
-
+    if: ${{ github.event.pull_request.draft == false }}
     steps:
 #1. Checkout Code
       - name: Checkout
