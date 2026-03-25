@@ -106,7 +106,16 @@ namespace RegScan
 
             // Get the options
             _options = new OptionsObj();
-            TwainEnvironment.EnableDebugging("c:\\scanner25\\vstwain.log");
+            // Create a path to where debugging logs should be stored. 
+            string scannerDir = "c:\\scanner25";
+            string scannerFile = "vstwain.log";
+            string scannerPath = String.Concat(scannerDir, "\\", scannerFile);
+
+            UtilityObj.createFolder(scannerDir);
+            UtilityObj.createFile(scannerPath);
+
+            // Set up debugging for the TWAIN SDK
+            TwainEnvironment.EnableDebugging(scannerPath);
             TwainEnvironment.DebugLevel = DebugLevel.Debug;
 
             // create TWAIN device manager

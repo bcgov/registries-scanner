@@ -56,6 +56,15 @@ namespace RegScan
             return "TO_DATE('" + _DateTime.ToString("dd-MMM-yyyy HH:mm:ss") + "','DD-MON-YYYY hh24:mi:ss')";
         }
 
+        // Create a file if it does not exist.
+        static public void createFile(string fileName)
+        {
+            if (!System.IO.File.Exists(fileName))
+            {
+                System.IO.File.Create(fileName).Close();
+            }
+        }
+
         // Write message string to log file.
         static public void writeLog(string msg)
         {
@@ -117,7 +126,7 @@ namespace RegScan
             }
         }
 
-        // Remove the images folder.
+        // Read the images folder.
         static public List<string> readFolder(string folder)
         {
             folder = Directory.GetCurrentDirectory() + "\\" + folder;

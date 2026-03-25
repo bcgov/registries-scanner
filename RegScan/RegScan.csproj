@@ -72,6 +72,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PdfSharp, Version=1.3.1684.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfSharp.1.3\lib\PdfSharp.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.15.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.15.0\lib\net452\RestSharp.dll</HintPath>
     </Reference>
@@ -257,10 +260,6 @@
     <ProjectReference Include="..\BarCodeScanner\BarCodeScanner.csproj">
       <Project>{bd27739d-f7b8-4b24-9373-fafda26703c6}</Project>
       <Name>BarCodeScanner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PdfSharp\PdfSharp.csproj">
-      <Project>{5384ce57-1f94-4d22-860d-2e9c1ac12ddf}</Project>
-      <Name>PdfSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
