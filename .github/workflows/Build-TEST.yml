@@ -1,0 +1,135 @@
+name: Build (TEST) - MSBuild
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    environment: TEST
+    env:
+      APP_CONFIG_DIR: RegScan
+      SOLUTION_FILE: RegScan.sln
+      BUILD_CONFIGURATION: Debug
+      BUILD_PLATFORM: "Any CPU"
+    if: ${{ github.event.pull_request.draft == false }}
+    steps:
+#1. Checkout Code
+      - name: Checkout
+        uses: actions/checkout@v4
+#2. Add MSBuild to Path
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+#3. Setup Nuget
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+#4. Create sensitive.config from template for appSettings
+      - name: Copy sensitive.config.template -> sensitive.config
+        shell: pwsh
+        working-directory: .\RegScan
+        run: |
+          Copy-Item -Path ".\sensitive.config.template" `
+                    -Destination ".\sensitive.config" `
+                    -Force
+#5. Populate key values with secrets      
+      - name: Hydrate sensitive.config (all keys)
+        shell: pwsh
+        working-directory: .\RegScan
+        env:
+          PORT: ${{ secrets.PORT }}
+          ENV: ${{ secrets.ENV }}
+          AUTH_TIMEOUT: ${{ secrets.AUTH_TIMEOUT }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          HOST: ${{ secrets.HOST }}
+          SID: ${{ secrets.SID }}
+          AUTH_SVC_URL: ${{ secrets.AUTH_SVC_URL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_ACCOUNT: ${{ secrets.CLIENT_ACCOUNT }}
+          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+          APIKEY: ${{ secrets.APIKEY }}
+          API_URL: ${{ secrets.API_URL }}
+          ClientSettingsProvider_ServiceUri: ${{ secrets.ClientSettingsProvider_ServiceUri }}
+          TwainSDKUserName: ${{ secrets.TwainSDKUserName }}
+          TwainSDKEmail: ${{ secrets.TwainSDKEmail }}
+          TwainSDKKey: ${{ secrets.TwainSDKKey }}
+        run: |
+          $path = ".\sensitive.config"
+          if (!(Test-Path $path)) {
+            throw "sensitive.config not found at $path"
+          }
+      
+          # Root element is <appSettings>
+          [xml]$xml = Get-Content $path
+      
+          # Map EXACT template keys -> values
+          $valuesByKey = @{
+            "PORT" = $env:PORT
+            "ENV" = $env:ENV
+            "AUTH_TIMEOUT" = $env:AUTH_TIMEOUT
+            "USERNAME" = $env:USERNAME
+            "PASSWORD" = $env:PASSWORD
+            "HOST" = $env:HOST
+            "SID" = $env:SID
+            "AUTH_SVC_URL" = $env:AUTH_SVC_URL
+            "CLIENT_ID" = $env:CLIENT_ID
+            "CLIENT_ACCOUNT" = $env:CLIENT_ACCOUNT
+            "ACCOUNT_ID" = $env:ACCOUNT_ID
+            "APIKEY" = $env:APIKEY
+            "API_URL" = $env:API_URL
+            "ClientSettingsProvider.ServiceUri" = $env:ClientSettingsProvider_ServiceUri
+            "TwainSDKUserName" = $env:TwainSDKUserName
+            "TwainSDKEmail" = $env:TwainSDKEmail
+            "TwainSDKKey" = $env:TwainSDKKey
+          }
+      
+          foreach ($key in $valuesByKey.Keys) {
+            $value = $valuesByKey[$key]
+      
+            if ([string]::IsNullOrWhiteSpace($value)) {
+              throw "Configuration value for '$key' is missing or empty."
+            }
+      
+            $node = $xml.SelectSingleNode("/appSettings/add[@key='$key']")
+            if ($null -eq $node) {
+              throw "Key '$key' not found in sensitive.config.template"
+            }
+      
+            $node.SetAttribute("value", $value)
+          }
+      
+          $xml.Save($path)
+#6. Restore NuGet packages
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: |
+          nuget restore "$env:SOLUTION_FILE"
+#7. Build
+      - name: Build with MSBuild
+        shell: pwsh
+        run: |
+          msbuild "$env:SOLUTION_FILE" `
+            /m `
+            /t:Rebuild `
+            /p:Configuration="$env:BUILD_CONFIGURATION" `
+            /p:Platform="$env:BUILD_PLATFORM" `
+            /verbosity:minimal
+#8. Store files in folder for export. Uncomment if required
+#      - name: Save build folder
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: full-build-output
+#          path: '*/bin/Debug/'  # Point to the directory, not a file
+#          retention-days: 2 
