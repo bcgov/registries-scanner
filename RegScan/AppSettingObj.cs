@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppConfiguration;
+using System;
 using System.Configuration;
 
 namespace RegScan
@@ -30,11 +31,11 @@ namespace RegScan
             {
 
                 // Oracle configuration.
-                UserName = ConfigurationManager.AppSettings["UserName"];
-                Password = ConfigurationManager.AppSettings["Password"];
-                Host = ConfigurationManager.AppSettings["Host"];
-                Port = ConfigurationManager.AppSettings["Port"];
-                Sid = ConfigurationManager.AppSettings["Sid"];
+                UserName = ConfigKeys.USERNAME;
+                Password = ConfigKeys.PASSWORD;
+                Host = ConfigKeys.HOST;
+                Port = ConfigKeys.PORT;
+                Sid = ConfigKeys.SID;
 
                 // Set the database name based on the last character.
                 switch (Sid.Substring(Sid.Length - 1, 1).ToUpper())
@@ -51,9 +52,9 @@ namespace RegScan
                 }
 
                 // Twain SDK
-                TwainSDKUserName = ConfigurationManager.AppSettings["TwainSDKUserName"];
-                TwainSDKEmail = ConfigurationManager.AppSettings["TwainSDKEmail"];
-                TwainSDKKey = ConfigurationManager.AppSettings["TwainSDKKey"];
+                TwainSDKUserName = ConfigKeys.TWAINSDKUSERNAME;
+                TwainSDKEmail = ConfigKeys.TWAINSDKEMAIL;
+                TwainSDKKey = ConfigKeys.TWAINSDKKEY;
             }
             catch (Exception Error)
             {

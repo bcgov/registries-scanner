@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<appSettings>
+	<add key="PORT" value="" />
+	<add key="ENV" value="" />
+	<add key="AUTH_TIMEOUT" value="" />
+	<add key="USERNAME" value="" />
+	<add key="PASSWORD" value="" />
+	<add key="HOST" value="" />
+	<add key="SID" value="" />
+	<add key="AUTH_SVC_URL" value="" />
+	<add key="CLIENT_ID" value="" />
+	<add key="CLIENT_ACCOUNT" value="" />
+	<add key="ACCOUNT_ID" value="" />
+	<add key="APIKEY" value="" />
+	<add key="API_URL" value="" />
+	<add key="ClientSettingsProvider.ServiceUri" value="" />
+	<add key="TwainSDKUserName" value=""/>
+	<add key="TwainSDKEmail" value=""/>
+	<add key="TwainSDKKey" value=""/>
+</appSettings>
