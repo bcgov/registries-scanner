@@ -172,7 +172,7 @@ namespace ApiScanner
             return resp;
         }
 
-        // documenttype consumerDocumentId
+        // This endpoint was depreciated a long time ago. Should NOT be used. 
         public static string get(string docType, string conDocId)
         {
             string endpoint = "/doc/api/v1/business/" + docType + "?consumerDocumentId=" + conDocId;
