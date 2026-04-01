@@ -215,6 +215,8 @@ namespace RegScan
             ErrorMessage = "";
             List<DocumentObj> list = new List<DocumentObj>();           
 
+            // This value will hold the information we need for the document. 
+            // The Call to `getDocObjectList()` is not necessary.
             string resp = DocumentApi.get(_BarCode);
 
             if (resp.Contains("errorMessage"))
@@ -231,6 +233,7 @@ namespace RegScan
                 var token = JToken.Parse(resp);
                 string docClass = (string)token[0]["documentClass"];
 
+                // This call returns the same information that `resp` holds. Not required.
                 List<JObject> docList = DocumentApi.getDocObjectList(docClass, _BarCode);
 
                 UtilityObj.writeLog("Fix3 API returned docList, Adding docs to list");
