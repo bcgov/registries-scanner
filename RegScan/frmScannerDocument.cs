@@ -158,10 +158,11 @@ namespace RegScan
                 image0 = _Image;
             }
 
+            // Create file name and save the image.
             string fileName = "Images\\Bitmap_image " + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
             UtilityObj.saveImageAsFile(fileName, _Image);
 
-            // Save the image to file.
+            // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
 
             UtilityObj.writeLog("Scan List size: " + Convert.ToString(_scanSessionFileList.Count));
