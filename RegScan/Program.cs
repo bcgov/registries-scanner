@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using AppConfiguration;
 using AsyncRequests;
 
 namespace RegScan
@@ -14,7 +15,7 @@ namespace RegScan
         {            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            new AppConfiguration.ConfigKeys(); //Initialize the configuration keys to ensure they are loaded before any other operations
+            _ = new ConfigKeys(KeyStorage.AppConfig); //Initialize the configuration keys to ensure they are loaded before any other operations
             Security.EncryptExternalSection("appSettings");//Encrypt the appSettings section in App.config to secure sensitive information
             Application.Run(new frmMDIMain());
         }
