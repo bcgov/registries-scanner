@@ -17,4 +17,8 @@
 	<add key="TwainSDKUserName" value=""/>
 	<add key="TwainSDKEmail" value=""/>
 	<add key="TwainSDKKey" value=""/>
+	<add key="AZURE_KEYVAULTNAME" value="" />
+	<add key="AZURE_TENANT_ID" value="" />
+	<add key="AZURE_CLIENT_ID" value="" />
+	<add key ="GOOGLE_PROJECT_ID" value="" />
 </appSettings>

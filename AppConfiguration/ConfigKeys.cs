@@ -221,7 +221,7 @@ namespace AppConfiguration
             AUTH_TIMEOUT = ConfigurationManager.AppSettings[nameof(ConfigKeys.AUTH_TIMEOUT)];
             AUTH_SVC_URL = ConfigurationManager.AppSettings[nameof(ConfigKeys.AUTH_SVC_URL)];
             API_URL = ConfigurationManager.AppSettings[nameof(ConfigKeys.API_URL)];
-            GOOGLE_PROJECT_ID = ConfigurationManager.AppSettings[nameof(ConfigKeys.API_URL)];
+            GOOGLE_PROJECT_ID = ConfigurationManager.AppSettings[nameof(ConfigKeys.GOOGLE_PROJECT_ID)];
 
             USERNAME = GetGoogleSecretValue(nameof(ConfigKeys.USERNAME));
             PASSWORD = GetGoogleSecretValue(nameof(ConfigKeys.PASSWORD));
