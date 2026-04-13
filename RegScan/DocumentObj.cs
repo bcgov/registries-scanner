@@ -62,7 +62,7 @@ namespace RegScan
         private string _scannerId;
         private DateTime _scannedDate;
 
-        private Boolean _replaceFlag = false;
+        private Boolean _replaceRecordFlag = false;
        
 
         // Calculated.
@@ -97,6 +97,8 @@ namespace RegScan
         public string Owner { get { return _owner; } }
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
+        public Boolean UpdateRecord { get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
+
         // Calculated
         public PdfDocument PDFDocument { get { return _pdfDocument; } set { _pdfDocument = value; } }
         public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
@@ -128,18 +130,16 @@ namespace RegScan
             UpdateBoxPageCount();
         }
                
+        /// <summary>
+        /// Handles the logic of updating a current record with the scanned document.
+        /// </summary>
         private void Update()
         {
             copyToModel();
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
-            string resp = DocumentApi.patch(ApiDocModel, _documentServiceId);
-            if (resp.Contains("errorMessage")) {
-                UtilityObj.writeLog("Scanned document Image failed PATCH to update information.");
-                Environment.Exit(0);    
-            }
-            resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
                 MessageBox.Show("ERROR, scanned image failed to laod into database. Current data for " + BarCode + " may be inaccurrate.");
@@ -150,6 +150,13 @@ namespace RegScan
             UpdateBoxPageCount();
         }
 
+        /// <summary>
+        /// Controls the flow of logic between inserting a new document and updating an existing document.
+        /// If the _replaceFlag is true, (there is an existing document) -> Update: replace the existing document.
+        /// If the _replaceFlag is false, (no existing document). Insert: create a new record and post the document.
+        ///     Previously _replaceFlag would have been false for any record without a DocumentURL and inserted
+        ///                                             true for any record with a DocumentURL and updated.
+        /// </summary>
         public void UpdateInsert()
         {
             // Set some values before database requests.
@@ -157,12 +164,16 @@ namespace RegScan
             _fileExtension = "PDF";
             _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");                    
             
-            if (_replaceFlag)
+            // Previously would have been false for any record without a DocumentURL and inserted - any with would be an update.
+            // That logic is faulty because the endpoints are the same in both cases and should be handled the same
+            // We want to only do an insert if there was no existing record for the barcode.
+            if (_replaceRecordFlag)
                 Update();
             else
                 Insert();
 
-            _replaceFlag = false;
+            // Once done reset flag
+            _replaceRecordFlag = false;
         }
 
         private void UpdateBoxPageCount()
@@ -197,7 +208,7 @@ namespace RegScan
         public void SetToNew()
         {
             //_documentId = "";          // _documentId = "" indicates a database insert, instead of an update.
-            _replaceFlag = true;
+            _replaceRecordFlag = true;
 
             //if (_documentClass == "SOCIETY")
             //{
@@ -263,6 +274,7 @@ namespace RegScan
             copyFromModel(docObj, jDoc);
 
             if (jDoc.ContainsKey("scanningInformation")) {
+                // If there is already scanning information for the record it is likely that it has already been scanned at least once
                 
                 UtilityObj.writeLog("Extract jDoc and scanning information.");
 
@@ -293,9 +305,11 @@ namespace RegScan
                 UtilityObj.writeLog("No Scanning Information for Barcode " + docObj._consumerDocumentId);
             }
 
-            // Make sure document exists
+            // If a previous version of the document exists make a request to download the stored copy
             if (docObj._documentURL != "")
             {
+                // TODO: check if this works... Should the old document ever be shown?
+                // If not why do we download it?
                 Byte[] docBytes = DocumentApi.getDocBytes(docObj._documentURL);
 
                 if (docBytes != null && docBytes.Length > 2000)
@@ -365,7 +379,6 @@ namespace RegScan
             if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentTypeCode"]; }
             //if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentType"]; }
 
-
             if (temp["documentTypeDescription"] != null) { ApiDocModel.documentTypeDescription = (string)temp["documentTypeDescription"]; }
             if (temp["documentURL"] != null) { ApiDocModel.documentURL = (string)temp["documentURL"]; } 
                  
@@ -373,6 +386,11 @@ namespace RegScan
         }
 
         
+        /// <summary>
+        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guarenteed to be reurned from DRS API
+        /// </summary>
+        /// <param name="docObj"> DocumentObj that we want to hold the current documents information </param>
+        /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
             if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
@@ -398,10 +416,19 @@ namespace RegScan
             if (jDoc.ContainsKey("documentServiceId")) { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
             if (jDoc.ContainsKey("documentType")) { docObj._documentTypeCode = (string)jDoc["documentType"]; }
             if (jDoc.ContainsKey("documentTypeDescription")) { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
+
+            // Check if there is a previous document uploaded for this record
             if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
+            else if (jDoc.ContainsKey("consumerFilename") && docObj._documentServiceId != "")
+            {
+                // If the optional documentURL parameter is not present but there is a consumerFileName
+                // There is another way we can attempt to get the document URL.
+                docObj._documentURL = GetDocURL(docObj);
+            }
 
             if (jDoc.ContainsKey("scanningInformation"))
             {
+                // Make the nested object easier to parse
                 docObj.scanInfo = (JObject)jDoc["scanningInformation"];
                 //docObj.ApiScanModel = (ScanningInfoModel)docObj.scanInfo;
 
@@ -430,6 +457,54 @@ namespace RegScan
         {
             if (jDoc == null || jDoc.ToString() == "") { return false; }
             return true;
+        }
+
+        /// <summary>
+        /// Using this objects _documentServiceId, attempt to get the document URL from the API.
+        /// If successful, return the document URL. If not, return an empty string and log an error.
+        /// </summary>
+        /// <param name="thisDoc"> The current object we want to get a URL for </param>
+        /// <returns> A temporary URL to access the digital document, or an empty string </returns>
+        static public String GetDocURL(DocumentObj thisDoc)
+        {
+            string resp = "";
+            if (thisDoc._documentServiceId == "")
+            {
+                // If there is no document identifier we cant use the endpoint to request a documentURL.
+                thisDoc.Error = "Document Service ID Not Found For Document with Barcode: " + thisDoc._barCode;
+                UtilityObj.writeLog(thisDoc.Error);
+            }
+            else
+            {
+                // request a URL for the document.
+                resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
+
+                if (resp.Contains("errorMessage"))
+                {
+                    thisDoc.Error = "Error attempting to request URL for document with Barcode: " + thisDoc._barCode;
+                    UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
+                    resp = "";
+                }
+                else
+                {
+                    // Get the result of the API call as a JObject to parse
+                    var result = (JObject)JToken.Parse(resp);
+
+                    if (result.ContainsKey("url"))
+                    {
+                        // Set the returned string to be the returned document URL
+                        resp = (string)result["url"];
+                    }
+                    else
+                    {
+                        thisDoc.Error = "Document URL Not Found For Document Service Id: " + thisDoc._documentServiceId;
+                        UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
+                        resp = "";
+                    }
+                }
+            }
+
+            return resp;
         }
 
         #endregion      
