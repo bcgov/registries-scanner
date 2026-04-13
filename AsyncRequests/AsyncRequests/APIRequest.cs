@@ -114,6 +114,7 @@ namespace AsyncRequests
 
             var client = new RestClient(api_url + endPoint);
             var request = new RestRequest(requestType);
+            string answer = "";
 
             request.AddHeader("Account-Id", account_id);
             request.AddHeader("x-apikey", apikey);
@@ -121,18 +122,20 @@ namespace AsyncRequests
 
             if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
             {
-                request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]);
-                request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
-                request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
-                request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
+                foreach (var keyValuePair in param) {
+                    request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
+                }
+                //if param.ContainsKey() { request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]); }
+                //request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
+                //request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
+                //request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
 
                 request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
-                string answer = client.Execute(request).Content;
-                return answer;
+                answer = client.Execute(request).Content;
             }
 
-            return "";
+            return answer;
 
         }
 

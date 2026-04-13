@@ -49,7 +49,8 @@ namespace ApiScanner
             param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
 
             //string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
+            //string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
+            string endpoint = "doc/api/v1/documents/" + myData.documentClass;
 
             string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.POST);
 
@@ -73,7 +74,8 @@ namespace ApiScanner
 
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (_fileName != "")
-            {                
+            {
+                // TODO: handle passing in any parameters with param. 
                 param.Add("consumerFilename", (string)myData.consumerFilename);
             }
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
@@ -132,6 +134,18 @@ namespace ApiScanner
         public static string getSearch(string docClass)
         {
             string endpoint = "/doc/api/v1/searches/" + docClass;
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            return resp;
+        }
+
+        /// <summary>
+        /// Request a URL for an existing record. 
+        /// </summary>
+        /// <param name="identifier"> Unique identifier of an existing service application document or application report </param>
+        /// <returns> URL from the API call </returns>
+        public static string getDocumentURL(string identifier)
+        {
+            string endpoint = "/doc/api/v1/application-documents/" + identifier;
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
