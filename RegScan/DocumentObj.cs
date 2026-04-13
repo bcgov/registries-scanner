@@ -1,5 +1,4 @@
 ﻿using ApiScanner;
-using Json;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Drawing.BarCodes;
@@ -12,7 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
-using System.Web.UI;
 using System.Windows.Forms;
 
 namespace RegScan
