@@ -137,7 +137,7 @@ namespace RegScan
             resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to laod into database. Current data for " + BarCode + " may be inaccurrate.");
+                MessageBox.Show("ERROR, scanned image failed to load into database. Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
@@ -198,7 +198,7 @@ namespace RegScan
                 _ownerTypeCode = _documentClass;
             }
             
-            // Get the lates open box ... if one is not found, then one will be created.            
+            // Get the latest open box ... if one is not found, then one will be created.            
             _boxObj = BoxObj.Find(_ownerTypeCode);
             _accessionNumber = GetAccessionNumber(_boxObj);
             _batchId = 0;                           // Batch Id is reset to zero.
@@ -210,6 +210,12 @@ namespace RegScan
 
 
         //  _BarCode  == conDocId
+        /// <summary>
+        /// Given a barcode request record details. Store the returned items into a list of DocumentObjs.
+        /// 
+        /// </summary>
+        /// <param name="_BarCode"> 8-digit barcode string </param>
+        /// <returns> List of DocumentObjs for each returned record matching the _BarCode </returns>
         static public List<DocumentObj> Find(string _BarCode)
         {           
             ErrorMessage = "";
@@ -225,7 +231,8 @@ namespace RegScan
             }
 
             if (resp == "" )
-            {                
+            {             
+                // NOTE - not doing anything with this error message. We should print this to the logs.   
                 ErrorMessage = "No Documents Found For Barcode: " + _BarCode;
             }            
             else
@@ -302,7 +309,7 @@ namespace RegScan
         }
               
 
-        // IF the document does not contain an assesion number, then get one based on the ower type code.
+        // IF the document does not contain an accession number, then get one based on the owner type code.
         static public long GetAccessionNumber(BoxObj _Box)
         {
             return long.Parse(_Box.SequenceNumber.ToString().PadLeft(2, '0') +
