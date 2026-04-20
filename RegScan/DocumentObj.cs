@@ -137,7 +137,7 @@ namespace RegScan
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
-            string resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
                 MessageBox.Show("ERROR, scanned image failed to laod into database. Current data for " + BarCode + " may be inaccurrate.");
@@ -229,28 +229,34 @@ namespace RegScan
 
 
         //  _BarCode  == conDocId
-        static public List<DocumentObj> Find(string _BarCode)
+        static public List<DocumentObj> Find(string BarCode)
         {           
             ErrorMessage = "";
             List<DocumentObj> documentList = new List<DocumentObj>();
 
-            string resp = DocumentApi.get(_BarCode);
+            //UPDATE TO SEARCH CALL
+            string resp = DocumentApi.get(BarCode);
 
             if (resp.Contains("errorMessage"))
             {
                 resp = "";
-                ErrorMessage = "No Documents Found For Barcode: " + _BarCode;
+                ErrorMessage = "No Documents Found For Barcode: " + BarCode;
                 UtilityObj.writeLog(ErrorMessage);
             }         
             else
             {
                 var resultList = JToken.Parse(resp);
                 //string docClass = (string)token[0]["documentClass"];
-                //List<JObject> docList = DocumentApi.getDocObjectList(docClass, _BarCode);
+                //List<JObject> docList = DocumentApi.getDocObjectList(docClass, BarCode);
 
                 UtilityObj.writeLog("Fix3 API returned docList, Adding docs to list");
+                DocumentObj docObj;
                 foreach (JObject record in resultList)
-                    documentList.Add(ExtractDocument(record));
+                {
+                    docObj = new DocumentObj();
+                    copyFromModel(docObj, record);
+                    documentList.Add(docObj);
+                }
             }
 
             UtilityObj.writeLog("Return Ordered docs");
@@ -259,7 +265,6 @@ namespace RegScan
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
 
         }
-
 
         // Select the documents that match this barcode.
         static private DocumentObj ExtractDocument(JObject jDoc)
@@ -271,50 +276,6 @@ namespace RegScan
             // Much of the logic below is not required. 
             copyFromModel(docObj, jDoc);
 
-            if (jDoc.ContainsKey("scanningInformation")) {
-                // If there is already scanning information for the record it is likely that it has already been scanned at least once
-                
-                UtilityObj.writeLog("Extract jDoc and scanning information.");
-
-                // If Accession Number
-                //if (docObj.AccessionNumber == 0 )
-                //{
-                //    // Get the latest open box ... if one is not found, then one will be created.
-                //    docObj._boxObj = BoxObj.Find(docObj._ownerTypeCode);
-
-                //    // IF the box was not created
-                //    if (docObj._boxObj == null)
-                //    {
-                //        docObj.Error = BoxObj.ERROR_MESSAGE;
-                //    }
-                //    else
-                //        docObj.AccessionNumber = GetAccessionNumber(docObj._boxObj);
-                //}
-                //else
-                //{
-                //    // Get the existing box from the accession number.
-                //    string an = docObj._accessionNumber.ToString().PadLeft(BoxObj.ACCESSION_NUMBER_LENGTH, '0');
-                //    docObj._boxObj = BoxObj.Find(int.Parse(an.Substring(0, 2)), int.Parse(an.Substring(2, 4)), int.Parse(an.Substring(6, 4)));
-                //    docObj._accessionNumber = Convert.ToInt64(docObj._accessionNumber);
-                //}                               
-            }
-            else
-            {
-                UtilityObj.writeLog("No Scanning Information for Barcode " + docObj._consumerDocumentId);
-            }
-
-            // If a previous version of the document exists make a request to download the stored copy
-            if (docObj._documentURL != "")
-            {
-                // TODO: check if this works... Should the old document ever be shown?
-                // If not why do we download it?
-                Byte[] docBytes = DocumentApi.getDocBytes(docObj._documentURL);
-
-                if (docBytes != null && docBytes.Length > 2000)
-                {
-                    docObj._pdfDocument = PDFObj.ConvertByteArrayToPDF(docBytes);
-                }
-            }
             return docObj;
         }
               
@@ -439,7 +400,7 @@ namespace RegScan
                     docObj._scheduleNumber = int.Parse(accNumbersSplit[1]);
                     docObj._boxNumber = int.Parse(accNumbersSplit[2]);
                 }
-
+                // Within the nested returned object there is another author field, save as the doc owner
                 if (docObj.scanInfo.ContainsKey("author")) { docObj._owner = (string)docObj.scanInfo["author"]; }
                 
                 if (docObj.scanInfo.ContainsKey("batchId")) { docObj._batchId = (int)docObj.scanInfo["batchId"];}
@@ -466,16 +427,21 @@ namespace RegScan
         static public String GetDocURL(DocumentObj thisDoc)
         {
             string resp = "";
+            Byte[] docBytes = null;
+            bool requestDoc = true;
             if (thisDoc._documentServiceId == "")
             {
                 // If there is no document identifier we cant use the endpoint to request a documentURL.
                 thisDoc.Error = "Document Service ID Not Found For Document with Barcode: " + thisDoc._barCode;
                 UtilityObj.writeLog(thisDoc.Error);
+                return resp;
             }
-            else
+            // Enter a loop of requesting a URL, attempting to download the document at the URL.
+            // Logging any errors we may hit, and 
+            while (requestDoc)
             {
                 // request a URL for the document.
-                resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
+                //resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
 
                 if (resp.Contains("errorMessage"))
                 {
@@ -492,6 +458,26 @@ namespace RegScan
                     {
                         // Set the returned string to be the returned document URL
                         resp = (string)result["url"];
+                        // The following will try to download the image at the given URL.
+                        // This (previously) was never displayed in the application 
+                        try
+                        {
+                            docBytes = DocumentApi.getDocBytes(thisDoc._documentURL);
+                        }
+                        catch (Exception e)
+                        {
+                            // If we hit an exception while trying to get the document at the given URL
+                            string err = "Error attempting to get document bytes for document with Barcode: ";
+                            UtilityObj.writeLog(err + thisDoc._barCode.ToString() + "\n" + e.ToString());
+                        }
+
+                        if (docBytes != null && docBytes.Length > 2000)
+                        {
+                            // NOTE - The DocumentObj's _pdfDocument element gets overwritten by images held in
+                            // _scannedImageList when the user selects 'save scan'. This variable is not
+                            // used anywhere else in the application. I don't see why the document is downloaded here. 
+                            thisDoc._pdfDocument = PDFObj.ConvertByteArrayToPDF(docBytes);
+                        }
                     }
                     else
                     {
@@ -501,6 +487,7 @@ namespace RegScan
                     }
                 }
             }
+            
 
             return resp;
         }
