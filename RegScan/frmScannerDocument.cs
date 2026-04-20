@@ -158,7 +158,7 @@ namespace RegScan
                 image0 = _Image;
             }
 
-            string fileName = "Images\\Bitmap_image " + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
+            string fileName = "Images\\Bitmap_image" + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
             UtilityObj.saveImageAsFile(fileName, _Image);
 
             // Save the image to file.
@@ -471,7 +471,8 @@ namespace RegScan
             if (_currentImageIndex > -1)
             {
                 //SetImage(_scannedImageList[_currentImageIndex].Image);
-                string imageFile = "Images\\Bitmap_image " + Convert.ToString(_currentImageIndex) + ".bmp";
+                string imageFile = _scanSessionFileList[_currentImageIndex];
+                // string imageFile = "Images\\Bitmap_image " + Convert.ToString(_currentImageIndex) + ".bmp";
                 var image = UtilityObj.readFileAsImage(imageFile);
                 SetImage(image);
                 SetOrientation(_scannedImageList[_currentImageIndex].Orientation.ToString());
