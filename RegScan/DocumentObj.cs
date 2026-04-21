@@ -422,12 +422,13 @@ namespace RegScan
 
             // Check if there is a previous document uploaded for this record
             if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
-            else if (jDoc.ContainsKey("consumerFilename") && docObj._documentServiceId != "")
-            {
+            // There is a better way to get this information (implemented in another branch)
+            //else if (jDoc.ContainsKey("consumerFilename") && docObj._documentServiceId != "")
+            //{
                 // If the optional documentURL parameter is not present but there is a consumerFileName
                 // There is another way we can attempt to get the document URL.
-                docObj._documentURL = GetDocURL(docObj);
-            }
+                //docObj._documentURL = GetDocURL(docObj);
+            //}
 
             if (jDoc.ContainsKey("scanningInformation"))
             {
@@ -460,55 +461,6 @@ namespace RegScan
         {
             if (jDoc == null || jDoc.ToString() == "") { return false; }
             return true;
-        }
-
-        /// <summary>
-        /// Using this objects _documentServiceId, attempt to get the document URL from the API.
-        /// If successful, return the document URL. If not, return an empty string and log an error.
-        /// </summary>
-        /// <param name="thisDoc"> The current object we want to get a URL for </param>
-        /// <returns> A temporary URL to access the digital document, or an empty string </returns>
-        static public String GetDocURL(DocumentObj thisDoc)
-        {
-            string resp = "";
-            if (thisDoc._documentServiceId == "")
-            {
-                // If there is no document identifier we cant use the endpoint to request a documentURL.
-                thisDoc.Error = "Document Service ID Not Found For Document with Barcode: " + thisDoc._barCode;
-                UtilityObj.writeLog(thisDoc.Error);
-            }
-            else
-            {
-                // request a URL for the document.
-                // REMOVING THIS IN ANOTHER BRANCH
-                //resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
-
-                if (resp.Contains("errorMessage") || resp == "")
-                {
-                    thisDoc.Error = "Error attempting to request URL for document with Barcode: " + thisDoc._barCode;
-                    UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
-                    resp = "";
-                }
-                else
-                {
-                    // Get the result of the API call as a JObject to parse
-                    var result = (JObject)JToken.Parse(resp);
-
-                    if (result.ContainsKey("url"))
-                    {
-                        // Set the returned string to be the returned document URL
-                        resp = (string)result["url"];
-                    }
-                    else
-                    {
-                        thisDoc.Error = "Document URL Not Found For Document Service Id: " + thisDoc._documentServiceId;
-                        UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
-                        resp = "";
-                    }
-                }
-            }
-
-            return resp;
         }
 
         #endregion      
