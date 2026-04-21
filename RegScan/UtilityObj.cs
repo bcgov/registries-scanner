@@ -89,12 +89,23 @@ namespace RegScan
         // Read file into image.
         static public Bitmap readFileAsImage(string fileName)
         {
-            byte[] imageData = System.IO.File.ReadAllBytes(fileName);
+            Bitmap bmp = null;
+            byte[] imageData = null;
 
-            Bitmap bmp;
-            using (var ms = new MemoryStream(imageData))
+
+            try
             {
-                bmp = new Bitmap(ms);
+                imageData = System.IO.File.ReadAllBytes(fileName);
+                
+
+                using (var ms = new MemoryStream(imageData))
+                {
+                    bmp = new Bitmap(ms);
+                }
+            }
+            catch (Exception e)
+            {
+                writeLog("Unable to process reading file.\n" + e);
             }
             return bmp;
         }
