@@ -475,9 +475,10 @@ namespace RegScan
             else
             {
                 // request a URL for the document.
-                resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
+                // REMOVING THIS IN ANOTHER BRANCH
+                //resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
 
-                if (resp.Contains("errorMessage"))
+                if (resp.Contains("errorMessage") || resp == "")
                 {
                     thisDoc.Error = "Error attempting to request URL for document with Barcode: " + thisDoc._barCode;
                     UtilityObj.writeLog(thisDoc.Error + "\n" + resp);

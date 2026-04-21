@@ -120,20 +120,23 @@ namespace AsyncRequests
             request.AddHeader("x-apikey", apikey);
             request.AddHeader("Content-Type", "application/pdf");
 
-            if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
+            if (requestType != Method.POST && requestType != Method.PUT && requestType != Method.PATCH)
             {
-                foreach (var keyValuePair in param) {
-                    request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
-                }
-                //if param.ContainsKey() { request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]); }
-                //request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
-                //request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
-                //request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
-
-                request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
-
-                answer = client.Execute(request).Content;
+                // If any other request type is used throw a new error
+                throw new Exception("Invalid request type for endpoint: " + endPoint + ". Must be POST, PUT, or PATCH.");
             }
+            foreach (var keyValuePair in param)
+            {
+                request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
+            }
+            //if param.ContainsKey() { request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]); }
+            //request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
+            //request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
+            //request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
+
+            request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
+
+            answer = client.Execute(request).Content;
 
             return answer;
 
