@@ -32,12 +32,25 @@ namespace ApiScanner
             return jList;
         }
 
+        /// <summary>
+        /// Used to control the returned data from attempting to download an image from a URL
+        /// </summary>
+        /// <param name="docURL"> URL to access previously scanned data </param>
+        /// <returns> Byte[] holding image data </returns>
+        /// <exception cref="Exception"> If the URL was inaccessible or timed out </exception>
         public static Byte[] getDocBytes(string docURL)
         {
             return APIRequest.download(docURL);
         }        
 
-        // Create pdf document
+        /// <summary>
+        /// To be used to update the scanning information of a preexisting document record.
+        /// This endpoint can not be used to upload a document image to the API
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="pdfBytes"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static string post(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -56,7 +69,15 @@ namespace ApiScanner
             return resp;
         }
 
-        //Update document data
+        /// <summary>
+        /// Update any of the document record properties (other than document class) for an existing
+        /// document identified by a document service ID. If scanning information is included in the
+        /// request (and it exists), the scanning record matching the consumerDocumentId will be
+        /// updated and included in the response.
+        /// </summary>
+        /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
+        /// <param name="docServId">The unique identifier of an existing document service document</param>
+        /// <returns></returns>
         public static string patch(object data, string docServId)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -66,7 +87,16 @@ namespace ApiScanner
             return resp;
         }
 
-        // Update document image
+        /// <summary>
+        /// Add or replace the existing document record specified by the document service ID with
+        /// the payload document. A required consumerFilename parameter must be submitted with the
+        /// request. If scanning information matching the consumerDocumentId exists then it will
+        /// be included in the response.
+        /// </summary>
+        /// <param name="_fileName"> Filename associated with the uploaded document </param>
+        /// <param name="pdfBytes"> PDF file as a byte array</param>
+        /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
+        /// <returns></returns>
         public static string put(string _fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -85,7 +115,12 @@ namespace ApiScanner
 
         ////Documents       
 
-        // consumerDocumentId
+        /// <summary>
+        /// This endpoint should only be used if a user is checking if the current barcode is
+        /// already used or not before attempting to add a new document record. 
+        /// </summary>
+        /// <param name="conDocId"> Barcode (consumerDocumentId) to check for existence </param>
+        /// <returns> String response from API call </returns>
         public static string get(string conDocId)
         {           
             string endpoint = "/doc/api/v1/documents/verify/" + conDocId;
@@ -93,7 +128,8 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentServiceId
+        /// REMOVE. 
+        /// This endpoint and request type combo should not be used by the scanning application
         public static string delete(string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
@@ -101,7 +137,8 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentServiceId
+        /// REMOVE. This is duplicated from the patch method above. 
+        /// The only difference is not casting data to a DocumentModel.
         public static string patch2(object data, string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
@@ -109,7 +146,15 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentClass documentType
+        /// <summary>
+        /// Update any of the document record properties (other than document class) for an existing document.
+        /// If scanning information is included in the request, the scanning record matching the consumerDocumentId
+        /// will be updated (if it exists). This information will then be included in the response.
+        /// </summary>
+        /// <param name="data">
+        /// body document to be included in the request. MUST be able to be cast to DocumentModel.
+        /// </param>
+        /// <returns>>Response from the API call</returns>
         public static string post(object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -136,7 +181,8 @@ namespace ApiScanner
             return resp;
         }
 
-        //Update pdf document
+        /// REMOVE. This is duplicated from the post method above. 
+        /// The only difference is adding parameters to before making the call. 
         public static string update(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -153,7 +199,8 @@ namespace ApiScanner
             return resp;
         }
 
-        //Update pdf document
+        /// REMOVE. This is duplicated from the post method above. 
+        /// The only difference is adding parameters to before making the call. 
         public static string patch(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -172,7 +219,7 @@ namespace ApiScanner
             return resp;
         }
 
-        // This endpoint was depreciated a long time ago. Should NOT be used. 
+        /// REMOVE. This endpoint was depreciated a long time ago. Should NOT be used. 
         public static string get(string docType, string conDocId)
         {
             string endpoint = "/doc/api/v1/business/" + docType + "?consumerDocumentId=" + conDocId;
