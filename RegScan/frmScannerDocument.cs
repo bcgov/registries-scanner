@@ -310,6 +310,7 @@ namespace RegScan
                                 if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                                 {
                                     // If a new version, then update the version number and set id to new
+                                    // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
                                     _currentDocument.VersionNumber++;
                                     // We dont want to clear the metadata from the current document - just indicate that there is a new version of the document image.
                                     // _currentDocument.SetToNew();
@@ -336,6 +337,8 @@ namespace RegScan
                         else
                         {
                             // IF the current batch id is null
+                            // TODO - look into what this should actually be doing
+                            // This is not set on app start. Will always be null on first scan.
                             if (_currentBatchId == null)
                             {
                                 // If the current document's batch is assigned.
@@ -376,6 +379,8 @@ namespace RegScan
                             foreach (var imageFile in _scanSessionFileList)
                             {
                                 Bitmap image = UtilityObj.readFileAsImage(imageFile);
+                                // go to next page if this one cant be read
+                                if (image == null) { continue; }
                                 // Calculate the page size and add the image to the overall scanned list.
                                 var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
 
@@ -413,6 +418,8 @@ namespace RegScan
                 foreach (var imageFile in _scanSessionFileList)
                 {
                     var image = UtilityObj.readFileAsImage(imageFile);
+                    // go to next page if this one cant be read
+                    if (image == null) { continue; }
                     _currentImageIndex++;
                     var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
                     _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
@@ -468,12 +475,16 @@ namespace RegScan
         /// </summary>
         private void UpdateImageDisplay()
         {
-            if (_currentImageIndex > -1)
+            if (_currentImageIndex > -1 && _currentImageIndex < _scannedImageList.Count)
             {
-                //SetImage(_scannedImageList[_currentImageIndex].Image);
-                string imageFile = _scanSessionFileList[_currentImageIndex];
-                // string imageFile = "Images\\Bitmap_image " + Convert.ToString(_currentImageIndex) + ".bmp";
-                var image = UtilityObj.readFileAsImage(imageFile);
+                // we have already read in all the images, select the one from the index to display
+                var image = _scannedImageList[_currentImageIndex].Image;
+                // display error if this one cant be read
+                if (image == null) 
+                { 
+                    MessageBox.Show("Error loading image for page " + Convert.ToString(_currentImageIndex + 1));
+                    return;
+                }
                 SetImage(image);
                 SetOrientation(_scannedImageList[_currentImageIndex].Orientation.ToString());
                 SetPageSize(_scannedImageList[_currentImageIndex].PageSize.ToString());
