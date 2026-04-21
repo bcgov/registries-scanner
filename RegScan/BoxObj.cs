@@ -110,6 +110,7 @@ namespace RegScan
 
             copyToModel(boxModel);
             string resp = ScanningBoxApi.patch(boxModel);
+            // NOTE - nothing is done with resp here but this is called from DocumentObj
         }
 
 

@@ -165,6 +165,8 @@ namespace RegScan
             if (_docList.Count() == 0)
                 return;
 
+            // NOTE - a DocumnetObj's PDFDocument does not hold a file name, it holds the image itself.
+            // Using it in this way will likely result in errors.
             _tempFileNameList.Add(PDFObj.DisplayPdf(_docList[_versionIndex].PDFDocument));
         }
 

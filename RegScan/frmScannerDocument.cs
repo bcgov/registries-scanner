@@ -38,7 +38,7 @@ namespace RegScan
         private ScannerSettingObj _defaultSetting;
 
         /// <summary>
-        /// List of all scananed images for the current document.
+        /// List of all scanned images for the current document.
         /// </summary>
         private List<ImageObj> _scannedImageList = new List<ImageObj>();
 
@@ -79,7 +79,7 @@ namespace RegScan
         bool _isImageAcquiring;
 
         /// <summary>
-        /// Determines that image acquistion must be canceled because application's form is closing.
+        /// Determines that image acquisition must be canceled because application's form is closing.
         /// </summary>
         bool _cancelTransferBecauseFormIsClosing;
 
@@ -138,7 +138,7 @@ namespace RegScan
                 if (_deviceManager != null)
                     _deviceManager.Close();
                 _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
-                //Set the twaindsm path to the local folder if using 64 bit
+                //Set the twain DSM path to the local folder if using 64 bit
                 //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
             }
             catch { }
@@ -146,13 +146,15 @@ namespace RegScan
 
         #region Scanning Session
         /// <summary>
-        /// Process the scanned image.
+        /// Process the scanned image as a bitmap.
         /// </summary>
-        /// <param name="_Image"></param>
+        /// <param name="_Image"> Bitmap image from scan process </param>
         private void ProcessScan(Bitmap _Image)
         {
             UtilityObj.writeLog("ProcessScan: Saving Scan");
 
+            // Set the first image to image0 for barcode scanning and display purposes.
+            // NOTE - It may be possible to use _Image and image0 interchangeably and eliminate the need for image0.
             if (image0 == null)
             {
                 image0 = _Image;
@@ -169,7 +171,7 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Process the completed scan session ... this contains most of the business logic of the application.
+        /// Process the completed scan session. Contains most of the business logic of the application.
         /// </summary>
         private void ProcessCompleted()
         {
@@ -188,6 +190,11 @@ namespace RegScan
 
             UtilityObj.writeLog("Fix Barcodes =" + barcodes.ToString());
 
+            // What follows here is a lot of if else statements. I believe breaking the components
+            // out into methods then only using this as the control to the flow.
+            //    Components: get barcode, get record, handle versions, display document
+            // This refactoring could also be accomplished by drawing out the process before rewriting.
+
             // IF we have a new document.
             if (_currentDocument == null)
             {
@@ -201,7 +208,7 @@ namespace RegScan
                     // Display the image.
                     SetImage(image0);
 
-                    // Ask if a barcode shoulde be entered manually.
+                    // Ask if a barcode should be entered manually.
                     if (MessageBox.Show("No barcode found. Do you want to manually enter the barcode?", "Missing Barcode", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
                         // Display dialog box to get manual entered barcode
@@ -215,6 +222,7 @@ namespace RegScan
                 {
                     UtilityObj.writeLog("Fix barcode found=" + barcodes[0].ToString());
                     // Assume the first bar code found is the correct one.
+                    // NOTE - If we are making this assumption BarcodeObj.Scan() can be optimized to only find one barcode. 
                     barCode = barcodes[0].ToString();
                 }
 
@@ -227,11 +235,13 @@ namespace RegScan
                 {
                     UtilityObj.writeLog("Fix Barcode not null");
                     bool documentsFound = false;
+                    // Unclear what 'neos' means. Essentially used to denote that API calls need to be made to get a record associated with the found barcode.
                     bool neos = true;
                     while (neos)
                     {
                         UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Find the associated existing documents for this barcode ... There may be more than one document (known as versions)
+                        // Find the associated existing document(s) for this barcode.
+                        // If there is more than one document it may indicate multiple versions
                         docs = DocumentObj.Find(barCode);
 
                         // IF no documents were found
@@ -240,7 +250,7 @@ namespace RegScan
                             UtilityObj.writeLog("Fix No existing docs, SetImage(image0)");
                             // Display message that no documents(s) found for this barcode.
                             SetImage(image0);
-                            // Ask if a barcode shoulde be entered manually.
+                            // Ask if a barcode should be entered manually.
                             if (MessageBox.Show("No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?", "No Documents Found", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                             {
                                 // Display dialog box to get manual entered barcode
@@ -255,7 +265,7 @@ namespace RegScan
                         }
                         else
                         {                           
-                            // Indicate documents found and time to move onto next step.
+                            // Indicate document(s) found and move onto next step.
                             documentsFound = true;
                             neos = false;
                         }
@@ -292,14 +302,15 @@ namespace RegScan
                                 btnNewBox.Enabled = false;
 
                                 // Ask if this is a new version.
-                                if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                                string messageText = "Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?";
+                                if (MessageBox.Show(messageText, "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                                 {
                                     // If a new version, then update the version number and set id to new
                                     _currentDocument.VersionNumber++;
                                     _currentDocument.SetToNew();
                                 }
                                 else
-                                    // Cancel this scan if a new vesion is not required.
+                                    // Cancel this scan if a new version is not required.
                                     cancelScan = true;
                             }
                             else
@@ -325,7 +336,7 @@ namespace RegScan
                                 // If the current document's batch is assigned.
                                 if (_currentDocument.BatchId != 0)
                                 {
-                                    // Create a batch object and assigne current's document's values.
+                                    // Create a batch object and assign current's document's values.
                                     _currentBatchId = new BatchObj();
                                     _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
                                     _currentBatchId.BatchId = _currentDocument.BatchId;
@@ -381,10 +392,11 @@ namespace RegScan
                 }                
             }
 
-            // Existing docucment.
+            // Existing document.
             else
             {
                 // IF we have a barcode
+                // Why are we showing an error if there is a barcode on the page?
                 if (barcodes.Count != 0)
                 {
                     // Display a warning message.
@@ -410,7 +422,7 @@ namespace RegScan
         #region Image Display.
 
         /// <summary>
-        ///  Sets the image on the image naviagtion panel.
+        ///  Sets the image on the image navigation panel.
         /// </summary>
         private void SetImageNav()
         {
@@ -530,10 +542,12 @@ namespace RegScan
         }
 
         /// <summary>
-        ///  Save the document to the database.
+        /// Method called when a user selects the 'Save' button on the main form.
+        /// Here we should verify the form and its contents, then make a call to push the document
+        /// and all related metadata to the DRS API.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"> Save Scan Button </param>
+        /// <param name="e"> Events from user </param>
         private void btnSave_Click(object sender, EventArgs e)
         {
 
@@ -584,7 +598,7 @@ namespace RegScan
             _currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
             _currentDocument.UpdateInsert();
 
-            // Reset the document and dispaly.
+            // Reset the document and display.
             ResetDocument();
             progressBar.Visible = false;
 
@@ -715,6 +729,8 @@ namespace RegScan
 
         /// <summary>
         /// Reset the document.
+        /// NOTE - This is not necessary. An new instance of this class can be used instead of
+        /// attempting to clear an old version. 
         /// </summary>
         private void ResetDocument()
         {
@@ -749,7 +765,7 @@ namespace RegScan
             cBoxOrientation.SelectedIndex = -1;
             cBoxPageSize.Enabled = false;
 
-            // Delete any tempoary FileNames.
+            // Delete any temporary FileNames.
             try
             {
                 foreach (var fileName in _tempFileNameList)
@@ -794,7 +810,7 @@ namespace RegScan
         /// </summary>
         private void CreateNewBoxNumber()
         {
-            // Dont' proceed if no current document.
+            // Don't proceed if no current document.
             if (_currentDocument == null)
                 return;
 
@@ -860,7 +876,8 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Set the form from the document.
+        /// Called if a record is found for the scanned document.
+        /// Form fields will be populated with the document's properties.
         /// </summary>
         protected void SetForm()
         {
@@ -959,13 +976,13 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Image is being acquired.
+        /// This method is hit after the scan process has been completed to start the process of acquiring the image.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"> Vintasoft TWAIN Device </param>
+        /// <param name="e"> The image processing event. Tracks progress and canceling events </param>
         private void device_ImageAcquiringProgress(object sender, ImageAcquiringProgressEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
+            // image acquisition must be canceled because application's form is closing
             if (_cancelTransferBecauseFormIsClosing)
             {
                 // cancel image acquisition
@@ -973,20 +990,26 @@ namespace RegScan
                 return;
             }
 
-
+            // set the progress bar value to the current completion level of the image acquisition.
             progressBar.Value = (int)e.Progress;
 
             //UtilityObj.writeLog(Convert.ToString(progressBar.Value) + " device_ImageAcquiringProgress");
 
+            // Catch when the process is complete and clear the progress bar.
             if (progressBar.Value == 100)
             {
                 progressBar.Value = 0;
             }
         }
 
+        /// <summary>
+        /// Hit once the device_ImageAcquiringProgress() is complete and the image is acquired.
+        /// </summary>
+        /// <param name="sender"> Vintasoft TWAIN Device </param>
+        /// <param name="e"> Holds the image and it's properties </param>
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
+            // image acquisition must be canceled because application's form is closing
             if (_cancelTransferBecauseFormIsClosing)
             {
                 // cancel image acquisition
@@ -994,8 +1017,10 @@ namespace RegScan
                 return;
             }
 
+            // Transform the acquired image into a Bitmap.
             Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
 
+            // Method call to process the bitmap
             ProcessScan(acquiredImage);
 
         }
@@ -1069,10 +1094,10 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Scan session has finished event.
+        /// Scan session and image acquisition and processing events have finished.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"> Vintasoft TWAIN Device </param>
+        /// <param name="e"> Application Event Arguments - Empty </param>
         private void device_ScanFinished(object sender, EventArgs e)
         {
             // close the device
@@ -1089,10 +1114,10 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Sets up the scanning session.
+        /// Called when user selects the 'Scan' button. Sets up and starts the scanning session.
         /// </summary>
-        /// <param name="sender"></param>p
-        /// <param name="e"></param>
+        /// <param name="sender"> "Scan" button on Main Form </param>
+        /// <param name="e"> Mouse events that may need to be handled </param>
         private void btnScanPage_Click(object sender, EventArgs e)
         {            
             UtilityObj.deleteFolder("Images");
@@ -1150,7 +1175,7 @@ namespace RegScan
                 }
 
                 // set device capabilities
-                // unit of measure
+                // unit of measure: ALWAYS inches 
                 try
                 {
                     if (device.UnitOfMeasure != UnitOfMeasure.Inches)
@@ -1160,7 +1185,7 @@ namespace RegScan
                 {
                 }
 
-                // resolution
+                // Set resolution. If the low resolution box is checked use 400x400, otherwise use 600x600.
                 try
                 {
                     if (ckBoxLowResolution.Checked)
@@ -1172,7 +1197,9 @@ namespace RegScan
                 {
                 }
 
-                // ADF
+                // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
+                // NOTE - There could be a test implemented here to check if the device supports
+                //     an ADF and if not, show a warning to the user that it can not be used.
                 try
                 {
                     device.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
@@ -1181,7 +1208,11 @@ namespace RegScan
                 {
                 }
 
-                // Duplex
+                // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
+                // If the device does not support duplex scanning, then this will fail and be caught by the exception. 
+                // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
+                //    There could also be a check before attempting to set the value to determine support.
+                //    The device currently does not support this feature and the catch is always hit.
                 try
                 {
                     device.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
@@ -1210,7 +1241,7 @@ namespace RegScan
                 {
                     UtilityObj.writeLog("Start image acquisition");
 
-                    // start image acquition process
+                    // start image acquisition (scan) process
                     device.Acquire();
 
                     UtilityObj.writeLog("End of image acquisition");
