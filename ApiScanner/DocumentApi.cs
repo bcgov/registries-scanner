@@ -130,15 +130,25 @@ namespace ApiScanner
 
         public static string searchByBarcode(string barcode)
         {
-            string endpoint = "/doc/api/v1/searches" + barcode;
+            string endpoint = "/doc/api/v1/searches";
+
+            if (barcode != "") { endpoint += "?consumerDocumentId=" + barcode; }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+
             return resp;
         }
 
         //Search by docClass
-        public static string getSearch(string docClass)
+        public static string getSearch(string docClass, Dictionary<string, string> queries)
         {
             string endpoint = "/doc/api/v1/searches/" + docClass;
+            
+            foreach (KeyValuePair<string, string> kvp in queries)
+            {
+                endpoint += "?" + kvp.Key + "=" + kvp.Value;
+            }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }

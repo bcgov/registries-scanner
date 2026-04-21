@@ -124,7 +124,7 @@ namespace RegScan
         {
             copyToModel();            
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
-            string resp = DocumentApi.post(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
             UpdateBoxPageCount();
         }
                
@@ -160,8 +160,8 @@ namespace RegScan
             // Set some values before database requests.
             _isScanned = true;
             _fileExtension = "PDF";
-            _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");                    
-            
+            _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
+
             // Previously would have been false for any record without a DocumentURL and inserted - any with would be an update.
             // That logic is faulty because the endpoints are the same in both cases and should be handled the same
             // We want to only do an insert if there was no existing record for the barcode.
@@ -235,7 +235,7 @@ namespace RegScan
             List<DocumentObj> documentList = new List<DocumentObj>();
 
             //UPDATE TO SEARCH CALL
-            string resp = DocumentApi.get(BarCode);
+            string resp = DocumentApi.searchByBarcode(BarCode);
 
             if (resp.Contains("errorMessage"))
             {
@@ -245,16 +245,35 @@ namespace RegScan
             }         
             else
             {
-                var resultList = JToken.Parse(resp);
-                //string docClass = (string)token[0]["documentClass"];
-                //List<JObject> docList = DocumentApi.getDocObjectList(docClass, BarCode);
+                var resultList = (JObject)JToken.Parse(resp);
 
-                UtilityObj.writeLog("Fix3 API returned docList, Adding docs to list");
-                DocumentObj docObj;
-                foreach (JObject record in resultList)
+                // If there are no results returned from the API, return an empty list and log an error.
+                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
                 {
+                    UtilityObj.writeLog("Unexpected reuturn result from API.");
+                    return null;
+                }
+                if (resultList["resultCount"].ToString() != "1")
+                {
+                    // We need exactly one result. 
+                    UtilityObj.writeLog("API did not return exactly one value.");
+                    return null;
+                }
+
+
+                DocumentObj docObj;
+                foreach (JObject record in resultList["results"])
+                {
+                    // The first API call doesn't provide all the fields we want to display
+                    // Call search again with the document class and unique identifier
+                    var docClass = record["documentClass"].ToString();
+                    var queries = new Dictionary<string, string>() { { "documentServiceId", record["documentServiceId"].ToString() } };
+                    var betterResponse = DocumentApi.getSearch(docClass, queries);
+
+                    // This does return a list but the documentClass documentServiceId pairing is unique -> only one element
+                    var betterResultList = (JObject)JToken.Parse(betterResponse)[0];
                     docObj = new DocumentObj();
-                    copyFromModel(docObj, record);
+                    copyFromModel(docObj, betterResultList);
                     documentList.Add(docObj);
                 }
             }
@@ -352,6 +371,8 @@ namespace RegScan
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
+            // We arent getting the following keys:
+            // consumerFilingDateTime, createDateTime, description
             if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
             if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
             if (jDoc.ContainsKey("consumerFilename")) { docObj._fileName = (string)jDoc["consumerFilename"]; }
@@ -378,12 +399,6 @@ namespace RegScan
 
             // Check if there is a previous document uploaded for this record
             if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
-            else if (jDoc.ContainsKey("consumerFilename") && docObj._documentServiceId != "")
-            {
-                // If the optional documentURL parameter is not present but there is a consumerFileName
-                // There is another way we can attempt to get the document URL.
-                docObj._documentURL = GetDocURL(docObj);
-            }
 
             if (jDoc.ContainsKey("scanningInformation"))
             {
@@ -405,7 +420,7 @@ namespace RegScan
                 
                 if (docObj.scanInfo.ContainsKey("batchId")) { docObj._batchId = (int)docObj.scanInfo["batchId"];}
                                 
-                if (docObj.scanInfo.ContainsKey("pagecount")) { docObj._pageCount = (int)docObj.scanInfo["pagecount"];}
+                if (docObj.scanInfo.ContainsKey("pageCount")) { docObj._pageCount = (int)docObj.scanInfo["pageCount"];}
                 
                 if (docObj.scanInfo.ContainsKey("scanDateTime")) { docObj._scannedDate = (DateTime)docObj.scanInfo["scanDateTime"];}
                                        
@@ -416,80 +431,6 @@ namespace RegScan
         {
             if (jDoc == null || jDoc.ToString() == "") { return false; }
             return true;
-        }
-
-        /// <summary>
-        /// Using this objects _documentServiceId, attempt to get the document URL from the API.
-        /// If successful, return the document URL. If not, return an empty string and log an error.
-        /// </summary>
-        /// <param name="thisDoc"> The current object we want to get a URL for </param>
-        /// <returns> A temporary URL to access the digital document, or an empty string </returns>
-        static public String GetDocURL(DocumentObj thisDoc)
-        {
-            string resp = "";
-            Byte[] docBytes = null;
-            bool requestDoc = true;
-            if (thisDoc._documentServiceId == "")
-            {
-                // If there is no document identifier we cant use the endpoint to request a documentURL.
-                thisDoc.Error = "Document Service ID Not Found For Document with Barcode: " + thisDoc._barCode;
-                UtilityObj.writeLog(thisDoc.Error);
-                return resp;
-            }
-            // Enter a loop of requesting a URL, attempting to download the document at the URL.
-            // Logging any errors we may hit, and 
-            while (requestDoc)
-            {
-                // request a URL for the document.
-                //resp = DocumentApi.getDocumentURL(thisDoc._documentServiceId);
-
-                if (resp.Contains("errorMessage"))
-                {
-                    thisDoc.Error = "Error attempting to request URL for document with Barcode: " + thisDoc._barCode;
-                    UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
-                    resp = "";
-                }
-                else
-                {
-                    // Get the result of the API call as a JObject to parse
-                    var result = (JObject)JToken.Parse(resp);
-
-                    if (result.ContainsKey("url"))
-                    {
-                        // Set the returned string to be the returned document URL
-                        resp = (string)result["url"];
-                        // The following will try to download the image at the given URL.
-                        // This (previously) was never displayed in the application 
-                        try
-                        {
-                            docBytes = DocumentApi.getDocBytes(thisDoc._documentURL);
-                        }
-                        catch (Exception e)
-                        {
-                            // If we hit an exception while trying to get the document at the given URL
-                            string err = "Error attempting to get document bytes for document with Barcode: ";
-                            UtilityObj.writeLog(err + thisDoc._barCode.ToString() + "\n" + e.ToString());
-                        }
-
-                        if (docBytes != null && docBytes.Length > 2000)
-                        {
-                            // NOTE - The DocumentObj's _pdfDocument element gets overwritten by images held in
-                            // _scannedImageList when the user selects 'save scan'. This variable is not
-                            // used anywhere else in the application. I don't see why the document is downloaded here. 
-                            thisDoc._pdfDocument = PDFObj.ConvertByteArrayToPDF(docBytes);
-                        }
-                    }
-                    else
-                    {
-                        thisDoc.Error = "Document URL Not Found For Document Service Id: " + thisDoc._documentServiceId;
-                        UtilityObj.writeLog(thisDoc.Error + "\n" + resp);
-                        resp = "";
-                    }
-                }
-            }
-            
-
-            return resp;
         }
 
         #endregion      
