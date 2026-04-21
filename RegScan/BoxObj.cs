@@ -30,7 +30,7 @@ namespace RegScan
         public int SequenceNumber { get { return _sequenceNumber; } set { _sequenceNumber = value; } }
         public int ScheduleNumber { get { return _scheduleNumber; } set { _scheduleNumber = value; } }
         public int BoxNumber { get { return _boxNumber; } set { _boxNumber = value; } }
-        public DateTime OpendedDate { get { return _openedDate; } set { _openedDate = value; } }
+        public DateTime OpenDate { get { return _openedDate; } set { _openedDate = value; } }
         public DateTime ClosedDate { get { return _closedDate; } set { _closedDate = value; } }
 
         public string ErrorMessage;
@@ -170,7 +170,7 @@ namespace RegScan
             }
             catch
             {
-                ERROR_MESSAGE += "No box found for sequence " + _SequenceNumber.ToString() + " and chedule " + _ScheduleNumber.ToString();
+                ERROR_MESSAGE += "No box found for sequence " + _SequenceNumber.ToString() + " and schedule " + _ScheduleNumber.ToString();
                 return null;
             }
         }
@@ -195,7 +195,7 @@ namespace RegScan
             }
         }
 
-        // Find the box assocated with this owner type code ... if not found, then create a box.
+        // Find the box associated with this owner type code ... if not found, then create a box.
         static public BoxObj Find(string _OwnerTypeCode)
         {
             ERROR_MESSAGE = "";
@@ -276,7 +276,7 @@ namespace RegScan
             box.SequenceNumber = _SequenceNumber;
             box.ScheduleNumber = _ScheduleNumber;
             box.PageCount = 0;
-            box.OpendedDate = DateTime.Now;
+            box.OpenDate = DateTime.Now;
             box.BoxNumber = _BoxNumber;
 
             // Insert Box 
@@ -304,7 +304,7 @@ namespace RegScan
             _Destination.BoxId = _Source.BoxId;
             _Destination.BoxNumber = _Source.BoxNumber;
             _Destination.ClosedDate = _Source.ClosedDate;
-            _Destination.OpendedDate = _Source.OpendedDate;
+            _Destination.OpenDate = _Source.OpenDate;
             _Destination.PageCount = _Source.PageCount;
             _Destination.ScheduleNumber = _Source.ScheduleNumber;
             _Destination.SequenceNumber = _Source.SequenceNumber;
@@ -328,7 +328,7 @@ namespace RegScan
             boxModel.sequenceNumber = box.SequenceNumber;
             boxModel.scheduleNumber = box.ScheduleNumber;
             boxModel.boxNumber = box.BoxNumber;
-            boxModel.openedDate = box.OpendedDate;
+            boxModel.openedDate = box.openDate;
             boxModel.closedDate = box.ClosedDate;
             boxModel.pageCount = box.PageCount;
 

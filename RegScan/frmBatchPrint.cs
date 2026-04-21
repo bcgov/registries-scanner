@@ -12,7 +12,7 @@ namespace RegScan
         {
             InitializeComponent();
 
-            // Save our batch incase it is to be modified.
+            // Save our batch in case it is to be modified.
             _batch = _Batch;
             txtAccessionNumber.Text = _batch.AccessionNumberFormatted;
             numericUpDownBatchNumber.Value = _batch.BatchId;
