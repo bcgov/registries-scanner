@@ -391,6 +391,11 @@ namespace RegScan
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
+            if (docObj == null || jDoc == null)
+            {
+                UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
+                throw new Exception("Attempting to pull data from a null object."); 
+            }
             if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
             if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
             if (jDoc.ContainsKey("consumerFilename")) { docObj._fileName = (string)jDoc["consumerFilename"]; }
