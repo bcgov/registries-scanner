@@ -108,8 +108,10 @@ namespace AsyncRequests
         {
             if (api_url == null) { }
 
+            string answer = null;
+
             string url = api_url + "/" + endPoint;
-            if (queryParam != "") { url += "?" + queryParam; }
+            if (!string.IsNullOrEmpty(queryParam)) { url += "?" + queryParam; }
 
             var client = new RestClient(url);
             var request = new RestRequest(requestType);
@@ -123,17 +125,11 @@ namespace AsyncRequests
                 {
                     request.AddJsonBody(requestBody);
                 }
-                string answer = client.Execute(request).Content;
-                return answer;
             }
 
-            if (requestType == Method.GET)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
+            answer = client.Execute(request).Content;
 
-            return "";
+            return answer;
         }
 
         //Dictionary<string,object>param

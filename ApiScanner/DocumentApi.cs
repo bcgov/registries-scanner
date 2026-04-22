@@ -11,7 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace ApiScanner
 {
@@ -35,7 +34,7 @@ namespace ApiScanner
 
         public static Byte[] getDocBytes(string docURL)
         {
-            // TODO some sort of URL verification
+            // TODO some sort of URL verification Ticket #33043
             Byte[] downloadedDoc = APIRequest.download(docURL);
 
             if ( downloadedDoc == null)
@@ -81,7 +80,7 @@ namespace ApiScanner
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (_fileName != "")
             {
-                // TODO: handle passing in any parameters with param. 
+                // TODO: handle passing in any parameters with param. Ticket #33043
                 param.Add("consumerFilename", (string)myData.consumerFilename);
             }
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
@@ -132,7 +131,7 @@ namespace ApiScanner
         {
             string endpoint = "/doc/api/v1/searches";
 
-            if (barcode != "") { endpoint += "?consumerDocumentId=" + barcode; }
+            if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
             
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
 

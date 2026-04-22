@@ -154,6 +154,8 @@ namespace RegScan
         /// If the _replaceFlag is false, (no existing document). Insert: create a new record and post the document.
         ///     Previously _replaceFlag would have been false for any record without a DocumentURL and inserted
         ///                                             true for any record with a DocumentURL and updated.
+        /// With the current use cases of the application there will never be a need to create a document record
+        /// through the scanning application. This function should be removed and Update() used instead.
         /// </summary>
         public void UpdateInsert()
         {
@@ -234,7 +236,6 @@ namespace RegScan
             ErrorMessage = "";
             List<DocumentObj> documentList = new List<DocumentObj>();
 
-            //UPDATE TO SEARCH CALL
             string resp = DocumentApi.searchByBarcode(BarCode);
 
             if (resp.Contains("errorMessage"))
@@ -336,6 +337,8 @@ namespace RegScan
         
         public void copyToModel(JObject temp, ScanningInfoModel scanInfo )
         {
+            if (temp == null || scanInfo == null) return;
+
             if (temp["accessionNumber"] != null) { scanInfo.accessionNumber = (long)temp["accessionNumber"]; }
             if (temp["authorId"] != null) { scanInfo.author = (string)temp["authorId"]; }
             if (temp["scannedDate"] != null) { scanInfo.scannedDate = (DateTime)temp["scannedDate"]; }
@@ -371,7 +374,7 @@ namespace RegScan
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
-            // We arent getting the following keys:
+            // We arent saving the following keys:
             // consumerFilingDateTime, createDateTime, description
             if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
             if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
@@ -408,7 +411,7 @@ namespace RegScan
 
                 if (docObj.scanInfo.ContainsKey("accessionNumber")) {
                     // The Accession Number is returned as a string with the following form: "12-3456-7890"
-                    // From this we can get the sequence number (12), schedule number (3456) and box number (7890).
+                    // From this we can get the sequence number <12>, schedule number <3456> and box number <7890>.
                     string accNumb = (string)docObj.scanInfo["accessionNumber"];
                     string[] accNumbersSplit = accNumb.Split('-');
                     docObj._sequenceNumber = int.Parse(accNumbersSplit[0]);
