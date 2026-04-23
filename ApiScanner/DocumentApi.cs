@@ -48,6 +48,7 @@ namespace ApiScanner
         public static string updateScanningInformation(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
+            string resp = null;
 
             Dictionary<string, object> param = new Dictionary<string, object>();
             param.Add("consumerIdentifier", (string)myData.consumerIdentifier);
@@ -57,8 +58,14 @@ namespace ApiScanner
 
             string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
 
-            string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.POST);
-
+            try
+            {
+                resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.POST);
+            }
+            catch (Exception e)
+            {
+                UtilityObj.writeLog("Error trying to POST data: " + e);
+            }
             return resp;
         }
 
@@ -76,6 +83,7 @@ namespace ApiScanner
         public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
+            string resp = null;
 
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (_fileName != "")
@@ -84,8 +92,15 @@ namespace ApiScanner
                 param.Add("consumerFilename", (string)myData.consumerFilename);
             }
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
-            string resp = APIRequest.MakeKeyRequest(myData.consumerFilename, pdfBytes, param, endpoint, RestSharp.Method.PUT);
-            return resp;
+            try
+            {
+                resp = APIRequest.MakeKeyRequest(myData.consumerFilename, pdfBytes, param, endpoint, RestSharp.Method.PUT);
+            }
+            catch (Exception e)
+            {
+                UtilityObj.writeLog("Error trying to PUT data: " + e);
+            }
+                return resp;
         }
 
         /// In documentation, possible expansion of application. Not currently used by scanner
