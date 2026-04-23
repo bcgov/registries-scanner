@@ -245,7 +245,7 @@ namespace RegScan
                     while (neos)
                     {
                         UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Call to DRS API to recieve associated existing documents for this barcode.
+                        // Call to DRS API to receive associated existing documents for this barcode.
                         // There may be more than one document (known as versions)
                         docs = DocumentObj.Find(barCode);
 
@@ -312,11 +312,11 @@ namespace RegScan
                                     // If a new version, then update the version number and set id to new
                                     // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
                                     _currentDocument.VersionNumber++;
-                                    // We dont want to clear the metadata from the current document - just indicate that there is a new version of the document image.
+                                    // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
                                     // _currentDocument.SetToNew();
                                 }
                                 else
-                                    // Cancel this scan if a new vesion is not required.
+                                    // Cancel this scan if a new version is not required.
                                     cancelScan = true;
                             }
                             else

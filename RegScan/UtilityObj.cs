@@ -92,7 +92,6 @@ namespace RegScan
             Bitmap bmp = null;
             byte[] imageData = null;
 
-
             try
             {
                 imageData = System.IO.File.ReadAllBytes(fileName);
