@@ -430,3 +430,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/RegScan/.vs/RegScan.csproj.dtbcache.json
