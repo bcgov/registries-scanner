@@ -560,6 +560,51 @@ namespace RegScan
         }
 
         /// <summary>
+        /// Given an image create a new page and 'draw' the image to that page.
+        /// The page is added to the given PDF document. 
+        /// </summary>
+        /// <param name="pdf">PDF Document to add image to</param>
+        /// <param name="scannedImage">Image to be added to PDF document</param>
+        private void imageToPDF(PdfDocument pdf, ImageObj scannedImage)
+        {
+            // Create a new page and add in the image.
+            var pdfPage = new PdfPage();
+            pdfPage.Size = scannedImage.PageSize;
+            pdfPage.Orientation = scannedImage.Orientation;
+
+            pdf.AddPage(pdfPage);
+
+            var xgr = XGraphics.FromPdfPage(pdfPage);
+            var img = XImage.FromGdiPlusImage(scannedImage.Image);
+
+            double pageWidth = pdfPage.Width.Point;
+            double pageHeight = pdfPage.Height.Point;
+
+            // Maintain aspect ratio, fit within page, centered
+            double imgAspect = (double)scannedImage.Image.Width / scannedImage.Image.Height;
+            double pageAspect = pageWidth / pageHeight;
+
+            double drawWidth, drawHeight, drawX, drawY;
+            if (imgAspect > pageAspect)
+            {
+                drawWidth = pageWidth;
+                drawHeight = pageWidth / imgAspect;
+                drawX = 0;
+                drawY = (pageHeight - drawHeight) / 2;
+            }
+            else
+            {
+                drawHeight = pageHeight;
+                drawWidth = pageHeight * imgAspect;
+                drawX = (pageWidth - drawWidth) / 2;
+                drawY = 0;
+            }
+
+            xgr.DrawImage(img, drawX, drawY, drawWidth, drawHeight);
+           
+        }
+
+        /// <summary>
         ///  Save the document to the database.
         /// </summary>
         /// <param name="sender"></param>
@@ -579,8 +624,10 @@ namespace RegScan
 
             // Create a PDF document.
             var pdf = new PdfDocument();
-            int updateCount = ((int)100 / _scannedImageList.Count) / 2;
-            progressBar.Value = updateCount;
+
+            // Percentage updated based on number of images to process
+            int updateCount = (int)100 / _scannedImageList.Count;
+            progressBar.Value = 0;
             progressBar.Visible = true;
 
             // Process any queued actions in the background. 
@@ -588,23 +635,22 @@ namespace RegScan
 
             UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnSave_Click Scanner  Objects");
 
-            // FOREACH image create a new page.
+            // FOREACH image convert to a PDF page and add to the PDF document
             foreach (var bp in _scannedImageList)
             {
-
-                // Create a new page and add in the image.
-                var pdfPage = new PdfPage();
-                pdfPage.Size = bp.PageSize;
-                pdfPage.Orientation = bp.Orientation;
-                pdf.AddPage(pdfPage);
-                var xgr = XGraphics.FromPdfPage(pdfPage);
-                var img = XImage.FromGdiPlusImage(bp.Image);
-                xgr.DrawImage(img, 0, 0);
-
+                try
+                {
+                    imageToPDF(pdf, bp);
+                }
+                catch (Exception ex)
+                {
+                    string img_num = _scannedImageList.IndexOf(bp).ToString() + " of " + _scannedImageList.Count();
+                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" + ex);
+                }
+                
                 // Update progress bar
                 progressBar.Value += updateCount;
                 Application.DoEvents();
-
             }
 
             // Update the document.
