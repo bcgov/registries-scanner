@@ -407,11 +407,14 @@ namespace RegScan
             // Existing docucment.
             else
             {
-                // IF we have a barcode
-                if (barcodes.Count != 0)
+                // IF we have a barcode and it doesnt match the previous barcode
+                if (barcodes.Count != 0 && barcodes[0].ToString() != _currentDocument.BarCode)
                 {
                     // Display a warning message.
-                    MessageBox.Show("Warning! A barcode was found on this page. Click OK to continue");
+                    string title = "Warning: Double Barcode";
+                    string msg = "A barcode was found on this page.\n.";
+                    string comp = "First barcode: " + barcodes[0].ToString() + "\nSecond Barcode: " + _currentDocument.BarCode;
+                    MessageBox.Show(msg + comp, title);
                 }
 
                 // Save the images.
@@ -567,36 +570,55 @@ namespace RegScan
         /// <param name="scannedImage">Image to be added to PDF document</param>
         private void imageToPDF(PdfDocument pdf, ImageObj scannedImage)
         {
-            // Create a new page and add in the image.
+            // Create a new page and with the document scans specifications
             var pdfPage = new PdfPage();
             pdfPage.Size = scannedImage.PageSize;
             pdfPage.Orientation = scannedImage.Orientation;
 
+            // Add the new page to the PDF document
             pdf.AddPage(pdfPage);
 
+            // Make the PDF Page a drawable canvas
             var xgr = XGraphics.FromPdfPage(pdfPage);
+            // Turn the scanned document into an XImage
             var img = XImage.FromGdiPlusImage(scannedImage.Image);
 
+            // Get the PDF Pages 
             double pageWidth = pdfPage.Width.Point;
             double pageHeight = pdfPage.Height.Point;
 
             // Maintain aspect ratio, fit within page, centered
+            // Get the shape of the scanned document and PDF page
             double imgAspect = (double)scannedImage.Image.Width / scannedImage.Image.Height;
             double pageAspect = pageWidth / pageHeight;
 
             double drawWidth, drawHeight, drawX, drawY;
+            // if the images' shape is larger than the pages' shape 
             if (imgAspect > pageAspect)
             {
+                // limit the widch to the width of the page
                 drawWidth = pageWidth;
+                // the height is set to the width of the page / the images' shape
+                //  -> Pw / (Iw / Ih) -> Pw * Ih / Iw
+                //  -> The images aspecct ratio scaled to the pages width
                 drawHeight = pageWidth / imgAspect;
+                // 
                 drawX = 0;
+                // 
                 drawY = (pageHeight - drawHeight) / 2;
             }
+            // if the pages' shape is larger than (or equal to) the images' shape 
             else
             {
+                // set the height to the pages height
                 drawHeight = pageHeight;
+                // set the width to the height of the page * the images' shape
+                //  -> Ph * (Iw / Ih) -> Ph * Ih / Iw
+                //  -> The images aspect ratio scaled to the pages height
                 drawWidth = pageHeight * imgAspect;
+                //
                 drawX = (pageWidth - drawWidth) / 2;
+                //
                 drawY = 0;
             }
 
