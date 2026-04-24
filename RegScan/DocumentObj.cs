@@ -24,26 +24,21 @@ namespace RegScan
         private string _documentURL;
         private string _documentClass;
         private string _documentServiceId;
-        private string _documentExists;
         private string _documentTypeDescription;
         private DateTime _consumerFilingDate;
         private string _consumerIdentifier;
         private int _consumerReferenceId;
-        private int _consumerDocumentId;
         JObject scanInfo;
-        object scanDoc;
 
         //private long _documentId = UtilityObj.NOID;
         private string _documentId = "";
         private string _legalEntityKey;
-        private string _ownerTypeCode;
         private string _documentTypeCode;
         private string _authorId;
         private string _description;
         private string _fileName;
         private string _fileExtension;
         private bool _isScanned;
-        private bool _isPurged;
         private DateTime _createDateTime;
 
         // Scanning Information
@@ -55,8 +50,6 @@ namespace RegScan
         private int _batchId;
         private int _versionNumber;
         private string _owner;
-        private int _eventId;
-        private bool _eventIdIsNull;
         private string _scannerId;
         private DateTime _scannedDate;
 
@@ -73,14 +66,12 @@ namespace RegScan
         public string DocumentURL { get { return _documentURL; } }
         public string DocumentId { get { return _documentId; } } //not used in data tables any longer
         public string LegalEntityKey { get { return _legalEntityKey; } }
-        public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
         public string AuthorId { get { return _authorId; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string FileName { get { return _fileName; } }
         public string FileExtension { get { return _fileExtension; } }
         public bool IsScanned { get { return _isScanned; } }
-        public bool IsPurged { get { return _isPurged; } }
         public DateTime CreateDateTime { get { return _createDateTime; } }
         public string BarCode { get { return _barCode.ToString(); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
@@ -405,6 +396,8 @@ namespace RegScan
 
             // Check if there is a previous document uploaded for this record
             if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
+
+            if (jDoc.ContainsKey("consumerFilingDateTime")) { docObj._consumerFilingDate = (DateTime)jDoc["consumerFilingDateTime"]; }
 
             if (jDoc.ContainsKey("scanningInformation"))
             {

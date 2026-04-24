@@ -2,7 +2,6 @@
 using Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PdfSharp.Pdf;
 using RestSharp;
 using System;
 using System.Collections.Generic;
