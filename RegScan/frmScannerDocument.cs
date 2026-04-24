@@ -73,16 +73,6 @@ namespace RegScan
         /// </summary>
         Device _currentDevice;
 
-        /// <summary>
-        /// Indicates that device is acquiring image(s).
-        /// </summary>
-        bool _isImageAcquiring;
-
-        /// <summary>
-        /// Determines that image acquistion must be canceled because application's form is closing.
-        /// </summary>
-        bool _cancelTransferBecauseFormIsClosing;
-
         #endregion
         public frmScannerDocument()
         {
@@ -206,8 +196,10 @@ namespace RegScan
             UtilityObj.writeLog("Fix Checking for barcode");
             // Scan for Barcodes
             var barcodes = BarCodeObj.Scan(image0);
-
-            UtilityObj.writeLog("Fix Barcodes =" + barcodes[0].ToString());
+            if (barcodes.Count < 1)
+            {
+                UtilityObj.writeLog("No barcodes found in document");
+            }
 
             // IF we have a new document (no values held in _currentDocument).
             if (_currentDocument == null)
@@ -289,42 +281,32 @@ namespace RegScan
                         // We have a record from DRS API that matches the barcode. This means we will be updating the record.
                         _currentDocument.UpdateRecord = true;
 
-                        // IF document has been purged.
-                        if (_currentDocument.IsPurged)
+                        // IF document has already been scanned.
+                        //if (_currentDocument.IsScanned)
+                        if (_currentDocument.DocumentURL != "")
                         {
-                            // Cancel the scan and display a message.
-                            cancelScan = true;
-                            MessageBox.Show("This barcode number has already been used and deleted. It cannot be re-used.");
+                            UtilityObj.writeLog("Document barcode already exists.");
+                            // Turn off buttons for new box number.
+                            btnNewBox.Enabled = false;
+
+                            // Ask if this is a new version.
+                            if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                // If a new version, then update the version number and set id to new
+                                // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
+                                _currentDocument.VersionNumber++;
+                                // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
+                                // _currentDocument.SetToNew();
+                            }
+                            else
+                                // Cancel this scan if a new version is not required.
+                                cancelScan = true;
                         }
                         else
                         {
-                            // IF document has already been scanned.
-                            //if (_currentDocument.IsScanned)
-                            if (_currentDocument.DocumentURL != "")
-                            {
-                                UtilityObj.writeLog("Document barcode already exists.");
-                                // Turn off buttons for new box number.
-                                btnNewBox.Enabled = false;
-
-                                // Ask if this is a new version.
-                                if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    // If a new version, then update the version number and set id to new
-                                    // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
-                                    _currentDocument.VersionNumber++;
-                                    // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
-                                    // _currentDocument.SetToNew();
-                                }
-                                else
-                                    // Cancel this scan if a new version is not required.
-                                    cancelScan = true;
-                            }
-                            else
-                            {
-                                // Check for box full and display a message if it is full.
-                                if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
-                                    MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
-                            }
+                            // Check for box full and display a message if it is full.
+                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
+                                MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
                         }
 
                         // IF scan is to be cancelled
@@ -1064,15 +1046,6 @@ namespace RegScan
         /// <param name="e"></param>
         private void device_ImageAcquiringProgress(object sender, ImageAcquiringProgressEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
-            if (_cancelTransferBecauseFormIsClosing)
-            {
-                // cancel image acquisition
-                _currentDevice.CancelTransfer();
-                return;
-            }
-
-
             progressBar.Value = (int)e.Progress;
 
             //UtilityObj.writeLog(Convert.ToString(progressBar.Value) + " device_ImageAcquiringProgress");
@@ -1085,14 +1058,6 @@ namespace RegScan
 
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
-            if (_cancelTransferBecauseFormIsClosing)
-            {
-                // cancel image acquisition
-                _currentDevice.CancelTransfer();
-                return;
-            }
-
             Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
 
             ProcessScan(acquiredImage);
@@ -1177,9 +1142,6 @@ namespace RegScan
             // close the device
             _currentDevice.Close();
 
-            // specify that image acquisition is finished
-            _isImageAcquiring = false;
-
             // Clear program bar.
             progressBar.Visible = false;
 
@@ -1197,15 +1159,12 @@ namespace RegScan
             UtilityObj.deleteFolder("Images");
             _scanSessionFileList.Clear();
             image0 = null;
-            UtilityObj.createFolder("Images");           
+            UtilityObj.createFolder("Images");
 
-            // specify that image acquisition is started
-            _isImageAcquiring = true;
             progressBar.Visible = true;
 
             try
             {
-
                 // Open device manager, if not open.
                 if (_deviceManager.State == DeviceManagerState.Closed)
                     _deviceManager.Open();
@@ -1214,107 +1173,90 @@ namespace RegScan
                     // unsubscribe from the device events
                     UnsubscribeFromDeviceEvents(_currentDevice);
 
-                // Get default device
-                Device device = _deviceManager.DefaultDevice;
-                _currentDevice = device;
+                // Get and set the current device
+                _currentDevice = _deviceManager.DefaultDevice;
 
                 // subscribe to the device events
                 SubscribeToDeviceEvents(_currentDevice);
 
                 // set the image acquisition parameters
-                device.ShowUI = useUICheckBox.Checked;
-                device.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
-                device.ModalUI = false;
-                device.DisableAfterAcquire = false;
-                device.TransferMode = TransferMode.Memory;
-
+                _currentDevice.ShowUI = useUICheckBox.Checked;
+                _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
+                _currentDevice.ModalUI = false;
+                _currentDevice.DisableAfterAcquire = false;
+                _currentDevice.TransferMode = TransferMode.Memory;
 
                 try
                 {
                     // open the device
-                    device.Open();
+                    _currentDevice.Open();
                 }
                 catch (Vintasoft.Twain.TwainException ex)
                 {
-                    // specify that image acquisition is finished
-                    _isImageAcquiring = false;
 
-                    MessageBox.Show(ex.Message.Replace("Unknown error 11.", "") + "Is the scanner " + device.Info.ProductName + " turned on?", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName + " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                catch(Exception ex2)
-                {
-                    MessageBox.Show(ex2.Message);
-                    return;
-                }
+                // set device capabilities
+                // unit of measure
+                if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
+                    _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
 
+                // resolution
+                if (ckBoxLowResolution.Checked)
+                    _currentDevice.Resolution = new Resolution(400, 400);
+                else
+                    _currentDevice.Resolution = new Resolution(600, 600);
+
+                // ADF
+                _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
+
+                // Duplex
+                _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
+            }
+            catch (TwainDeviceCapabilityException)
+            {
+                MessageBox.Show("Scanning device is not compatable with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            catch(Exception ex2)
+            {
+                MessageBox.Show(ex2.Message);
+                return;
+            }
+
+
+            UtilityObj.writeLog("Checking for asynchronous scanning...");
+            // if device supports asynchronous events
+            if (_currentDevice.IsAsyncEventsSupported)
+            {
                 try
                 {
-                    // set device capabilities
-                    // unit of measure
-                    if (device.UnitOfMeasure != UnitOfMeasure.Inches)
-                        device.UnitOfMeasure = UnitOfMeasure.Inches;
-
-                    // resolution
-                    if (ckBoxLowResolution.Checked)
-                        device.Resolution = new Resolution(400, 400);
-                    else
-                        device.Resolution = new Resolution(600, 600);
-
+                    UtilityObj.writeLog("Device supports asynchronous scanning");
+                    // enable all asynchronous events supported by device
+                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
                 }
-                catch (Vintasoft.Twain.TwainException)
+                catch
                 {
-                }
-
-                try
-                {
-                    // ADF
-                    device.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
-                    // Duplex
-                    device.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
-                }
-                catch (TwainDeviceCapabilityException)
-                {
-                }
-
-                UtilityObj.writeLog("Checking for asynchronous scanning...");
-                // if device supports asynchronous events
-                if (device.IsAsyncEventsSupported)
-                {
-                    try
-                    {
-                        UtilityObj.writeLog("Device supports asynchronous scanning");
-                        // enable all asynchronous events supported by device
-                        device.AsyncEvents = device.GetSupportedAsyncEvents();
-                    }
-                    catch
-                    {
-                    }
-                }
-
-
-                try
-                {
-                    UtilityObj.writeLog("Start image acquisition");
-
-                    // start image acquition process
-                    device.Acquire();
-
-                    UtilityObj.writeLog("End of image acquisition");
-                }
-                catch (Vintasoft.Twain.TwainException ex)
-                {
-                    // specify that image acquisition is finished
-                    _isImageAcquiring = false;
-                    UtilityObj.writeLog("Image acquisition error: " + ex);
-                    MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
                 }
             }
-            finally
+
+
+            try
             {
-               
+                UtilityObj.writeLog("Start image acquisition");
+
+                // start image acquition process
+                _currentDevice.Acquire();
+
+                UtilityObj.writeLog("End of image acquisition");
+            }
+            catch (Vintasoft.Twain.TwainException ex)
+            {
+                UtilityObj.writeLog("Image acquisition error: " + ex);
+                MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
         #endregion
