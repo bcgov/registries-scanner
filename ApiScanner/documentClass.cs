@@ -17,7 +17,7 @@ namespace ApiScanner
         OTHER - Other
         PPR - Personal Property Registry
         SOCIETY - Societies
-        XP - Extraprovincial Registrations(Deprecated)
+        XP - Extra provincial Registrations(Deprecated)
         */
     }
 

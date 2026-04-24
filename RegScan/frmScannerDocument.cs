@@ -38,7 +38,7 @@ namespace RegScan
         private ScannerSettingObj _defaultSetting;
 
         /// <summary>
-        /// List of all scananed images for the current document.
+        /// List of all scanned images for the current document.
         /// </summary>
         private List<ImageObj> _scannedImageList = new List<ImageObj>();
 
@@ -214,7 +214,7 @@ namespace RegScan
                     // Display the image.
                     SetImage(image0);
 
-                    // Ask if a barcode shoulde be entered manually.
+                    // Ask if a barcode should be entered manually.
                     barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
                 }
                 else
@@ -247,7 +247,7 @@ namespace RegScan
                             UtilityObj.writeLog("Fix No existing docs, SetImage(image0)");
                             SetImage(image0);
 
-                            // Ask if a barcode shoulde be entered manually.
+                            // Ask if a barcode should be entered manually.
                             string message = "No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?";
                             barCode = ManualBarcode(message);
 
@@ -326,7 +326,7 @@ namespace RegScan
                                 // If the current document's batch is assigned.
                                 if (_currentDocument.BatchId != 0)
                                 {
-                                    // Create a batch object and assigne current's document's values.
+                                    // Create a batch object and assign current's document's values.
                                     _currentBatchId = new BatchObj();
                                     _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
                                     _currentBatchId.BatchId = _currentDocument.BatchId;
@@ -386,10 +386,10 @@ namespace RegScan
                 }                
             }
 
-            // Existing docucment.
+            // Existing document.
             else
             {
-                // IF we have a barcode and it doesnt match the previous barcode
+                // IF we have a barcode and it doesn't match the previous barcode
                 if (barcodes.Count != 0 && barcodes[0].ToString() != _currentDocument.BarCode)
                 {
                     // Display a warning message.
@@ -420,7 +420,7 @@ namespace RegScan
         #region Image Display.
 
         /// <summary>
-        ///  Sets the image on the image naviagtion panel.
+        ///  Sets the image on the image navigation panel.
         /// </summary>
         private void SetImageNav()
         {
@@ -578,11 +578,11 @@ namespace RegScan
             // if the images' shape is larger than the pages' shape 
             if (imgAspect > pageAspect)
             {
-                // limit the widch to the width of the page
+                // limit the width to the width of the page
                 drawWidth = pageWidth;
                 // the height is set to the width of the page / the images' shape
                 //  -> Pw / (Iw / Ih) -> Pw * Ih / Iw
-                //  -> The images aspecct ratio scaled to the pages width
+                //  -> The images aspect ratio scaled to the pages width
                 drawHeight = pageWidth / imgAspect;
                 // 
                 drawX = 0;
@@ -666,7 +666,7 @@ namespace RegScan
             _currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
             _currentDocument.UpdateInsert();
 
-            // Reset the document and dispaly.
+            // Reset the document and display.
             ResetDocument();
             progressBar.Visible = false;
 
@@ -831,7 +831,7 @@ namespace RegScan
             cBoxOrientation.SelectedIndex = -1;
             cBoxPageSize.Enabled = false;
 
-            // Delete any tempoary FileNames.
+            // Delete any temporary FileNames.
             try
             {
                 foreach (var fileName in _tempFileNameList)
@@ -876,7 +876,7 @@ namespace RegScan
         /// </summary>
         private void CreateNewBoxNumber()
         {
-            // Dont' proceed if no current document.
+            // Don't proceed if no current document.
             if (_currentDocument == null)
                 return;
 
@@ -1216,7 +1216,7 @@ namespace RegScan
             }
             catch (TwainDeviceCapabilityException)
             {
-                MessageBox.Show("Scanning device is not compatable with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             
@@ -1247,7 +1247,7 @@ namespace RegScan
             {
                 UtilityObj.writeLog("Start image acquisition");
 
-                // start image acquition process
+                // start image acquisition process
                 _currentDevice.Acquire();
 
                 UtilityObj.writeLog("End of image acquisition");

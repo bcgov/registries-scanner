@@ -131,7 +131,7 @@ namespace RegScan
             string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to laod into database. Current data for " + BarCode + " may be inaccurrate.");
+                MessageBox.Show("ERROR, scanned image failed to load into database. Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
@@ -210,7 +210,7 @@ namespace RegScan
             //    _ownerTypeCode = _documentClass;
             //}
             
-            //// Get the lates open box ... if one is not found, then one will be created.            
+            //// Get the latest open box ... if one is not found, then one will be created.            
             //_boxObj = BoxObj.Find(_ownerTypeCode);
             //_accessionNumber = GetAccessionNumber(_boxObj);
             //_batchId = 0;                           // Batch Id is reset to zero.
@@ -242,7 +242,7 @@ namespace RegScan
                 // If there are no results returned from the API, return an empty list and log an error.
                 if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
                 {
-                    UtilityObj.writeLog("Unexpected reuturn result from API.");
+                    UtilityObj.writeLog("Unexpected return result from API.");
                     return null;
                 }
                 if (resultList["resultCount"].ToString() != "1")
@@ -291,7 +291,7 @@ namespace RegScan
         }
               
 
-        // IF the document does not contain an assesion number, then get one based on the ower type code.
+        // IF the document does not contain an accession number, then get one based on the owner type code.
         static public long GetAccessionNumber(BoxObj _Box)
         {
             return long.Parse(_Box.SequenceNumber.ToString().PadLeft(2, '0') +
@@ -359,7 +359,7 @@ namespace RegScan
 
         
         /// <summary>
-        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guarenteed to be reurned from DRS API
+        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guaranteed to be returned from DRS API
         /// </summary>
         /// <param name="docObj"> DocumentObj that we want to hold the current documents information </param>
         /// <param name="jDoc"> JObject of items returned from DRS API </param>

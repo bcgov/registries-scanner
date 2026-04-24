@@ -13,7 +13,7 @@ namespace RegScan
 
         private int _versionIndex = 0;                                      // Index of current version being displayed.
         private List<DocumentObj> _docList = null;
-        private int _imageIndex = 0;                                        // Index of current imagebeing displayed.
+        private int _imageIndex = 0;                                        // Index of current image being displayed.
         List<string> _tempFileNameList = new List<string>();
 
         public frmFind()
@@ -25,7 +25,7 @@ namespace RegScan
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            // Delete any tempoary FileNames.
+            // Delete any temporary FileNames.
             try
             {
                 foreach (var fileName in _tempFileNameList)
