@@ -1174,7 +1174,8 @@ namespace RegScan
                     UnsubscribeFromDeviceEvents(_currentDevice);
 
                 // Get and set the current device
-                _currentDevice = _deviceManager.DefaultDevice;
+                Device device = _deviceManager.DefaultDevice;
+                _currentDevice = device;
 
                 // subscribe to the device events
                 SubscribeToDeviceEvents(_currentDevice);
@@ -1212,7 +1213,10 @@ namespace RegScan
                 _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
 
                 // Duplex
-                _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
+                if (_currentDevice.DocumentFeeder.Enabled)
+                {
+                    _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
+                }
             }
             catch (TwainDeviceCapabilityException)
             {
