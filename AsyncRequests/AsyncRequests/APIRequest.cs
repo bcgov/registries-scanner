@@ -145,10 +145,14 @@ namespace AsyncRequests
 
         public static byte[] download(string url)
         {
-            var client = new RestClient(url);
-            var request = new RestRequest(Method.GET);
-            byte[] response = client.DownloadData(request);
-            string x = Encoding.Default.GetString(response);
+            byte[] response = null;
+            if (url != null)
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.GET);
+                response = client.DownloadData(request);
+                string x = Encoding.Default.GetString(response); 
+            }
             return response;
         }
 
