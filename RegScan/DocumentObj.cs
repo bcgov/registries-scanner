@@ -19,7 +19,6 @@ namespace RegScan
     {
         #region Properties and Constructors
         private DocumentModel ApiDocModel = new DocumentModel();
-        private ScanningInfoModel ApiScanModel = new ScanningInfoModel();
 
         //DRS
         private string _documentURL;
@@ -31,7 +30,7 @@ namespace RegScan
         private string _consumerIdentifier;
         private int _consumerReferenceId;
         private int _consumerDocumentId;
-        object scanInfo;
+        JObject scanInfo;
         object scanDoc;
 
         //private long _documentId = UtilityObj.NOID;
@@ -46,9 +45,13 @@ namespace RegScan
         private bool _isScanned;
         private bool _isPurged;
         private DateTime _createDateTime;
+
+        // Scanning Information
         private int _barCode;
         private int _pageCount;
-        private long _accessionNumber;
+        private int _sequenceNumber;
+        private int _scheduleNumber;
+        private int _boxNumber;
         private int _batchId;
         private int _versionNumber;
         private string _owner;
@@ -57,7 +60,7 @@ namespace RegScan
         private string _scannerId;
         private DateTime _scannedDate;
 
-        private Boolean _replaceFlag = false;
+        private Boolean _replaceRecordFlag = false;
        
 
         // Calculated.
@@ -81,9 +84,9 @@ namespace RegScan
         public DateTime CreateDateTime { get { return _createDateTime; } }
         public string BarCode { get { return _barCode.ToString(); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
-        public long AccessionNumber { get { return _accessionNumber; } set { _accessionNumber = value; } }
-        public string AccessionNumberString { get { return _accessionNumber.ToString().PadLeft(BoxObj.ACCESSION_NUMBER_LENGTH, '0'); } }
-        public string AccessionNumberText { get { return AccessionNumberString.Substring(0, 2) + "-" + AccessionNumberString.Substring(2, 4) + "-" + AccessionNumberString.Substring(6, 4); } }
+        public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
+        public string AccessionNumberString { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), _scheduleNumber.ToString().PadLeft(4, '0'), _boxNumber.ToString().PadLeft(4, '0')); } }
+        public string AccessionNumberText { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-", _scheduleNumber.ToString().PadLeft(4, '0'), "-", _boxNumber.ToString().PadLeft(4, '0')); } }
         public int BatchId { get { return _batchId; } set { _batchId = value; } }
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
         public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
@@ -91,6 +94,8 @@ namespace RegScan
 
         public string Owner { get { return _owner; } }
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
+
+        public Boolean UpdateRecord { get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
 
         // Calculated
         public PdfDocument PDFDocument { get { return _pdfDocument; } set { _pdfDocument = value; } }
@@ -123,18 +128,16 @@ namespace RegScan
             UpdateBoxPageCount();
         }
                
+        /// <summary>
+        /// Handles the logic of updating a current record with the scanned document.
+        /// </summary>
         private void Update()
         {
             copyToModel();
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
-            string resp = DocumentApi.patch(ApiDocModel, _documentServiceId);
-            if (resp.Contains("errorMessage")) {
-                UtilityObj.writeLog("Scanned document Image failed PATCH to update information.");
-                Environment.Exit(0);    
-            }
-            resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.put(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
                 MessageBox.Show("ERROR, scanned image failed to load into database. Current data for " + BarCode + " may be inaccurate.");
@@ -145,6 +148,13 @@ namespace RegScan
             UpdateBoxPageCount();
         }
 
+        /// <summary>
+        /// Controls the flow of logic between inserting a new document and updating an existing document.
+        /// If the _replaceFlag is true, (there is an existing document) -> Update: replace the existing document.
+        /// If the _replaceFlag is false, (no existing document). Insert: create a new record and post the document.
+        ///     Previously _replaceFlag would have been false for any record without a DocumentURL and inserted
+        ///                                             true for any record with a DocumentURL and updated.
+        /// </summary>
         public void UpdateInsert()
         {
             // Set some values before database requests.
@@ -152,12 +162,16 @@ namespace RegScan
             _fileExtension = "PDF";
             _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");                    
             
-            if (_replaceFlag)
+            // Previously would have been false for any record without a DocumentURL and inserted - any with would be an update.
+            // That logic is faulty because the endpoints are the same in both cases and should be handled the same
+            // We want to only do an insert if there was no existing record for the barcode.
+            if (_replaceRecordFlag)
                 Update();
             else
                 Insert();
 
-            _replaceFlag = false;
+            // Once done reset flag
+            _replaceRecordFlag = false;
         }
 
         private void UpdateBoxPageCount()
@@ -184,24 +198,29 @@ namespace RegScan
         }
 
 
+        /// <summary>
+        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if there is a preexisting
+        /// version of this document and the user indicates they would like to create a new version of the document. This
+        /// would not suggest that the document class should be changed nor a new box should be created. 
+        /// </summary>
         public void SetToNew()
         {
             //_documentId = "";          // _documentId = "" indicates a database insert, instead of an update.
-            _replaceFlag = true;
+            _replaceRecordFlag = true;
 
-            if (_documentClass == "SOCIETY")
-            {
-                _ownerTypeCode = "SOC";
-            }
-            else
-            {
-                _ownerTypeCode = _documentClass;
-            }
+            //if (_documentClass == "SOCIETY")
+            //{
+            //    _ownerTypeCode = "SOC";
+            //}
+            //else
+            //{
+            //    _ownerTypeCode = _documentClass;
+            //}
             
-            // Get the latest open box ... if one is not found, then one will be created.            
-            _boxObj = BoxObj.Find(_ownerTypeCode);
-            _accessionNumber = GetAccessionNumber(_boxObj);
-            _batchId = 0;                           // Batch Id is reset to zero.
+            //// Get the lates open box ... if one is not found, then one will be created.            
+            //_boxObj = BoxObj.Find(_ownerTypeCode);
+            //_accessionNumber = GetAccessionNumber(_boxObj);
+            //_batchId = 0;                           // Batch Id is reset to zero.
         }
         #endregion
 
@@ -219,7 +238,7 @@ namespace RegScan
         static public List<DocumentObj> Find(string _BarCode)
         {           
             ErrorMessage = "";
-            List<DocumentObj> list = new List<DocumentObj>();           
+            List<DocumentObj> documentList = new List<DocumentObj>();
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
@@ -234,7 +253,8 @@ namespace RegScan
             {             
                 // NOTE - not doing anything with this error message. We should print this to the logs.   
                 ErrorMessage = "No Documents Found For Barcode: " + _BarCode;
-            }            
+                UtilityObj.writeLog(ErrorMessage);
+            }         
             else
             {
                 var token = JToken.Parse(resp);
@@ -244,14 +264,14 @@ namespace RegScan
                 List<JObject> docList = DocumentApi.getDocObjectList(docClass, _BarCode);
 
                 UtilityObj.writeLog("Fix3 API returned docList, Adding docs to list");
-                foreach (JObject jDoc in docList)                   
-                    list.Add(ExtractDocument(jDoc));
+                foreach (JObject record in resultList)
+                    documentList.Add(ExtractDocument(record));
             }
 
             UtilityObj.writeLog("Return Ordered docs");
 
             // Return list ordered by Version Number Descending.
-            return list.OrderByDescending(l => l.VersionNumber).ToList();
+            return documentList.OrderByDescending(l => l.VersionNumber).ToList();
 
         }
 
@@ -262,42 +282,47 @@ namespace RegScan
             UtilityObj.writeLog("Extract jDoc and scanning information.");
 
             DocumentObj docObj = new DocumentObj();
+            // Updated copyFromModel to do the work copying scanning information (if returned) as well as the record information.
+            // Much of the logic below is not required. 
             copyFromModel(docObj, jDoc);
 
-            if (jDoc["scanningInformation"] != null) {
+            if (jDoc.ContainsKey("scanningInformation")) {
+                // If there is already scanning information for the record it is likely that it has already been scanned at least once
                 
                 UtilityObj.writeLog("Extract jDoc and scanning information.");
 
                 // If Accession Number
-                if (docObj._accessionNumber == 0 )
-                {
-                    // Get the latest open box ... if one is not found, then one will be created.
-                    docObj._boxObj = BoxObj.Find(docObj._ownerTypeCode);
+                //if (docObj.AccessionNumber == 0 )
+                //{
+                //    // Get the latest open box ... if one is not found, then one will be created.
+                //    docObj._boxObj = BoxObj.Find(docObj._ownerTypeCode);
 
-                    // IF the box was not created
-                    if (docObj._boxObj == null)
-                    {
-                        docObj.Error = BoxObj.ERROR_MESSAGE;
-                    }
-                    else
-                        docObj.AccessionNumber = GetAccessionNumber(docObj._boxObj);
-                }
-                else
-                {
-                    // Get the existing box from the accession number.
-                    string an = docObj._accessionNumber.ToString().PadLeft(BoxObj.ACCESSION_NUMBER_LENGTH, '0');
-                    docObj._boxObj = BoxObj.Find(int.Parse(an.Substring(0, 2)), int.Parse(an.Substring(2, 4)), int.Parse(an.Substring(6, 4)));
-                    docObj._accessionNumber = Convert.ToInt64(docObj._accessionNumber);
-                }                               
+                //    // IF the box was not created
+                //    if (docObj._boxObj == null)
+                //    {
+                //        docObj.Error = BoxObj.ERROR_MESSAGE;
+                //    }
+                //    else
+                //        docObj.AccessionNumber = GetAccessionNumber(docObj._boxObj);
+                //}
+                //else
+                //{
+                //    // Get the existing box from the accession number.
+                //    string an = docObj._accessionNumber.ToString().PadLeft(BoxObj.ACCESSION_NUMBER_LENGTH, '0');
+                //    docObj._boxObj = BoxObj.Find(int.Parse(an.Substring(0, 2)), int.Parse(an.Substring(2, 4)), int.Parse(an.Substring(6, 4)));
+                //    docObj._accessionNumber = Convert.ToInt64(docObj._accessionNumber);
+                //}                               
             }
             else
             {
                 UtilityObj.writeLog("No Scanning Information for Barcode " + docObj._consumerDocumentId);
             }
 
-            // Make sure document exists
+            // If a previous version of the document exists make a request to download the stored copy
             if (docObj._documentURL != "")
             {
+                // TODO: check if this works... Should the old document ever be shown?
+                // If not why do we download it?
                 Byte[] docBytes = DocumentApi.getDocBytes(docObj._documentURL);
 
                 if (docBytes != null && docBytes.Length > 2000)
@@ -320,12 +345,12 @@ namespace RegScan
 
         public void copyToModel()
         {
-            ApiScanModel.accessionNumber = _accessionNumber;
-            ApiScanModel.author = _authorId;
-            ApiScanModel.batchId = _batchId;
-            ApiScanModel.createDateTime = _createDateTime;
-            ApiScanModel.pagecount = _pageCount;
-            ApiScanModel.scannedDate = _scannedDate;
+            //ApiScanModel.accessionNumber = _accessionNumber;
+            //ApiScanModel.author = _authorId;
+            //ApiScanModel.batchId = _batchId;
+            //ApiScanModel.createDateTime = _createDateTime;
+            //ApiScanModel.pagecount = _pageCount;
+            //ApiScanModel.scannedDate = _scannedDate;
 
             ApiDocModel.author = _authorId;
             ApiDocModel.consumerDocumentId = _barCode;
@@ -340,18 +365,18 @@ namespace RegScan
             ApiDocModel.documentType = _documentTypeCode;
             ApiDocModel.documentTypeDescription = "";
             ApiDocModel.documentURL = "";
-            ApiDocModel.scanningInformation = ApiScanModel;
+            //ApiDocModel.scanningInformation = ApiScanModel;
           
         }
         
         public void copyToModel(JObject temp, ScanningInfoModel scanInfo )
         {
-            if (temp["accessionNumber"] != null) { ApiScanModel.accessionNumber = (long)temp["accessionNumber"]; }
-            if (temp["authorId"] != null) { ApiScanModel.author = (string)temp["authorId"]; }
-            if (temp["scannedDate"] != null) { ApiScanModel.scannedDate = (DateTime)temp["scannedDate"]; }
-            if (temp["batchId"] != null) { ApiScanModel.batchId = (int)temp["batchId"]; }
-            if (temp["createDateTime"] != null) { ApiScanModel.createDateTime = (DateTime)temp["createDateTime"]; }
-            if (temp["pageCount"] != null) { ApiScanModel.pagecount = (int)temp["pageCount"]; }
+            if (temp["accessionNumber"] != null) { scanInfo.accessionNumber = (long)temp["accessionNumber"]; }
+            if (temp["authorId"] != null) { scanInfo.author = (string)temp["authorId"]; }
+            if (temp["scannedDate"] != null) { scanInfo.scannedDate = (DateTime)temp["scannedDate"]; }
+            if (temp["batchId"] != null) { scanInfo.batchId = (int)temp["batchId"]; }
+            if (temp["createDateTime"] != null) { scanInfo.createDateTime = (DateTime)temp["createDateTime"]; }
+            if (temp["pageCount"] != null) { scanInfo.pagecount = (int)temp["pageCount"]; }
 
             if (temp["author"] != null) { ApiDocModel.author = (string)temp["author"]; }
             if (temp["consumerDocumentId"] != null) { ApiDocModel.consumerDocumentId = (int)temp["consumerDocumentId"]; }
@@ -367,7 +392,6 @@ namespace RegScan
             if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentTypeCode"]; }
             //if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentType"]; }
 
-
             if (temp["documentTypeDescription"] != null) { ApiDocModel.documentTypeDescription = (string)temp["documentTypeDescription"]; }
             if (temp["documentURL"] != null) { ApiDocModel.documentURL = (string)temp["documentURL"]; } 
                  
@@ -375,37 +399,76 @@ namespace RegScan
         }
 
         
+        /// <summary>
+        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guarenteed to be reurned from DRS API
+        /// </summary>
+        /// <param name="docObj"> DocumentObj that we want to hold the current documents information </param>
+        /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
-        {         
-            if (jDoc["author"] != null) { docObj._authorId = (string)jDoc["author"]; }            
-            if (jDoc["consumerDocumentId"] != null) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
-            if (jDoc["consumerFilename"] != null) { docObj._fileName = (string)jDoc["consumerFilename"]; }
-
-            if (jDoc["consumerIdentifier"] != null) { docObj._legalEntityKey = (string)jDoc["consumerIdentifier"]; }
-            if (jDoc["consumerIdentifier"] != null) { docObj._consumerIdentifier = (string)jDoc["consumerIdentifier"]; }
-
-            if ( dataCheck(jDoc["consumerReferenceId"].ToString())) { docObj._consumerReferenceId = Int32.Parse(jDoc["consumerReferenceId"].ToString()); }
-            if (jDoc["createDateTime"] != null) { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
-
-            if (jDoc["documentClass"] != null) { docObj._description = (string)jDoc["documentClass"]; }
-            if (jDoc["documentClass"] != null) { docObj._documentClass = (string)jDoc["documentClass"]; }
-
-            if (jDoc["documentServiceId"] != null) { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
-            if (jDoc["documentType"] != null) { docObj._documentTypeCode = (string)jDoc["documentType"]; }
-            if (jDoc["documentTypeDescription"] != null) { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
-            if (jDoc["documentURL"] != null) { docObj._documentURL = (string)jDoc["documentURL"]; }
-
-            if (jDoc["scanningInformation"] != null)
+        {
+            if (docObj == null || jDoc == null)
             {
-                docObj.scanInfo = (object)jDoc["scanningInformation"];
-                docObj.ApiScanModel = (ScanningInfoModel)docObj.scanInfo;
+                UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
+                throw new Exception("Attempting to pull data from a null object."); 
+            }
+            if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
+            if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
+            if (jDoc.ContainsKey("consumerFilename")) { docObj._fileName = (string)jDoc["consumerFilename"]; }
 
-                docObj._accessionNumber = docObj.ApiScanModel.accessionNumber;
-                docObj._authorId = docObj.ApiScanModel.author;
-                docObj._batchId = docObj.ApiScanModel.batchId;
-                docObj._createDateTime = docObj.ApiScanModel.createDateTime;
-                docObj._pageCount = docObj.ApiScanModel.pagecount;
-                docObj._scannedDate = docObj.ApiScanModel.scannedDate;                       
+            if (jDoc.ContainsKey("consumerIdentifier")) {
+                docObj._legalEntityKey = (string)jDoc["consumerIdentifier"];
+                docObj._consumerIdentifier = (string)jDoc["consumerIdentifier"];
+            }
+
+            if ( dataCheck(jDoc["consumerReferenceId"].ToString())) {
+                docObj._consumerReferenceId = Int32.Parse(jDoc["consumerReferenceId"].ToString());
+            }
+            if (jDoc.ContainsKey("createDateTime")) { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
+
+            if (jDoc.ContainsKey("documentClass")) {
+                if (jDoc.ContainsKey("documentTypeDescription")) { docObj._description = (string)jDoc["documentTypeDescription"]; }
+                else { docObj._description = (string)jDoc["documentClass"]; }
+                docObj._documentClass = (string)jDoc["documentClass"];
+            }
+
+            if (jDoc.ContainsKey("documentServiceId")) { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
+            if (jDoc.ContainsKey("documentType")) { docObj._documentTypeCode = (string)jDoc["documentType"]; }
+            if (jDoc.ContainsKey("documentTypeDescription")) { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
+
+            // Check if there is a previous document uploaded for this record
+            if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
+            // There is a better way to get this information (implemented in another branch)
+            //else if (jDoc.ContainsKey("consumerFilename") && docObj._documentServiceId != "")
+            //{
+                // If the optional documentURL parameter is not present but there is a consumerFileName
+                // There is another way we can attempt to get the document URL.
+                //docObj._documentURL = GetDocURL(docObj);
+            //}
+
+            if (jDoc.ContainsKey("scanningInformation"))
+            {
+                // Make the nested object easier to parse
+                docObj.scanInfo = (JObject)jDoc["scanningInformation"];
+                //docObj.ApiScanModel = (ScanningInfoModel)docObj.scanInfo;
+
+                if (docObj.scanInfo.ContainsKey("accessionNumber")) {
+                    // The Accession Number is returned as a string with the following form: "12-3456-7890"
+                    // From this we can get the sequence number (12), schedule number (3456) and box number (7890).
+                    string accNumb = (string)docObj.scanInfo["accessionNumber"];
+                    string[] accNumbersSplit = accNumb.Split('-');
+                    docObj._sequenceNumber = int.Parse(accNumbersSplit[0]);
+                    docObj._scheduleNumber = int.Parse(accNumbersSplit[1]);
+                    docObj._boxNumber = int.Parse(accNumbersSplit[2]);
+                }
+
+                if (docObj.scanInfo.ContainsKey("author")) { docObj._owner = (string)docObj.scanInfo["author"]; }
+                
+                if (docObj.scanInfo.ContainsKey("batchId")) { docObj._batchId = (int)docObj.scanInfo["batchId"];}
+                                
+                if (docObj.scanInfo.ContainsKey("pagecount")) { docObj._pageCount = (int)docObj.scanInfo["pagecount"];}
+                
+                if (docObj.scanInfo.ContainsKey("scanDateTime")) { docObj._scannedDate = (DateTime)docObj.scanInfo["scanDateTime"];}
+                                       
             }
         }        
 
