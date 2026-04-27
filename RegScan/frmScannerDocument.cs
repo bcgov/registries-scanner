@@ -76,12 +76,12 @@ namespace RegScan
         /// <summary>
         /// Indicates that device is acquiring image(s).
         /// </summary>
-        bool _isImageAcquiring;
+        //bool _isImageAcquiring;
 
         /// <summary>
         /// Determines that image acquisition must be canceled because application's form is closing.
         /// </summary>
-        bool _cancelTransferBecauseFormIsClosing;
+        //bool _cancelTransferBecauseFormIsClosing;
 
         #endregion
         public frmScannerDocument()
@@ -300,14 +300,14 @@ namespace RegScan
                         _currentDocument.UpdateRecord = true;
 
                         // IF document has been purged.
-                        if (_currentDocument.IsPurged)
-                        {
-                            // Cancel the scan and display a message.
-                            cancelScan = true;
-                            MessageBox.Show("This barcode number has already been used and deleted. It cannot be re-used.");
-                        }
-                        else
-                        {
+                        //if (_currentDocument.IsPurged)
+                        //{
+                        //    // Cancel the scan and display a message.
+                        //    cancelScan = true;
+                        //    MessageBox.Show("This barcode number has already been used and deleted. It cannot be re-used.");
+                        //}
+                        //else
+                        //{
                             // IF document has already been scanned.
                             //if (_currentDocument.IsScanned)
                             if (_currentDocument.DocumentURL != "")
@@ -335,7 +335,7 @@ namespace RegScan
                                 if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
                                     MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
                             }
-                        }
+                        //}
 
                         // IF scan is to be cancelled
                         if (cancelScan)
@@ -1002,12 +1002,12 @@ namespace RegScan
         private void device_ImageAcquiringProgress(object sender, ImageAcquiringProgressEventArgs e)
         {
             // image acquisition must be canceled because application's form is closing
-            if (_cancelTransferBecauseFormIsClosing)
-            {
-                // cancel image acquisition
-                _currentDevice.CancelTransfer();
-                return;
-            }
+            //if (_cancelTransferBecauseFormIsClosing)
+            //{
+            //    // cancel image acquisition
+            //    _currentDevice.CancelTransfer();
+            //    return;
+            //}
 
             // set the progress bar value to the current completion level of the image acquisition.
             progressBar.Value = (int)e.Progress;
@@ -1029,12 +1029,12 @@ namespace RegScan
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
             // image acquisition must be canceled because application's form is closing
-            if (_cancelTransferBecauseFormIsClosing)
-            {
-                // cancel image acquisition
-                _currentDevice.CancelTransfer();
-                return;
-            }
+            //if (_cancelTransferBecauseFormIsClosing)
+            //{
+            //    // cancel image acquisition
+            //    _currentDevice.CancelTransfer();
+            //    return;
+            //}
 
             // Transform the acquired image into a Bitmap.
             Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
@@ -1123,7 +1123,7 @@ namespace RegScan
             _currentDevice.Close();
 
             // specify that image acquisition is finished
-            _isImageAcquiring = false;
+            //_isImageAcquiring = false;
 
             // Clear program bar.
             progressBar.Visible = false;
@@ -1145,7 +1145,7 @@ namespace RegScan
             UtilityObj.createFolder("Images");           
 
             // specify that image acquisition is started
-            _isImageAcquiring = true;
+            //_isImageAcquiring = true;
             progressBar.Visible = true;
 
             try
@@ -1182,7 +1182,7 @@ namespace RegScan
                 catch (Vintasoft.Twain.TwainException ex)
                 {
                     // specify that image acquisition is finished
-                    _isImageAcquiring = false;
+                    //_isImageAcquiring = false;
 
                     MessageBox.Show(ex.Message.Replace("Unknown error 11.", "") + "Is the scanner " + device.Info.ProductName + " turned on?", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -1202,9 +1202,7 @@ namespace RegScan
                     if (device.UnitOfMeasure != UnitOfMeasure.Inches)
                         device.UnitOfMeasure = UnitOfMeasure.Inches;
 
-                // Set resolution. If the low resolution box is checked use 400x400, otherwise use 600x600.
-                try
-                {
+                    // Set resolution. If the low resolution box is checked use 400x400, otherwise use 600x600.
                     if (ckBoxLowResolution.Checked)
                         device.Resolution = new Resolution(400, 400);
                     else
@@ -1228,8 +1226,6 @@ namespace RegScan
                 // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
                 //    There could also be a check before attempting to set the value to determine support.
                 //    The device currently does not support this feature and the catch is always hit.
-                try
-                {
                     device.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
                 catch (TwainDeviceCapabilityException)
@@ -1264,7 +1260,7 @@ namespace RegScan
                 catch (Vintasoft.Twain.TwainException ex)
                 {
                     // specify that image acquisition is finished
-                    _isImageAcquiring = false;
+                    //_isImageAcquiring = false;
                     UtilityObj.writeLog("Image acquisition error: " + ex);
                     MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
