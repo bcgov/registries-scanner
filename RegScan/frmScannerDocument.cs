@@ -168,6 +168,28 @@ namespace RegScan
         }
 
         /// <summary>
+        /// Handles making a request to the user to manually enter a barcode and returns the entered value.
+        /// </summary>
+        /// <param name="message"> String displayed in the message box </param>
+        /// <returns> string of characters entered by the user </returns>
+        private string ManualBarcode(string message)
+        {
+            string enteredBarcode = "";
+
+            // Display window to user.
+            if (MessageBox.Show(message, "Missing/ Not Found Barcode", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                // User has indicated they wish to enter a barcode manually. Display a new form.
+                var barCodeString = new BarCodeString();
+                var frm = new frmEnterBarCode(barCodeString);
+                frm.ShowDialog();
+                enteredBarcode = barCodeString.BarCode;
+            }
+
+            return enteredBarcode;
+        }
+
+        /// <summary>
         /// Process the completed scan session ... this contains most of the business logic of the application.
         /// </summary>
         private void ProcessCompleted()
@@ -185,14 +207,14 @@ namespace RegScan
             // Scan for Barcodes
             var barcodes = BarCodeObj.Scan(image0);
 
-            UtilityObj.writeLog("Fix Barcodes =" + barcodes.ToString());
+            UtilityObj.writeLog("Fix Barcodes =" + barcodes[0].ToString());
 
-            // IF we have a new document.
+            // IF we have a new document (no values held in _currentDocument).
             if (_currentDocument == null)
             {
                 UtilityObj.writeLog("Fix Current Doc is null");
 
-                // IF we do not have a barcode.
+                // IF no barcodes were returned from BarCodeObj.Scan() 
                 string barCode = "";
                 if (barcodes.Count == 0)
                 {
@@ -201,14 +223,7 @@ namespace RegScan
                     SetImage(image0);
 
                     // Ask if a barcode shoulde be entered manually.
-                    if (MessageBox.Show("No barcode found. Do you want to manually enter the barcode?", "Missing Barcode", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        // Display dialog box to get manual entered barcode
-                        var barCodeString = new BarCodeString();
-                        var frm = new frmEnterBarCode(barCodeString);
-                        frm.ShowDialog();
-                        barCode = barCodeString.BarCode;
-                    }
+                    barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
                 }
                 else
                 {
@@ -221,7 +236,7 @@ namespace RegScan
                 // List to hold the documents.
                 List<DocumentObj> docs = null;
 
-                // If a bar code was found.
+                // If the barcode was set in the checks above
                 if (barCode != "")
                 {
                     UtilityObj.writeLog("Fix Barcode not null");
@@ -230,27 +245,25 @@ namespace RegScan
                     while (neos)
                     {
                         UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Find the associated existing documents for this barcode ... There may be more than one document (known as versions)
+                        // Call to DRS API to recieve associated existing documents for this barcode.
+                        // There may be more than one document (known as versions)
                         docs = DocumentObj.Find(barCode);
 
                         // IF no documents were found
                         if (docs.Count == 0)
                         {
                             UtilityObj.writeLog("Fix No existing docs, SetImage(image0)");
-                            // Display message that no documents(s) found for this barcode.
                             SetImage(image0);
+
                             // Ask if a barcode shoulde be entered manually.
-                            if (MessageBox.Show("No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?", "No Documents Found", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                            string message = "No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?";
+                            barCode = ManualBarcode(message);
+
+                            if (barCode == "")
                             {
-                                // Display dialog box to get manual entered barcode
-                                var barCodeString = new BarCodeString();
-                                var frm = new frmEnterBarCode(barCodeString);
-                                frm.ShowDialog();
-                                barCode = barCodeString.BarCode;
-                            }
-                            else
                                 // Move on to next step.
                                 neos = false;
+                            }
                         }
                         else
                         {                           
@@ -272,6 +285,9 @@ namespace RegScan
                                             
                         // Will only be true, if it is an existing scan and new version is not required.
                         bool cancelScan = false;
+
+                        // We have a record from DRS API that matches the barcode. This means we will be updating the record.
+                        _currentDocument.UpdateRecord = true;
 
                         // IF document has been purged.
                         if (_currentDocument.IsPurged)
@@ -295,7 +311,8 @@ namespace RegScan
                                 {
                                     // If a new version, then update the version number and set id to new
                                     _currentDocument.VersionNumber++;
-                                    _currentDocument.SetToNew();
+                                    // We dont want to clear the metadata from the current document - just indicate that there is a new version of the document image.
+                                    // _currentDocument.SetToNew();
                                 }
                                 else
                                     // Cancel this scan if a new vesion is not required.
@@ -371,7 +388,9 @@ namespace RegScan
                             _currentImageIndex = 0;
                             SetImageNav();
                         }                        
-                    }                    
+                    }
+                    // NOTE If logic wanted to be added to create a new record for the scanned image it could be added here.
+                    // _currentDocument.SetToNew();
                 }
                 else
                 {                    
@@ -551,6 +570,8 @@ namespace RegScan
             int updateCount = ((int)100 / _scannedImageList.Count) / 2;
             progressBar.Value = updateCount;
             progressBar.Visible = true;
+
+            // Process any queued actions in the background. 
             Application.DoEvents();
 
             UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnSave_Click Scanner  Objects");
@@ -819,7 +840,6 @@ namespace RegScan
                 {
                     // Reset everything on this end.
                     _currentDocument.Box = box;
-                    _currentDocument.AccessionNumber = long.Parse(box.AccessionNumber.Replace("-", ""));       // Remove formatting.
                     _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
                     _currentBatchId.BatchId = 1;
                     _currentDocument.BatchId = _currentBatchId.BatchId;
@@ -1148,41 +1168,30 @@ namespace RegScan
                     return;
                 }
 
-                // set device capabilities
-                // unit of measure
                 try
                 {
+                    // set device capabilities
+                    // unit of measure
                     if (device.UnitOfMeasure != UnitOfMeasure.Inches)
                         device.UnitOfMeasure = UnitOfMeasure.Inches;
-                }
-                catch (Vintasoft.Twain.TwainException)
-                {
-                }
 
-                // resolution
-                try
-                {
+                    // resolution
                     if (ckBoxLowResolution.Checked)
                         device.Resolution = new Resolution(400, 400);
                     else
                         device.Resolution = new Resolution(600, 600);
+
                 }
                 catch (Vintasoft.Twain.TwainException)
                 {
                 }
 
-                // ADF
                 try
                 {
+                    // ADF
                     device.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-                }
-                catch (TwainDeviceCapabilityException)
-                {
-                }
 
-                // Duplex
-                try
-                {
+                    // Duplex
                     device.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
                 catch (TwainDeviceCapabilityException)

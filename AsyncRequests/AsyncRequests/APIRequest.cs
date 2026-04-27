@@ -79,21 +79,38 @@ namespace AsyncRequests
         public static string MakeKeyRequest(string fileName, byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
         {
             var request = new RestRequest(requestType);
+            string answer = "";
 
             request.AddHeader("Account-Id", account_id);
             request.AddHeader("x-apikey", apikey);
             request.AddHeader("Content-Type", "application/pdf");
 
-            if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
+            if (requestType != Method.POST && requestType != Method.PUT && requestType != Method.PATCH)
             {
-                request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]);
-                request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
-                request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
-                request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
+                // If any other request type is used throw a new error
+                throw new Exception("Invalid request type for endpoint: " + endPoint + ". Must be POST, PUT, or PATCH.");
+            }
+            foreach (var keyValuePair in param)
+            {
+                request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
+            }
+            //if param.ContainsKey() { request.AddQueryParameter("consumerIdentifier", (string)param["consumerIdentifier"]); }
+            //request.AddQueryParameter("consumerFilename", (string)param["consumerFilename"]);
+            //request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
+            //request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
 
+<<<<<<< REFACTOR-APIRequest
                 request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
             }
             return GetHttpResponseContent(request, endPoint);
+=======
+            request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
+
+            answer = client.Execute(request).Content;
+
+            return answer;
+
+>>>>>>> main
         }
 
 
