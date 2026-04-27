@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using PdfSharp.Pdf.Content.Objects;
 
 namespace ApiScanner
 {
