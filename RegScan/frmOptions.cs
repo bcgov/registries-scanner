@@ -30,7 +30,7 @@ namespace RegScan
             int pages = 0;
             if (!int.TryParse(txtMaximumPagesInBox.Text, out pages))
             {
-                MessageBox.Show("Please enter a numeric value for Maxium Pages In a Box");
+                MessageBox.Show("Please enter a numeric value for Maximum Pages In a Box");
                 return;
             }
 

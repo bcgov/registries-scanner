@@ -30,7 +30,7 @@ namespace RegScan
             // Confirm box creation.
             if (MessageBox.Show("Confirm closing of existing open box and creating a new box?", "Confirm Box Creation", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
             {
-                // Close Exising Box.
+                // Close Existing Box.
                 var schedule = ScheduleObj.Find((int)cBoxScheduleId.SelectedValue);
                 var box = BoxObj.Find(schedule.SequenceNumber, schedule.ScheduleNumber);
                 if (box == null)
@@ -70,7 +70,7 @@ namespace RegScan
             else
             {
                 txtBoxId.Text = boxObj.BoxId.ToString();
-                txtDateBoxOpened.Text = boxObj.OpendedDate.ToString("dd-MMM-yyyy");
+                txtDateBoxOpened.Text = boxObj.OpenedDate.ToString("dd-MMM-yyyy");
                 txtDateBoxClosed.Text = boxObj.ClosedDate == BoxObj.BOXSTILLOPEN ? "" : boxObj.ClosedDate.ToString("dd-MMM-yyyy");
                 txtPagesInBox.Text = boxObj.PageCount.ToString();
                 btnPrint.Visible = true;
@@ -156,7 +156,7 @@ namespace RegScan
             _boxObj = _BoxObj;
             var accessionNumber = _boxObj.AccessionNumber.Replace("-", "");
             if (accessionNumber.Length != BoxObj.ACCESSION_NUMBER_LENGTH)
-                return "Accession Number is incorrect lenght ... lenght should be " + BoxObj.ACCESSION_NUMBER_LENGTH.ToString() + " digits";
+                return "Accession Number is incorrect length ... length should be " + BoxObj.ACCESSION_NUMBER_LENGTH.ToString() + " digits";
 
             // Get the sequence/schedule number and box number.
             var fqn = int.Parse(accessionNumber.Substring(0, 6));
@@ -185,7 +185,7 @@ namespace RegScan
             // Display the box contents
             btnFind_Click(new object(), new EventArgs());
 
-            // Select button is visable now.
+            // Select button is visible now.
             btnSelect.Visible = true;
 
             return "";
@@ -206,7 +206,7 @@ namespace RegScan
             btnPrintBatchLabel.Visible = true;
         }
 
-        // Button will only be activce if form was called from the frmDocument.
+        // Button will only be active if form was called from the frmDocument.
         private void btnSelect_Click(object sender, EventArgs e)
         {
             if (cBoxScheduleId.SelectedIndex < 1)

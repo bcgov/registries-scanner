@@ -50,7 +50,7 @@ namespace RegScan
         // Static
         private static List<ScheduleObj> _list = new List<ScheduleObj>();
 
-        // Find the schedule assocated with this schedule number.
+        // Find the schedule associated with this schedule number.
         static public ScheduleObj Find(int _ScheduleNumber)
         {
             if (_list.Count == 0)

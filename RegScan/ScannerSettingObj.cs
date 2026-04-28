@@ -16,7 +16,7 @@ namespace RegScan
         public bool UseDocumentFeeder = false;
         public bool ShowTwainUI = true;
         public bool ShowProgressIndicatorUI = true;
-        public bool UseDuplex = true;
+        public bool UseDuplex = false;
         public bool BlackAndWhiteCheckBox = true;
         public bool ShouldTransferAllPages = true;
         public bool AutoRotateCheckBox = true;

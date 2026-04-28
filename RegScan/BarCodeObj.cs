@@ -41,7 +41,7 @@ namespace RegScan
         /// Scan the image for barcode type 39
         /// </summary>
         /// <param name="_BMP">Image to scan.</param>
-        /// <returns>Collecation of bar code</returns>
+        /// <returns>collection of bar code</returns>
         static public System.Collections.ArrayList Scan(Bitmap _BMP)
         {
             return Scan1(_BMP);
