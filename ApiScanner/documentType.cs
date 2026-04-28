@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace ApiScanner
 {
     // In documentation, possible expansion of application. Not currently used by scanner
+    // CAN BE REMOVED
     public class documentType
     {
        

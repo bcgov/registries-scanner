@@ -30,7 +30,7 @@ namespace RegScan
         public int SequenceNumber { get { return _sequenceNumber; } set { _sequenceNumber = value; } }
         public int ScheduleNumber { get { return _scheduleNumber; } set { _scheduleNumber = value; } }
         public int BoxNumber { get { return _boxNumber; } set { _boxNumber = value; } }
-        public DateTime OpenedDate { get { return _openedDate; } set { _openedDate = value; } }
+        public DateTime OpenDate { get { return _openedDate; } set { _openedDate = value; } }
         public DateTime ClosedDate { get { return _closedDate; } set { _closedDate = value; } }
 
         public string ErrorMessage;
@@ -94,7 +94,8 @@ namespace RegScan
         {
             BoxModel boxModel = new BoxModel();
 
-            copyToModel(boxModel);            
+            CopyToModel(boxModel);
+            // TODO - not doing anything with this value
             string resp = ScanningBoxApi.post(boxModel);
 
             var box = Find(_sequenceNumber, _scheduleNumber, _boxNumber);
@@ -108,8 +109,9 @@ namespace RegScan
         {
             BoxModel boxModel = new BoxModel();
 
-            copyToModel(boxModel);
+            CopyToModel(boxModel);
             string resp = ScanningBoxApi.patch(boxModel);
+            // NOTE - nothing is done with resp here but this is called from DocumentObj
         }
 
 
@@ -216,6 +218,7 @@ namespace RegScan
 
         }
 
+        // TODO - none of the params are used here.
         static public List<BoxObj> List(int _SequencyNumber, int _ScheduleNumber, bool _IncludeNoBoxesFound)
         {
             ERROR_MESSAGE = "";
@@ -241,12 +244,12 @@ namespace RegScan
 
             try
             {
-                _Box.copyToModel(_Box, boxModel);
+                _Box.CopyToModel(_Box, boxModel);
                 string resp = ScanningBoxApi.patch(boxModel);
                 
                 if (resp == null)
                 {
-                    var box = new BoxObj();
+                    BoxObj box = new BoxObj();
                     box.ErrorMessage = "Box not found.";
                     return box;
                 }
@@ -275,7 +278,7 @@ namespace RegScan
             box.SequenceNumber = _SequenceNumber;
             box.ScheduleNumber = _ScheduleNumber;
             box.PageCount = 0;
-            box.OpenedDate = DateTime.Now;
+            box.OpenDate = DateTime.Now;
             box.BoxNumber = _BoxNumber;
 
             // Insert Box 
@@ -303,13 +306,13 @@ namespace RegScan
             _Destination.BoxId = _Source.BoxId;
             _Destination.BoxNumber = _Source.BoxNumber;
             _Destination.ClosedDate = _Source.ClosedDate;
-            _Destination.OpenedDate = _Source.OpenedDate;
+            _Destination.OpenDate = _Source.OpenDate;
             _Destination.PageCount = _Source.PageCount;
             _Destination.ScheduleNumber = _Source.ScheduleNumber;
             _Destination.SequenceNumber = _Source.SequenceNumber;
         }
 
-        public void copyToModel(BoxModel boxModel)
+        public void CopyToModel(BoxModel boxModel)
         {
             boxModel.boxId = _boxId;
             boxModel.sequenceNumber = _sequenceNumber;
@@ -321,19 +324,20 @@ namespace RegScan
                      
         }
 
-        public void copyToModel(BoxObj box, BoxModel boxModel)
+        public void CopyToModel(BoxObj box, BoxModel boxModel)
         {
             boxModel.boxId = box.BoxId;
             boxModel.sequenceNumber = box.SequenceNumber;
             boxModel.scheduleNumber = box.ScheduleNumber;
             boxModel.boxNumber = box.BoxNumber;
-            boxModel.openedDate = box.OpenedDate;
+            boxModel.openedDate = box._openedDate;
+            boxModel.openedDate = box.OpenDate;
             boxModel.closedDate = box.ClosedDate;
             boxModel.pageCount = box.PageCount;
 
         }
        
-        public void copyFromModel(string resp)
+        public void CopyFromModel(string resp)
         {
             var token = JToken.Parse(resp);
 

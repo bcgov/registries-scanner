@@ -8,6 +8,16 @@ using System.Windows.Forms;
 
 namespace RegScan
 {
+    /// <summary>
+    /// The <c>AuthorObj</c> class is used to store information about the document record creator.
+    /// This information is obtained from an API call and stored in a class variable list of AuthorObjs.
+    /// 
+    /// Taylor's Notes -
+    /// I believe that this is not a great practice - it would be better to store a list of 
+    /// DocTypeObjs outside this class or rename and configure this class to intentionally 
+    /// store a list of objects. 
+    /// 
+    /// </summary>
     public class AuthorObj
     {
         private string _authorId;

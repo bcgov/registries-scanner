@@ -42,7 +42,9 @@ namespace AsyncRequests
          */
         public static string MakeRequest(object data, string endPoint, Method requestType)
         {
-            authToken = _GetAuthToken();
+            authToken = GetAuthToken();
+
+            var client = new RestClient(api_url + "/" + endPoint);
             var request = new RestRequest(requestType);
 
             request.AddHeader("Authorization", "Bearer " + authToken);
@@ -88,7 +90,7 @@ namespace AsyncRequests
         {
             if (api_url == null) { }
 
-            string answer = null;
+            string answer;
 
             string url = api_url + "/" + endPoint;
             if (!string.IsNullOrEmpty(queryParam)) { url += "?" + queryParam; }
@@ -112,13 +114,11 @@ namespace AsyncRequests
             return answer;
         }
 
-        /* This method is used to make API calls that require an API key and account id in the header and also require a PDF document in the body of the request.
-         * The parameters for the request are passed in a dictionary and added as query parameters to the request.
-         */
-        public static string MakeKeyRequest(string fileName, byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
+        //Dictionary<string,object>param
+        public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
         {
             var request = new RestRequest(requestType);
-            string answer = "";
+            string answer;
 
             request.AddHeader("Account-Id", account_id);
             request.AddHeader("x-apikey", apikey);
@@ -147,27 +147,7 @@ namespace AsyncRequests
         }
 
 
-        /// <summary>
-        /// NOTE THIS DOES NOT WORK 
-        /// Currently this only ever gets errors
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public static byte[] download(string url)
-        {
-            byte[] response = null;
-            if (url != null)
-            {
-                var client = new RestClient(url);
-                var request = new RestRequest(Method.GET);
-                response = client.DownloadData(request);
-                string x = Encoding.Default.GetString(response); 
-            }
-            return response;
-        }
-
-
-        private static string _GetAuthToken()
+        private static string GetAuthToken()
         {
             var client = new RestClient(token_url);
             var request = new RestRequest(Method.POST);

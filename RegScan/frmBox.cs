@@ -70,7 +70,7 @@ namespace RegScan
             else
             {
                 txtBoxId.Text = boxObj.BoxId.ToString();
-                txtDateBoxOpened.Text = boxObj.OpenedDate.ToString("dd-MMM-yyyy");
+                txtDateBoxOpened.Text = boxObj.OpenDate.ToString("dd-MMM-yyyy");
                 txtDateBoxClosed.Text = boxObj.ClosedDate == BoxObj.BOXSTILLOPEN ? "" : boxObj.ClosedDate.ToString("dd-MMM-yyyy");
                 txtPagesInBox.Text = boxObj.PageCount.ToString();
                 btnPrint.Visible = true;
