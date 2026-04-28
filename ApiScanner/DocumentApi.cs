@@ -2,7 +2,6 @@
 using Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PdfSharp.Pdf;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -40,7 +39,15 @@ namespace ApiScanner
         /// <exception cref="Exception"> If the URL was inaccessible or timed out </exception>
         public static Byte[] getDocBytes(string docURL)
         {
-            return APIRequest.download(docURL);
+            // TODO some sort of URL verification Ticket #33043
+            Byte[] downloadedDoc = APIRequest.download(docURL);
+
+            if ( downloadedDoc == null)
+            {
+                throw new Exception("Error downloading from URL: " + docURL);
+            }
+            return downloadedDoc;
+
         }        
 
         /// <summary>
@@ -51,7 +58,7 @@ namespace ApiScanner
         /// <param name="pdfBytes"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static string post(string fileName, byte[] pdfBytes, object data)
+        public static string updateScanningInformation(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
@@ -62,9 +69,7 @@ namespace ApiScanner
             param.Add("consumerFilingDate", (DateTime)myData.consumerFilingDate);
             param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
 
-            //string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            //string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
-            string endpoint = "doc/api/v1/documents/" + myData.documentClass;
+            string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
 
             try
             {
@@ -86,7 +91,7 @@ namespace ApiScanner
         /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
         /// <param name="docServId">The unique identifier of an existing document service document</param>
         /// <returns></returns>
-        public static string patch(object data, string docServId)
+        public static string updateDocumentRecord(object data, string docServId)
         {
             DocumentModel myData = (DocumentModel)data;
 
@@ -105,7 +110,7 @@ namespace ApiScanner
         /// <param name="pdfBytes"> PDF file as a byte array</param>
         /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
         /// <returns></returns>
-        public static string put(string _fileName, byte[] pdfBytes, object data)
+        public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
@@ -113,7 +118,7 @@ namespace ApiScanner
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (_fileName != "")
             {
-                // TODO: handle passing in any parameters with param. 
+                // TODO: handle passing in any parameters with param. Ticket #33043
                 param.Add("consumerFilename", (string)myData.consumerFilename);
             }
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
@@ -138,9 +143,9 @@ namespace ApiScanner
         /// </summary>
         /// <param name="conDocId"> Barcode (consumerDocumentId) to check for existence </param>
         /// <returns> String response from API call </returns>
-        public static string get(string conDocId)
+        public static string verify(string barCode)
         {           
-            string endpoint = "/doc/api/v1/documents/verify/" + conDocId;
+            string endpoint = "/doc/api/v1/documents/verify/" + barCode;
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);           
             return resp;
         }
@@ -156,7 +161,7 @@ namespace ApiScanner
 
         /// REMOVE. This is duplicated from the patch method above. 
         /// The only difference is not casting data to a DocumentModel.
-        public static string patch2(object data, string docServId)
+        public static string updateDocumentRecordAndScanning(object data, string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
             string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH);
@@ -172,7 +177,7 @@ namespace ApiScanner
         /// body document to be included in the request. MUST be able to be cast to DocumentModel.
         /// </param>
         /// <returns>>Response from the API call</returns>
-        public static string post(object data)
+        public static string createDocumentRecord(object data)
         {
             DocumentModel myData = (DocumentModel)data;
 
@@ -183,23 +188,34 @@ namespace ApiScanner
 
         ////search
 
-        public static string getSearch()
+        public static string searchByBarcode(string barcode)
         {
             string endpoint = "/doc/api/v1/searches";
+
+            if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+
             return resp;
         }
 
         //Search by docClass
-        public static string getSearch(string docClass)
+        public static string getSearch(string docClass, Dictionary<string, string> queries)
         {
             string endpoint = "/doc/api/v1/searches/" + docClass;
+            
+            foreach (KeyValuePair<string, string> kvp in queries)
+            {
+                endpoint += "?" + kvp.Key + "=" + kvp.Value;
+            }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
 
         /// REMOVE. This is duplicated from the post method above. 
         /// The only difference is adding parameters to before making the call. 
+        //Update pdf document
         public static string update(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;

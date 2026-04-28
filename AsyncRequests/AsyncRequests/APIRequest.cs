@@ -38,8 +38,7 @@ namespace AsyncRequests
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-        }        
-      
+        }
 
         public static string MakeRequest(object data, string endPoint, Method requestType)
         {
@@ -71,8 +70,7 @@ namespace AsyncRequests
             }
 
             return "";
-        }      
-
+        }
 
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
@@ -106,6 +104,33 @@ namespace AsyncRequests
             return "";
         }
 
+        public static string MakeKeyRequest(object requestBody, string queryParam, string endPoint, Method requestType)
+        {
+            if (api_url == null) { }
+
+            string answer = null;
+
+            string url = api_url + "/" + endPoint;
+            if (!string.IsNullOrEmpty(queryParam)) { url += "?" + queryParam; }
+
+            var client = new RestClient(url);
+            var request = new RestRequest(requestType);
+
+            request.AddHeader("Account-Id", account_id);
+            request.AddHeader("x-apikey", apikey);
+
+            if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
+            {
+                if (requestBody != null)
+                {
+                    request.AddJsonBody(requestBody);
+                }
+            }
+
+            answer = client.Execute(request).Content;
+
+            return answer;
+        }
 
         //Dictionary<string,object>param
         public static string MakeKeyRequest(string fileName, byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
@@ -143,12 +168,22 @@ namespace AsyncRequests
         }
 
 
+        /// <summary>
+        /// NOTE THIS DOES NOT WORK 
+        /// Currently this only ever gets errors
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static byte[] download(string url)
         {
-            var client = new RestClient(url);
-            var request = new RestRequest(Method.GET);
-            byte[] response = client.DownloadData(request);
-            string x = Encoding.Default.GetString(response);
+            byte[] response = null;
+            if (url != null)
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.GET);
+                response = client.DownloadData(request);
+                string x = Encoding.Default.GetString(response); 
+            }
             return response;
         }
 

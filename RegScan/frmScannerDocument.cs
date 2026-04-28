@@ -73,16 +73,6 @@ namespace RegScan
         /// </summary>
         Device _currentDevice;
 
-        /// <summary>
-        /// Indicates that device is acquiring image(s).
-        /// </summary>
-        //bool _isImageAcquiring;
-
-        /// <summary>
-        /// Determines that image acquisition must be canceled because application's form is closing.
-        /// </summary>
-        //bool _cancelTransferBecauseFormIsClosing;
-
         #endregion
         public frmScannerDocument()
         {
@@ -160,8 +150,7 @@ namespace RegScan
                 image0 = _Image;
             }
 
-            // Create file name and save the image.
-            string fileName = "Images\\Bitmap_image " + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
+            string fileName = "Images\\Bitmap_image" + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
             UtilityObj.saveImageAsFile(fileName, _Image);
 
             // Save the created filename to a list of scanned files for this session.
@@ -209,8 +198,10 @@ namespace RegScan
             UtilityObj.writeLog("Fix Checking for barcode");
             // Scan for Barcodes
             var barcodes = BarCodeObj.Scan(image0);
-
-            UtilityObj.writeLog("Fix Barcodes =" + barcodes[0].ToString());
+            if (barcodes.Count < 1)
+            {
+                UtilityObj.writeLog("No barcodes found in document");
+            }
 
             // What follows here is a lot of if else statements. I believe breaking the components
             // out into methods then only using this as the control to the flow.
@@ -230,7 +221,7 @@ namespace RegScan
                     // Display the image.
                     SetImage(image0);
 
-                    // Ask if a barcode shoulde be entered manually.
+                    // Ask if a barcode should be entered manually.
                     barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
                 }
                 else
@@ -255,8 +246,8 @@ namespace RegScan
                     while (neos)
                     {
                         UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Find the associated existing document(s) for this barcode.
-                        // If there is more than one document it may indicate multiple versions
+                        // Call to DRS API to receive associated existing documents for this barcode.
+                        // There may be more than one document (known as versions)
                         docs = DocumentObj.Find(barCode);
 
                         // IF no documents were found
@@ -265,7 +256,7 @@ namespace RegScan
                             UtilityObj.writeLog("Fix No existing docs, SetImage(image0)");
                             SetImage(image0);
 
-                            // Ask if a barcode shoulde be entered manually.
+                            // Ask if a barcode should be entered manually.
                             string message = "No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?";
                             barCode = ManualBarcode(message);
 
@@ -299,43 +290,33 @@ namespace RegScan
                         // We have a record from DRS API that matches the barcode. This means we will be updating the record.
                         _currentDocument.UpdateRecord = true;
 
-                        // IF document has been purged.
-                        //if (_currentDocument.IsPurged)
-                        //{
-                        //    // Cancel the scan and display a message.
-                        //    cancelScan = true;
-                        //    MessageBox.Show("This barcode number has already been used and deleted. It cannot be re-used.");
-                        //}
-                        //else
-                        //{
-                            // IF document has already been scanned.
-                            //if (_currentDocument.IsScanned)
-                            if (_currentDocument.DocumentURL != "")
-                            {
-                                UtilityObj.writeLog("Document barcode already exists.");
-                                // Turn off buttons for new box number.
-                                btnNewBox.Enabled = false;
+                        // IF document has already been scanned.
+                        //if (_currentDocument.IsScanned)
+                        if (_currentDocument.DocumentURL != "")
+                        {
+                            UtilityObj.writeLog("Document barcode already exists.");
+                            // Turn off buttons for new box number.
+                            btnNewBox.Enabled = false;
 
-                                // Ask if this is a new version.
-                                string messageText = "Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?";
-                                if (MessageBox.Show(messageText, "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    // If a new version, then update the version number and set id to new
-                                    _currentDocument.VersionNumber++;
-                                    // We dont want to clear the metadata from the current document - just indicate that there is a new version of the document image.
-                                    // _currentDocument.SetToNew();
-                                }
-                                else
-                                    // Cancel this scan if a new version is not required.
-                                    cancelScan = true;
+                            // Ask if this is a new version.
+                            if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                // If a new version, then update the version number and set id to new
+                                // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
+                                _currentDocument.VersionNumber++;
+                                // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
+                                // _currentDocument.SetToNew();
                             }
                             else
-                            {
-                                // Check for box full and display a message if it is full.
-                                if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
-                                    MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
-                            }
-                        //}
+                                // Cancel this scan if a new version is not required.
+                                cancelScan = true;
+                        }
+                        else
+                        {
+                            // Check for box full and display a message if it is full.
+                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
+                                MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
+                        }
 
                         // IF scan is to be cancelled
                         if (cancelScan)
@@ -347,6 +328,8 @@ namespace RegScan
                         else
                         {
                             // IF the current batch id is null
+                            // TODO - look into what this should actually be doing
+                            // This is not set on app start. Will always be null on first scan.
                             if (_currentBatchId == null)
                             {
                                 // If the current document's batch is assigned.
@@ -387,6 +370,8 @@ namespace RegScan
                             foreach (var imageFile in _scanSessionFileList)
                             {
                                 Bitmap image = UtilityObj.readFileAsImage(imageFile);
+                                // go to next page if this one cant be read
+                                if (image == null) { continue; }
                                 // Calculate the page size and add the image to the overall scanned list.
                                 var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
 
@@ -413,18 +398,22 @@ namespace RegScan
             // Existing document.
             else
             {
-                // IF we have a barcode
-                // Why are we showing an error if there is a barcode on the page?
-                if (barcodes.Count != 0)
+                // IF we have a barcode and it doesn't match the previous barcode
+                if (barcodes.Count != 0 && barcodes[0].ToString() != _currentDocument.BarCode)
                 {
                     // Display a warning message.
-                    MessageBox.Show("Warning! A barcode was found on this page. Click OK to continue");
+                    string title = "Warning: Double Barcode";
+                    string msg = "A barcode was found on this page.\n.";
+                    string comp = "First barcode: " + barcodes[0].ToString() + "\nSecond Barcode: " + _currentDocument.BarCode;
+                    MessageBox.Show(msg + comp, title);
                 }
 
                 // Save the images.
                 foreach (var imageFile in _scanSessionFileList)
                 {
                     var image = UtilityObj.readFileAsImage(imageFile);
+                    // go to next page if this one cant be read
+                    if (image == null) { continue; }
                     _currentImageIndex++;
                     var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
                     _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
@@ -480,11 +469,16 @@ namespace RegScan
         /// </summary>
         private void UpdateImageDisplay()
         {
-            if (_currentImageIndex > -1)
+            if (_currentImageIndex > -1 && _currentImageIndex < _scannedImageList.Count)
             {
-                //SetImage(_scannedImageList[_currentImageIndex].Image);
-                string imageFile = "Images\\Bitmap_image " + Convert.ToString(_currentImageIndex) + ".bmp";
-                var image = UtilityObj.readFileAsImage(imageFile);
+                // we have already read in all the images, select the one from the index to display
+                var image = _scannedImageList[_currentImageIndex].Image;
+                // display error if this one cant be read
+                if (image == null) 
+                { 
+                    MessageBox.Show("Error loading image for page " + Convert.ToString(_currentImageIndex + 1));
+                    return;
+                }
                 SetImage(image);
                 SetOrientation(_scannedImageList[_currentImageIndex].Orientation.ToString());
                 SetPageSize(_scannedImageList[_currentImageIndex].PageSize.ToString());
@@ -561,8 +555,72 @@ namespace RegScan
 
         /// <summary>
         /// Method called when a user selects the 'Save' button on the main form.
-        /// Here we should verify the form and its contents, then make a call to push the document
-        /// and all related metadata to the DRS API.
+        /// Given an image create a new page and 'draw' the image to that page. The page is added
+        /// to the given PDF document. We should verify the form and its contents, then make a
+        /// call to push the document and all related metadata to the DRS API.
+        /// </summary>
+        /// <param name="pdf">PDF Document to add image to</param>
+        /// <param name="scannedImage">Image to be added to PDF document</param>
+        private void imageToPDF(PdfDocument pdf, ImageObj scannedImage)
+        {
+            // Create a new page and with the document scans specifications
+            var pdfPage = new PdfPage();
+            pdfPage.Size = scannedImage.PageSize;
+            pdfPage.Orientation = scannedImage.Orientation;
+
+            // Add the new page to the PDF document
+            pdf.AddPage(pdfPage);
+
+            // Make the PDF Page a drawable canvas
+            var xgr = XGraphics.FromPdfPage(pdfPage);
+            // Turn the scanned document into an XImage
+            var img = XImage.FromGdiPlusImage(scannedImage.Image);
+
+            // Get the PDF Pages 
+            double pageWidth = pdfPage.Width.Point;
+            double pageHeight = pdfPage.Height.Point;
+
+            // Maintain aspect ratio, fit within page, centered
+            // Get the shape of the scanned document and PDF page
+            double imgAspect = (double)scannedImage.Image.Width / scannedImage.Image.Height;
+            double pageAspect = pageWidth / pageHeight;
+
+            double drawWidth, drawHeight, drawX, drawY;
+            // if the images' shape is larger than the pages' shape 
+            if (imgAspect > pageAspect)
+            {
+                // limit the width to the width of the page
+                drawWidth = pageWidth;
+                // the height is set to the width of the page / the images' shape
+                //  -> Pw / (Iw / Ih) -> Pw * Ih / Iw
+                //  -> The images aspect ratio scaled to the pages width
+                drawHeight = pageWidth / imgAspect;
+                // 
+                drawX = 0;
+                // 
+                drawY = (pageHeight - drawHeight) / 2;
+            }
+            // if the pages' shape is larger than (or equal to) the images' shape 
+            else
+            {
+                // set the height to the pages height
+                drawHeight = pageHeight;
+                // set the width to the height of the page * the images' shape
+                //  -> Ph * (Iw / Ih) -> Ph * Ih / Iw
+                //  -> The images aspect ratio scaled to the pages height
+                drawWidth = pageHeight * imgAspect;
+                //
+                drawX = (pageWidth - drawWidth) / 2;
+                //
+                drawY = 0;
+            }
+
+            xgr.DrawImage(img, drawX, drawY, drawWidth, drawHeight);
+           
+        }
+
+        /// <summary>
+        ///  Save the document to the database.
         /// </summary>
         /// <param name="sender"> Save Scan Button </param>
         /// <param name="e"> Events from user </param>
@@ -581,8 +639,10 @@ namespace RegScan
 
             // Create a PDF document.
             var pdf = new PdfDocument();
-            int updateCount = ((int)100 / _scannedImageList.Count) / 2;
-            progressBar.Value = updateCount;
+
+            // Percentage updated based on number of images to process
+            int updateCount = (int)100 / _scannedImageList.Count;
+            progressBar.Value = 0;
             progressBar.Visible = true;
 
             // Process any queued actions in the background. 
@@ -590,23 +650,22 @@ namespace RegScan
 
             UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnSave_Click Scanner  Objects");
 
-            // FOREACH image create a new page.
+            // FOREACH image convert to a PDF page and add to the PDF document
             foreach (var bp in _scannedImageList)
             {
-
-                // Create a new page and add in the image.
-                var pdfPage = new PdfPage();
-                pdfPage.Size = bp.PageSize;
-                pdfPage.Orientation = bp.Orientation;
-                pdf.AddPage(pdfPage);
-                var xgr = XGraphics.FromPdfPage(pdfPage);
-                var img = XImage.FromGdiPlusImage(bp.Image);
-                xgr.DrawImage(img, 0, 0);
-
+                try
+                {
+                    imageToPDF(pdf, bp);
+                }
+                catch (Exception ex)
+                {
+                    string img_num = _scannedImageList.IndexOf(bp).ToString() + " of " + _scannedImageList.Count();
+                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" + ex);
+                }
+                
                 // Update progress bar
                 progressBar.Value += updateCount;
                 Application.DoEvents();
-
             }
 
             // Update the document.
@@ -1142,7 +1201,7 @@ namespace RegScan
             UtilityObj.deleteFolder("Images");
             _scanSessionFileList.Clear();
             image0 = null;
-            UtilityObj.createFolder("Images");           
+            UtilityObj.createFolder("Images");
 
             // specify that image acquisition is started
             //_isImageAcquiring = true;
@@ -1150,7 +1209,6 @@ namespace RegScan
 
             try
             {
-
                 // Open device manager, if not open.
                 if (_deviceManager.State == DeviceManagerState.Closed)
                     _deviceManager.Open();
@@ -1159,7 +1217,7 @@ namespace RegScan
                     // unsubscribe from the device events
                     UnsubscribeFromDeviceEvents(_currentDevice);
 
-                // Get default device
+                // Get and set the current device
                 Device device = _deviceManager.DefaultDevice;
                 _currentDevice = device;
 
@@ -1167,51 +1225,56 @@ namespace RegScan
                 SubscribeToDeviceEvents(_currentDevice);
 
                 // set the image acquisition parameters
-                device.ShowUI = useUICheckBox.Checked;
-                device.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
-                device.ModalUI = false;
-                device.DisableAfterAcquire = false;
-                device.TransferMode = TransferMode.Memory;
-
+                _currentDevice.ShowUI = useUICheckBox.Checked;
+                _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
+                _currentDevice.ModalUI = false;
+                _currentDevice.DisableAfterAcquire = false;
+                _currentDevice.TransferMode = TransferMode.Memory;
 
                 try
                 {
                     // open the device
-                    device.Open();
+                    _currentDevice.Open();
                 }
                 catch (Vintasoft.Twain.TwainException ex)
                 {
                     // specify that image acquisition is finished
                     //_isImageAcquiring = false;
 
-                    MessageBox.Show(ex.Message.Replace("Unknown error 11.", "") + "Is the scanner " + device.Info.ProductName + " turned on?", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName + " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                catch(Exception ex2)
-                {
-                    MessageBox.Show(ex2.Message);
-                    return;
-                }
-
                 // set device capabilities
-                // unit of measure: ALWAYS inches 
-                try
-                {
-                    // set device capabilities
-                    // unit of measure
-                    if (device.UnitOfMeasure != UnitOfMeasure.Inches)
-                        device.UnitOfMeasure = UnitOfMeasure.Inches;
+                // unit of measure
+                if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
+                    _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
 
-                    // Set resolution. If the low resolution box is checked use 400x400, otherwise use 600x600.
-                    if (ckBoxLowResolution.Checked)
-                        device.Resolution = new Resolution(400, 400);
-                    else
-                        device.Resolution = new Resolution(600, 600);
+                // resolution
+                if (ckBoxLowResolution.Checked)
+                    _currentDevice.Resolution = new Resolution(400, 400);
+                else
+                    _currentDevice.Resolution = new Resolution(600, 600);
 
-                }
-                catch (Vintasoft.Twain.TwainException)
+                // ADF
+                _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
+
+                // Duplex
+                if (_currentDevice.DocumentFeeder.Enabled)
                 {
+                    _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
+            }
+            catch (TwainDeviceCapabilityException)
+            {
+                MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            catch(Exception ex2)
+            {
+                MessageBox.Show(ex2.Message);
+                return;
+            }
 
                 // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
                 // NOTE - There could be a test implemented here to check if the device supports
@@ -1230,27 +1293,19 @@ namespace RegScan
                 }
                 catch (TwainDeviceCapabilityException)
                 {
+                    UtilityObj.writeLog("Device supports asynchronous scanning");
+                    // enable all asynchronous events supported by device
+                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
                 }
-
-                UtilityObj.writeLog("Checking for asynchronous scanning...");
-                // if device supports asynchronous events
-                if (device.IsAsyncEventsSupported)
+                catch
                 {
-                    try
-                    {
-                        UtilityObj.writeLog("Device supports asynchronous scanning");
-                        // enable all asynchronous events supported by device
-                        device.AsyncEvents = device.GetSupportedAsyncEvents();
-                    }
-                    catch
-                    {
-                    }
                 }
+            }
 
 
-                try
-                {
-                    UtilityObj.writeLog("Start image acquisition");
+            try
+            {
+                UtilityObj.writeLog("Start image acquisition");
 
                     // start image acquisition (scan) process
                     device.Acquire();
@@ -1266,9 +1321,11 @@ namespace RegScan
                     return;
                 }
             }
-            finally
+            catch (Vintasoft.Twain.TwainException ex)
             {
-               
+                UtilityObj.writeLog("Image acquisition error: " + ex);
+                MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
         #endregion

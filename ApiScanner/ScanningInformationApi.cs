@@ -5,9 +5,9 @@ namespace ApiScanner
 {
     public class ScanningInformationApi
     {
-        public string get(string consummerDocId)
+        public string get(string consumerDocId)
         {
-            string endpoint = "/doc/api/v1/documents/verify/" + consummerDocId;
+            string endpoint = "/doc/api/v1/documents/verify/" + consumerDocId;
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }

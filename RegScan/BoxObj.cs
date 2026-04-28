@@ -329,6 +329,7 @@ namespace RegScan
             boxModel.scheduleNumber = box.ScheduleNumber;
             boxModel.boxNumber = box.BoxNumber;
             boxModel.openedDate = box._openedDate;
+            boxModel.openedDate = box.OpenedDate;
             boxModel.closedDate = box.ClosedDate;
             boxModel.pageCount = box.PageCount;
 

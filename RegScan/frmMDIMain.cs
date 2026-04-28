@@ -115,7 +115,7 @@ namespace RegScan
             try
             {
                 UtilityObj.writeLog("Create new device manager using vintasoft twain");
-                // Create a device manager and display the built in selection diaglog
+                // Create a device manager and display the built in selection dialog
                 DeviceManager deviceManager = new DeviceManager();
                 UtilityObj.writeLog("Open Manager");
                 deviceManager.Open();
@@ -130,7 +130,7 @@ namespace RegScan
             }
             catch (Exception _Error)
             {
-                UtilityObj.writeLog("unable to reset decvice");
+                UtilityObj.writeLog("unable to reset device");
                 MessageBox.Show(_Error.Message + " ... unable to reset device for scanning form. Close and open scanning application");
             }
         }
