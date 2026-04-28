@@ -176,19 +176,14 @@ namespace AsyncRequests
         /// <returns></returns>
         public static byte[] download(string url)
         {
-            byte[] response;
-            var client = new RestClient(url);
-            var request = new RestRequest(Method.GET);
-            
-            // Do an initial request to test if the URL is still valid
-            var resp = client.Execute(request);
-            // If the status is 200 we can try to download
-            if (resp.StatusCode == HttpStatusCode.OK) { response = client.DownloadData(request); }
-            // Otherwise return null
-            else { response = null; }
-
-            // When viewing this in string version we get
-            // string x = Encoding.Default.GetString(response);
+            byte[] response = null;
+            if (url != null)
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.GET);
+                response = client.DownloadData(request);
+                string x = Encoding.Default.GetString(response); 
+            }
             return response;
         }
 
