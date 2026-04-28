@@ -42,7 +42,7 @@ namespace AsyncRequests
 
         public static string MakeRequest(object data, string endPoint, Method requestType)
         {
-            authToken = _GetAuthToken();
+            authToken = GetAuthToken();
 
             var client = new RestClient(api_url + "/" + endPoint);
             var request = new RestRequest(requestType);
@@ -108,7 +108,7 @@ namespace AsyncRequests
         {
             if (api_url == null) { }
 
-            string answer = null;
+            string answer;
 
             string url = api_url + "/" + endPoint;
             if (!string.IsNullOrEmpty(queryParam)) { url += "?" + queryParam; }
@@ -133,13 +133,13 @@ namespace AsyncRequests
         }
 
         //Dictionary<string,object>param
-        public static string MakeKeyRequest(string fileName, byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
+        public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
         {
             if (api_url == null) { }
 
             var client = new RestClient(api_url + endPoint);
             var request = new RestRequest(requestType);
-            string answer = "";
+            string answer;
 
             request.AddHeader("Account-Id", account_id);
             request.AddHeader("x-apikey", apikey);
@@ -168,27 +168,7 @@ namespace AsyncRequests
         }
 
 
-        /// <summary>
-        /// NOTE THIS DOES NOT WORK 
-        /// Currently this only ever gets errors
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public static byte[] download(string url)
-        {
-            byte[] response = null;
-            if (url != null)
-            {
-                var client = new RestClient(url);
-                var request = new RestRequest(Method.GET);
-                response = client.DownloadData(request);
-                string x = Encoding.Default.GetString(response); 
-            }
-            return response;
-        }
-
-
-        private static string _GetAuthToken()
+        private static string GetAuthToken()
         {
             var client = new RestClient(token_url);
             var request = new RestRequest(Method.POST);

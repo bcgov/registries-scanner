@@ -29,26 +29,7 @@ namespace ApiScanner
             }
 
             return jList;
-        }
-
-        /// <summary>
-        /// Used to control the returned data from attempting to download an image from a URL
-        /// </summary>
-        /// <param name="docURL"> URL to access previously scanned data </param>
-        /// <returns> Byte[] holding image data </returns>
-        /// <exception cref="Exception"> If the URL was inaccessible or timed out </exception>
-        public static Byte[] getDocBytes(string docURL)
-        {
-            // TODO some sort of URL verification Ticket #33043
-            Byte[] downloadedDoc = APIRequest.download(docURL);
-
-            if ( downloadedDoc == null)
-            {
-                throw new Exception("Error downloading from URL: " + docURL);
-            }
-            return downloadedDoc;
-
-        }        
+        }     
 
         /// <summary>
         /// To be used to update the scanning information of a preexisting document record.
@@ -73,7 +54,7 @@ namespace ApiScanner
 
             try
             {
-                resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.POST);
+                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.POST);
             }
             catch (Exception e)
             {
@@ -124,7 +105,7 @@ namespace ApiScanner
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
             try
             {
-                resp = APIRequest.MakeKeyRequest(myData.consumerFilename, pdfBytes, param, endpoint, RestSharp.Method.PUT);
+                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
             }
             catch (Exception e)
             {
@@ -227,7 +208,7 @@ namespace ApiScanner
             param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
 
             string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.PATCH);
+            string resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PATCH);
 
             return resp;
         }
@@ -247,7 +228,7 @@ namespace ApiScanner
             //string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.consumerDocumentId;
             string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
 
-            string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.PATCH);
+            string resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PATCH);
 
             return resp;
         }

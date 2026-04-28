@@ -1203,8 +1203,6 @@ namespace RegScan
             image0 = null;
             UtilityObj.createFolder("Images");
 
-            // specify that image acquisition is started
-            //_isImageAcquiring = true;
             progressBar.Visible = true;
 
             try
@@ -1255,10 +1253,16 @@ namespace RegScan
                 else
                     _currentDevice.Resolution = new Resolution(600, 600);
 
-                // ADF
+                // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
+                // NOTE - There could be a test implemented here to check if the device supports
+                //     an ADF and if not, show a warning to the user that it can not be used.
                 _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
 
-                // Duplex
+                // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
+                // If the device does not support duplex scanning, then this will fail and be caught by the exception. 
+                // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
+                //    There could also be a check before attempting to set the value to determine support.
+                //    The device currently does not support this feature and the catch is always hit.
                 if (_currentDevice.DocumentFeeder.Enabled)
                 {
                     _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
@@ -1276,22 +1280,11 @@ namespace RegScan
                 return;
             }
 
-                // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
-                // NOTE - There could be a test implemented here to check if the device supports
-                //     an ADF and if not, show a warning to the user that it can not be used.
+            UtilityObj.writeLog("Checking for asynchronous scanning...");
+            // if device supports asynchronous events
+            if (_currentDevice.IsAsyncEventsSupported)
+            {
                 try
-                {
-                    // ADF
-                    device.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
-                // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
-                // If the device does not support duplex scanning, then this will fail and be caught by the exception. 
-                // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
-                //    There could also be a check before attempting to set the value to determine support.
-                //    The device currently does not support this feature and the catch is always hit.
-                    device.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
-                }
-                catch (TwainDeviceCapabilityException)
                 {
                     UtilityObj.writeLog("Device supports asynchronous scanning");
                     // enable all asynchronous events supported by device
@@ -1307,19 +1300,10 @@ namespace RegScan
             {
                 UtilityObj.writeLog("Start image acquisition");
 
-                    // start image acquisition (scan) process
-                    device.Acquire();
+                // start image acquisition process
+                _currentDevice.Acquire();
 
-                    UtilityObj.writeLog("End of image acquisition");
-                }
-                catch (Vintasoft.Twain.TwainException ex)
-                {
-                    // specify that image acquisition is finished
-                    //_isImageAcquiring = false;
-                    UtilityObj.writeLog("Image acquisition error: " + ex);
-                    MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                UtilityObj.writeLog("End of image acquisition");
             }
             catch (Vintasoft.Twain.TwainException ex)
             {

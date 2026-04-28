@@ -26,12 +26,10 @@ namespace RegScan
         private string _documentServiceId;
         //private string _documentExists;
         private string _documentTypeDescription;
-        //private DateTime _consumerFilingDate;
+        private DateTime _consumerFilingDate;
         private string _consumerIdentifier;
         private int _consumerReferenceId;
         //private int _consumerDocumentId;
-        JObject scanInfo;
-        //object scanDoc;
         JObject scanInfo;
 
         //private long _documentId = UtilityObj.NOID;
@@ -249,26 +247,13 @@ namespace RegScan
 
             if (resp.Contains("errorMessage"))
             {
-                resp = "";
-            }
-
-            if (resp == "" )
-            {             
-                // NOTE - not doing anything with this error message. We should print this to the logs.   
+                resp = "";       
                 ErrorMessage = "No Documents Found For Barcode: " + BarCode;
                 UtilityObj.writeLog(ErrorMessage);
             }         
             else
             {
-                var token = JToken.Parse(resp);
-                string docClass = (string)token[0]["documentClass"];
 
-                // This call returns the same information that `resp` holds. Not required.
-                List<JObject> docList = DocumentApi.getDocObjectList(docClass, BarCode);
-
-                UtilityObj.writeLog("Fix3 API returned docList, Adding docs to list");
-                foreach (JObject record in docList)
-                    documentList.Add(ExtractDocument(record));
                 var resultList = (JObject)JToken.Parse(resp);
 
                 // If there are no results returned from the API, return an empty list and log an error.

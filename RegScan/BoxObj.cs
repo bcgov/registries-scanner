@@ -94,7 +94,8 @@ namespace RegScan
         {
             BoxModel boxModel = new BoxModel();
 
-            copyToModel(boxModel);            
+            CopyToModel(boxModel);
+            // TODO - not doing anything with this value
             string resp = ScanningBoxApi.post(boxModel);
 
             var box = Find(_sequenceNumber, _scheduleNumber, _boxNumber);
@@ -108,7 +109,7 @@ namespace RegScan
         {
             BoxModel boxModel = new BoxModel();
 
-            copyToModel(boxModel);
+            CopyToModel(boxModel);
             string resp = ScanningBoxApi.patch(boxModel);
             // NOTE - nothing is done with resp here but this is called from DocumentObj
         }
@@ -217,6 +218,7 @@ namespace RegScan
 
         }
 
+        // TODO - none of the params are used here.
         static public List<BoxObj> List(int _SequencyNumber, int _ScheduleNumber, bool _IncludeNoBoxesFound)
         {
             ERROR_MESSAGE = "";
@@ -242,12 +244,12 @@ namespace RegScan
 
             try
             {
-                _Box.copyToModel(_Box, boxModel);
+                _Box.CopyToModel(_Box, boxModel);
                 string resp = ScanningBoxApi.patch(boxModel);
                 
                 if (resp == null)
                 {
-                    var box = new BoxObj();
+                    BoxObj box = new BoxObj();
                     box.ErrorMessage = "Box not found.";
                     return box;
                 }
@@ -310,7 +312,7 @@ namespace RegScan
             _Destination.SequenceNumber = _Source.SequenceNumber;
         }
 
-        public void copyToModel(BoxModel boxModel)
+        public void CopyToModel(BoxModel boxModel)
         {
             boxModel.boxId = _boxId;
             boxModel.sequenceNumber = _sequenceNumber;
@@ -322,20 +324,20 @@ namespace RegScan
                      
         }
 
-        public void copyToModel(BoxObj box, BoxModel boxModel)
+        public void CopyToModel(BoxObj box, BoxModel boxModel)
         {
             boxModel.boxId = box.BoxId;
             boxModel.sequenceNumber = box.SequenceNumber;
             boxModel.scheduleNumber = box.ScheduleNumber;
             boxModel.boxNumber = box.BoxNumber;
             boxModel.openedDate = box._openedDate;
-            boxModel.openedDate = box.OpenedDate;
+            boxModel.openedDate = box.OpenDate;
             boxModel.closedDate = box.ClosedDate;
             boxModel.pageCount = box.PageCount;
 
         }
        
-        public void copyFromModel(string resp)
+        public void CopyFromModel(string resp)
         {
             var token = JToken.Parse(resp);
 
