@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using PdfSharp.Pdf.Content.Objects;
 
 namespace ApiScanner
 {
@@ -18,7 +17,7 @@ namespace ApiScanner
         OTHER - Other
         PPR - Personal Property Registry
         SOCIETY - Societies
-        XP - Extraprovincial Registrations(Deprecated)
+        XP - Extra provincial Registrations(Deprecated)
         */
     }
 

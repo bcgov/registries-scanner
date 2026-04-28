@@ -38,7 +38,6 @@ namespace AsyncRequests
 
         }
 
-
         /* This method is used to make API calls that require an authorization token and cache-control in the header.
          */
         public static string MakeRequest(object data, string endPoint, Method requestType)
@@ -56,8 +55,21 @@ namespace AsyncRequests
             return GetHttpResponseContent(request, endPoint);
         }
 
-        /* This method is used to make API calls that require an API key and account id in the header.
-         */
+            if (requestType == Method.GET)
+            {
+                string answer = client.Execute(request).Content;
+                return answer;
+            }
+
+            if (requestType == Method.DELETE)
+            {
+                string answer = client.Execute(request).Content;
+                return answer;
+            }
+
+            return "";
+        }
+
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
             var request = new RestRequest(requestType);
@@ -72,6 +84,33 @@ namespace AsyncRequests
             return GetHttpResponseContent(request, endPoint);
         }
 
+        public static string MakeKeyRequest(object requestBody, string queryParam, string endPoint, Method requestType)
+        {
+            if (api_url == null) { }
+
+            string answer = null;
+
+            string url = api_url + "/" + endPoint;
+            if (!string.IsNullOrEmpty(queryParam)) { url += "?" + queryParam; }
+
+            var client = new RestClient(url);
+            var request = new RestRequest(requestType);
+
+            request.AddHeader("Account-Id", account_id);
+            request.AddHeader("x-apikey", apikey);
+
+            if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
+            {
+                if (requestBody != null)
+                {
+                    request.AddJsonBody(requestBody);
+                }
+            }
+
+            answer = client.Execute(request).Content;
+
+            return answer;
+        }
 
         /* This method is used to make API calls that require an API key and account id in the header and also require a PDF document in the body of the request.
          * The parameters for the request are passed in a dictionary and added as query parameters to the request.
@@ -99,27 +138,31 @@ namespace AsyncRequests
             //request.AddQueryParameter("consumerFilingDate", Convert.ToString((DateTime)param["consumerFilingDate"]));
             //request.AddQueryParameter("consumerDocumentId", Convert.ToString((int)param["consumerDocumentId"]));
 
-<<<<<<< REFACTOR-APIRequest
-                request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
-            }
-            return GetHttpResponseContent(request, endPoint);
-=======
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
             answer = client.Execute(request).Content;
 
             return answer;
 
->>>>>>> main
         }
 
 
+        /// <summary>
+        /// NOTE THIS DOES NOT WORK 
+        /// Currently this only ever gets errors
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static byte[] download(string url)
         {
-            var client = new RestClient(url);
-            var request = new RestRequest(Method.GET);
-            byte[] response = client.DownloadData(request);
-            string x = Encoding.Default.GetString(response);//Why is this here? GG Feb 26, 2026
+            byte[] response = null;
+            if (url != null)
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.GET);
+                response = client.DownloadData(request);
+                string x = Encoding.Default.GetString(response); 
+            }
             return response;
         }
 

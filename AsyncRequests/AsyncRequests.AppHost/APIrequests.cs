@@ -119,9 +119,9 @@ namespace AsyncRequests
         private void SetEnvironment()
         {
             // Initialize environment
-            string enviroment = ConfigurationManager.AppSettings["ENV"];
+            string environment = ConfigurationManager.AppSettings["ENV"];
 
-            if (enviroment == "prod")
+            if (environment == "prod")
             {
                 apikey = Base64Decode(ConfigurationManager.AppSettings["PROD_X-APIKEY"]);
                 account_id = ConfigurationManager.AppSettings["PROD_ACCOUNT_ID"];
@@ -132,7 +132,7 @@ namespace AsyncRequests
                 client_secret = ConfigurationManager.AppSettings["TEST_CLIENT_ACCOUNT"];
 
             }
-            else if (enviroment == "test")
+            else if (environment == "test")
             {
                 apikey = Base64Decode(ConfigurationManager.AppSettings["TEST_X-APIKEY"]);
                 account_id = ConfigurationManager.AppSettings["TEST_ACCOUNT_ID"];
