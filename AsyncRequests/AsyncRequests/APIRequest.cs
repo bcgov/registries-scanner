@@ -151,22 +151,32 @@ namespace AsyncRequests
             client_secret = ConfigKeys.CLIENT_ACCOUNT;
         }
 
-        /* This method is used to execute the API request and handle any exceptions that may occur during the request. 
-         * It takes in a RestRequest object and an endpoint string, executes the request, and returns the response content as a string. 
-         * If there is an error with the request, it throws an exception with the error message.   
-        */
+        /// <summary>
+        /// This method is used to execute the API request and handle any exceptions that may occur
+        /// during the request. It takes in a RestRequest object and an endpoint string, executes
+        /// the request, and returns the response content as a string. If there is an error with
+        /// the request, it throws an exception with the error message. 
+        /// </summary>
+        /// <param name="request">Request to be executed</param>
+        /// <param name="endPoint">Where the request is sent</param>
+        /// <returns>Request response as a string</returns>
+        /// <exception cref="Exception"></exception>
         private static string GetHttpResponseContent(RestRequest request, string endPoint)
         {
             var client = new RestClient(api_url + endPoint);
             IRestResponse response = client.Execute(request);
-            if (response.ErrorMessage != "")//There is an error with the request.
+
+            // If the request was not successful (completed with a good status)
+            // throw a new error. 
+            if (!response.IsSuccessful)
             {
-                throw new Exception("Error Message: " + response.ErrorMessage);
+                throw new Exception("Error Message: " + 
+                                     response.StatusCode.ToString() + response.StatusDescription +
+                                     Environment.NewLine + response.ErrorMessage
+                                    );
             }
-            else
-            {
-                return response.Content;
-            }
+            return response.Content;
+
         }
 
     }  //end class
