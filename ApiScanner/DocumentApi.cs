@@ -14,7 +14,9 @@ namespace ApiScanner
         /// updated and included in the response.
         /// </summary>
         /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
-        /// <param name="docServId">The unique identifier of an existing document service document</param>
+        /// <param name="docServId">
+        ///     The unique identifier of an existing document service document
+        /// </param>
         /// <returns></returns>
         public static string updateDocumentRecord(object data, string docServId)
         {
@@ -32,7 +34,9 @@ namespace ApiScanner
         /// be included in the response.
         /// </summary>
         /// <param name="pdfBytes"> PDF file as a byte array</param>
-        /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
+        /// <param name="data"> 
+        ///     other elements to be used in the request. Backup if _fileName is an empty string
+        /// </param>
         /// <returns>String representation of the result fromt the request</returns>
         public static string uploadDocument(byte[] pdfBytes, object data)
         {
