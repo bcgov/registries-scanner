@@ -33,11 +33,18 @@ namespace ApiScanner
 
         public static Byte[] getDocBytes(string docURL)
         {
-            return APIRequest.download(docURL);
+            // TODO some sort of URL verification Ticket #33043
+            Byte[] downloadedDoc = APIRequest.download(docURL);
+
+            if ( downloadedDoc == null)
+            {
+                throw new Exception("Error downloading from URL: " + docURL);
+            }
+            return downloadedDoc;
+
         }        
 
-        // Create pdf document
-        public static string post(string fileName, byte[] pdfBytes, object data)
+        public static string updateScanningInformation(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
@@ -48,9 +55,7 @@ namespace ApiScanner
             param.Add("consumerFilingDate", (DateTime)myData.consumerFilingDate);
             param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
 
-            //string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            //string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
-            string endpoint = "doc/api/v1/documents/" + myData.documentClass;
+            string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
 
             try
             {
@@ -64,7 +69,7 @@ namespace ApiScanner
         }
 
         //Update document data
-        public static string patch(object data, string docServId)
+        public static string updateDocumentRecord(object data, string docServId)
         {
             DocumentModel myData = (DocumentModel)data;
 
@@ -74,7 +79,7 @@ namespace ApiScanner
         }
 
         // Update document image
-        public static string put(string _fileName, byte[] pdfBytes, object data)
+        public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
@@ -82,7 +87,7 @@ namespace ApiScanner
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (_fileName != "")
             {
-                // TODO: handle passing in any parameters with param. 
+                // TODO: handle passing in any parameters with param. Ticket #33043
                 param.Add("consumerFilename", (string)myData.consumerFilename);
             }
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
@@ -102,9 +107,9 @@ namespace ApiScanner
         ////Documents       
 
         // consumerDocumentId
-        public static string get(string conDocId)
+        public static string verify(string barCode)
         {           
-            string endpoint = "/doc/api/v1/documents/verify/" + conDocId;
+            string endpoint = "/doc/api/v1/documents/verify/" + barCode;
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);           
             return resp;
         }
@@ -117,8 +122,7 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentServiceId
-        public static string patch2(object data, string docServId)
+        public static string updateDocumentRecordAndScanning(object data, string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
             string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH);
@@ -126,7 +130,7 @@ namespace ApiScanner
         }
 
         // documentClass documentType
-        public static string post(object data)
+        public static string createDocumentRecord(object data)
         {
             DocumentModel myData = (DocumentModel)data;
 
@@ -137,32 +141,31 @@ namespace ApiScanner
 
         ////search
 
-        public static string getSearch()
+        public static string searchByBarcode(string barcode)
         {
             string endpoint = "/doc/api/v1/searches";
+
+            if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+
             return resp;
         }
 
         //Search by docClass
-        public static string getSearch(string docClass)
+        public static string getSearch(string docClass, Dictionary<string, string> queries)
         {
             string endpoint = "/doc/api/v1/searches/" + docClass;
+            
+            foreach (KeyValuePair<string, string> kvp in queries)
+            {
+                endpoint += "?" + kvp.Key + "=" + kvp.Value;
+            }
+            
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
 
-        /// <summary>
-        /// Request a URL for an existing record. 
-        /// </summary>
-        /// <param name="identifier"> Unique identifier of an existing service application document or application report </param>
-        /// <returns> URL from the API call </returns>
-        public static string getDocumentURL(string identifier)
-        {
-            string endpoint = "/doc/api/v1/application-documents/" + identifier;
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
-            return resp;
-        }
 
         //Update pdf document
         public static string update(string fileName, byte[] pdfBytes, object data)
