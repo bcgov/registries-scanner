@@ -57,21 +57,6 @@ namespace AsyncRequests
             return GetHttpResponseContent(request, endPoint);
         }
 
-            if (requestType == Method.GET)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            if (requestType == Method.DELETE)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            return "";
-        }
-
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
             var request = new RestRequest(requestType);
