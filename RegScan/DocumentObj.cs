@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace RegScan
 {
@@ -37,7 +38,7 @@ namespace RegScan
         private string _legalEntityKey;
         //private string _ownerTypeCode;
         private string _documentTypeCode;
-        private string _authorId;
+        private string _author;
         private string _description;
         private string _fileName;
         private string _fileExtension;
@@ -74,7 +75,7 @@ namespace RegScan
         public string LegalEntityKey { get { return _legalEntityKey; } }
         //public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
-        public string AuthorId { get { return _authorId; } }
+        public string Author { get { return _author; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string FileName { get { return _fileName; } }
         public string FileExtension { get { return _fileExtension; } }
@@ -128,7 +129,7 @@ namespace RegScan
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
-            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.uploadDocument(pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
                 MessageBox.Show("ERROR, scanned image failed to load into database. " + 
@@ -316,6 +317,9 @@ namespace RegScan
 
         }
 
+        /// <summary>
+        /// Take the elements of the DocumentObj and 
+        /// </summary>
         public void CopyToModel()
         {
             //ApiScanModel.accessionNumber = _accessionNumber;
@@ -325,7 +329,7 @@ namespace RegScan
             //ApiScanModel.pagecount = _pageCount;
             //ApiScanModel.scannedDate = _scannedDate;
 
-            ApiDocModel.author = _authorId;
+            ApiDocModel.author = _author;
             ApiDocModel.consumerDocumentId = _barCode;
             ApiDocModel.consumerFilename = _fileName;
             ApiDocModel.consumerFilingDate = DateTime.Now;
@@ -375,9 +379,12 @@ namespace RegScan
 
         
         /// <summary>
-        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guaranteed to be returned from DRS API
+        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not
+        /// guaranteed to be returned from DRS API
         /// </summary>
-        /// <param name="docObj"> DocumentObj that we want to hold the current documents information </param>
+        /// <param name="docObj"> 
+        ///     DocumentObj that we want to hold the current documents information
+        /// </param>
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
@@ -386,59 +393,104 @@ namespace RegScan
                 UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
                 throw new Exception("Attempting to pull data from a null object."); 
             }
-            if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
-            if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
-            if (jDoc.ContainsKey("consumerFilename")) { docObj._fileName = (string)jDoc["consumerFilename"]; }
 
+            // The unique identifier of the document record
+            if (jDoc.ContainsKey("documentServiceId"))
+                { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
+
+            // This author and the scanningInformation.author may be the same values
+            if (jDoc.ContainsKey("author")) { docObj._author = (string)jDoc["author"]; }
+
+            // Consumer information
+            // - identifier of one[+] document(s) associated with the consumer application entity
+            if (jDoc.ContainsKey("consumerDocumentId"))
+                { docObj._barCode = (int)jDoc["consumerDocumentId"]; }
+            // - Either a singular consumerFileName is returned, or a list of consumerFileNames
+            if (jDoc.ContainsKey("consumerFilename"))
+                { docObj._fileName = (string)jDoc["consumerFilename"]; }
+            else if (jDoc.ContainsKey("consumerFilenames")) 
+            {
+                // Convert to an array type and add all names to a string sep by a comma
+                JArray filenameList = (JArray)jDoc["consumerFileNames"];
+                foreach (string filename in filenameList)
+                {
+                    docObj._fileName += (string)filename;
+                    if (filename != (string)filenameList.Last())
+                    {
+                        docObj._fileName += ", ";
+                    }
+                }
+            }
+            // - The DateTime of application/ filing
+            if (jDoc.ContainsKey("consumerFilingDateTime")) 
+                { docObj._consumerFilingDate = (DateTime)jDoc["consumerFilingDateTime"]; }
+            // - Identifier of the entity (BC Company or a manufactured home) in filing
             if (jDoc.ContainsKey("consumerIdentifier")) {
                 docObj._legalEntityKey = (string)jDoc["consumerIdentifier"];
                 docObj._consumerIdentifier = (string)jDoc["consumerIdentifier"];
             }
-
-            if ( dataCheck(jDoc["consumerReferenceId"].ToString())) {
-                docObj._consumerReferenceId = Int32.Parse(jDoc["consumerReferenceId"].ToString());
-            }
-            if (jDoc.ContainsKey("createDateTime")) { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
-
-            if (jDoc.ContainsKey("documentClass")) {
-                if (jDoc.ContainsKey("documentTypeDescription")) { docObj._description = (string)jDoc["documentTypeDescription"]; }
-                else { docObj._description = (string)jDoc["documentClass"]; }
-                docObj._documentClass = (string)jDoc["documentClass"];
+            // - Unique identifier for the consumer application transaction/filing/registration
+            if (jDoc.ContainsKey("consumerReferenceId"))
+            {
+                if (dataCheck(jDoc["consumerReferenceId"].ToString()))
+                {
+                    docObj._consumerReferenceId = 
+                        Int32.Parse(jDoc["consumerReferenceId"].ToString());
+                }
             }
 
-            if (jDoc.ContainsKey("documentServiceId")) { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
-            if (jDoc.ContainsKey("documentType")) { docObj._documentTypeCode = (string)jDoc["documentType"]; }
-            if (jDoc.ContainsKey("documentTypeDescription")) { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
+            // Generated by the system, the date and time the document is saved/uploaded.
+            if (jDoc.ContainsKey("createDateTime")) 
+                { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
+
+            // Document Class, Type, and type description
+            if (jDoc.ContainsKey("documentClass"))
+                { docObj._documentClass = (string)jDoc["documentClass"]; }
+            if (jDoc.ContainsKey("documentType"))
+                { docObj._documentTypeCode = (string)jDoc["documentType"]; }
+            if (jDoc.ContainsKey("documentTypeDescription"))
+                { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
 
             // Check if there is a previous document uploaded for this record
-            if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
+            if (jDoc.ContainsKey("documentURL"))
+                { docObj._documentURL = (string)jDoc["documentURL"]; }
 
-            if (jDoc.ContainsKey("consumerFilingDateTime")) { docObj._consumerFilingDate = (DateTime)jDoc["consumerFilingDateTime"]; }
+            // Description, or notes of the document record
+            if (jDoc.ContainsKey("description"))
+                { docObj._description = (string)jDoc["description"]; }
 
+            // Scanning information [if present] is in a nested object
             if (jDoc.ContainsKey("scanningInformation"))
             {
                 // Make the nested object easier to parse
                 docObj.scanInfo = (JObject)jDoc["scanningInformation"];
-                //docObj.ApiScanModel = (ScanningInfoModel)docObj.scanInfo;
 
                 if (docObj.scanInfo.ContainsKey("accessionNumber")) {
-                    // The Accession Number is returned as a string with the following form: "12-3456-7890"
-                    // From this we can get the sequence number <12>, schedule number <3456> and box number <7890>.
+                    // The Accession Number is returned as a string with the following form:
+                    // "12-3456-7890" - From this we can extract the following
+                    // sequence number <12>, schedule number <3456> and box number <7890>.
                     string accNumb = (string)docObj.scanInfo["accessionNumber"];
                     string[] accNumbersSplit = accNumb.Split('-');
                     docObj._sequenceNumber = int.Parse(accNumbersSplit[0]);
                     docObj._scheduleNumber = int.Parse(accNumbersSplit[1]);
                     docObj._boxNumber = int.Parse(accNumbersSplit[2]);
                 }
-                // Within the nested returned object there is another author field, save as the doc owner
-                if (docObj.scanInfo.ContainsKey("author")) { docObj._owner = (string)docObj.scanInfo["author"]; }
+
+                // Another author field, save as owner
+                if (docObj.scanInfo.ContainsKey("author"))
+                    { docObj._owner = (string)docObj.scanInfo["author"]; }
                 
-                if (docObj.scanInfo.ContainsKey("batchId")) { docObj._batchId = (int)docObj.scanInfo["batchId"];}
-                                
-                if (docObj.scanInfo.ContainsKey("pageCount")) { docObj._pageCount = (int)docObj.scanInfo["pageCount"];}
-                
-                if (docObj.scanInfo.ContainsKey("scanDateTime")) { docObj._scannedDate = (DateTime)docObj.scanInfo["scanDateTime"];}
-                                       
+                // Batch ID that the scan was processed with
+                if (docObj.scanInfo.ContainsKey("batchId"))
+                    { docObj._batchId = (int)docObj.scanInfo["batchId"];}
+
+                // Number of pages expected in the document
+                if (docObj.scanInfo.ContainsKey("pageCount"))
+                    { docObj._pageCount = (int)docObj.scanInfo["pageCount"];}
+
+                // The date of the consumer application document scan date
+                if (docObj.scanInfo.ContainsKey("scanDateTime"))
+                    { docObj._scannedDate = (DateTime)docObj.scanInfo["scanDateTime"];}             
             }
         }        
 
