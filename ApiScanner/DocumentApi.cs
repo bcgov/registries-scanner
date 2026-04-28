@@ -87,17 +87,16 @@ namespace ApiScanner
         /// request. If scanning information matching the consumerDocumentId exists then it will
         /// be included in the response.
         /// </summary>
-        /// <param name="_fileName"> Filename associated with the uploaded document </param>
         /// <param name="pdfBytes"> PDF file as a byte array</param>
         /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
-        /// <returns></returns>
-        public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
+        /// <returns>String representation of the result fromt the request</returns>
+        public static string uploadDocument(byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
 
             Dictionary<string, object> param = new Dictionary<string, object>();
-            if (_fileName != "")
+            if (myData.consumerFilename != "")
             {
                 // TODO: handle passing in any parameters with param. Ticket #33043
                 param.Add("consumerFilename", (string)myData.consumerFilename);
