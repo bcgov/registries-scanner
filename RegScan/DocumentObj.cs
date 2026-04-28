@@ -24,21 +24,25 @@ namespace RegScan
         private string _documentURL;
         private string _documentClass;
         private string _documentServiceId;
+        //private string _documentExists;
         private string _documentTypeDescription;
         private DateTime _consumerFilingDate;
         private string _consumerIdentifier;
         private int _consumerReferenceId;
+        //private int _consumerDocumentId;
         JObject scanInfo;
 
         //private long _documentId = UtilityObj.NOID;
         private string _documentId = "";
         private string _legalEntityKey;
+        //private string _ownerTypeCode;
         private string _documentTypeCode;
         private string _authorId;
         private string _description;
         private string _fileName;
         private string _fileExtension;
         private bool _isScanned;
+        //private bool _isPurged;
         private DateTime _createDateTime;
 
         // Scanning Information
@@ -50,6 +54,8 @@ namespace RegScan
         private int _batchId;
         private int _versionNumber;
         private string _owner;
+        //private int _eventId;
+        //private bool _eventIdIsNull;
         private string _scannerId;
         private DateTime _scannedDate;
 
@@ -66,12 +72,14 @@ namespace RegScan
         public string DocumentURL { get { return _documentURL; } }
         public string DocumentId { get { return _documentId; } } //not used in data tables any longer
         public string LegalEntityKey { get { return _legalEntityKey; } }
+        //public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
         public string AuthorId { get { return _authorId; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string FileName { get { return _fileName; } }
         public string FileExtension { get { return _fileExtension; } }
         public bool IsScanned { get { return _isScanned; } }
+        //public bool IsPurged { get { return _isPurged; } }
         public DateTime CreateDateTime { get { return _createDateTime; } }
         public string BarCode { get { return _barCode.ToString(); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
@@ -222,21 +230,30 @@ namespace RegScan
 
 
         //  _BarCode  == conDocId
+        /// <summary>
+        /// Given a barcode request record details. Store the returned items into a list of DocumentObjs.
+        /// 
+        /// </summary>
+        /// <param name="BarCode"> 8-digit barcode string </param>
+        /// <returns> List of DocumentObjs for each returned record matching the _BarCode </returns>
         static public List<DocumentObj> Find(string BarCode)
         {           
             ErrorMessage = "";
             List<DocumentObj> documentList = new List<DocumentObj>();
 
+            // This value will hold the information we need for the document. 
+            // The Call to `getDocObjectList()` is not necessary.
             string resp = DocumentApi.searchByBarcode(BarCode);
 
             if (resp.Contains("errorMessage"))
             {
-                resp = "";
+                resp = "";       
                 ErrorMessage = "No Documents Found For Barcode: " + BarCode;
                 UtilityObj.writeLog(ErrorMessage);
             }         
             else
             {
+
                 var resultList = (JObject)JToken.Parse(resp);
 
                 // If there are no results returned from the API, return an empty list and log an error.

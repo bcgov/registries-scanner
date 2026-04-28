@@ -11,6 +11,10 @@ namespace ApiScanner
 {
     public class OwnerTypeApi
     {
+        /// <summary>
+        /// This is currently hitting the exact same endpoint as documentTypeApi
+        /// </summary>
+        /// <returns></returns>
         static public string get()
         {
             string endpoint = "/doc/api/v1/scanning/document-classes";

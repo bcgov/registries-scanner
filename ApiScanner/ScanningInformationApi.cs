@@ -12,6 +12,12 @@ namespace ApiScanner
             return resp;
         }
 
+        /// <summary>
+        /// DONT USE THIS HERE USE THE OTHER ONE THAT ALREADY EXISTS IN DOCUMENTAPI
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="docServiceId"></param>
+        /// <returns></returns>
         public string patch(object data, string docServiceId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServiceId;

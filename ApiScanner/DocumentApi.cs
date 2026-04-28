@@ -29,21 +29,16 @@ namespace ApiScanner
             }
 
             return jList;
-        }
+        }     
 
-        public static Byte[] getDocBytes(string docURL)
-        {
-            // TODO some sort of URL verification Ticket #33043
-            Byte[] downloadedDoc = APIRequest.download(docURL);
-
-            if ( downloadedDoc == null)
-            {
-                throw new Exception("Error downloading from URL: " + docURL);
-            }
-            return downloadedDoc;
-
-        }        
-
+        /// <summary>
+        /// To be used to update the scanning information of a preexisting document record.
+        /// This endpoint can not be used to upload a document image to the API
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="pdfBytes"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static string updateScanningInformation(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -59,7 +54,7 @@ namespace ApiScanner
 
             try
             {
-                resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.POST);
+                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.POST);
             }
             catch (Exception e)
             {
@@ -68,7 +63,15 @@ namespace ApiScanner
             return resp;
         }
 
-        //Update document data
+        /// <summary>
+        /// Update any of the document record properties (other than document class) for an existing
+        /// document identified by a document service ID. If scanning information is included in the
+        /// request (and it exists), the scanning record matching the consumerDocumentId will be
+        /// updated and included in the response.
+        /// </summary>
+        /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
+        /// <param name="docServId">The unique identifier of an existing document service document</param>
+        /// <returns></returns>
         public static string updateDocumentRecord(object data, string docServId)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -78,7 +81,16 @@ namespace ApiScanner
             return resp;
         }
 
-        // Update document image
+        /// <summary>
+        /// Add or replace the existing document record specified by the document service ID with
+        /// the payload document. A required consumerFilename parameter must be submitted with the
+        /// request. If scanning information matching the consumerDocumentId exists then it will
+        /// be included in the response.
+        /// </summary>
+        /// <param name="_fileName"> Filename associated with the uploaded document </param>
+        /// <param name="pdfBytes"> PDF file as a byte array</param>
+        /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
+        /// <returns></returns>
         public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -93,7 +105,7 @@ namespace ApiScanner
             string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
             try
             {
-                resp = APIRequest.MakeKeyRequest(myData.consumerFilename, pdfBytes, param, endpoint, RestSharp.Method.PUT);
+                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
             }
             catch (Exception e)
             {
@@ -106,7 +118,12 @@ namespace ApiScanner
 
         ////Documents       
 
-        // consumerDocumentId
+        /// <summary>
+        /// This endpoint should only be used if a user is checking if the current barcode is
+        /// already used or not before attempting to add a new document record. 
+        /// </summary>
+        /// <param name="conDocId"> Barcode (consumerDocumentId) to check for existence </param>
+        /// <returns> String response from API call </returns>
         public static string verify(string barCode)
         {           
             string endpoint = "/doc/api/v1/documents/verify/" + barCode;
@@ -114,7 +131,8 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentServiceId
+        /// REMOVE. 
+        /// This endpoint and request type combo should not be used by the scanning application
         public static string delete(string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
@@ -122,6 +140,8 @@ namespace ApiScanner
             return resp;
         }
 
+        /// REMOVE. This is duplicated from the patch method above. 
+        /// The only difference is not casting data to a DocumentModel.
         public static string updateDocumentRecordAndScanning(object data, string docServId)
         {
             string endpoint = "/doc/api/v1/documents/" + docServId;
@@ -129,7 +149,15 @@ namespace ApiScanner
             return resp;
         }
 
-        // documentClass documentType
+        /// <summary>
+        /// Update any of the document record properties (other than document class) for an existing document.
+        /// If scanning information is included in the request, the scanning record matching the consumerDocumentId
+        /// will be updated (if it exists). This information will then be included in the response.
+        /// </summary>
+        /// <param name="data">
+        /// body document to be included in the request. MUST be able to be cast to DocumentModel.
+        /// </param>
+        /// <returns>>Response from the API call</returns>
         public static string createDocumentRecord(object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -166,7 +194,8 @@ namespace ApiScanner
             return resp;
         }
 
-
+        /// REMOVE. This is duplicated from the post method above. 
+        /// The only difference is adding parameters to before making the call. 
         //Update pdf document
         public static string update(string fileName, byte[] pdfBytes, object data)
         {
@@ -179,12 +208,13 @@ namespace ApiScanner
             param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
 
             string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.PATCH);
+            string resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PATCH);
 
             return resp;
         }
 
-        //Update pdf document
+        /// REMOVE. This is duplicated from the post method above. 
+        /// The only difference is adding parameters to before making the call. 
         public static string patch(string fileName, byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
@@ -198,12 +228,12 @@ namespace ApiScanner
             //string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.consumerDocumentId;
             string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
 
-            string resp = APIRequest.MakeKeyRequest(fileName, pdfBytes, param, endpoint, RestSharp.Method.PATCH);
+            string resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PATCH);
 
             return resp;
         }
 
-        // documenttype consumerDocumentId
+        /// REMOVE. This endpoint was depreciated a long time ago. Should NOT be used. 
         public static string get(string docType, string conDocId)
         {
             string endpoint = "/doc/api/v1/business/" + docType + "?consumerDocumentId=" + conDocId;

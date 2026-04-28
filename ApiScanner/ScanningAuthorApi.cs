@@ -4,7 +4,10 @@ namespace ApiScanner
 {
     public class ScanningAuthorApi 
     {     
-        //List
+        /// <summary>
+        /// Gets a list of all the authors. It does not appear to use this information anywhere else.
+        /// </summary>
+        /// <returns></returns>
         static public string get()
         {
             string endpoint = "/doc/api/v1/scanning/authors";

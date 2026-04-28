@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace ApiScanner
 {
     // In documentation, possible expansion of application. Not currently used by scanner
+    // CAN BE REMOVED
     public class documentModelApi
     {
         public DocumentApi _doc;
