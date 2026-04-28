@@ -119,27 +119,20 @@ namespace RegScan
 
         #region dml
                
-        private void Insert()
-        {
-            copyToModel();            
-            byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
-            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
-            UpdateBoxPageCount();
-        }
-               
         /// <summary>
         /// Handles the logic of updating a current record with the scanned document.
         /// </summary>
         private void Update()
         {
-            copyToModel();
+            CopyToModel();
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
             string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to load into database. Current data for " + BarCode + " may be inaccurate.");
+                MessageBox.Show("ERROR, scanned image failed to load into database. " + 
+                                "Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
@@ -168,8 +161,14 @@ namespace RegScan
             // We want to only do an insert if there was no existing record for the barcode.
             if (_replaceRecordFlag)
                 Update();
+            // The scanning application should never create a new record through the DRS API.
             else
-                Insert();
+            {
+                MessageBox.Show("ERROR Unable to create a new record for document with barcode: " +
+                                 BarCode + ". Please try again once document has been indexed.");
+                UtilityObj.writeLog("No existing record for barcode: " + BarCode);
+                Environment.Exit(0);
+            }
 
             // Once done reset flag
             _replaceRecordFlag = false;
@@ -317,7 +316,7 @@ namespace RegScan
 
         }
 
-        public void copyToModel()
+        public void CopyToModel()
         {
             //ApiScanModel.accessionNumber = _accessionNumber;
             //ApiScanModel.author = _authorId;
