@@ -125,10 +125,7 @@ namespace AsyncRequests
 
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
-            answer = client.Execute(request).Content;
-
-            return answer;
-
+            return GetHttpResponseContent(request, endPoint);
         }
 
 
