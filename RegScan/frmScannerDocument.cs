@@ -30,7 +30,7 @@ namespace RegScan
         /// <summary>
         /// Options that control functions of application.
         /// </summary>
-        private OptionsObj _options = null;
+        //private OptionsObj _options = null;
 
         /// <summary>
         /// Default setting for scanning parameters.
@@ -94,8 +94,6 @@ namespace RegScan
             cBoxPageSize.Items.Add(PdfSharp.PageSize.Legal.ToString());
             cBoxPageSize.SelectedIndex = -1;
 
-            // Get the options
-            _options = new OptionsObj();
             // Create a path to where debugging logs should be stored. 
             string scannerDir = "c:\\scanner25";
             string scannerFile = "vstwain.log";
@@ -314,8 +312,8 @@ namespace RegScan
                         else
                         {
                             // Check for box full and display a message if it is full.
-                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _options.MaximumPagesInBox)
-                                MessageBox.Show("Warning - Current Box will exceed limit of " + _options.MaximumPagesInBox.ToString() + " pages, after these pages are added");
+                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _defaultSetting.MaxPagesInBox)
+                                MessageBox.Show("Warning - Current Box will exceed limit of " + _defaultSetting.MaxPagesInBox.ToString() + " pages, after these pages are added");
                         }
 
                         // IF scan is to be cancelled
@@ -633,7 +631,10 @@ namespace RegScan
 
             if (_currentDocument.PageCount != _scannedImageList.Count)
             {
-                if (MessageBox.Show("Number of pages scanned does not match number of pages expected ... Save?", "Page Mismatch", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
+                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
+                    MessageBoxButtons.YesNo);
+                if ( usr_rsp == System.Windows.Forms.DialogResult.No)
                     return;
             }
 
@@ -645,10 +646,10 @@ namespace RegScan
             progressBar.Value = 0;
             progressBar.Visible = true;
 
-            // Process any queued actions in the background. 
+            // This is discouraged in Microsoft Docs.
             Application.DoEvents();
 
-            UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnSave_Click Scanner  Objects");
+            UtilityObj.writeLog(_scannedImageList.Count.ToString() + " _scannedImageList Objects");
 
             // FOREACH image convert to a PDF page and add to the PDF document
             foreach (var bp in _scannedImageList)
@@ -659,12 +660,15 @@ namespace RegScan
                 }
                 catch (Exception ex)
                 {
-                    string img_num = _scannedImageList.IndexOf(bp).ToString() + " of " + _scannedImageList.Count();
-                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" + ex);
+                    string img_num = _scannedImageList.IndexOf(bp).ToString() +
+                                     " of " + _scannedImageList.Count();
+                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" +
+                                         ex.ToString());
                 }
                 
                 // Update progress bar
                 progressBar.Value += updateCount;
+                // This is discouraged in Microsoft Docs.
                 Application.DoEvents();
             }
 

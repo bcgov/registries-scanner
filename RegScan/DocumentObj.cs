@@ -71,7 +71,7 @@ namespace RegScan
 
         // From document table
         public string DocumentURL { get { return _documentURL; } }
-        public string DocumentId { get { return _documentId; } } //not used in data tables any longer
+        public string DocumentId { get { return _documentId; } }
         public string LegalEntityKey { get { return _legalEntityKey; } }
         //public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
@@ -85,8 +85,14 @@ namespace RegScan
         public string BarCode { get { return _barCode.ToString(); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
         public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
-        public string AccessionNumberString { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), _scheduleNumber.ToString().PadLeft(4, '0'), _boxNumber.ToString().PadLeft(4, '0')); } }
-        public string AccessionNumberText { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-", _scheduleNumber.ToString().PadLeft(4, '0'), "-", _boxNumber.ToString().PadLeft(4, '0')); } }
+        public string AccessionNumberString { 
+            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
+                                       _scheduleNumber.ToString().PadLeft(4, '0'), 
+                                       _boxNumber.ToString().PadLeft(4, '0')); } }
+        public string AccessionNumberText { 
+            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-",
+                                       _scheduleNumber.ToString().PadLeft(4, '0'), "-",
+                                       _boxNumber.ToString().PadLeft(4, '0')); } }
         public int BatchId { get { return _batchId; } set { _batchId = value; } }
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
         public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
@@ -95,19 +101,25 @@ namespace RegScan
         public string Owner { get { return _owner; } }
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
-        public Boolean UpdateRecord { get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
+        public Boolean UpdateRecord { 
+            get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
 
         // Calculated
-        public PdfDocument PDFDocument { get { return _pdfDocument; } set { _pdfDocument = value; } }
+        public PdfDocument PDFDocument { 
+            get { return _pdfDocument; } set { _pdfDocument = value; } }
         public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
 
-        public int SequenceNumber { get { return int.Parse(AccessionNumberString.Substring(0, 2)); } }
-        public int ScheduleNumber { get { return int.Parse(AccessionNumberString.Substring(2, 4)); } }
-        public int BoxNumber { get { return int.Parse(AccessionNumberString.Substring(6, 4)); } }
+        public int SequenceNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(0, 2)); } }
+        public int ScheduleNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(2, 4)); } }
+        public int BoxNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(6, 4)); } }
 
         public int PagesInBox { get { return _boxObj == null ? 0 : _boxObj.PageCount; } }
         public int PdfPages { get { return _pdfDocument.PageCount; } }
-        public string FQDocType { get { return DocTypeObj.Find(_documentTypeCode).FQDescription; } }
+        public string FQDocType { 
+            get { return DocTypeObj.Find(_documentTypeCode).FQDescription; } }
 
         public string Error = "";
 
@@ -142,13 +154,13 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Controls the flow of logic between inserting a new document and updating an existing document.
-        /// If the _replaceFlag is true, (there is an existing document) -> Update: replace the existing document.
-        /// If the _replaceFlag is false, (no existing document). Insert: create a new record and post the document.
-        ///     Previously _replaceFlag would have been false for any record without a DocumentURL and inserted
-        ///                                             true for any record with a DocumentURL and updated.
-        /// With the current use cases of the application there will never be a need to create a document record
-        /// through the scanning application. This function should be removed and Update() used instead.
+        /// Controls the flow of logic between inserting or updatating a document record.
+        /// If the _replaceFlag is true, (there is an existing document) 
+        ///     -> Update: replace the existing document.
+        /// If the _replaceFlag is false, (no existing document).
+        ///     -> Insert: create a new record and post the document. Currently the scanning
+        ///        application does not have the ability to create a new document record through
+        ///        DRS API. This functionality could be added in the future.
         /// </summary>
         public void UpdateInsert()
         {
@@ -157,9 +169,6 @@ namespace RegScan
             _fileExtension = "PDF";
             _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
 
-            // Previously would have been false for any record without a DocumentURL and inserted - any with would be an update.
-            // That logic is faulty because the endpoints are the same in both cases and should be handled the same
-            // We want to only do an insert if there was no existing record for the barcode.
             if (_replaceRecordFlag)
                 Update();
             // The scanning application should never create a new record through the DRS API.
@@ -200,13 +209,14 @@ namespace RegScan
 
 
         /// <summary>
-        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if there is a preexisting
-        /// version of this document and the user indicates they would like to create a new version of the document. This
-        /// would not suggest that the document class should be changed nor a new box should be created. 
+        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if
+        /// there is a preexisting version of this document and the user indicates they would like
+        /// to create a new version of the document. This would not suggest that neither the 
+        /// document class should be changed nor a new box should be created. 
         /// </summary>
         public void SetToNew()
         {
-            //_documentId = "";          // _documentId = "" indicates a database insert, instead of an update.
+            // _documentId = "" indicates a database insert, instead of an update.
             _replaceRecordFlag = true;
 
             //if (_documentClass == "SOCIETY")
@@ -229,13 +239,14 @@ namespace RegScan
         static public string ErrorMessage = "";
 
 
-        //  _BarCode  == conDocId
         /// <summary>
-        /// Given a barcode request record details. Store the returned items into a list of DocumentObjs.
-        /// 
+        /// Given a barcode request record details. Store the returned items into a list of
+        /// DocumentObjs
         /// </summary>
         /// <param name="BarCode"> 8-digit barcode string </param>
-        /// <returns> List of DocumentObjs for each returned record matching the _BarCode </returns>
+        /// <returns> 
+        ///     List of DocumentObjs for each returned record matching the _BarCode
+        /// </returns>
         static public List<DocumentObj> Find(string BarCode)
         {           
             ErrorMessage = "";
@@ -256,7 +267,8 @@ namespace RegScan
 
                 var resultList = (JObject)JToken.Parse(resp);
 
-                // If there are no results returned from the API, return an empty list and log an error.
+                // If there are no results are returned from the API or if they are not formatted
+                // as expected -> return an empty list and log an error.
                 if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
                 {
                     UtilityObj.writeLog("Unexpected return result from API.");
@@ -269,19 +281,24 @@ namespace RegScan
                     return null;
                 }
 
-
                 DocumentObj docObj;
+                // The barcode should be unique and only one item (Document Record) in the results
+                // This loop will catch any unexpected results and save them to the documentList
                 foreach (JObject record in resultList["results"])
                 {
                     // The first API call doesn't provide all the fields we want to display
                     // Call search again with the document class and unique identifier
                     var docClass = record["documentClass"].ToString();
-                    var queries = new Dictionary<string, string>() { { "documentServiceId", record["documentServiceId"].ToString() } };
+                    var queries = new Dictionary<string, string>() { 
+                        { "documentServiceId", record["documentServiceId"].ToString() } 
+                    };
                     var betterResponse = DocumentApi.getSearch(docClass, queries);
 
-                    // This does return a list but the documentClass documentServiceId pairing is unique -> only one element
+                    // This does return a list but the documentClass documentServiceId pairing is
+                    //     unique -> only one element
                     var betterResultList = (JObject)JToken.Parse(betterResponse)[0];
                     docObj = new DocumentObj();
+                    // Take the elements from the returned JObject and save them to a DocumentObj
                     copyFromModel(docObj, betterResultList);
                     documentList.Add(docObj);
                 }
@@ -291,29 +308,6 @@ namespace RegScan
 
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
-
-        }
-
-        // Select the documents that match this barcode.
-        static private DocumentObj ExtractDocument(JObject jDoc)
-        {           
-            UtilityObj.writeLog("Extract jDoc and scanning information.");
-
-            DocumentObj docObj = new DocumentObj();
-            // Updated copyFromModel to do the work copying scanning information (if returned) as well as the record information.
-            // Much of the logic below is not required. 
-            copyFromModel(docObj, jDoc);
-
-            return docObj;
-        }
-              
-
-        // IF the document does not contain an accession number, then get one based on the owner type code.
-        static public long GetAccessionNumber(BoxObj _Box)
-        {
-            return long.Parse(_Box.SequenceNumber.ToString().PadLeft(2, '0') +
-                              _Box.ScheduleNumber.ToString().PadLeft(4, '0') +
-                              _Box.BoxNumber.ToString().PadLeft(4, '0'));
 
         }
 
