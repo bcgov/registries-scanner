@@ -8,7 +8,7 @@ namespace ApiScanner
         static public string get()
         {
             string endpoint = "/doc/api/v1/scanning/parameters";
-            string resp = APIRequest.MakeKeyRequest("", endpoint, Method.GET);
+            string resp = APIRequest.MakeKeyRequest(endpoint, Method.GET);
             return resp;
         }
 
