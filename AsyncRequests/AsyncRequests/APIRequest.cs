@@ -12,12 +12,10 @@ using System.Text;
 namespace AsyncRequests
 {
     // Class to facilitate API calls
-    // uses Base64Encoding to scramble api-key value in app.config
-    //
     public class APIRequest
     {
         // security                         
-        private string timeout;
+        private static string timeout;
         private static string client_id;
         private static string client_secret;
         private static string apikey;
@@ -25,13 +23,13 @@ namespace AsyncRequests
         private static string authToken;
         private static string token_url;
 
-        private static string api_url;    
+        private static string api_url;
 
         public static Method method;
 
         public APIRequest()
         {
-            // Get configuration
+            // Set configuration
             SetEnvironment();
 
             // Set security protocols
@@ -40,6 +38,8 @@ namespace AsyncRequests
 
         }
 
+        /* This method is used to make API calls that require an authorization token and cache-control in the header.
+         */
         public static string MakeRequest(object data, string endPoint, Method requestType)
         {
             authToken = GetAuthToken();
@@ -49,34 +49,16 @@ namespace AsyncRequests
 
             request.AddHeader("Authorization", "Bearer " + authToken);
             request.AddHeader("cache-control", "no-cache");
-            
+
             if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
             {
                 request.AddJsonBody(data);
-                string answer = client.Execute(request).Content;
-                return answer;
             }
-
-            if (requestType == Method.GET)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            if (requestType == Method.DELETE)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            return "";
+            return GetHttpResponseContent(request, endPoint);
         }
 
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
-            if( api_url == null ) { }                  
-
-            var client = new RestClient(api_url + "/" + endPoint);
             var request = new RestRequest(requestType);
 
             request.AddHeader("Account-Id", account_id);
@@ -84,24 +66,9 @@ namespace AsyncRequests
 
             if (requestType == Method.POST || requestType == Method.PUT || requestType == Method.PATCH)
             {
-                request.AddJsonBody(data);                
-                string answer = client.Execute(request).Content;
-                return answer;
+                request.AddJsonBody(data);
             }
-
-            if (requestType == Method.GET)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            if (requestType == Method.DELETE)
-            {
-                string answer = client.Execute(request).Content;
-                return answer;
-            }
-
-            return "";
+            return GetHttpResponseContent(request, endPoint);
         }
 
         public static string MakeKeyRequest(object requestBody, string queryParam, string endPoint, Method requestType)
@@ -135,9 +102,6 @@ namespace AsyncRequests
         //Dictionary<string,object>param
         public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, string endPoint, Method requestType)
         {
-            if (api_url == null) { }
-
-            var client = new RestClient(api_url + endPoint);
             var request = new RestRequest(requestType);
             string answer;
 
@@ -161,10 +125,7 @@ namespace AsyncRequests
 
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
-            answer = client.Execute(request).Content;
-
-            return answer;
-
+            return GetHttpResponseContent(request, endPoint);
         }
 
 
@@ -193,6 +154,34 @@ namespace AsyncRequests
             timeout = ConfigKeys.AUTH_TIMEOUT;
             client_id = ConfigKeys.CLIENT_ID;
             client_secret = ConfigKeys.CLIENT_ACCOUNT;
+        }
+
+        /// <summary>
+        /// This method is used to execute the API request and handle any exceptions that may occur
+        /// during the request. It takes in a RestRequest object and an endpoint string, executes
+        /// the request, and returns the response content as a string. If there is an error with
+        /// the request, it throws an exception with the error message. 
+        /// </summary>
+        /// <param name="request">Request to be executed</param>
+        /// <param name="endPoint">Where the request is sent</param>
+        /// <returns>Request response as a string</returns>
+        /// <exception cref="Exception"></exception>
+        private static string GetHttpResponseContent(RestRequest request, string endPoint)
+        {
+            var client = new RestClient(api_url + endPoint);
+            IRestResponse response = client.Execute(request);
+
+            // If the request was not successful (completed with a good status)
+            // throw a new error. 
+            if (!response.IsSuccessful)
+            {
+                throw new Exception("Error Message: " + 
+                                     response.StatusCode.ToString() + response.StatusDescription +
+                                     Environment.NewLine + response.ErrorMessage
+                                    );
+            }
+            return response.Content;
+
         }
 
     }  //end class
