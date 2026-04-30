@@ -9,8 +9,11 @@ namespace ApiScanner
         static public string get()
         {
             string endpoint = "/doc/api/v1/scanning/document-types";
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
-            return resp;
+            
+            // I dont know if this list is actually being used.
+            //string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+
+            return null;
         }        
     }
 

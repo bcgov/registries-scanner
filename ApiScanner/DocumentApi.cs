@@ -85,7 +85,7 @@ namespace ApiScanner
                 throw new Exception("Unable to process search without Barcode. Please try again.");
             }
             
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
 
             return resp;
         }
@@ -108,7 +108,7 @@ namespace ApiScanner
                 endpoint += "?" + kvp.Key + "=" + kvp.Value;
             }
             
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
             return resp;
         }
 

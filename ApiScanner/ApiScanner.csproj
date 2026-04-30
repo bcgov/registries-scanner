@@ -39,7 +39,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="documentModelApi.cs" />
     <Compile Include="documentType.cs" />
     <Compile Include="DocumentApi.cs" />
     <Compile Include="documentTypeApi.cs" />
