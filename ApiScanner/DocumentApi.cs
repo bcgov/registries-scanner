@@ -7,6 +7,7 @@ namespace ApiScanner
 {
     public class DocumentApi
     {
+        #region Updating Document and Record Endpoints
         /// <summary>
         /// Update any of the document record properties (other than document class) for an existing
         /// document identified by a document service ID. If scanning information is included in the
@@ -60,14 +61,15 @@ namespace ApiScanner
             }
                 return resp;
         }
+        #endregion
 
-        ////search
+        #region Search Endpoints
 
         /// <summary>
         /// With the given barcode use the DRS API to search for a matching document record.
         /// </summary>
-        /// <param name="barcode">
-        ///     Cant be null or empty string. Used in query parameter for search.
+        /// <param name="barcode"> 
+        ///     Can't be null or empty string. Used in query parameter for search.
         /// </param>
         /// <returns>string response from search endpoint</returns>
         /// <exception cref="Exception">If barcode is empty or null throw an error</exception>
@@ -109,7 +111,9 @@ namespace ApiScanner
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
-    
+
+        #endregion
+
     }
 
     public class DocumentModel
