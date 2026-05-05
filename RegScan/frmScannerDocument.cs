@@ -180,7 +180,9 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Process the completed scan session ... this contains most of the business logic of the application.
+        /// Once the scan is complete process all scanned images and save to a local folder.
+        /// Pages are checked for barcodes and any existing document records. The scans are then
+        /// passed along to be shown to the user.
         /// </summary>
         private void ProcessCompleted()
         {
@@ -196,15 +198,11 @@ namespace RegScan
             UtilityObj.writeLog("Fix Checking for barcode");
             // Scan for Barcodes
             var barcodes = BarCodeObj.Scan(image0);
-            if (barcodes.Count < 1)
-            {
-                UtilityObj.writeLog("No barcodes found in document");
-            }
 
             // What follows here is a lot of if else statements. I believe breaking the components
             // out into methods then only using this as the control to the flow.
             //    Components: get barcode, get record, handle versions, display document
-            // This refactoring could also be accomplished by drawing out the process before rewriting.
+            // This could also be accomplished by drawing out the process before rewriting.
 
             // IF we have a new document.
             if (_currentDocument == null)
@@ -220,13 +218,15 @@ namespace RegScan
                     SetImage(image0);
 
                     // Ask if a barcode should be entered manually.
-                    barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
+                    barCode = ManualBarcode(
+                        "No barcode found. Do you want to manually enter the barcode?");
                 }
                 else
                 {
                     UtilityObj.writeLog("Fix barcode found=" + barcodes[0].ToString());
                     // Assume the first bar code found is the correct one.
-                    // NOTE - If we are making this assumption BarcodeObj.Scan() can be optimized to only find one barcode. 
+                    // NOTE - If we are making this assumption BarcodeObj.Scan()
+                    // can be optimized to only find one barcode. 
                     barCode = barcodes[0].ToString();
                 }
 
@@ -235,16 +235,16 @@ namespace RegScan
                 List<DocumentObj> docs = null;
 
                 // If the barcode was set in the checks above
-                if (barCode != "")
+                if (!string.IsNullOrEmpty(barCode))
                 {
                     UtilityObj.writeLog("Fix Barcode not null");
                     bool documentsFound = false;
-                    // Unclear what 'neos' means. Essentially used to denote that API calls need to be made to get a record associated with the found barcode.
+                    // Unclear what 'neos' means. Used here to denote that API calls need to be
+                    // made to get a record associated with the found barcode.
                     bool neos = true;
                     while (neos)
                     {
-                        UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Call to DRS API to receive associated existing documents for this barcode.
+                        // Call to DRS API for existing document records for this barcode.
                         // There may be more than one document (known as versions)
                         docs = DocumentObj.Find(barCode);
 
@@ -255,7 +255,8 @@ namespace RegScan
                             SetImage(image0);
 
                             // Ask if a barcode should be entered manually.
-                            string message = "No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?";
+                            string message = "No documents found for barcode " + barCode + 
+                                ". Do you want to manually enter the barcode?";
                             barCode = ManualBarcode(message);
 
                             if (barCode == "")
@@ -275,17 +276,20 @@ namespace RegScan
                     if (documentsFound)
                     {
                         UtilityObj.writeLog("Fix Set current doc to docs[0]");
-                        // The first document is the latest and is the one that will be displayed.
+                        // The first document is the latest and is the one that will be displayed
                         _currentDocument = docs[0];
 
-                        // Display the warning if there was some sort of error getting the document.
+                        // Display the warning if there was some sort of error getting the document
                         if (_currentDocument.Error != "")
-                            MessageBox.Show("Warning an error was found -> " + _currentDocument.Error);
+                            MessageBox.Show("Warning an error was found -> " + 
+                                _currentDocument.Error);
                                             
-                        // Will only be true, if it is an existing scan and new version is not required.
+                        // Will only be true if it is an existing scan and
+                        // new version is not required.
                         bool cancelScan = false;
 
-                        // We have a record from DRS API that matches the barcode. This means we will be updating the record.
+                        // We have a record from DRS API that matches the barcode.
+                        // This means we will be updating the record.
                         _currentDocument.UpdateRecord = true;
 
                         // IF document has already been scanned.
@@ -297,12 +301,17 @@ namespace RegScan
                             btnNewBox.Enabled = false;
 
                             // Ask if this is a new version.
-                            if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            if (MessageBox.Show("Document with barcode " + barCode + 
+                                " has already been scanned. Do you want to create a new version?", 
+                                "Document Already Scanned", MessageBoxButtons.YesNo, 
+                                MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                             {
-                                // If a new version, then update the version number and set id to new
-                                // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
+                                // If a new version, then update the version number
+                                // TODO - get previous version number from filename. Then add one.
+                                // This will always be 0++ = 1
                                 _currentDocument.VersionNumber++;
-                                // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
+                                // We don't want to clear the metadata from the current document
+                                // just indicate that there is a new version of the document image
                                 // _currentDocument.SetToNew();
                             }
                             else
@@ -312,8 +321,11 @@ namespace RegScan
                         else
                         {
                             // Check for box full and display a message if it is full.
-                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _defaultSetting.MaxPagesInBox)
-                                MessageBox.Show("Warning - Current Box will exceed limit of " + _defaultSetting.MaxPagesInBox.ToString() + " pages, after these pages are added");
+                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > 
+                                    _defaultSetting.MaxPagesInBox)
+                                MessageBox.Show("Warning - Current Box will exceed limit of " +
+                                    _defaultSetting.MaxPagesInBox.ToString() +
+                                    " pages, after these pages are added");
                         }
 
                         // IF scan is to be cancelled
@@ -333,24 +345,30 @@ namespace RegScan
                                 // If the current document's batch is assigned.
                                 if (_currentDocument.BatchId != 0)
                                 {
-                                    // Create a batch object and assign current's document's values.
+                                    // Create a batch object and assign current's document's values
                                     _currentBatchId = new BatchObj();
-                                    _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
+                                    _currentBatchId.AccessionNumber = 
+                                        _currentDocument.AccessionNumber;
                                     _currentBatchId.BatchId = _currentDocument.BatchId;
                                 }
                                 else
                                 {
-                                    // Get the next batch id for this accession and assign it to the document.
-                                    _currentBatchId = BatchObj.GetNextBatchId(_currentDocument.AccessionNumber);
+                                    // Get the next batch id for this accession and assign
+                                    // it to the document.
+                                    _currentBatchId = BatchObj.GetNextBatchId(
+                                        _currentDocument.AccessionNumber);
                                     _currentDocument.BatchId = _currentBatchId.BatchId;
                                 }
                             }
                             else
                             {
                                 UtilityObj.writeLog("Fix No batchid");
-                                // IF the accession number has changed, then get the next batch id and assign it.
-                                if (_currentBatchId.AccessionNumber != _currentDocument.AccessionNumber)
-                                    _currentBatchId = BatchObj.GetNextBatchId(_currentDocument.AccessionNumber);
+                                // IF the accession number has changed,
+                                // get the next batch id and assign it.
+                                if (_currentBatchId.AccessionNumber != 
+                                        _currentDocument.AccessionNumber)
+                                    _currentBatchId = BatchObj.GetNextBatchId(
+                                        _currentDocument.AccessionNumber);
 
                                 // If the current document's batch is not assigned.
                                 if (_currentDocument.BatchId == 0)
@@ -370,10 +388,12 @@ namespace RegScan
                                 Bitmap image = UtilityObj.readFileAsImage(imageFile);
                                 // go to next page if this one cant be read
                                 if (image == null) { continue; }
-                                // Calculate the page size and add the image to the overall scanned list.
+                                // Calculate the page size and add the image to the scanned list.
                                 var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
 
-                                _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
+                                _scannedImageList.Add(
+                                    new ImageObj(image, 
+                                        PdfSharp.PageOrientation.Portrait, pageSize));
                                 image = null;
                             }
 
@@ -383,7 +403,7 @@ namespace RegScan
                             SetImageNav();
                         }                        
                     }
-                    // NOTE If logic wanted to be added to create a new record for the scanned image it could be added here.
+                    // NOTE Create a new record for the scanned image logic could be added here
                     // _currentDocument.SetToNew();
                 }
                 else
@@ -393,7 +413,8 @@ namespace RegScan
                 }                
             }
 
-            // Existing document.
+            // This else is entered when there is at least one page that has already been scanned
+            // in this session.
             else
             {
                 // IF we have a barcode and it doesn't match the previous barcode
@@ -402,7 +423,8 @@ namespace RegScan
                     // Display a warning message.
                     string title = "Warning: Double Barcode";
                     string msg = "A barcode was found on this page.\n.";
-                    string comp = "First barcode: " + barcodes[0].ToString() + "\nSecond Barcode: " + _currentDocument.BarCode;
+                    string comp = "First barcode: " + barcodes[0].ToString() + 
+                                  "\nSecond Barcode: " + _currentDocument.BarCode;
                     MessageBox.Show(msg + comp, title);
                 }
 
@@ -414,7 +436,8 @@ namespace RegScan
                     if (image == null) { continue; }
                     _currentImageIndex++;
                     var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
-                    _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
+                    _scannedImageList.Add(
+                        new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
                 }
 
                 SetImageNav();
