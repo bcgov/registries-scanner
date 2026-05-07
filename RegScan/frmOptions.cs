@@ -21,7 +21,7 @@ namespace RegScan
 
         private void btnUpdate4_Click(object sender, EventArgs e)
         {
-            if (txtMaximumPagesInBox.Text == "")
+            if (string.IsNullOrEmpty(txtMaximumPagesInBox.Text))
             {
                 MessageBox.Show("Please enter a value for Maximum Pages In a Box");
                 return;

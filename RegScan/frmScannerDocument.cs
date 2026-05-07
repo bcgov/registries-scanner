@@ -259,7 +259,7 @@ namespace RegScan
                                 ". Do you want to manually enter the barcode?";
                             barCode = ManualBarcode(message);
 
-                            if (barCode == "")
+                            if (string.IsNullOrEmpty(barCode))
                             {
                                 // Move on to next step.
                                 neos = false;
@@ -987,7 +987,8 @@ namespace RegScan
         protected void SetForm()
         {
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = _currentDocument.DocumentServiceId == "" ? "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
+            txtDocumentId.Text = string.IsNullOrEmpty(_currentDocument.DocumentServiceId) ?
+                "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtOwner.Text = _currentDocument.Owner;
             txtDocumentDescription.Text = _currentDocument.Description;

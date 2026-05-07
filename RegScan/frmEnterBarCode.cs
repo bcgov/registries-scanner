@@ -16,7 +16,7 @@ namespace RegScan
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (txtBarCode.Text == "")
+            if (string.IsNullOrEmpty(txtBarCode.Text))
                 return;
 
             var document = DocumentObj.Find(txtBarCode.Text);
