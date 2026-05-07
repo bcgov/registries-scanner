@@ -1,41 +1,31 @@
 ﻿using AppConfiguration;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Net;
-using System.Text;
-
 
 namespace AsyncRequests
 {
     // Class to facilitate API calls
     public class APIRequest
     {
-        // security                         
-        private static string timeout;
-        private static string client_id;
-        private static string client_secret;
-        private static string apikey;
-        private static string account_id;
-        private static string authToken;
-        private static string token_url;
-
-        private static string api_url;
-
         public static Method method;
 
         public APIRequest()
         {
-            // Set configuration
-            SetEnvironment();
-
             // Set security protocols
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+        }
+        private static RestRequest CreateRequest(Method reqType)
+        {
+            var request = new RestRequest(reqType);
+
+            request.AddHeader("Account-Id", ConfigKeys.ACCOUNT_ID);
+            request.AddHeader("x-apikey", ConfigKeys.APIKEY);
+
+            return request;
         }
 
         /// <summary>
@@ -47,17 +37,15 @@ namespace AsyncRequests
         /// <returns>Response from API in string format.</returns>
         public static string MakeKeyRequest(string endPoint, Method requestType)
         {
-            var request = new RestRequest(requestType);
-
-            request.AddHeader("Account-Id", account_id);
-            request.AddHeader("x-apikey", apikey);
-
             if (requestType != Method.GET)
             {
                 // If any other request type is used throw a new error
                 throw new Exception("Invalid request type for endpoint: " + endPoint + 
                                     ". Must use GET.");
             }
+
+            var request = CreateRequest(requestType);
+
             return GetHttpResponseContent(request, endPoint);
         }
 
@@ -72,11 +60,6 @@ namespace AsyncRequests
         /// <returns>Response from API in string format.</returns>
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
-            var request = new RestRequest(requestType);
-
-            request.AddHeader("Account-Id", account_id);
-            request.AddHeader("x-apikey", apikey);
-
             if (requestType != Method.POST && requestType != Method.PUT &&
                 requestType != Method.PATCH)
             {
@@ -84,7 +67,10 @@ namespace AsyncRequests
                 throw new Exception("Invalid request type for endpoint: " + endPoint +
                                     ". Must use POST, PUT, or PATCH.");
             }
+            
+            var request = CreateRequest(requestType);
             request.AddJsonBody(data);
+
             return GetHttpResponseContent(request, endPoint);
         }
 
@@ -102,17 +88,16 @@ namespace AsyncRequests
         public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, 
                                             string endPoint, Method requestType)
         {
-            var request = new RestRequest(requestType);
-
-            request.AddHeader("Account-Id", account_id);
-            request.AddHeader("x-apikey", apikey);
-            request.AddHeader("Content-Type", "application/pdf");
-
             if ( requestType != Method.PUT )
             {
                 // If any other request type is used throw a new error
-                throw new Exception("Invalid request type for endpoint: " + endPoint + ". Uploading documents must use PUT.");
+                throw new Exception("Invalid request type for endpoint: " + 
+                    endPoint + ". Uploading documents must use PUT.");
             }
+            
+            var request = CreateRequest(requestType);
+            request.AddHeader("Content-Type", "application/pdf");
+            
             foreach (var keyValuePair in param)
             {
                 request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
@@ -121,20 +106,6 @@ namespace AsyncRequests
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
             return GetHttpResponseContent(request, endPoint);
-        }
-
-        /// <summary>
-        /// Set object variables to environment variables.
-        /// </summary>
-        private void SetEnvironment()
-        {
-            apikey = ConfigKeys.APIKEY;
-            api_url = ConfigKeys.API_URL;
-            account_id = ConfigKeys.ACCOUNT_ID;
-            token_url = ConfigKeys.AUTH_SVC_URL;
-            timeout = ConfigKeys.AUTH_TIMEOUT;
-            client_id = ConfigKeys.CLIENT_ID;
-            client_secret = ConfigKeys.CLIENT_ACCOUNT;
         }
 
         /// <summary>
@@ -151,7 +122,7 @@ namespace AsyncRequests
         /// </exception>
         private static string GetHttpResponseContent(RestRequest request, string endPoint)
         {
-            var client = new RestClient(api_url + endPoint);
+            var client = new RestClient(ConfigKeys.API_URL + endPoint);
             IRestResponse response = client.Execute(request);
 
             // If the request was not successful (completed with a good status)
