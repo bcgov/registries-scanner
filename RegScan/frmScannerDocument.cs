@@ -987,7 +987,7 @@ namespace RegScan
         protected void SetForm()
         {
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = _currentDocument.DocumentId == "" ? "[not assigned]" : _currentDocument.DocumentId.ToString();
+            txtDocumentId.Text = _currentDocument.DocumentServiceId == "" ? "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtOwner.Text = _currentDocument.Owner;
             txtDocumentDescription.Text = _currentDocument.Description;
@@ -1103,7 +1103,7 @@ namespace RegScan
             // Catch when the process is complete and clear the progress bar.
             if (progressBar.Value == 100)
             {
-                progressBar.Value = 0;
+                 progressBar.Value = 0;
             }
         }
 
@@ -1225,10 +1225,10 @@ namespace RegScan
         /// <param name="e"> Mouse events that may need to be handled </param>
         private void btnScanPage_Click(object sender, EventArgs e)
         {            
-            UtilityObj.deleteFolder("Images");
-            _scanSessionFileList.Clear();
+            //UtilityObj.deleteFolder("Images");
+            //_scanSessionFileList.Clear();
             image0 = null;
-            UtilityObj.createFolder("Images");
+            //UtilityObj.createFolder("Images");
 
             progressBar.Visible = true;
 

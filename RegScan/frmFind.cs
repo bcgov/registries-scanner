@@ -140,7 +140,7 @@ namespace RegScan
         protected void SetForm(DocumentObj _currentDocument)
         {
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = _currentDocument.DocumentId.ToString();
+            txtDocumentId.Text = _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtOwner.Text = _currentDocument.Owner;
             txtDocumentDescription.Text = _currentDocument.Description;

@@ -34,7 +34,7 @@ namespace RegScan
         JObject scanInfo;
 
         //private long _documentId = UtilityObj.NOID;
-        private string _documentId = "";
+        //private string _documentId = "";
         private string _legalEntityKey;
         //private string _ownerTypeCode;
         private string _documentTypeCode;
@@ -71,7 +71,7 @@ namespace RegScan
 
         // From document table
         public string DocumentURL { get { return _documentURL; } }
-        public string DocumentId { get { return _documentId; } }
+        public string DocumentServiceId { get { return _documentServiceId; } }
         public string LegalEntityKey { get { return _legalEntityKey; } }
         //public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
@@ -118,8 +118,7 @@ namespace RegScan
 
         public int PagesInBox { get { return _boxObj == null ? 0 : _boxObj.PageCount; } }
         public int PdfPages { get { return _pdfDocument.PageCount; } }
-        public string FQDocType { 
-            get { return DocTypeObj.Find(_documentTypeCode).FQDescription; } }
+        public string FQDocType { get { return _documentTypeDescription; } }
 
         public string Error = "";
 
