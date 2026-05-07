@@ -16,7 +16,7 @@ namespace ApiScanner
         // UpdatePageCount + CloseOpen  
         static public string patch(object data)
         {
-            string endpoint = "/doc/api/v1/scanning/boxes";
+            //string endpoint = "/doc/api/v1/scanning/boxes";
             //string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH);
             // mocked return data 
             string resp = "{\r\n  \"boxId\": 1,\r\n  \"boxNumber\": 21,\r\n  \"closedDate\": " +
