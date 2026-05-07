@@ -77,7 +77,7 @@ namespace RegScan
         {
             string resp = ScanningAuthorApi.get();
 
-            if (resp == "") { return; }
+            if (string.IsNullOrEmpty(resp)) { return; }
             if (resp.Contains("errorMessage"))
             {
                 MessageBox.Show("Error: " + resp);

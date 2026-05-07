@@ -445,7 +445,7 @@ namespace RegScan
 
         static private Boolean dataCheck(string jDoc)
         {
-            if (jDoc == null || jDoc.ToString() == "") { return false; }
+            if (string.IsNullOrEmpty(jDoc)) { return false; }
             return true;
         }
 
