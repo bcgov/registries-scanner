@@ -1,4 +1,5 @@
 ﻿using ApiScanner;
+using Utilities;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Drawing.BarCodes;
@@ -247,33 +248,26 @@ namespace RegScan
         ///     List of DocumentObjs for each returned record matching the _BarCode
         /// </returns>
         static public List<DocumentObj> Find(string BarCode)
-        {           
-            ErrorMessage = "";
+        {
             List<DocumentObj> documentList = new List<DocumentObj>();
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
             string resp = DocumentApi.searchByBarcode(BarCode);
-
-            if (resp.Contains("errorMessage"))
+       
+            if (!string.IsNullOrEmpty(resp))
             {
-                resp = "";       
-                ErrorMessage = "No Documents Found For Barcode: " + BarCode;
-                UtilityObj.writeLog(ErrorMessage);
-            }         
-            else
-            {
-
                 var resultList = (JObject)JToken.Parse(resp);
 
                 // If there are no results are returned from the API or if they are not formatted
                 // as expected -> return an empty list and log an error.
-                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
+                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results") )
                 {
                     UtilityObj.writeLog(UtilityObj.error, "Unexpected return result from API.");
                     return null;
                 }
-                if (resultList["resultCount"].ToString() != "1")
+                // Checking if we get more than one result.
+                else if (resultList["resultCount"].ToString() != "1")
                 {
                     UtilityObj.writeLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
@@ -301,7 +295,7 @@ namespace RegScan
                 }
             }
 
-            UtilityObj.writeLog("Return Ordered docs");
+            UtilityObj.writeLog(UtilityObj.debug, "Return Ordered docs");
 
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
