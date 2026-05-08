@@ -144,9 +144,9 @@ namespace RegScan
             string resp = DocumentApi.uploadDocument(pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to load into database. " + 
+                MessageBox.Show("Scanned image failed to load into database. " + 
                                 "Current data for " + BarCode + " may be inaccurate.");
-                UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
+                UtilityObj.WriteLog(UtilityObj.error, "Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
 
@@ -174,9 +174,9 @@ namespace RegScan
             // The scanning application should never create a new record through the DRS API.
             else
             {
-                MessageBox.Show("ERROR Unable to create a new record for document with barcode: " +
+                MessageBox.Show("Unable to create a new record for document with barcode: " +
                                  BarCode + ". Please try again once document has been indexed.");
-                UtilityObj.writeLog("No existing record for barcode: " + BarCode);
+                UtilityObj.WriteLog(UtilityObj.error, "No existing record for barcode: " + BarCode);
                 Environment.Exit(0);
             }
 
@@ -263,13 +263,13 @@ namespace RegScan
                 // as expected -> return an empty list and log an error.
                 if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results") )
                 {
-                    UtilityObj.writeLog(UtilityObj.error, "Unexpected return result from API.");
+                    UtilityObj.WriteLog(UtilityObj.error, "Unexpected return result from API.");
                     return null;
                 }
                 // Checking if we get more than one result.
                 else if (resultList["resultCount"].ToString() != "1")
                 {
-                    UtilityObj.writeLog(UtilityObj.warn, "Got more than one result from DRS API.");
+                    UtilityObj.WriteLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
 
                 DocumentObj docObj;
@@ -295,7 +295,7 @@ namespace RegScan
                 }
             }
 
-            UtilityObj.writeLog(UtilityObj.debug, "Return Ordered docs");
+            UtilityObj.WriteLog(UtilityObj.debug, "Return Ordered docs");
 
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
@@ -375,7 +375,7 @@ namespace RegScan
         {
             if (docObj == null || jDoc == null)
             {
-                UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to copy from model, objest null.");
                 throw new Exception("Attempting to pull data from a null object."); 
             }
 

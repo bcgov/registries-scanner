@@ -80,7 +80,7 @@ namespace RegScan
         {
             InitializeComponent();
 
-            UtilityObj.createFolder("Images");
+            UtilityObj.CreateFolder("Images");
 
             // Set scanner defaults.
             _defaultSetting = new ScannerSettingObj();
@@ -101,8 +101,8 @@ namespace RegScan
             string scannerFile = "vstwain.log";
             string scannerPath = String.Concat(scannerDir, "\\", scannerFile);
 
-            UtilityObj.createFolder(scannerDir);
-            UtilityObj.createFile(scannerPath);
+            UtilityObj.CreateFolder(scannerDir);
+            UtilityObj.CreateFile(scannerPath);
 
             // Set up debugging for the TWAIN SDK
             TwainEnvironment.EnableDebugging(scannerPath);
@@ -141,7 +141,7 @@ namespace RegScan
         /// <param name="_Image"> Bitmap image from scan process </param>
         private void ProcessScan(Bitmap _Image)
         {
-            UtilityObj.writeLog("ProcessScan: Saving Scan");
+            UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
             // Set the first image to image0 for barcode scanning and display purposes.
             // NOTE - It may be possible to use _Image and image0 interchangeably and eliminate the need for image0.
@@ -152,7 +152,7 @@ namespace RegScan
 
             string fileNumber = _scanSessionFileList.Count > 0 ? Convert.ToString(_scanSessionFileList.Count) : "";
             string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
-            UtilityObj.saveImageAsFile(fileName, _Image);
+            UtilityObj.SaveImageAsFile(fileName, _Image);
 
             // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
@@ -161,7 +161,7 @@ namespace RegScan
             _scannedImageList.Add(new ImageObj(image0, PdfSharp.PageOrientation.Portrait,
                 ImageObj.GetPageSize(image0.Width, image0.Height)));
 
-            UtilityObj.writeLog("Scan List size: " + fileNumber == "" ? "0" : fileNumber);
+            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
         }
 
         private void ProocessFristPage()
@@ -195,10 +195,10 @@ namespace RegScan
                 {
                     string msg = "Hit error trying to find record for barcode: " + barCode;
                     // log the issue
-                    UtilityObj.writeLog(UtilityObj.error, msg + 
+                    UtilityObj.WriteLog(UtilityObj.error, msg +
                         System.Environment.NewLine + e.ToString());
                     // Ask the user if they would like to try again 
-                    if (MessageBox.Show(msg + System.Environment.NewLine + 
+                    if (MessageBox.Show(msg + System.Environment.NewLine +
                         "Would you like to try again?", "Missing/ Not Found Barcode",
                         MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
@@ -212,6 +212,7 @@ namespace RegScan
                         documentsFound = false;
                         checkBarcode = false;
                     }
+                }
                 // If documents were found continue to next step
                 if (docs.Count > 0)
                 {
@@ -222,7 +223,7 @@ namespace RegScan
 
             if (documentsFound)
             {
-                UtilityObj.writeLog("Fix Set current doc to docs[0]");
+                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to docs[0]");
                 // The first document is the latest and is the one that will be displayed
                 _currentDocument = docs[0];
 
@@ -243,7 +244,7 @@ namespace RegScan
                 //if (_currentDocument.IsScanned)
                 if (_currentDocument.DocumentURL != "")
                 {
-                    UtilityObj.writeLog("Document barcode already exists.");
+                    UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
                     // Turn off buttons for new box number.
                     btnNewBox.Enabled = false;
 
@@ -259,8 +260,11 @@ namespace RegScan
                         _currentDocument.VersionNumber++;
                     }
                     else
+                    {
                         // Cancel this scan if a new version is not required.
                         cancelScan = true;
+                    }
+                        
                 }
 
                 // IF scan is to be cancelled
@@ -268,15 +272,15 @@ namespace RegScan
                 {
                     // Set current document back to null.
                     _currentDocument = null;
-                    UtilityObj.deleteFolder("Images");
+                    UtilityObj.DeleteFolder("Images");
                 }
                 else
                 {
-                    UtilityObj.writeLog("Fix Display image");
+                    UtilityObj.WriteLog(UtilityObj.debug, "Fix Display image");
                     // Display the document.
                     SetForm();
 
-                    UtilityObj.writeLog("Fix SetImageNav");
+                    UtilityObj.WriteLog(UtilityObj.debug, "Fix SetImageNav");
                     // Display the first document.
                     _currentImageIndex = 0;
                 }
@@ -297,7 +301,7 @@ namespace RegScan
         /// </summary>
         private void ProcessCompleted()
         {
-            UtilityObj.writeLog("Scanning finished");
+            UtilityObj.WriteLog(UtilityObj.debug, "Scanning finished");
 
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
@@ -427,7 +431,8 @@ namespace RegScan
             progressBar.Visible = true;
             Application.DoEvents();
 
-            UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnViewAsPDF_Click Scanner  Objects");
+            UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
+                " btnViewAsPDF_Click Scanner  Objects");
 
             // FOREACH image create a new page.
             foreach (var bp in _scannedImageList)
@@ -551,7 +556,8 @@ namespace RegScan
             // This is discouraged in Microsoft Docs.
             Application.DoEvents();
 
-            UtilityObj.writeLog(_scannedImageList.Count.ToString() + " _scannedImageList Objects");
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " _scannedImageList Objects");
 
             // FOREACH image convert to a PDF page and add to the PDF document
             foreach (var bp in _scannedImageList)
@@ -564,8 +570,8 @@ namespace RegScan
                 {
                     string img_num = _scannedImageList.IndexOf(bp).ToString() +
                                      " of " + _scannedImageList.Count();
-                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" +
-                                         ex.ToString());
+                    UtilityObj.WriteLog(UtilityObj.error, "Unable to process image " + img_num +
+                        " to PDF page.\n" + ex.ToString());
                 }
                 
                 // Update progress bar
@@ -1017,7 +1023,7 @@ namespace RegScan
         /// <param name="e"></param>
         private void device_AsyncEvent(object sender, DeviceAsyncEventArgs e)
         {
-            UtilityObj.writeLog("device_AsyncEvent");
+            UtilityObj.WriteLog(UtilityObj.debug, "device_AsyncEvent");
             switch (e.DeviceEvent)
             {
                 case DeviceEventId.PaperJam:
@@ -1109,9 +1115,9 @@ namespace RegScan
             // past sessions are cleared.
             if (_currentDocument == null)
             {
-                UtilityObj.deleteFolder("Images");
+                UtilityObj.DeleteFolder("Images");
                 _scanSessionFileList.Clear();
-                UtilityObj.createFolder("Images");
+                UtilityObj.CreateFolder("Images");
             }
             
             image0 = null;
@@ -1179,11 +1185,11 @@ namespace RegScan
                 {
                     _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
-                UtilityObj.writeLog("Checking for asynchronous scanning...");
+                UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
                 // if device supports asynchronous events
                 if (_currentDevice.IsAsyncEventsSupported)
                 {
-                    UtilityObj.writeLog("Device supports asynchronous scanning");
+                    UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
                     // enable all asynchronous events supported by device
                     _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
                 }
@@ -1203,16 +1209,16 @@ namespace RegScan
 
             try
             {
-                UtilityObj.writeLog("Start image acquisition");
+                UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
 
                 // start image acquisition process
                 _currentDevice.Acquire();
 
-                UtilityObj.writeLog("End of image acquisition");
+                UtilityObj.WriteLog(UtilityObj.debug, "End of image acquisition");
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
-                UtilityObj.writeLog("Image acquisition error: " + ex);
+                UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
                 MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }

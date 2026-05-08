@@ -59,7 +59,7 @@ namespace Utilities
         }
 
         // Create a file if it does not exist.
-        static public void createFile(string fileName)
+        static public void CreateFile(string fileName)
         {
             if (!System.IO.File.Exists(fileName))
             {
@@ -68,7 +68,7 @@ namespace Utilities
         }
 
         // Write message string to log file.
-        static public void writeLog(string levelString, string msg)
+        static public void WriteLog(string levelString, string msg)
         {
             msg = (DateTime.Now).ToString() + ": " + msg + System.Environment.NewLine;
 
@@ -86,23 +86,23 @@ namespace Utilities
         }
 
         // Save image as file.
-        static public void saveImageAsFile(string fileName, Bitmap img)
+        static public void SaveImageAsFile(string fileName, Bitmap img)
         {
-            System.IO.File.WriteAllBytes(fileName, imageToByte(img));
+            System.IO.File.WriteAllBytes(fileName, ImageToByte(img));
         }
 
         // Convert bitmap to byte array. 
-        static public byte[] imageToByte(Image img)
+        static public byte[] ImageToByte(Image img)
         {
             ImageConverter converter = new ImageConverter();
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
 
         // Read file into image.
-        static public Bitmap readFileAsImage(string fileName)
+        static public Bitmap ReadFileAsImage(string fileName)
         {
             Bitmap bmp = null;
-            byte[] imageData = null;
+            byte[] imageData;
 
             try
             {
@@ -116,13 +116,13 @@ namespace Utilities
             }
             catch (Exception e)
             {
-                writeLog(error, "Unable to process reading file.\n" + e);
+                WriteLog(error, "Unable to process reading file.\n" + e);
             }
             return bmp;
         }
 
         // Read file into image.
-        static public Bitmap readImageFile(string fileName)
+        static public Bitmap ReadImageFile(string fileName)
         {
             byte[] imageData = System.IO.File.ReadAllBytes(fileName);
 
@@ -131,7 +131,7 @@ namespace Utilities
         }
 
         // Create the images folder. 
-        static public void createFolder(string folder)
+        static public void CreateFolder(string folder)
         {
             if (!Directory.Exists(folder))
             {
@@ -140,7 +140,7 @@ namespace Utilities
         }
 
         // Remove the images folder. 
-        static public void deleteFolder(string folder)
+        static public void DeleteFolder(string folder)
         {
             if (Directory.Exists(folder))
             {
@@ -149,7 +149,7 @@ namespace Utilities
         }
 
         // Read the images folder.
-        static public List<string> readFolder(string folder)
+        static public List<string> ReadFolder(string folder)
         {
             folder = Directory.GetCurrentDirectory() + "\\" + folder;
             if (Directory.Exists(folder))
@@ -159,7 +159,7 @@ namespace Utilities
             return null;
         }
 
-        static public DataTable makeDataTable(string json)
+        static public DataTable MakeDataTable(string json)
         {
             DataTable dataTable = new DataTable();
             if (string.IsNullOrWhiteSpace(json))
@@ -188,7 +188,7 @@ namespace Utilities
         }
         */
 
-        static public bool copyShallow(Object api, Object srcObj)
+        static public bool CopyShallow(Object api, Object srcObj)
         {
 
             var srcT = srcObj.GetType();
