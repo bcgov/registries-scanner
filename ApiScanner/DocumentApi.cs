@@ -1,4 +1,5 @@
 ﻿using AsyncRequests;
+using Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -57,7 +58,7 @@ namespace ApiScanner
             }
             catch (Exception e)
             {
-                UtilityObj.writeLog("Error trying to PUT data: " + e);
+                UtilityObj.writeLog(UtilityObj.error, "Error trying to PUT data: " + e);
             }
                 return resp;
         }
@@ -80,14 +81,12 @@ namespace ApiScanner
             if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
             else
             {
-                UtilityObj.writeLog("ERR: Document is either null or empty. " + 
+                UtilityObj.writeLog(UtilityObj.error, "Document is either null or empty. " + 
                         "Cannot hit search endpoint.");
                 throw new Exception("Unable to process search without Barcode. Please try again.");
             }
-            
-            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
 
-            return resp;
+            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
         }
 
         /// <summary>

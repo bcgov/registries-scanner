@@ -54,7 +54,6 @@
     <Compile Include="ScanningInformationApi.cs" />
     <Compile Include="ScanningParameterApi.cs" />
     <Compile Include="ScheduleApi.cs" />
-    <Compile Include="UtilityObj.cs" />
   </ItemGroup>
   <!-- Framework references only -->
   <ItemGroup>
@@ -66,6 +65,10 @@
   <!-- Project references (no DLL hint paths) -->
   <ItemGroup>
     <ProjectReference Include="..\AsyncRequests\AsyncRequests\AsyncRequests.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{d05439d1-dd91-49b4-a6f0-eb0f8f36db38}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- NuGet dependencies via PackageReference ONLY -->
   <ItemGroup>
