@@ -58,7 +58,7 @@ namespace ApiScanner
             }
             catch (Exception e)
             {
-                UtilityObj.writeLog(UtilityObj.error, "Error trying to PUT data: " + e);
+                UtilityObj.WriteLog(UtilityObj.error, "Error trying to PUT data: " + e);
             }
                 return resp;
         }
@@ -81,7 +81,7 @@ namespace ApiScanner
             if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
             else
             {
-                UtilityObj.writeLog(UtilityObj.error, "Document is either null or empty. " + 
+                UtilityObj.WriteLog(UtilityObj.error, "Document is either null or empty. " + 
                         "Cannot hit search endpoint.");
                 throw new Exception("Unable to process search without Barcode. Please try again.");
             }
