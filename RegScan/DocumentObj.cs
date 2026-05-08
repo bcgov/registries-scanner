@@ -259,14 +259,12 @@ namespace RegScan
                 // If there are no results returned from the API, return an empty list and log an error.
                 if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
                 {
-                    UtilityObj.writeLog("Unexpected return result from API.");
+                    UtilityObj.writeLog(UtilityObj.error, "Unexpected return result from API.");
                     return null;
                 }
                 if (resultList["resultCount"].ToString() != "1")
                 {
-                    // We need exactly one result. 
-                    UtilityObj.writeLog("API did not return exactly one value.");
-                    return null;
+                    UtilityObj.writeLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
 
 

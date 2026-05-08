@@ -166,7 +166,6 @@
     <Compile Include="ScanningInfoObj.cs" />
     <Compile Include="ScheduleObj.cs" />
     <Compile Include="Security.cs" />
-    <Compile Include="UtilityObj.cs" />
     <EmbeddedResource Include="frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +242,10 @@
     <ProjectReference Include="..\BarCodeScanner\BarCodeScanner.csproj">
       <Project>{bd27739d-f7b8-4b24-9373-fafda26703c6}</Project>
       <Name>BarCodeScanner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{d05439d1-dd91-49b4-a6f0-eb0f8f36db38}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

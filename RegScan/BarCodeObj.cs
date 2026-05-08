@@ -1,4 +1,5 @@
 ﻿using BarCodeScanner;
+using Utilities;
 using System.Drawing;
 
 namespace RegScan

@@ -1,68 +1,14 @@
 ﻿using AsyncRequests;
-using Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
+using Utilities;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
+
 
 namespace ApiScanner
 {
     public class DocumentApi
     {
-        // consumerDocumentId
-        public static List<JObject> getDocObjectList(string docType, string conDocId)
-        {
-            string resp = get(docType, conDocId);
-
-            List<JObject> jList = new List<JObject>();
-            var token = JToken.Parse(resp);
-
-            foreach (object token2 in token)
-            {
-                jList.Add((JObject)token2);
-            }
-
-            return jList;
-        }     
-
-        /// <summary>
-        /// To be used to update the scanning information of a preexisting document record.
-        /// This endpoint can not be used to upload a document image to the API
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="pdfBytes"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static string updateScanningInformation(string fileName, byte[] pdfBytes, object data)
-        {
-            DocumentModel myData = (DocumentModel)data;
-            string resp = null;
-
-            Dictionary<string, object> param = new Dictionary<string, object>();
-            param.Add("consumerIdentifier", (string)myData.consumerIdentifier);
-            param.Add("consumerFilename", (string)myData.consumerFilename);
-            param.Add("consumerFilingDate", (DateTime)myData.consumerFilingDate);
-            param.Add("consumerDocumentId", (int)myData.consumerDocumentId);
-
-            string endpoint = "doc/api/v1/scanning/" + myData.documentClass + "/" + myData.consumerDocumentId;
-
-            try
-            {
-                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.POST);
-            }
-            catch (Exception e)
-            {
-                UtilityObj.writeLog("Error trying to POST data: " + e);
-            }
-            return resp;
-        }
-
+        #region Updating Document and Record Endpoints
         /// <summary>
         /// Update any of the document record properties (other than document class) for an existing
         /// document identified by a document service ID. If scanning information is included in the
@@ -87,17 +33,18 @@ namespace ApiScanner
         /// request. If scanning information matching the consumerDocumentId exists then it will
         /// be included in the response.
         /// </summary>
-        /// <param name="_fileName"> Filename associated with the uploaded document </param>
         /// <param name="pdfBytes"> PDF file as a byte array</param>
-        /// <param name="data"> other elements to be used in the request. Backup if _fileName is an empty string</param>
-        /// <returns></returns>
-        public static string uploadDocument(string _fileName, byte[] pdfBytes, object data)
+        /// <param name="data"> 
+        ///     other elements to be used in the request. Backup if _fileName is an empty string
+        /// </param>
+        /// <returns>String representation of the result fromt the request</returns>
+        public static string uploadDocument(byte[] pdfBytes, object data)
         {
             DocumentModel myData = (DocumentModel)data;
             string resp = null;
 
             Dictionary<string, object> param = new Dictionary<string, object>();
-            if (_fileName != "")
+            if (myData.consumerFilename != "")
             {
                 // TODO: handle passing in any parameters with param. Ticket #33043
                 param.Add("consumerFilename", (string)myData.consumerFilename);
@@ -109,75 +56,35 @@ namespace ApiScanner
             }
             catch (Exception e)
             {
-                UtilityObj.writeLog("Error trying to PUT data: " + e);
+                UtilityObj.writeLog(UtilityObj.error, "Error trying to PUT data: " + e);
             }
                 return resp;
         }
+        #endregion
 
-        /// In documentation, possible expansion of application. Not currently used by scanner
-
-        ////Documents       
-
-        /// <summary>
-        /// This endpoint should only be used if a user is checking if the current barcode is
-        /// already used or not before attempting to add a new document record. 
-        /// </summary>
-        /// <param name="conDocId"> Barcode (consumerDocumentId) to check for existence </param>
-        /// <returns> String response from API call </returns>
-        public static string verify(string barCode)
-        {           
-            string endpoint = "/doc/api/v1/documents/verify/" + barCode;
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);           
-            return resp;
-        }
-
-        /// REMOVE. 
-        /// This endpoint and request type combo should not be used by the scanning application
-        public static string delete(string docServId)
-        {
-            string endpoint = "/doc/api/v1/documents/" + docServId;
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.DELETE);
-            return resp;
-        }
-
-        /// REMOVE. This is duplicated from the patch method above. 
-        /// The only difference is not casting data to a DocumentModel.
-        public static string updateDocumentRecordAndScanning(object data, string docServId)
-        {
-            string endpoint = "/doc/api/v1/documents/" + docServId;
-            string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH);
-            return resp;
-        }
+        #region Search Endpoints
 
         /// <summary>
-        /// Update any of the document record properties (other than document class) for an existing document.
-        /// If scanning information is included in the request, the scanning record matching the consumerDocumentId
-        /// will be updated (if it exists). This information will then be included in the response.
+        /// With the given barcode use the DRS API to search for a matching document record.
         /// </summary>
-        /// <param name="data">
-        /// body document to be included in the request. MUST be able to be cast to DocumentModel.
+        /// <param name="barcode"> 
+        ///     Can't be null or empty string. Used in query parameter for search.
         /// </param>
-        /// <returns>>Response from the API call</returns>
-        public static string createDocumentRecord(object data)
-        {
-            DocumentModel myData = (DocumentModel)data;
-
-            string endpoint = "doc/api/v1/documents/" + myData.documentClass + "/" + myData.documentType;
-            string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.POST);
-            return resp;
-        }    
-
-        ////search
-
+        /// <returns>string response from search endpoint</returns>
+        /// <exception cref="Exception">If barcode is empty or null throw an error</exception>
         public static string searchByBarcode(string barcode)
         {
             string endpoint = "/doc/api/v1/searches";
 
             if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
-            
-            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            else
+            {
+                UtilityObj.writeLog(UtilityObj.error, "Document is either null or empty. " + 
+                        "Cannot hit search endpoint.");
+                throw new Exception("Unable to process search without Barcode. Please try again.");
+            }
 
-            return resp;
+            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
         }
 
         //Search by docClass
