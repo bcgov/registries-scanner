@@ -1,4 +1,5 @@
 ﻿using ApiScanner;
+using Utilities;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Drawing.BarCodes;
@@ -37,7 +38,7 @@ namespace RegScan
         private string _legalEntityKey;
         //private string _ownerTypeCode;
         private string _documentTypeCode;
-        private string _authorId;
+        private string _author;
         private string _description;
         private string _fileName;
         private string _fileExtension;
@@ -70,11 +71,11 @@ namespace RegScan
 
         // From document table
         public string DocumentURL { get { return _documentURL; } }
-        public string DocumentId { get { return _documentId; } } //not used in data tables any longer
+        public string DocumentServiceId { get { return _documentServiceId; } }
         public string LegalEntityKey { get { return _legalEntityKey; } }
         //public string OwnerTypeCode { get { return _ownerTypeCode; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
-        public string AuthorId { get { return _authorId; } }
+        public string Author { get { return _author; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string FileName { get { return _fileName; } }
         public string FileExtension { get { return _fileExtension; } }
@@ -84,8 +85,14 @@ namespace RegScan
         public string BarCode { get { return _barCode.ToString(); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
         public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
-        public string AccessionNumberString { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), _scheduleNumber.ToString().PadLeft(4, '0'), _boxNumber.ToString().PadLeft(4, '0')); } }
-        public string AccessionNumberText { get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-", _scheduleNumber.ToString().PadLeft(4, '0'), "-", _boxNumber.ToString().PadLeft(4, '0')); } }
+        public string AccessionNumberString { 
+            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
+                                       _scheduleNumber.ToString().PadLeft(4, '0'), 
+                                       _boxNumber.ToString().PadLeft(4, '0')); } }
+        public string AccessionNumberText { 
+            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-",
+                                       _scheduleNumber.ToString().PadLeft(4, '0'), "-",
+                                       _boxNumber.ToString().PadLeft(4, '0')); } }
         public int BatchId { get { return _batchId; } set { _batchId = value; } }
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
         public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
@@ -94,19 +101,24 @@ namespace RegScan
         public string Owner { get { return _owner; } }
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
-        public Boolean UpdateRecord { get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
+        public Boolean UpdateRecord { 
+            get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
 
         // Calculated
-        public PdfDocument PDFDocument { get { return _pdfDocument; } set { _pdfDocument = value; } }
+        public PdfDocument PDFDocument { 
+            get { return _pdfDocument; } set { _pdfDocument = value; } }
         public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
 
-        public int SequenceNumber { get { return int.Parse(AccessionNumberString.Substring(0, 2)); } }
-        public int ScheduleNumber { get { return int.Parse(AccessionNumberString.Substring(2, 4)); } }
-        public int BoxNumber { get { return int.Parse(AccessionNumberString.Substring(6, 4)); } }
+        public int SequenceNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(0, 2)); } }
+        public int ScheduleNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(2, 4)); } }
+        public int BoxNumber { 
+            get { return int.Parse(AccessionNumberString.Substring(6, 4)); } }
 
         public int PagesInBox { get { return _boxObj == null ? 0 : _boxObj.PageCount; } }
         public int PdfPages { get { return _pdfDocument.PageCount; } }
-        public string FQDocType { get { return DocTypeObj.Find(_documentTypeCode).FQDescription; } }
+        public string FQDocType { get { return _documentTypeDescription; } }
 
         public string Error = "";
 
@@ -119,27 +131,20 @@ namespace RegScan
 
         #region dml
                
-        private void Insert()
-        {
-            copyToModel();            
-            byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
-            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
-            UpdateBoxPageCount();
-        }
-               
         /// <summary>
         /// Handles the logic of updating a current record with the scanned document.
         /// </summary>
         private void Update()
         {
-            copyToModel();
+            CopyToModel();
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
-            string resp = DocumentApi.uploadDocument(_fileName, pdfBytes, ApiDocModel);
+            string resp = DocumentApi.uploadDocument(pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to load into database. Current data for " + BarCode + " may be inaccurate.");
+                MessageBox.Show("ERROR, scanned image failed to load into database. " + 
+                                "Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
@@ -148,13 +153,13 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Controls the flow of logic between inserting a new document and updating an existing document.
-        /// If the _replaceFlag is true, (there is an existing document) -> Update: replace the existing document.
-        /// If the _replaceFlag is false, (no existing document). Insert: create a new record and post the document.
-        ///     Previously _replaceFlag would have been false for any record without a DocumentURL and inserted
-        ///                                             true for any record with a DocumentURL and updated.
-        /// With the current use cases of the application there will never be a need to create a document record
-        /// through the scanning application. This function should be removed and Update() used instead.
+        /// Controls the flow of logic between inserting or updatating a document record.
+        /// If the _replaceFlag is true, (there is an existing document) 
+        ///     -> Update: replace the existing document.
+        /// If the _replaceFlag is false, (no existing document).
+        ///     -> Insert: create a new record and post the document. Currently the scanning
+        ///        application does not have the ability to create a new document record through
+        ///        DRS API. This functionality could be added in the future.
         /// </summary>
         public void UpdateInsert()
         {
@@ -163,13 +168,16 @@ namespace RegScan
             _fileExtension = "PDF";
             _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
 
-            // Previously would have been false for any record without a DocumentURL and inserted - any with would be an update.
-            // That logic is faulty because the endpoints are the same in both cases and should be handled the same
-            // We want to only do an insert if there was no existing record for the barcode.
             if (_replaceRecordFlag)
                 Update();
+            // The scanning application should never create a new record through the DRS API.
             else
-                Insert();
+            {
+                MessageBox.Show("ERROR Unable to create a new record for document with barcode: " +
+                                 BarCode + ". Please try again once document has been indexed.");
+                UtilityObj.writeLog("No existing record for barcode: " + BarCode);
+                Environment.Exit(0);
+            }
 
             // Once done reset flag
             _replaceRecordFlag = false;
@@ -200,13 +208,14 @@ namespace RegScan
 
 
         /// <summary>
-        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if there is a preexisting
-        /// version of this document and the user indicates they would like to create a new version of the document. This
-        /// would not suggest that the document class should be changed nor a new box should be created. 
+        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if
+        /// there is a preexisting version of this document and the user indicates they would like
+        /// to create a new version of the document. This would not suggest that neither the 
+        /// document class should be changed nor a new box should be created. 
         /// </summary>
         public void SetToNew()
         {
-            //_documentId = "";          // _documentId = "" indicates a database insert, instead of an update.
+            // _documentId = "" indicates a database insert, instead of an update.
             _replaceRecordFlag = true;
 
             //if (_documentClass == "SOCIETY")
@@ -229,55 +238,54 @@ namespace RegScan
         static public string ErrorMessage = "";
 
 
-        //  _BarCode  == conDocId
         /// <summary>
-        /// Given a barcode request record details. Store the returned items into a list of DocumentObjs.
-        /// 
+        /// Given a barcode request record details. Store the returned items into a list of
+        /// DocumentObjs
         /// </summary>
         /// <param name="BarCode"> 8-digit barcode string </param>
-        /// <returns> List of DocumentObjs for each returned record matching the _BarCode </returns>
+        /// <returns> 
+        ///     List of DocumentObjs for each returned record matching the _BarCode
+        /// </returns>
         static public List<DocumentObj> Find(string BarCode)
-        {           
-            ErrorMessage = "";
+        {
             List<DocumentObj> documentList = new List<DocumentObj>();
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
             string resp = DocumentApi.searchByBarcode(BarCode);
-
-            if (resp.Contains("errorMessage"))
+       
+            if (!string.IsNullOrEmpty(resp))
             {
-                resp = "";       
-                ErrorMessage = "No Documents Found For Barcode: " + BarCode;
-                UtilityObj.writeLog(ErrorMessage);
-            }         
-            else
-            {
-
                 var resultList = (JObject)JToken.Parse(resp);
 
-                // If there are no results returned from the API, return an empty list and log an error.
-                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
+                // If there are no results are returned from the API or if they are not formatted
+                // as expected -> return an empty list and log an error.
+                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results") )
                 {
                     UtilityObj.writeLog(UtilityObj.error, "Unexpected return result from API.");
                     return null;
                 }
-                if (resultList["resultCount"].ToString() != "1")
+                // Checking if we get more than one result.
+                else if (resultList["resultCount"].ToString() != "1")
                 {
                     UtilityObj.writeLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
 
-
                 DocumentObj docObj;
+                // The barcode should be unique and only one item (Document Record) in the results
+                // This loop will catch any unexpected results and save them to the documentList
                 foreach (JObject record in resultList["results"])
                 {
                     // The first API call doesn't provide all the fields we want to display
                     // Call search again with the document class and unique identifier
                     var docClass = record["documentClass"].ToString();
-                    var queries = new Dictionary<string, string>() { { "documentServiceId", record["documentServiceId"].ToString() } };
+                    var queries = new Dictionary<string, string>() { 
+                        { "documentServiceId", record["documentServiceId"].ToString() } 
+                    };
                     var betterResponse = DocumentApi.getSearch(docClass, queries);
 
-                    // This does return a list but the documentClass documentServiceId pairing is unique -> only one element
+                    // This does return a list but the documentClass documentServiceId pairing is
+                    //     unique -> only one element
                     var betterResultList = (JObject)JToken.Parse(betterResponse)[0];
                     docObj = new DocumentObj();
                     copyFromModel(docObj, betterResultList);
@@ -285,37 +293,17 @@ namespace RegScan
                 }
             }
 
-            UtilityObj.writeLog("Return Ordered docs");
+            UtilityObj.writeLog(UtilityObj.debug, "Return Ordered docs");
 
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
 
         }
 
-        // Select the documents that match this barcode.
-        static private DocumentObj ExtractDocument(JObject jDoc)
-        {           
-            UtilityObj.writeLog("Extract jDoc and scanning information.");
-
-            DocumentObj docObj = new DocumentObj();
-            // Updated copyFromModel to do the work copying scanning information (if returned) as well as the record information.
-            // Much of the logic below is not required. 
-            copyFromModel(docObj, jDoc);
-
-            return docObj;
-        }
-              
-
-        // IF the document does not contain an accession number, then get one based on the owner type code.
-        static public long GetAccessionNumber(BoxObj _Box)
-        {
-            return long.Parse(_Box.SequenceNumber.ToString().PadLeft(2, '0') +
-                              _Box.ScheduleNumber.ToString().PadLeft(4, '0') +
-                              _Box.BoxNumber.ToString().PadLeft(4, '0'));
-
-        }
-
-        public void copyToModel()
+        /// <summary>
+        /// Take the elements of the DocumentObj and 
+        /// </summary>
+        public void CopyToModel()
         {
             //ApiScanModel.accessionNumber = _accessionNumber;
             //ApiScanModel.author = _authorId;
@@ -324,7 +312,7 @@ namespace RegScan
             //ApiScanModel.pagecount = _pageCount;
             //ApiScanModel.scannedDate = _scannedDate;
 
-            ApiDocModel.author = _authorId;
+            ApiDocModel.author = _author;
             ApiDocModel.consumerDocumentId = _barCode;
             ApiDocModel.consumerFilename = _fileName;
             ApiDocModel.consumerFilingDate = DateTime.Now;
@@ -374,9 +362,12 @@ namespace RegScan
 
         
         /// <summary>
-        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not guaranteed to be returned from DRS API
+        /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not
+        /// guaranteed to be returned from DRS API
         /// </summary>
-        /// <param name="docObj"> DocumentObj that we want to hold the current documents information </param>
+        /// <param name="docObj"> 
+        ///     DocumentObj that we want to hold the current documents information
+        /// </param>
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
         static public void copyFromModel(DocumentObj docObj, JObject jDoc)
         {
@@ -385,32 +376,67 @@ namespace RegScan
                 UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
                 throw new Exception("Attempting to pull data from a null object."); 
             }
-            if (jDoc.ContainsKey("author")) { docObj._authorId = (string)jDoc["author"]; }            
-            if (jDoc.ContainsKey("consumerDocumentId")) { docObj._barCode = (int)jDoc["consumerDocumentId"]; }            
-            if (jDoc.ContainsKey("consumerFilename")) { docObj._fileName = (string)jDoc["consumerFilename"]; }
 
+            // The unique identifier of the document record
+            if (jDoc.ContainsKey("documentServiceId"))
+                { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
+
+            // This author and the scanningInformation.author may be the same values
+            if (jDoc.ContainsKey("author")) { docObj._author = (string)jDoc["author"]; }
+
+            // Consumer information
+            // - identifier of one[+] document(s) associated with the consumer application entity
+            if (jDoc.ContainsKey("consumerDocumentId"))
+                { docObj._barCode = (int)jDoc["consumerDocumentId"]; }
+            // - Either a singular consumerFileName is returned, or a list of consumerFileNames
+            if (jDoc.ContainsKey("consumerFilename"))
+                { docObj._fileName = (string)jDoc["consumerFilename"]; }
+            else if (jDoc.ContainsKey("consumerFilenames")) 
+            {
+                // Convert to an array type and add all names to a string sep by a comma
+                JArray filenameList = (JArray)jDoc["consumerFileNames"];
+                foreach (string filename in filenameList)
+                {
+                    docObj._fileName += (string)filename;
+                    if (filename != (string)filenameList.Last())
+                    {
+                        docObj._fileName += ", ";
+                    }
+                }
+            }
+            // - The DateTime of application/ filing
+            if (jDoc.ContainsKey("consumerFilingDateTime")) 
+                { docObj._consumerFilingDate = (DateTime)jDoc["consumerFilingDateTime"]; }
+            // - Identifier of the entity (BC Company or a manufactured home) in filing
             if (jDoc.ContainsKey("consumerIdentifier")) {
                 docObj._legalEntityKey = (string)jDoc["consumerIdentifier"];
                 docObj._consumerIdentifier = (string)jDoc["consumerIdentifier"];
             }
-
-            if ( dataCheck(jDoc["consumerReferenceId"].ToString())) {
-                docObj._consumerReferenceId = Int32.Parse(jDoc["consumerReferenceId"].ToString());
-            }
-            if (jDoc.ContainsKey("createDateTime")) { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
-
-            if (jDoc.ContainsKey("documentClass")) {
-                if (jDoc.ContainsKey("documentTypeDescription")) { docObj._description = (string)jDoc["documentTypeDescription"]; }
-                else { docObj._description = (string)jDoc["documentClass"]; }
-                docObj._documentClass = (string)jDoc["documentClass"];
+            // - Unique identifier for the consumer application transaction/filing/registration
+            if (jDoc.ContainsKey("consumerReferenceId"))
+            {
+                if (dataCheck(jDoc["consumerReferenceId"].ToString()))
+                {
+                    docObj._consumerReferenceId = 
+                        Int32.Parse(jDoc["consumerReferenceId"].ToString());
+                }
             }
 
-            if (jDoc.ContainsKey("documentServiceId")) { docObj._documentServiceId = (string)jDoc["documentServiceId"]; }
-            if (jDoc.ContainsKey("documentType")) { docObj._documentTypeCode = (string)jDoc["documentType"]; }
-            if (jDoc.ContainsKey("documentTypeDescription")) { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
+            // Generated by the system, the date and time the document is saved/uploaded.
+            if (jDoc.ContainsKey("createDateTime")) 
+                { docObj._createDateTime = (DateTime)jDoc["createDateTime"]; }
+
+            // Document Class, Type, and type description
+            if (jDoc.ContainsKey("documentClass"))
+                { docObj._documentClass = (string)jDoc["documentClass"]; }
+            if (jDoc.ContainsKey("documentType"))
+                { docObj._documentTypeCode = (string)jDoc["documentType"]; }
+            if (jDoc.ContainsKey("documentTypeDescription"))
+                { docObj._documentTypeDescription = (string)jDoc["documentTypeDescription"]; }
 
             // Check if there is a previous document uploaded for this record
-            if (jDoc.ContainsKey("documentURL")) { docObj._documentURL = (string)jDoc["documentURL"]; }
+            if (jDoc.ContainsKey("documentURL"))
+                { docObj._documentURL = (string)jDoc["documentURL"]; }
 
             if (jDoc.ContainsKey("consumerFilingDateTime")) { docObj._consumerFilingDate = (DateTime)jDoc["consumerFilingDateTime"]; }
 

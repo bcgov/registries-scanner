@@ -1,5 +1,4 @@
-﻿using AsyncRequests;
-using PdfSharp.Drawing;
+﻿using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -151,33 +150,19 @@ namespace RegScan
                 image0 = _Image;
             }
 
-            string fileName = "Images\\Bitmap_image" + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
+            string fileNumber = _scanSessionFileList.Count > 0 ? Convert.ToString(_scanSessionFileList.Count) : "";
+            string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
             UtilityObj.saveImageAsFile(fileName, _Image);
 
             // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
+            
+            // Create a new ImageObj and add to the list of scanned images
+            _scannedImageList.Add(new ImageObj(image0, PdfSharp.PageOrientation.Portrait,
+                ImageObj.GetPageSize(image0.Width, image0.Height)));
 
-            UtilityObj.writeLog("Scan List size: " + Convert.ToString(_scanSessionFileList.Count));
+            UtilityObj.writeLog("Scan List size: " + fileNumber == "" ? "0" : fileNumber);
         }
-
-        /// <summary>
-        /// Handles making a request to the user to manually enter a barcode and returns the entered value.
-        /// </summary>
-        /// <param name="message"> String displayed in the message box </param>
-        /// <returns> string of characters entered by the user </returns>
-        private string ManualBarcode(string message)
-        {
-            string enteredBarcode = "";
-
-            // Display window to user.
-            if (MessageBox.Show(message, "Missing/ Not Found Barcode", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-            {
-                // User has indicated they wish to enter a barcode manually. Display a new form.
-                var barCodeString = new BarCodeString();
-                var frm = new frmEnterBarCode(barCodeString);
-                frm.ShowDialog();
-                enteredBarcode = barCodeString.BarCode;
-            }
 
             return enteredBarcode;
         }
@@ -187,10 +172,15 @@ namespace RegScan
         /// </summary>
         private void ProcessCompleted()
         {
-            UtilityObj.writeLog("Scanning finished");
+            // List to hold the documents.
+            List<DocumentObj> docs = null;
+            // Control flow based on if a record exists for this document
+            bool documentsFound = false;
+            // Control loop to get a barcode and check for a record.
+            bool checkBarcode = true;
 
-            // Enable the form.
-            Enabled = true;
+            // Scan the first page for Barcodes
+            string barCode = BarCodeObj.ScanForBarcode(image0);
 
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
@@ -212,16 +202,8 @@ namespace RegScan
             // IF we have a new document.
             if (_currentDocument == null)
             {
-                UtilityObj.writeLog("Fix Current Doc is null");
-
-                // IF no barcodes were returned from BarCodeObj.Scan() 
-                string barCode = "";
-                if (barcodes.Count == 0)
+                if (string.IsNullOrEmpty(barCode))
                 {
-                    UtilityObj.writeLog("add barcode manually");
-                    // Display the image.
-                    SetImage(image0);
-
                     // Ask if a barcode should be entered manually.
                     barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
                 }
@@ -291,13 +273,13 @@ namespace RegScan
                         // We have a record from DRS API that matches the barcode. This means we will be updating the record.
                         _currentDocument.UpdateRecord = true;
 
-                        // IF document has already been scanned.
-                        //if (_currentDocument.IsScanned)
-                        if (_currentDocument.DocumentURL != "")
-                        {
-                            UtilityObj.writeLog("Document barcode already exists.");
-                            // Turn off buttons for new box number.
-                            btnNewBox.Enabled = false;
+                // IF document has already been scanned.
+                //if (_currentDocument.IsScanned)
+                if (_currentDocument.DocumentURL != "")
+                {
+                    UtilityObj.writeLog("Document barcode already exists.");
+                    // Turn off buttons for new box number.
+                    btnNewBox.Enabled = false;
 
                             // Ask if this is a new version.
                             if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
@@ -420,9 +402,11 @@ namespace RegScan
                     _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
                 }
 
-                SetImageNav();
-
-            }            
+            SetImageNav();
+            
+            // Enable the form.
+            Enabled = true;
+                     
         }
 
         #endregion
@@ -1269,34 +1253,27 @@ namespace RegScan
                 {
                     _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
+                UtilityObj.writeLog("Checking for asynchronous scanning...");
+                // if device supports asynchronous events
+                if (_currentDevice.IsAsyncEventsSupported)
+                {
+                    UtilityObj.writeLog("Device supports asynchronous scanning");
+                    // enable all asynchronous events supported by device
+                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
+                }
             }
             catch (TwainDeviceCapabilityException)
             {
                 MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
-            catch(Exception ex2)
+
+            catch (Exception ex2)
             {
                 MessageBox.Show(ex2.Message);
                 return;
             }
-
-            UtilityObj.writeLog("Checking for asynchronous scanning...");
-            // if device supports asynchronous events
-            if (_currentDevice.IsAsyncEventsSupported)
-            {
-                try
-                {
-                    UtilityObj.writeLog("Device supports asynchronous scanning");
-                    // enable all asynchronous events supported by device
-                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
-                }
-                catch
-                {
-                }
-            }
-
+            
 
             try
             {
