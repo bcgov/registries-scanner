@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan
@@ -19,27 +20,27 @@ namespace RegScan
         {            
             APIRequest api = new APIRequest();
 
-            UtilityObj.writeLog("Initializing components");
+            UtilityObj.WriteLog(UtilityObj.debug, "Initializing components");
             InitializeComponent();
 
-            UtilityObj.writeLog("Reading app settings");
+            UtilityObj.WriteLog(UtilityObj.debug, "Reading app settings");
             // Get the application setting.
             AppSettingObj aso = new AppSettingObj();
 
             // Register Twain SDK
-            UtilityObj.writeLog("Initialize twain settings");
+            UtilityObj.WriteLog(UtilityObj.debug, "Initialize twain settings");
             TwainGlobalSettings tgs = new TwainGlobalSettings();
             tgs.Register(aso.TwainSDKUserName, aso.TwainSDKEmail, aso.TwainSDKKey);
 
 
             // Set the database connection.
-            UtilityObj.writeLog("Set database connection");
+            UtilityObj.WriteLog(UtilityObj.debug, "Set database connection");
             // FIX DBSupport.SetConnection(DBSupport.BuildConnectionString(aso.UserName, aso.Password, aso.Host, aso.Port, aso.Sid));
 
             // Assign which database that is being used.
             //this.Text += " Using Database " + aso.DatabaseName;
             this.Text += " Using DRS API";
-            UtilityObj.writeLog(this.Text);
+            UtilityObj.WriteLog(UtilityObj.debug, this.Text);
 
             // Load up look up lists now.
             UtilityObj.writeLog("Load Lookup lists from API");
@@ -58,7 +59,7 @@ namespace RegScan
 
         private void ShowNewForm(object sender, EventArgs e)
         {
-            UtilityObj.writeLog("Make new scanner form and display it");
+            UtilityObj.WriteLog(UtilityObj.debug, "Make new scanner form and display it");
             _scannerForm = new frmScannerDocument();
             _scannerForm.MdiParent = this;
             _scannerForm.WindowState = FormWindowState.Maximized;
@@ -114,24 +115,30 @@ namespace RegScan
         {
             try
             {
-                UtilityObj.writeLog("Create new device manager using vintasoft twain");
+                UtilityObj.WriteLog(UtilityObj.debug, 
+                    "Create new device manager using vintasoft twain");
                 // Create a device manager and display the built in selection dialog
                 DeviceManager deviceManager = new DeviceManager();
-                UtilityObj.writeLog("Open Manager");
+                UtilityObj.WriteLog(UtilityObj.debug, "Open Manager");
                 deviceManager.Open();
-                UtilityObj.writeLog("Show default device selection dialog (choose scanner)");
+                UtilityObj.WriteLog(UtilityObj.debug, 
+                    "Show default device selection dialog (choose scanner)");
                 deviceManager.ShowDefaultDeviceSelectionDialog();
 
-                // Close our device manger and ask scanning form to create a new one for its use to pick up on the new selected scanner.
-                UtilityObj.writeLog("Close manager after dialog");
+                // Close our device manger and ask scanning form to create a new one
+                // for its use to pick up on the new selected scanner.
+                UtilityObj.WriteLog(UtilityObj.debug, "Close manager after dialog");
                 deviceManager.Close();
-                UtilityObj.writeLog("Create new device manager based on scanner selection");
+                UtilityObj.WriteLog(UtilityObj.debug, 
+                    "Create new device manager based on scanner selection");
                 _scannerForm.CreateTwainDeviceManager();
             }
             catch (Exception _Error)
             {
-                UtilityObj.writeLog("unable to reset device");
-                MessageBox.Show(_Error.Message + " ... unable to reset device for scanning form. Close and open scanning application");
+                string msg = "TWAIN Device unable to reset.";
+                UtilityObj.WriteLog(UtilityObj.error, msg + Environment.NewLine +
+                    _Error.ToString());
+                MessageBox.Show(_Error.Message + msg + " Close and open scanning application");
             }
         }
 
@@ -155,7 +162,7 @@ namespace RegScan
 
         private void MDIMain_Load(object sender, EventArgs e)
         {
-            UtilityObj.writeLog("Load New Form");
+            UtilityObj.WriteLog(UtilityObj.debug, "Load New Form");
             ShowNewForm(sender, e);
         }
 

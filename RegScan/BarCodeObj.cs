@@ -51,7 +51,7 @@ namespace RegScan
             string barCode = null;
             try
             {
-                UtilityObj.writeLog(UtilityObj.debug,"Fix Checking for barcode");
+                UtilityObj.WriteLog(UtilityObj.debug,"Fix Checking for barcode");
                 // Scan the first page for Barcodes
                 barcodes = BarCodeObj.Scan(bitmapImage);
                 // get the first barcode from the list
@@ -60,7 +60,7 @@ namespace RegScan
             catch (Exception e)
             {
                 // Log the error.
-                UtilityObj.writeLog(UtilityObj.error, "Error trying to scan for barcodes: " +
+                UtilityObj.WriteLog(UtilityObj.error, "Error trying to scan for barcodes: " +
                     e.ToString());
             }
 
