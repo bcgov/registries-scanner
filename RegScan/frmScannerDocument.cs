@@ -87,15 +87,6 @@ namespace RegScan
             SetSettingValues();
             useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
 
-            // Load combo boxes
-            cBoxOrientation.Items.Add(PdfSharp.PageOrientation.Landscape.ToString());
-            cBoxOrientation.Items.Add(PdfSharp.PageOrientation.Portrait.ToString());
-            cBoxOrientation.SelectedIndex = -1;
-
-            cBoxPageSize.Items.Add(PdfSharp.PageSize.Letter.ToString());
-            cBoxPageSize.Items.Add(PdfSharp.PageSize.Legal.ToString());
-            cBoxPageSize.SelectedIndex = -1;
-
             // Create a path to where debugging logs should be stored. 
             string scannerDir = "c:\\scanner25";
             string scannerFile = "vstwain.log";
@@ -245,8 +236,6 @@ namespace RegScan
                 if (_currentDocument.DocumentURL != "")
                 {
                     UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
-                    // Turn off buttons for new box number.
-                    btnNewBox.Enabled = false;
 
                     // Ask if this is a new version.
                     if (MessageBox.Show("Document with barcode " + barCode +
@@ -384,11 +373,8 @@ namespace RegScan
                     return;
                 }
                 SetImage(image);
-                SetOrientation(_scannedImageList[_currentImageIndex].Orientation.ToString());
-                SetPageSize(_scannedImageList[_currentImageIndex].PageSize.ToString());
             }
 
-            lbPagesScanned.Text = "Pages Scanned: " + _scannedImageList.Count().ToString();
             string display = (_currentImageIndex + 1).ToString();
             lbDisplayImage.Text = display + " of " + _scannedImageList.Count.ToString();
             if (_currentImageIndex != 0)
@@ -397,11 +383,7 @@ namespace RegScan
                 btnDeleteImage.Visible = false;
 
             btnViewAsPDF.Enabled = true;
-            btnSharpen.Enabled = true;
-            btnPrintBatchLabel.Enabled = true;
-            btnNewBox.Enabled = true;
-            cBoxOrientation.Enabled = true;
-            cBoxPageSize.Enabled = true;
+            btnRotate.Enabled = true;
         }
 
         #endregion
@@ -447,7 +429,7 @@ namespace RegScan
                 xgr.DrawImage(img, 0, 0);
 
                 // Update progress bar
-                txtMessage.Text += "\r\n" + "Page Size: " + pdfPage.Size.ToString();
+                txtNotes.Text += "\r\n" + "Page Size: " + pdfPage.Size.ToString();
                 progressBar.Value += updateCount;
                 Application.DoEvents();
 
@@ -650,13 +632,6 @@ namespace RegScan
             var frm = new frmBatchPrint(_currentBatchId, true);
             frm.ShowDialog();
 
-            // If the batch ID was changed
-            if (_currentBatchId.BatchId != int.Parse(txtBatchNumber.Text))
-            {
-                // Then update on the form and in the document object.
-                txtBatchNumber.Text = _currentBatchId.BatchId.ToString();
-                _currentDocument.BatchId = _currentBatchId.BatchId;
-            }
         }
 
         /// <summary>
@@ -689,31 +664,6 @@ namespace RegScan
             btnScanPage.Focus();
         }
 
-        /// <summary>
-        /// The orientation was changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cBoxOrientation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cBoxOrientation.Text == PdfSharp.PageOrientation.Landscape.ToString())
-                _scannedImageList[_currentImageIndex].Orientation = PdfSharp.PageOrientation.Landscape;
-            else if (cBoxOrientation.Text == PdfSharp.PageOrientation.Portrait.ToString())
-                _scannedImageList[_currentImageIndex].Orientation = PdfSharp.PageOrientation.Portrait;
-        }
-
-        /// <summary>
-        /// The Page size was changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cBoxPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cBoxPageSize.Text == PdfSharp.PageSize.Letter.ToString())
-                _scannedImageList[_currentImageIndex].PageSize = PdfSharp.PageSize.Letter;
-            else if (cBoxPageSize.Text == PdfSharp.PageSize.Legal.ToString())
-                _scannedImageList[_currentImageIndex].PageSize = PdfSharp.PageSize.Legal;
-        }
         #endregion
 
         #region house keeping methods
@@ -732,29 +682,17 @@ namespace RegScan
 
             // Clear the document.
             txtBarCode.Text = "";
-            txtDocumentId.Text = "";
             txtLegalEntityKey.Text = "";
             txtIndexer.Text = "";
             txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
-            txtVersionNumber.Text = "";
             txtPagesInDocument.Text = "";
-            txtBatchNumber.Text = "";
-            txtAccessionNumber.Text = "";
-            txtPagesInBox.Text = "";
+            txtSequenceNumber.Text = "";
             imageBox.Image = null;
-            heightLabel.Text = "";
-            widthLabel.Text = "";
             lbDisplayImage.Text = "0 of 0";
-            lbPagesScanned.Text = "Pages Scanned: 0";
             btnDeleteImage.Visible = false;
-            btnNewBox.Enabled = false;
-            btnPrintBatchLabel.Enabled = false;
             btnViewAsPDF.Enabled = false;
-            btnSharpen.Enabled = false;
-            cBoxOrientation.Enabled = false;
-            cBoxOrientation.SelectedIndex = -1;
-            cBoxPageSize.Enabled = false;
+            btnRotate.Enabled = false;
 
             // Delete any temporary FileNames.
             try
@@ -765,35 +703,8 @@ namespace RegScan
             }
             catch { }
 
-            txtMessage.Text = "";
+            txtNotes.Text = "";
             imageBox.Image = null;
-        }
-
-        /// <summary>
-        ///  Set the current selected Orientation in the combo box.
-        /// </summary>
-        /// <param name="_Orientation"></param>
-        private void SetOrientation(string _Orientation)
-        {
-
-            for (int i = 0; i < cBoxOrientation.Items.Count; i++)
-            {
-                if (cBoxOrientation.Items[i].ToString() == _Orientation)
-                    cBoxOrientation.SelectedIndex = i;
-            }
-        }
-
-        /// <summary>
-        /// Set the current selected Page Size in the combo box.
-        /// </summary>
-        /// <param name="_PageSize"></param>
-        private void SetPageSize(string _PageSize)
-        {
-            for (int i = 0; i < cBoxPageSize.Items.Count; i++)
-            {
-                if (cBoxPageSize.Items[i].ToString() == _PageSize)
-                    cBoxPageSize.SelectedIndex = i;
-            }
         }
 
         /// <summary>
@@ -830,9 +741,7 @@ namespace RegScan
                     _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
                     _currentBatchId.BatchId = 1;
                     _currentDocument.BatchId = _currentBatchId.BatchId;
-                    txtBatchNumber.Text = _currentBatchId.BatchId.ToString();
-                    txtAccessionNumber.Text = box.AccessionNumber;
-                    txtPagesInBox.Text = box.PageCount.ToString();
+                    txtSequenceNumber.Text = box.AccessionNumber;
                 }
             }
 
@@ -871,18 +780,27 @@ namespace RegScan
         /// </summary>
         protected void SetForm()
         {
+            // Document Record Details
+
+            // Indexing/ Filing information
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = string.IsNullOrEmpty(_currentDocument.DocumentServiceId) ?
-                "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
-            txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtIndexer.Text = _currentDocument.Owner;
-            txtDocumentClass.Text = _currentDocument.Description;
-            txtDocumentType.Text = _currentDocument.FQDocType;
-            txtVersionNumber.Text = _currentDocument.VersionNumber.ToString();
+            txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
+            txtFilingDate.Text = _currentDocument.ConsumerFilingDate;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
-            txtBatchNumber.Text = _currentDocument.BatchId.ToString();
-            txtAccessionNumber.Text = _currentDocument.AccessionNumberText;
-            txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
+
+            // Document Information
+            txtDocumentClass.Text = _currentDocument.DocumentClass;
+            txtDocumentType.Text = _currentDocument.DocumentTypeCode;
+            txtDocumentDescription.Text = _currentDocument.DocTypeDesc;
+
+            // Accession Numbers
+            txtSequenceNumber.Text = _currentDocument.SequenceNumber;
+            txtScheduleNumber.Text = _currentDocument.ScheduleNumber;
+            txtBoxNumber.Text = _currentDocument.BoxNumber;
+
+            // Notes / Description
+            txtNotes.Text = _currentDocument.Description;
         }
         #endregion
 
@@ -905,9 +823,7 @@ namespace RegScan
         /// </summary>
         private void UpdateStatusBar()
         {
-            positionToolStripStatusLabel.Text = imageBox.AutoScrollPosition.ToString();
-            imageSizeToolStripStatusLabel.Text = imageBox.GetImageViewPort().ToString();
-            zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
+
         }
 
         /// <summary>
