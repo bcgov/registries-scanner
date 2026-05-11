@@ -7,16 +7,16 @@ namespace ApiScanner
     {      
         static public string get()
         {
-            string endpoint = "/doc/api/v1/scanning/parameters";
-            string resp = APIRequest.MakeKeyRequest(endpoint, Method.GET);
-            return resp;
+            //string endpoint = "/doc/api/v1/scanning/parameters";
+            //string resp = APIRequest.MakeKeyRequest(endpoint, Method.GET);
+            return "";
         }
 
         static public string patch(object data)
         {            
-            string endpoint = "/doc/api/v1/scanning/parameters";
-            string resp = APIRequest.MakeKeyRequest(data, endpoint, Method.PATCH);
-            return resp;
+            //string endpoint = "/doc/api/v1/scanning/parameters";
+            //string resp = APIRequest.MakeKeyRequest(data, endpoint, Method.PATCH);
+            return "";
         }   
                 
     }
