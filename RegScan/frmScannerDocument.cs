@@ -582,7 +582,7 @@ namespace RegScan
 
             // Update the document.
             _currentDocument.PDFDocument = pdf;
-            _currentDocument.Description = txtDocumentDescription.Text;
+            _currentDocument.Description = txtDocumentClass.Text;
             _currentDocument.PageCount = _scannedImageList.Count;
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
@@ -734,8 +734,8 @@ namespace RegScan
             txtBarCode.Text = "";
             txtDocumentId.Text = "";
             txtLegalEntityKey.Text = "";
-            txtOwner.Text = "";
-            txtDocumentDescription.Text = "";
+            txtIndexer.Text = "";
+            txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
             txtVersionNumber.Text = "";
             txtPagesInDocument.Text = "";
@@ -875,8 +875,8 @@ namespace RegScan
             txtDocumentId.Text = string.IsNullOrEmpty(_currentDocument.DocumentServiceId) ?
                 "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
-            txtOwner.Text = _currentDocument.Owner;
-            txtDocumentDescription.Text = _currentDocument.Description;
+            txtIndexer.Text = _currentDocument.Owner;
+            txtDocumentClass.Text = _currentDocument.Description;
             txtDocumentType.Text = _currentDocument.FQDocType;
             txtVersionNumber.Text = _currentDocument.VersionNumber.ToString();
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
