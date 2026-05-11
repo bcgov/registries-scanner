@@ -331,38 +331,6 @@ namespace RegScan
           
         }
         
-        public void copyToModel(JObject temp, ScanningInfoModel scanInfo )
-        {
-            if (temp == null || scanInfo == null) return;
-
-            if (temp["accessionNumber"] != null) { scanInfo.accessionNumber = (long)temp["accessionNumber"]; }
-            if (temp["authorId"] != null) { scanInfo.author = (string)temp["authorId"]; }
-            if (temp["scannedDate"] != null) { scanInfo.scannedDate = (DateTime)temp["scannedDate"]; }
-            if (temp["batchId"] != null) { scanInfo.batchId = (int)temp["batchId"]; }
-            if (temp["createDateTime"] != null) { scanInfo.createDateTime = (DateTime)temp["createDateTime"]; }
-            if (temp["pageCount"] != null) { scanInfo.pagecount = (int)temp["pageCount"]; }
-
-            if (temp["author"] != null) { ApiDocModel.author = (string)temp["author"]; }
-            if (temp["consumerDocumentId"] != null) { ApiDocModel.consumerDocumentId = (int)temp["consumerDocumentId"]; }
-            if (temp["consumerFilename"] != null) { ApiDocModel.consumerFilename = (string)temp["consumerFilename"]; }
-            if (temp["consumerFilingDate"] != null) { ApiDocModel.consumerFilingDate = (DateTime)temp["consumerFilingDate"]; }
-            if (temp["consumerIdentifier"] != null) { ApiDocModel.consumerIdentifier = (string)temp["consumerIdentifier"]; }
-            if (temp["consumerReferenceId"] != null) { ApiDocModel.consumerReferenceId = ""; }
-            if (temp["createDateTime"] != null) { ApiDocModel.createDateTime = (DateTime)temp["createDateTime"]; }
-            if (temp["documentClass"] != null) { ApiDocModel.documentClass = (string)temp["documentClass"]; }
-            if (temp["documentExists"] != null) { ApiDocModel.documentExists = (string)temp["documentExists"]; }
-            if (temp["documentId"] != null) { ApiDocModel.documentServiceId = (string)temp["documentId"]; }
-            
-            if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentTypeCode"]; }
-            //if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentType"]; }
-
-            if (temp["documentTypeDescription"] != null) { ApiDocModel.documentTypeDescription = (string)temp["documentTypeDescription"]; }
-            if (temp["documentURL"] != null) { ApiDocModel.documentURL = (string)temp["documentURL"]; } 
-                 
-            ApiDocModel.scanningInformation = scanInfo;
-        }
-
-        
         /// <summary>
         /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not
         /// guaranteed to be returned from DRS API
