@@ -786,7 +786,7 @@ namespace RegScan
             txtBarCode.Text = _currentDocument.BarCode;
             txtIndexer.Text = _currentDocument.Owner;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
-            txtFilingDate.Text = _currentDocument.ConsumerFilingDate;
+            txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
             // Document Information
@@ -795,9 +795,8 @@ namespace RegScan
             txtDocumentDescription.Text = _currentDocument.DocTypeDesc;
 
             // Accession Numbers
-            txtSequenceNumber.Text = _currentDocument.SequenceNumber;
-            txtScheduleNumber.Text = _currentDocument.ScheduleNumber;
-            txtBoxNumber.Text = _currentDocument.BoxNumber;
+            txtSequenceNumber.Text = _currentDocument.SequenceNumberString;
+            txtScheduleNumber.Text = _currentDocument.ScheduleNumberString;
 
             // Notes / Description
             txtNotes.Text = _currentDocument.Description;
