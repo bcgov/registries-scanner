@@ -1,5 +1,4 @@
 ﻿using PdfSharp.Drawing;
-using PdfSharp.Drawing.BarCodes;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using Utilities;
 using Vintasoft.Twain;
@@ -305,7 +303,6 @@ namespace RegScan
             if (_currentDocument == null)
             {
                 ProocessFristPage();
-                
             } 
             // Here we are adding an additional page to the document. We just need to adjust the index
             else {  _currentImageIndex++; }
@@ -408,9 +405,8 @@ namespace RegScan
 
             // Create a PDF document.
             var pdf = new PdfDocument();
-            int updateCount = ((int)100 / _scannedImageList.Count) / 2;
-            progressBar.Value = updateCount;
-            progressBar.Visible = true;
+            int updateCount = (int)100 / _scannedImageList.Count;
+            showProgressBar();
             Application.DoEvents();
 
             UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
@@ -436,7 +432,7 @@ namespace RegScan
             }
 
             _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
-            progressBar.Visible = false;
+            hideProgressBar();
 
         }
 
@@ -532,8 +528,7 @@ namespace RegScan
 
             // Percentage updated based on number of images to process
             int updateCount = (int)100 / _scannedImageList.Count;
-            progressBar.Value = 0;
-            progressBar.Visible = true;
+            showProgressBar();
 
             // This is discouraged in Microsoft Docs.
             Application.DoEvents();
@@ -573,7 +568,7 @@ namespace RegScan
 
             // Reset the document and display.
             ResetDocument();
-            progressBar.Visible = false;
+            hideProgressBar();
 
         }
 
@@ -888,24 +883,9 @@ namespace RegScan
         /// <param name="e"> The image processing event. Tracks progress and canceling events </param>
         private void device_ImageAcquiringProgress(object sender, ImageAcquiringProgressEventArgs e)
         {
-            // image acquisition must be canceled because application's form is closing
-            //if (_cancelTransferBecauseFormIsClosing)
-            //{
-            //    // cancel image acquisition
-            //    _currentDevice.CancelTransfer();
-            //    return;
-            //}
-
             // set the progress bar value to the current completion level of the image acquisition.
             progressBar.Value = (int)e.Progress;
 
-            //UtilityObj.writeLog(Convert.ToString(progressBar.Value) + " device_ImageAcquiringProgress");
-
-            // Catch when the process is complete and clear the progress bar.
-            if (progressBar.Value == 100)
-            {
-                 progressBar.Value = 0;
-            }
         }
 
         /// <summary>
@@ -1013,14 +993,15 @@ namespace RegScan
             //_isImageAcquiring = false;
 
             // Clear program bar.
-            progressBar.Visible = false;
+            hideProgressBar();
 
             // process the scanned images.
             ProcessCompleted();
         }
 
         /// <summary>
-        /// Called when user selects the 'Scan' button. Sets up and starts the scanning session.
+        /// Ensure the scanning device is open and use the form fields to configure scanning
+        /// options. 
         /// </summary>
         /// <param name="sender"> "Scan" button on Main Form </param>
         /// <param name="e"> Mouse events that may need to be handled </param>
@@ -1108,6 +1089,70 @@ namespace RegScan
                     // enable all asynchronous events supported by device
                     _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
                 }
+            }
+
+        /// <summary>
+        /// All steps used to hide the progress bar, show scanner controls and enable the form
+        /// </summary>
+        private void hideProgressBar()
+        {
+            // hide the progress bar
+            progressBar.Visible = false;
+            
+            // Show scanning options when processing scan is complete
+            useUICheckBox.Visible = true;
+            useAdfCheckBox.Visible = true;
+            useDuplexCheckBox.Visible = true;
+            useUICheckBox.Visible = true;
+            showProgressIndicatorUICheckBox.Visible = true;
+
+            // Allow the user to interact with the form
+            Enabled = true;
+        }
+
+        /// <summary>
+        /// All steps used to show the progress bar, hide scanner controls and disable the form
+        /// </summary>
+        private void showProgressBar()
+        {
+            // Disable interaction with the form
+            Enabled = false;
+            
+            // Hide scanning options when processing scan
+            useUICheckBox.Visible = false;
+            useAdfCheckBox.Visible = false;
+            useDuplexCheckBox.Visible = false;
+            useUICheckBox.Visible = false;
+            showProgressIndicatorUICheckBox.Visible = false;
+
+            // show the progress bar
+            progressBar.Visible = true;
+            progressBar.Value = 0;
+        }
+
+        /// <summary>
+        /// Called when user selects the 'Scan' button. Sets up and starts the scanning session.
+        /// </summary>
+        /// <param name="sender"> "Scan" button on Main Form </param>
+        /// <param name="e"> Mouse events that may need to be handled </param>
+        private void btnScanPage_Click(object sender, EventArgs e)
+        {    
+            // If we are starting a new scanning session we want to ensure any files created in
+            // past sessions are cleared.
+            if (_currentDocument == null)
+            {
+                UtilityObj.DeleteFolder("Images");
+                _scanSessionFileList.Clear();
+                UtilityObj.CreateFolder("Images");
+            }
+            
+            image0 = null;
+            
+            showProgressBar();
+
+            try
+            {
+                setUpScanner();
             }
             catch (TwainDeviceCapabilityException)
             {
