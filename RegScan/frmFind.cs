@@ -149,7 +149,7 @@ namespace RegScan
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
             txtBatchNumber.Text = _currentDocument.BatchId.ToString();
             txtAccessionNumber.Text = _currentDocument.AccessionNumberText;
-            txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
+            //txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
 
             if (_currentDocument.IsScanned)
                 _currentDocument.ConvertPDFToImageList();
