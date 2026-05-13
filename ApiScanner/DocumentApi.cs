@@ -84,7 +84,7 @@ namespace ApiScanner
                 throw new Exception("Unable to process search without Barcode. Please try again.");
             }
 
-            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+            return APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
         }
 
         //Search by docClass
@@ -100,6 +100,8 @@ namespace ApiScanner
             string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
+
+        #endregion
 
         /// REMOVE. This is duplicated from the post method above. 
         /// The only difference is adding parameters to before making the call. 
