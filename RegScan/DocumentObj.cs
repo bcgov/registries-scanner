@@ -15,7 +15,6 @@ namespace RegScan
     public class DocumentObj
     {
         #region Properties and Constructors
-        private DocumentModel ApiDocModel = new DocumentModel();
 
         //DRS
         private string _documentURL;
@@ -25,8 +24,6 @@ namespace RegScan
         private DateTime _consumerFilingDate;
         private string _consumerIdentifier;
         private int _consumerReferenceId;
-
-        JObject scanInfo;
 
         private string _legalEntityKey;
         private string _documentTypeCode;
@@ -62,7 +59,7 @@ namespace RegScan
         public string BarCode { get { return _barCode.ToString(); } }
         public string Owner { get { return _owner; } }
         public string LegalEntityKey { get { return _legalEntityKey; } }
-        public string ConsumerFilingDateString {  get { return _consumerFilingDate.ToString(); } }
+        public string ConsumerFilingDateString {  get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
         public string DocumentClass {  get { return _documentClass; } }
         public string DocumentTypeCode { get { return _documentTypeCode; } }
@@ -73,15 +70,15 @@ namespace RegScan
         public string DocumentServiceId { get { return _documentServiceId; } }
         public string SequenceNumberString
         {
-            get { return _sequenceNumber.ToString(); }
+            get { return _sequenceNumber.ToString().PadLeft(2, '0'); }
         }
         public string ScheduleNumberString
         {
-            get { return _scheduleNumber.ToString(); }
+            get { return _scheduleNumber.ToString().PadLeft(4, '0'); }
         }
         public string BoxNumberString
         {
-            get { return _boxNumber.ToString(); }
+            get { return _boxNumber.ToString().PadLeft(4, '0'); }
         }
 
         public int SequenceNumber { 
@@ -137,20 +134,42 @@ namespace RegScan
         /// </summary>
         private void Update()
         {
-            CopyToModel();
+            // Object to hold the document record information
+            DocumentModel apiDocModel = new DocumentModel();
+            // Copy local information to obj
+            CopyToModel(apiDocModel);
 
+            // Transform the scanned images into a byte array
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
-            
-            string resp = DocumentApi.uploadDocument(pdfBytes, ApiDocModel);
-            if (resp.Contains("errorMessage"))
+
+            // TODO - we shouldnt exit, we should show the error then handle it gracefully
+            try
+            {
+                string uploadResp = DocumentApi.uploadDocument(
+                    pdfBytes, apiDocModel.consumerFilename, _documentServiceId);
+            }
+            catch (Exception e)
             {
                 MessageBox.Show("Scanned image failed to load into database. " + 
                                 "Current data for " + BarCode + " may be inaccurate.");
-                UtilityObj.WriteLog(UtilityObj.error, "Scanned document Image failed PUT to update old image.");
+                UtilityObj.WriteLog(UtilityObj.error, 
+                    "Scanned document Image failed PUT to update image." + e.ToString());
                 Environment.Exit(0);
             }
-
-            UpdateBoxPageCount();
+            try
+            {
+                string updateResp = DocumentApi.updateDocumentRecord(
+                    apiDocModel, _documentServiceId);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Unable to update document record." +
+                                "Current data for " + BarCode + " may be inaccurate.");
+                UtilityObj.WriteLog(UtilityObj.error,
+                    "Scanned document Image failed PATCH to update document record." +
+                    e.ToString());
+                Environment.Exit(0);
+            }
         }
 
         /// <summary>
@@ -166,7 +185,6 @@ namespace RegScan
         {
             // Set some values before database requests.
             _isScanned = true;
-            _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
 
             if (_replaceRecordFlag)
                 Update();
@@ -181,13 +199,6 @@ namespace RegScan
 
             // Once done reset flag
             _replaceRecordFlag = false;
-        }
-
-        private void UpdateBoxPageCount()
-        {
-            // Update Box Page Count
-            _boxObj.PageCount += _pageCount;
-            _boxObj.UpdatePageCount();
         }
 
         #endregion
@@ -302,32 +313,33 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Take the elements of the DocumentObj and 
+        /// Take the elements of the DocumentObj and transform it into the Document Upload struct
         /// </summary>
-        public void CopyToModel()
+        public void CopyToModel(DocumentModel model)
         {
-            //ApiScanModel.accessionNumber = _accessionNumber;
-            //ApiScanModel.author = _authorId;
-            //ApiScanModel.batchId = _batchId;
-            //ApiScanModel.createDateTime = _createDateTime;
-            //ApiScanModel.pagecount = _pageCount;
-            //ApiScanModel.scannedDate = _scannedDate;
+            // get the current time
+            DateTime currentTime = DateTime.Now;
 
-            ApiDocModel.author = _author;
-            ApiDocModel.consumerDocumentId = _barCode;
-            ApiDocModel.consumerFilename = _fileName;
-            ApiDocModel.consumerFilingDate = DateTime.Now;
-            ApiDocModel.consumerIdentifier = _consumerIdentifier;
-            ApiDocModel.consumerReferenceId = "";
-            ApiDocModel.createDateTime = _createDateTime;
-            ApiDocModel.documentClass = _documentClass;
-            ApiDocModel.documentExists = "";
-            ApiDocModel.documentServiceId = _documentServiceId;
-            ApiDocModel.documentType = _documentTypeCode;
-            ApiDocModel.documentTypeDescription = "";
-            ApiDocModel.documentURL = "";
-            //ApiDocModel.scanningInformation = ApiScanModel;
-          
+            // Build the scanning information model
+            DocumentModel.ScanningInformation scanInfo = new DocumentModel.ScanningInformation();
+            scanInfo.consumerDocumentId = _barCode.ToString();
+            scanInfo.scanDateTime = currentTime.ToString();
+            scanInfo.documentClass = _documentClass;
+            scanInfo.accessionNumber = AccessionNumberString;
+            scanInfo.batchId = null;
+            scanInfo.pageCount = _pageCount;
+            scanInfo.author = _author;
+
+            // Build the UpdateDocument model
+            model.consumerDocumentId = _barCode.ToString();
+            model.consumerIdentifier = _consumerIdentifier;
+            model.consumerFilename = _legalEntityKey + currentTime.ToString("yyyy_MM_dd_hh_mm_ss");
+            model.consumerFilingDate = _consumerFilingDate.ToString();
+            model.description = _description;
+            model.documentType = _documentTypeCode;
+            model.documentClass = _documentClass;
+            model.consumerReferenceId = _consumerReferenceId.ToString();
+            model.scanInfo = scanInfo;
         }
         
         /// <summary>
@@ -415,13 +427,13 @@ namespace RegScan
             if (jDoc.ContainsKey("scanningInformation"))
             {
                 // Make the nested object easier to parse
-                docObj.scanInfo = (JObject)jDoc["scanningInformation"];
+                JObject scanInfo = (JObject)jDoc["scanningInformation"];
 
-                if (docObj.scanInfo.ContainsKey("accessionNumber")) {
+                if (scanInfo.ContainsKey("accessionNumber")) {
                     // The Accession Number is returned as a string with the following form:
                     // "12-3456-7890" - From this we can extract the following
                     // sequence number <12>, schedule number <3456> and box number <7890>.
-                    string accNumb = (string)docObj.scanInfo["accessionNumber"];
+                    string accNumb = (string)scanInfo["accessionNumber"];
                     string[] accNumbersSplit = accNumb.Split('-');
                     docObj._sequenceNumber = int.Parse(accNumbersSplit[0]);
                     docObj._scheduleNumber = int.Parse(accNumbersSplit[1]);
@@ -429,20 +441,20 @@ namespace RegScan
                 }
 
                 // Another author field, save as owner
-                if (docObj.scanInfo.ContainsKey("author"))
-                    { docObj._owner = (string)docObj.scanInfo["author"]; }
+                if (scanInfo.ContainsKey("author"))
+                    { docObj._owner = (string)scanInfo["author"]; }
                 
                 // Batch ID that the scan was processed with
-                if (docObj.scanInfo.ContainsKey("batchId"))
-                    { docObj._batchId = (int)docObj.scanInfo["batchId"];}
+                if (scanInfo.ContainsKey("batchId"))
+                    { docObj._batchId = (int)scanInfo["batchId"];}
 
                 // Number of pages expected in the document
-                if (docObj.scanInfo.ContainsKey("pageCount"))
-                    { docObj._pageCount = (int)docObj.scanInfo["pageCount"];}
+                if (scanInfo.ContainsKey("pageCount"))
+                    { docObj._pageCount = (int)scanInfo["pageCount"];}
 
                 // The date of the consumer application document scan date
-                if (docObj.scanInfo.ContainsKey("scanDateTime"))
-                    { docObj._scannedDate = (DateTime)docObj.scanInfo["scanDateTime"];}             
+                if (scanInfo.ContainsKey("scanDateTime"))
+                    { docObj._scannedDate = (DateTime)scanInfo["scanDateTime"];}             
             }
         }        
 
