@@ -30,15 +30,14 @@ namespace ApiScanner
         ///     The unique identifier of an existing document service document
         /// </param>
         /// <returns></returns>
-        public static string updateDocumentRecord(object data, string docServId)
+        public static string updateDocumentRecord(DocumentModel data, string docServId)
         {
             // TODO - update how we pass information back to the API 
             //     - verification & checking that the data should be changed
-            DocumentModel myData = (DocumentModel)data;
 
             string endpoint = "doc/api/v1/documents/" + docServId;
 
-            return APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH); 
+            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.PATCH); 
         }
 
         /// <summary>
@@ -52,17 +51,15 @@ namespace ApiScanner
         ///     other elements to be used in the request. Backup if _fileName is an empty string
         /// </param>
         /// <returns>String representation of the result fromt the request</returns>
-        public static string uploadDocument(byte[] pdfBytes, object data)
+        public static string uploadDocument(byte[] pdfBytes, string filename, string docServiceId)
         {
-            DocumentModel myData = (DocumentModel)data;
-
             Dictionary<string, object> param = new Dictionary<string, object>();
-            if (myData.consumerFilename != "")
+            if (!string.IsNullOrEmpty(filename))
             {
                 // TODO: handle passing in any parameters with param. Ticket #33043
-                param.Add("consumerFilename", (string)myData.consumerFilename);
+                param.Add("consumerFilename", filename);
             }
-            string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
+            string endpoint = "/doc/api/v1/documents/" + docServiceId;
 
             return APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
         }
@@ -118,22 +115,30 @@ namespace ApiScanner
 
     }
 
+    /// <summary>
+    /// Object to match the DRS API documentUpdate Model
+    /// </summary>
     public class DocumentModel
     {
-        public string author;
-        public int consumerDocumentId;
-        public string consumerFilename;
-        public DateTime consumerFilingDate;
+        public string consumerDocumentId;
         public string consumerIdentifier;
-        public string consumerReferenceId;
-        public DateTime createDateTime;
-        public string documentClass;
-        public string documentExists;
-        public string documentServiceId;
+        public string consumerFilename;
+        public string consumerFilingDate;
+        public string description;
         public string documentType;
-        public string documentTypeDescription;
-        public string documentURL;
-        public object scanningInformation;
+        public string documentClass;
+        public string consumerReferenceId;
+        public ScanningInformation scanInfo;
+        public class ScanningInformation
+        {
+            public string consumerDocumentId;
+            public string scanDateTime;
+            public string documentClass;
+            public string accessionNumber;
+            public string batchId;
+            public int pageCount;
+            public string author;
+        }
     }
 
 }
