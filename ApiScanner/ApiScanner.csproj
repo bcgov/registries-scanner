@@ -76,5 +76,8 @@
     <PackageReference Include="JSON" Version="1.0.1" />
     <PackageReference Include="RestSharp" Version="106.15.0" />
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
