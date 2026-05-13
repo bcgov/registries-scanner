@@ -10,9 +10,9 @@ namespace ApiScanner
     {
         static public string get()
         {
-            //string endpoint = "/doc/api/v1/scanning/schedules";
-            //string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);           
-            return "";
+            string endpoint = "/doc/api/v1/scanning/schedules";
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);           
+            return resp;
         }      
     }
 

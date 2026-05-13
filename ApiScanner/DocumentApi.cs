@@ -174,7 +174,7 @@ namespace ApiScanner
 
             if (!string.IsNullOrEmpty(barcode)) { endpoint += "?consumerDocumentId=" + barcode; }
             
-            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
 
             return resp;
         }
@@ -189,7 +189,7 @@ namespace ApiScanner
                 endpoint += "?" + kvp.Key + "=" + kvp.Value;
             }
             
-            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
             return resp;
         }
 

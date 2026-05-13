@@ -13,10 +13,9 @@ namespace ApiScanner
         /// <returns></returns>
         public string get()
         {
-            // This is not used currently should be removed.
-            //string endpoint = "/doc/api/v1/documents/document-types";
-            //string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
-            return "";
+            string endpoint = "/doc/api/v1/documents/document-types";
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            return resp;
         }
     }
 }

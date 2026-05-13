@@ -6,9 +6,9 @@ namespace ApiScanner
     {   
         static public string get(long accessionNumber)
         {
-            //string endpoint = "/doc/api/v1/scanning/batchid/" + accessionNumber.ToString() + "/";
-            //string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
-            return "";
+            string endpoint = "/doc/api/v1/scanning/batchid/" + accessionNumber.ToString() + "/";
+            string resp = APIRequest.MakeKeyRequest("", endpoint, RestSharp.Method.GET);
+            return resp;
         }
     }
 
