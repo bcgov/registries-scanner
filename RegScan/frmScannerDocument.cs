@@ -792,6 +792,7 @@ namespace RegScan
             // Accession Numbers
             txtSequenceNumber.Text = _currentDocument.SequenceNumberString;
             txtScheduleNumber.Text = _currentDocument.ScheduleNumberString;
+            txtBoxNumber.Text = _currentDocument.BoxNumberString;
 
             // Notes / Description
             txtNotes.Text = _currentDocument.Description;
@@ -857,9 +858,10 @@ namespace RegScan
                 device.AsyncEvent += new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
                 device.ScanFinished += new EventHandler(device_ScanFinished);
             }
-            catch
+            catch (Exception e)
             {
                 MessageBox.Show("Error, scanner not found. Is the scanner turned on?", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to Subscribe to Device Events" + e.ToString());
                 Environment.Exit(0);
             }
         }
@@ -1003,93 +1005,81 @@ namespace RegScan
         /// Ensure the scanning device is open and use the form fields to configure scanning
         /// options. 
         /// </summary>
-        /// <param name="sender"> "Scan" button on Main Form </param>
-        /// <param name="e"> Mouse events that may need to be handled </param>
-        private void btnScanPage_Click(object sender, EventArgs e)
-        {    
-            // If we are starting a new scanning session we want to ensure any files created in
-            // past sessions are cleared.
-            if (_currentDocument == null)
-            {
-                UtilityObj.DeleteFolder("Images");
-                _scanSessionFileList.Clear();
-                UtilityObj.CreateFolder("Images");
-            }
-            
-            image0 = null;
-            progressBar.Visible = true;
+        private void setUpScanner()
+        {
+            // Open device manager, if not open.
+            if (_deviceManager.State == DeviceManagerState.Closed)
+                _deviceManager.Open();
+
+            if (_currentDevice != null)
+                // unsubscribe from the device events
+                UnsubscribeFromDeviceEvents(_currentDevice);
+
+            // Get and set the current device
+            Device device = _deviceManager.DefaultDevice;
+            _currentDevice = device;
+
+            // subscribe to the device events
+            SubscribeToDeviceEvents(_currentDevice);
+
+            // set the image acquisition parameters
+            _currentDevice.ShowUI = useUICheckBox.Checked;
+            _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
+            _currentDevice.ModalUI = false;
+            _currentDevice.DisableAfterAcquire = false;
+            _currentDevice.TransferMode = TransferMode.Memory;
 
             try
             {
-                // Open device manager, if not open.
-                if (_deviceManager.State == DeviceManagerState.Closed)
-                    _deviceManager.Open();
-
-                if (_currentDevice != null)
-                    // unsubscribe from the device events
-                    UnsubscribeFromDeviceEvents(_currentDevice);
-
-                // Get and set the current device
-                Device device = _deviceManager.DefaultDevice;
-                _currentDevice = device;
-
-                // subscribe to the device events
-                SubscribeToDeviceEvents(_currentDevice);
-
-                // set the image acquisition parameters
-                _currentDevice.ShowUI = useUICheckBox.Checked;
-                _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
-                _currentDevice.ModalUI = false;
-                _currentDevice.DisableAfterAcquire = false;
-                _currentDevice.TransferMode = TransferMode.Memory;
-
-                try
-                {
-                    // open the device
-                    _currentDevice.Open();
-                }
-                catch (Vintasoft.Twain.TwainException ex)
-                {
-                    // specify that image acquisition is finished
-                    //_isImageAcquiring = false;
-
-                    MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName + " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                // set device capabilities
-                // unit of measure
-                if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
-                    _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
-
-                // resolution
-                if (ckBoxLowResolution.Checked)
-                    _currentDevice.Resolution = new Resolution(400, 400);
-                else
-                    _currentDevice.Resolution = new Resolution(600, 600);
-
-                // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
-                // NOTE - There could be a test implemented here to check if the device supports
-                //     an ADF and if not, show a warning to the user that it can not be used.
-                _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
-                // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
-                // If the device does not support duplex scanning, then this will fail and be caught by the exception. 
-                // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
-                //    There could also be a check before attempting to set the value to determine support.
-                //    The device currently does not support this feature and the catch is always hit.
-                if (_currentDevice.DocumentFeeder.Enabled)
-                {
-                    _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
-                }
-                UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
-                // if device supports asynchronous events
-                if (_currentDevice.IsAsyncEventsSupported)
-                {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
-                    // enable all asynchronous events supported by device
-                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
-                }
+                // open the device
+                _currentDevice.Open();
             }
+            catch (Vintasoft.Twain.TwainException ex)
+            {
+                // specify that image acquisition is finished
+                //_isImageAcquiring = false;
+
+                MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName + 
+                    " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+            // set device capabilities
+            // unit of measure
+            if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
+                _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
+
+            // resolution
+            if (ckBoxLowResolution.Checked)
+                _currentDevice.Resolution = new Resolution(400, 400);
+            else
+                _currentDevice.Resolution = new Resolution(600, 600);
+
+            // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
+            // NOTE - There could be a test implemented here to check if the device supports
+            //     an ADF and if not, show a warning to the user that it can not be used.
+            _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
+
+            // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
+            // If the device does not support duplex scanning, then this will fail and be
+            // caught by the exception. 
+            // NOTE - currently the catch is not handling the scenario instead just buffing the
+            //    error. Logs/ warnings to user should be shown. There could also be a check
+            //    before attempting to set the value to determine support. The device currently
+            //    does not support this feature and the catch is always hit.
+            if (_currentDevice.DocumentFeeder.Enabled)
+            {
+                _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
+            }
+            UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
+            // if device supports asynchronous events
+            if (_currentDevice.IsAsyncEventsSupported)
+            {
+                UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
+                // enable all asynchronous events supported by device
+                _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
+            }
+        }
 
         /// <summary>
         /// All steps used to hide the progress bar, show scanner controls and enable the form
@@ -1156,7 +1146,8 @@ namespace RegScan
             }
             catch (TwainDeviceCapabilityException)
             {
-                MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Scanning device is not compatible with the request.", 
+                    "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1165,8 +1156,6 @@ namespace RegScan
                 MessageBox.Show(ex2.Message);
                 return;
             }
-            
-
             try
             {
                 UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
