@@ -17,9 +17,9 @@ namespace ApiScanner
         /// <returns></returns>
         static public string get()
         {
-            string endpoint = "/doc/api/v1/scanning/document-classes";
-            string resp = APIRequest.MakeKeyRequest("", endpoint, Method.GET);
-            return resp;
+            //string endpoint = "/doc/api/v1/scanning/document-classes";
+            //string resp = APIRequest.MakeKeyRequest("", endpoint, Method.GET);
+            return "";
         }
 
 

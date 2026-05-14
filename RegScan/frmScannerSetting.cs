@@ -46,7 +46,7 @@ namespace RegScan
             _defaultSetting.checkBoxArea = checkBoxArea.Checked;
             _defaultSetting.AutoDetectBorderCheckBox = autoDetectBorderCheckBox.Checked;
             _defaultSetting.AutoRotateCheckBox = autoRotateCheckBox.Checked;
-            _defaultSetting.Update();
+            //_defaultSetting.Update();
 
             // FIX
             //if (DBSupport.ErrorMessage != "")

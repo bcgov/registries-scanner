@@ -12,22 +12,37 @@ namespace RegScan
     public class ScannerSettingObj
     {
         
-        public int MaxPagesInBox = 300;
-        public bool UseDocumentFeeder = false;
-        public bool ShowTwainUI = true;
-        public bool ShowProgressIndicatorUI = true;
-        public bool UseDuplex = false;
-        public bool BlackAndWhiteCheckBox = true;
-        public bool ShouldTransferAllPages = true;
-        public bool AutoRotateCheckBox = true;
-        public bool AutoDetectBorderCheckBox = false;
-        public bool checkBoxArea = false;
+        public int MaxPagesInBox;
+        public bool UseDocumentFeeder;
+        public bool ShowTwainUI;
+        public bool ShowProgressIndicatorUI;
+        public bool UseDuplex;
+        public bool BlackAndWhiteCheckBox;
+        public bool ShouldTransferAllPages;
+        public bool AutoRotateCheckBox;
+        public bool AutoDetectBorderCheckBox;
+        public bool checkBoxArea;
 
         private ScannerParametersModel ApiModel = new ScannerParametersModel();
 
         public ScannerSettingObj()
-        {           
-            load();            
+        {
+            // Because we have default values that can be used we dont need to call the API to get
+            // this information. If there was a way to tie settings to a specific user the API
+            // might be more useful. 
+            //load();
+
+            // Default values
+            MaxPagesInBox = 300;
+            UseDocumentFeeder = false;
+            ShowTwainUI = true;
+            ShowProgressIndicatorUI = true;
+            UseDuplex = false;
+            BlackAndWhiteCheckBox = true;
+            ShouldTransferAllPages = true;
+            AutoRotateCheckBox = true;
+            AutoDetectBorderCheckBox = false;
+            checkBoxArea = false;
         }
 
         public void Update()
@@ -44,25 +59,6 @@ namespace RegScan
             ApiModel.showTwainProgress = ShowProgressIndicatorUI;
             ApiModel.useFullDuplex = UseDuplex;
             ApiModel.useLowResolution = BlackAndWhiteCheckBox;
-        }
-
-        public void copyFromModel(string resp)
-        {
-            var token = JToken.Parse(resp);
-
-            MaxPagesInBox = token.Value<int>("maxPagesInBox");
-            UseDocumentFeeder = token.Value<bool>("useDocumentFeeder");
-            ShowTwainUI = token.Value<bool>("showTwainUi");
-            ShowProgressIndicatorUI = token.Value<bool>("showTwainProgress");
-            UseDuplex = token.Value<bool>("useFullDuplex");
-            BlackAndWhiteCheckBox = token.Value<bool>("useLowResolution");
-        }
-
-        private void load()
-        {
-            string resp = ScanningParameterApi.get();
-            copyFromModel(resp);
-        }                  
-
+        }           
     }
 }

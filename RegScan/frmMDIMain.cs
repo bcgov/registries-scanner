@@ -42,17 +42,18 @@ namespace RegScan
             UtilityObj.writeLog(this.Text);
 
             // Load up look up lists now.
-            UtilityObj.writeLog("Load Lookup lists from API");
-            UtilityObj.writeLog("Load Doc Type");
-            DocTypeObj.Refresh();
-            UtilityObj.writeLog("Load Author Obj");
-            AuthorObj.Refresh();
-            List<AuthorObj> mylist = AuthorObj._list;
-            UtilityObj.writeLog("Load Owner Type Obj");
-            OwnerTypeObj.Refresh();
-            UtilityObj.writeLog("Load Box Obj");
-            BoxObj.Refresh();
-            UtilityObj.writeLog("Done Loading from DB");                
+            // These API calls will not work as expected. They are hitting DRS API endpoints and
+            // storing the returned values as local variables. However; because there is no obj
+            // of each type to contain this values we can not guarentee that they will be set
+            // correctly or that the values will be accessable in the future. I have not hit errors
+            // from commenting these lines out yet but I am leaving them here in the event that
+            // they are required.
+            //DocTypeObj.Refresh();
+            //AuthorObj.Refresh();
+            //List<AuthorObj> mylist = AuthorObj._list;
+            //OwnerTypeObj.Refresh();
+            //BoxObj.Refresh();
+                           
 
         }
 
