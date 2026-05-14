@@ -6,9 +6,30 @@ namespace RegScan
     public partial class frmEnterBarCode : Form
     {
 
-        private BarCodeString _barCodeString;
+        private string _barCodeString;
 
-        public frmEnterBarCode(BarCodeString _BarCodeString)
+        /// <summary>
+        /// Handles making a request to the user to manually enter a barcode and returns the entered value.
+        /// </summary>
+        /// <param name="message"> String displayed in the message box </param>
+        /// <returns> string of characters entered by the user </returns>
+        public static string ManualBarcode(string message)
+        {
+            string enteredBarcode = null;
+
+            // Display window to user.
+            if (MessageBox.Show(message, "Missing/ Not Found Barcode", 
+                MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                // User has indicated they wish to enter a barcode manually. Display a new form.
+                var frm = new frmEnterBarCode(enteredBarcode);
+                frm.ShowDialog();
+            }
+
+            return enteredBarcode;
+        }
+
+        public frmEnterBarCode(string _BarCodeString)
         {
             InitializeComponent();
             _barCodeString = _BarCodeString;
@@ -16,7 +37,7 @@ namespace RegScan
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (txtBarCode.Text == "")
+            if (string.IsNullOrEmpty(txtBarCode.Text))
                 return;
 
             var document = DocumentObj.Find(txtBarCode.Text);
@@ -29,7 +50,7 @@ namespace RegScan
                 MessageBox.Show(DocumentObj.ErrorMessage);
             else
             {
-                _barCodeString.BarCode = txtBarCode.Text;
+                _barCodeString = txtBarCode.Text;
                 this.Close();
             }
 
@@ -37,7 +58,7 @@ namespace RegScan
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            _barCodeString.BarCode = "";
+            _barCodeString = "";
             this.Close();
         }
     }

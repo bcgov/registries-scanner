@@ -54,7 +54,6 @@
     <Compile Include="ScanningInformationApi.cs" />
     <Compile Include="ScanningParameterApi.cs" />
     <Compile Include="ScheduleApi.cs" />
-    <Compile Include="UtilityObj.cs" />
   </ItemGroup>
   <!-- Framework references only -->
   <ItemGroup>
@@ -66,12 +65,19 @@
   <!-- Project references (no DLL hint paths) -->
   <ItemGroup>
     <ProjectReference Include="..\AsyncRequests\AsyncRequests\AsyncRequests.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{d05439d1-dd91-49b4-a6f0-eb0f8f36db38}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <!-- NuGet dependencies via PackageReference ONLY -->
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="JSON" Version="1.0.1" />
     <PackageReference Include="RestSharp" Version="106.15.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

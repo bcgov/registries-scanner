@@ -1,4 +1,5 @@
 ﻿using ApiScanner;
+using Utilities;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using PdfSharp.Drawing.BarCodes;
@@ -143,9 +144,9 @@ namespace RegScan
             string resp = DocumentApi.uploadDocument(pdfBytes, ApiDocModel);
             if (resp.Contains("errorMessage"))
             {
-                MessageBox.Show("ERROR, scanned image failed to load into database. " + 
+                MessageBox.Show("Scanned image failed to load into database. " + 
                                 "Current data for " + BarCode + " may be inaccurate.");
-                UtilityObj.writeLog("Scanned document Image failed PUT to update old image.");
+                UtilityObj.WriteLog(UtilityObj.error, "Scanned document Image failed PUT to update old image.");
                 Environment.Exit(0);
             }
 
@@ -173,9 +174,9 @@ namespace RegScan
             // The scanning application should never create a new record through the DRS API.
             else
             {
-                MessageBox.Show("ERROR Unable to create a new record for document with barcode: " +
+                MessageBox.Show("Unable to create a new record for document with barcode: " +
                                  BarCode + ". Please try again once document has been indexed.");
-                UtilityObj.writeLog("No existing record for barcode: " + BarCode);
+                UtilityObj.WriteLog(UtilityObj.error, "No existing record for barcode: " + BarCode);
                 Environment.Exit(0);
             }
 
@@ -247,37 +248,28 @@ namespace RegScan
         ///     List of DocumentObjs for each returned record matching the _BarCode
         /// </returns>
         static public List<DocumentObj> Find(string BarCode)
-        {           
-            ErrorMessage = "";
+        {
             List<DocumentObj> documentList = new List<DocumentObj>();
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
             string resp = DocumentApi.searchByBarcode(BarCode);
-
-            if (resp.Contains("errorMessage"))
+       
+            if (!string.IsNullOrEmpty(resp))
             {
-                resp = "";       
-                ErrorMessage = "No Documents Found For Barcode: " + BarCode;
-                UtilityObj.writeLog(ErrorMessage);
-            }         
-            else
-            {
-
                 var resultList = (JObject)JToken.Parse(resp);
 
                 // If there are no results are returned from the API or if they are not formatted
                 // as expected -> return an empty list and log an error.
-                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results"))
+                if (!resultList.ContainsKey("resultCount") || !resultList.ContainsKey("results") )
                 {
-                    UtilityObj.writeLog("Unexpected return result from API.");
+                    UtilityObj.WriteLog(UtilityObj.error, "Unexpected return result from API.");
                     return null;
                 }
-                if (resultList["resultCount"].ToString() != "1")
+                // Checking if we get more than one result.
+                else if (resultList["resultCount"].ToString() != "1")
                 {
-                    // We need exactly one result. 
-                    UtilityObj.writeLog("API did not return exactly one value.");
-                    return null;
+                    UtilityObj.WriteLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
 
                 DocumentObj docObj;
@@ -303,7 +295,7 @@ namespace RegScan
                 }
             }
 
-            UtilityObj.writeLog("Return Ordered docs");
+            UtilityObj.WriteLog(UtilityObj.debug, "Return Ordered docs");
 
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
@@ -339,38 +331,6 @@ namespace RegScan
           
         }
         
-        public void copyToModel(JObject temp, ScanningInfoModel scanInfo )
-        {
-            if (temp == null || scanInfo == null) return;
-
-            if (temp["accessionNumber"] != null) { scanInfo.accessionNumber = (long)temp["accessionNumber"]; }
-            if (temp["authorId"] != null) { scanInfo.author = (string)temp["authorId"]; }
-            if (temp["scannedDate"] != null) { scanInfo.scannedDate = (DateTime)temp["scannedDate"]; }
-            if (temp["batchId"] != null) { scanInfo.batchId = (int)temp["batchId"]; }
-            if (temp["createDateTime"] != null) { scanInfo.createDateTime = (DateTime)temp["createDateTime"]; }
-            if (temp["pageCount"] != null) { scanInfo.pagecount = (int)temp["pageCount"]; }
-
-            if (temp["author"] != null) { ApiDocModel.author = (string)temp["author"]; }
-            if (temp["consumerDocumentId"] != null) { ApiDocModel.consumerDocumentId = (int)temp["consumerDocumentId"]; }
-            if (temp["consumerFilename"] != null) { ApiDocModel.consumerFilename = (string)temp["consumerFilename"]; }
-            if (temp["consumerFilingDate"] != null) { ApiDocModel.consumerFilingDate = (DateTime)temp["consumerFilingDate"]; }
-            if (temp["consumerIdentifier"] != null) { ApiDocModel.consumerIdentifier = (string)temp["consumerIdentifier"]; }
-            if (temp["consumerReferenceId"] != null) { ApiDocModel.consumerReferenceId = ""; }
-            if (temp["createDateTime"] != null) { ApiDocModel.createDateTime = (DateTime)temp["createDateTime"]; }
-            if (temp["documentClass"] != null) { ApiDocModel.documentClass = (string)temp["documentClass"]; }
-            if (temp["documentExists"] != null) { ApiDocModel.documentExists = (string)temp["documentExists"]; }
-            if (temp["documentId"] != null) { ApiDocModel.documentServiceId = (string)temp["documentId"]; }
-            
-            if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentTypeCode"]; }
-            //if (temp["documentType"] != null) { ApiDocModel.documentType = (string)temp["documentType"]; }
-
-            if (temp["documentTypeDescription"] != null) { ApiDocModel.documentTypeDescription = (string)temp["documentTypeDescription"]; }
-            if (temp["documentURL"] != null) { ApiDocModel.documentURL = (string)temp["documentURL"]; } 
-                 
-            ApiDocModel.scanningInformation = scanInfo;
-        }
-
-        
         /// <summary>
         /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not
         /// guaranteed to be returned from DRS API
@@ -383,7 +343,7 @@ namespace RegScan
         {
             if (docObj == null || jDoc == null)
             {
-                UtilityObj.writeLog("Error copying from model, docObj or jDoc was null.");
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to copy from model, objest null.");
                 throw new Exception("Attempting to pull data from a null object."); 
             }
 
@@ -489,7 +449,7 @@ namespace RegScan
 
         static private Boolean dataCheck(string jDoc)
         {
-            if (jDoc == null || jDoc.ToString() == "") { return false; }
+            if (string.IsNullOrEmpty(jDoc)) { return false; }
             return true;
         }
 

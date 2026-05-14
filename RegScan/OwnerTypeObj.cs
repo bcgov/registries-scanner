@@ -1,4 +1,5 @@
 ﻿using ApiScanner;
+using Utilities;
 using Json;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace RegScan
         {
             string resp = OwnerTypeApi.get();
 
-            if (resp == ""){ return; }
+            if (string.IsNullOrEmpty(resp)){ return; }
             if (resp.Contains("errorMessage")) 
             {
                 MessageBox.Show("Error: " + resp);

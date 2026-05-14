@@ -1,5 +1,5 @@
-﻿using AsyncRequests;
-using PdfSharp.Drawing;
+﻿using PdfSharp.Drawing;
+using PdfSharp.Drawing.BarCodes;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,9 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
+using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan
@@ -78,7 +80,7 @@ namespace RegScan
         {
             InitializeComponent();
 
-            UtilityObj.createFolder("Images");
+            UtilityObj.CreateFolder("Images");
 
             // Set scanner defaults.
             _defaultSetting = new ScannerSettingObj();
@@ -99,8 +101,8 @@ namespace RegScan
             string scannerFile = "vstwain.log";
             string scannerPath = String.Concat(scannerDir, "\\", scannerFile);
 
-            UtilityObj.createFolder(scannerDir);
-            UtilityObj.createFile(scannerPath);
+            UtilityObj.CreateFolder(scannerDir);
+            UtilityObj.CreateFile(scannerPath);
 
             // Set up debugging for the TWAIN SDK
             TwainEnvironment.EnableDebugging(scannerPath);
@@ -139,7 +141,7 @@ namespace RegScan
         /// <param name="_Image"> Bitmap image from scan process </param>
         private void ProcessScan(Bitmap _Image)
         {
-            UtilityObj.writeLog("ProcessScan: Saving Scan");
+            UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
             // Set the first image to image0 for barcode scanning and display purposes.
             // NOTE - It may be possible to use _Image and image0 interchangeably and eliminate the need for image0.
@@ -148,278 +150,182 @@ namespace RegScan
                 image0 = _Image;
             }
 
-            string fileName = "Images\\Bitmap_image" + Convert.ToString(_scanSessionFileList.Count) + ".bmp";
-            UtilityObj.saveImageAsFile(fileName, _Image);
+            string fileNumber = _scanSessionFileList.Count > 0 ? Convert.ToString(_scanSessionFileList.Count) : "";
+            string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
+            UtilityObj.SaveImageAsFile(fileName, _Image);
 
             // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
+            
+            // Create a new ImageObj and add to the list of scanned images
+            _scannedImageList.Add(new ImageObj(image0, PdfSharp.PageOrientation.Portrait,
+                ImageObj.GetPageSize(image0.Width, image0.Height)));
 
-            UtilityObj.writeLog("Scan List size: " + Convert.ToString(_scanSessionFileList.Count));
+            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
         }
 
-        /// <summary>
-        /// Handles making a request to the user to manually enter a barcode and returns the entered value.
-        /// </summary>
-        /// <param name="message"> String displayed in the message box </param>
-        /// <returns> string of characters entered by the user </returns>
-        private string ManualBarcode(string message)
+        private void ProocessFristPage()
         {
-            string enteredBarcode = "";
+            // List to hold the documents.
+            List<DocumentObj> docs = null;
+            // Control flow based on if a record exists for this document
+            bool documentsFound = false;
+            // Control loop to get a barcode and check for a record.
+            bool checkBarcode = true;
 
-            // Display window to user.
-            if (MessageBox.Show(message, "Missing/ Not Found Barcode", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            // Scan the first page for Barcodes
+            string barCode = BarCodeObj.ScanForBarcode(image0);
+
+            // Loop to get a document record for a given barcode
+            while (checkBarcode)
             {
-                // User has indicated they wish to enter a barcode manually. Display a new form.
-                var barCodeString = new BarCodeString();
-                var frm = new frmEnterBarCode(barCodeString);
-                frm.ShowDialog();
-                enteredBarcode = barCodeString.BarCode;
+                if (string.IsNullOrEmpty(barCode))
+                {
+                    // Ask if a barcode should be entered manually.
+                    string message = "Do you want to manually enter a barcode?";
+                    barCode = frmEnterBarCode.ManualBarcode(message);
+                }
+                // Call to DRS API for existing document records for this barcode.
+                // There may be more than one document (known as versions)
+                try
+                {
+                    docs = DocumentObj.Find(barCode);
+                }
+                catch (Exception e)
+                {
+                    string msg = "Hit error trying to find record for barcode: " + barCode;
+                    // log the issue
+                    UtilityObj.WriteLog(UtilityObj.error, msg +
+                        System.Environment.NewLine + e.ToString());
+                    // Ask the user if they would like to try again 
+                    if (MessageBox.Show(msg + System.Environment.NewLine +
+                        "Would you like to try again?", "Missing/ Not Found Barcode",
+                        MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        // start loop over with a request for a new barcode
+                        barCode = null;
+                        continue;
+                    }
+                    else
+                    {
+                        // move on without a barcode
+                        documentsFound = false;
+                        checkBarcode = false;
+                    }
+                }
+                // If documents were found continue to next step
+                if (docs.Count > 0)
+                {
+                    documentsFound = true;
+                    checkBarcode = false;
+                }
             }
 
-            return enteredBarcode;
+            if (documentsFound)
+            {
+                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to docs[0]");
+                // The first document is the latest and is the one that will be displayed
+                _currentDocument = docs[0];
+
+                // Display the warning if there was some sort of error getting the document
+                if (_currentDocument.Error != "")
+                    MessageBox.Show("Warning an error was found -> " +
+                        _currentDocument.Error);
+
+                // Will only be true if it is an existing scan and
+                // new version is not required.
+                bool cancelScan = false;
+
+                // We have a record from DRS API that matches the barcode.
+                // This means we will be updating the record.
+                _currentDocument.UpdateRecord = true;
+
+                // IF document has already been scanned.
+                //if (_currentDocument.IsScanned)
+                if (_currentDocument.DocumentURL != "")
+                {
+                    UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
+                    // Turn off buttons for new box number.
+                    btnNewBox.Enabled = false;
+
+                    // Ask if this is a new version.
+                    if (MessageBox.Show("Document with barcode " + barCode +
+                        " has already been scanned. Do you want to create a new version?",
+                        "Document Already Scanned", MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        // If a new version, then update the version number
+                        // TODO - get previous version number from filename. Then add one.
+                        // This will always be 0++ = 1
+                        _currentDocument.VersionNumber++;
+                    }
+                    else
+                    {
+                        // Cancel this scan if a new version is not required.
+                        cancelScan = true;
+                    }
+                        
+                }
+
+                // IF scan is to be cancelled
+                if (cancelScan)
+                {
+                    // Set current document back to null.
+                    _currentDocument = null;
+                    UtilityObj.DeleteFolder("Images");
+                }
+                else
+                {
+                    UtilityObj.WriteLog(UtilityObj.debug, "Fix Display image");
+                    // Display the document.
+                    SetForm();
+
+                    UtilityObj.WriteLog(UtilityObj.debug, "Fix SetImageNav");
+                    // Display the first document.
+                    _currentImageIndex = 0;
+                }
+            }
+            // NOTE Create a new record for the scanned image logic could be added here
+            
+            // if the barcode was not set
+            if (string.IsNullOrEmpty(_currentDocument.BarCode))
+            {
+                // Clear Image
+                imageBox.Image = null;
+            }
         }
 
         /// <summary>
-        /// Process the completed scan session ... this contains most of the business logic of the application.
+        /// Once the scan is complete check pages for barcodes and any existing document records.
+        /// The scans are then passed along to be shown to the user.
         /// </summary>
         private void ProcessCompleted()
         {
-            UtilityObj.writeLog("Scanning finished");
-
-            // Enable the form.
-            Enabled = true;
+            UtilityObj.WriteLog(UtilityObj.debug, "Scanning finished");
 
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
                 return;
-
-            UtilityObj.writeLog("Fix Checking for barcode");
-            // Scan for Barcodes
-            var barcodes = BarCodeObj.Scan(image0);
-            if (barcodes.Count < 1)
-            {
-                UtilityObj.writeLog("No barcodes found in document");
-            }
-
+            
             // What follows here is a lot of if else statements. I believe breaking the components
             // out into methods then only using this as the control to the flow.
             //    Components: get barcode, get record, handle versions, display document
-            // This refactoring could also be accomplished by drawing out the process before rewriting.
+            // This could also be accomplished by drawing out the process before rewriting.
 
-            // IF we have a new document.
+            // IF we have a new document process the first page
             if (_currentDocument == null)
             {
-                UtilityObj.writeLog("Fix Current Doc is null");
+                ProocessFristPage();
+                
+            } 
+            // Here we are adding an additional page to the document. We just need to adjust the index
+            else {  _currentImageIndex++; }
 
-                // IF no barcodes were returned from BarCodeObj.Scan() 
-                string barCode = "";
-                if (barcodes.Count == 0)
-                {
-                    UtilityObj.writeLog("add barcode manually");
-                    // Display the image.
-                    SetImage(image0);
-
-                    // Ask if a barcode should be entered manually.
-                    barCode = ManualBarcode("No barcode found. Do you want to manually enter the barcode?");
-                }
-                else
-                {
-                    UtilityObj.writeLog("Fix barcode found=" + barcodes[0].ToString());
-                    // Assume the first bar code found is the correct one.
-                    // NOTE - If we are making this assumption BarcodeObj.Scan() can be optimized to only find one barcode. 
-                    barCode = barcodes[0].ToString();
-                }
-
-                UtilityObj.writeLog("Fix Set List of Docs");
-                // List to hold the documents.
-                List<DocumentObj> docs = null;
-
-                // If the barcode was set in the checks above
-                if (barCode != "")
-                {
-                    UtilityObj.writeLog("Fix Barcode not null");
-                    bool documentsFound = false;
-                    // Unclear what 'neos' means. Essentially used to denote that API calls need to be made to get a record associated with the found barcode.
-                    bool neos = true;
-                    while (neos)
-                    {
-                        UtilityObj.writeLog("Fix neos=true Searching for doc with associated barcode");
-                        // Call to DRS API to receive associated existing documents for this barcode.
-                        // There may be more than one document (known as versions)
-                        docs = DocumentObj.Find(barCode);
-
-                        // IF no documents were found
-                        if (docs.Count == 0)
-                        {
-                            UtilityObj.writeLog("Fix No existing docs, SetImage(image0)");
-                            SetImage(image0);
-
-                            // Ask if a barcode should be entered manually.
-                            string message = "No documents found for barcode " + barCode + ". Do you want to manually enter the barcode?";
-                            barCode = ManualBarcode(message);
-
-                            if (barCode == "")
-                            {
-                                // Move on to next step.
-                                neos = false;
-                            }
-                        }
-                        else
-                        {                           
-                            // Indicate document(s) found and move onto next step.
-                            documentsFound = true;
-                            neos = false;
-                        }
-                    }            
-
-                    if (documentsFound)
-                    {
-                        UtilityObj.writeLog("Fix Set current doc to docs[0]");
-                        // The first document is the latest and is the one that will be displayed.
-                        _currentDocument = docs[0];
-
-                        // Display the warning if there was some sort of error getting the document.
-                        if (_currentDocument.Error != "")
-                            MessageBox.Show("Warning an error was found -> " + _currentDocument.Error);
-                                            
-                        // Will only be true, if it is an existing scan and new version is not required.
-                        bool cancelScan = false;
-
-                        // We have a record from DRS API that matches the barcode. This means we will be updating the record.
-                        _currentDocument.UpdateRecord = true;
-
-                        // IF document has already been scanned.
-                        //if (_currentDocument.IsScanned)
-                        if (_currentDocument.DocumentURL != "")
-                        {
-                            UtilityObj.writeLog("Document barcode already exists.");
-                            // Turn off buttons for new box number.
-                            btnNewBox.Enabled = false;
-
-                            // Ask if this is a new version.
-                            if (MessageBox.Show("Document with barcode " + barCode + " has already been scanned. Do you want to create a new version?", "Document Already Scanned", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                // If a new version, then update the version number and set id to new
-                                // TODO - get previous version number from filename. Then add one. This will always be 0++ = 1
-                                _currentDocument.VersionNumber++;
-                                // We don't want to clear the metadata from the current document - just indicate that there is a new version of the document image.
-                                // _currentDocument.SetToNew();
-                            }
-                            else
-                                // Cancel this scan if a new version is not required.
-                                cancelScan = true;
-                        }
-                        else
-                        {
-                            // Check for box full and display a message if it is full.
-                            if ((_currentDocument.PageCount + _currentDocument.PagesInBox) > _defaultSetting.MaxPagesInBox)
-                                MessageBox.Show("Warning - Current Box will exceed limit of " + _defaultSetting.MaxPagesInBox.ToString() + " pages, after these pages are added");
-                        }
-
-                        // IF scan is to be cancelled
-                        if (cancelScan)
-                        {
-                            // Set current document back to null.
-                            _currentDocument = null;
-                            UtilityObj.deleteFolder("Images");
-                        }
-                        else
-                        {
-                            // IF the current batch id is null
-                            // TODO - look into what this should actually be doing
-                            // This is not set on app start. Will always be null on first scan.
-                            if (_currentBatchId == null)
-                            {
-                                // If the current document's batch is assigned.
-                                if (_currentDocument.BatchId != 0)
-                                {
-                                    // Create a batch object and assign current's document's values.
-                                    _currentBatchId = new BatchObj();
-                                    _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
-                                    _currentBatchId.BatchId = _currentDocument.BatchId;
-                                }
-                                else
-                                {
-                                    // Get the next batch id for this accession and assign it to the document.
-                                    _currentBatchId = BatchObj.GetNextBatchId(_currentDocument.AccessionNumber);
-                                    _currentDocument.BatchId = _currentBatchId.BatchId;
-                                }
-                            }
-                            else
-                            {
-                                UtilityObj.writeLog("Fix No batchid");
-                                // IF the accession number has changed, then get the next batch id and assign it.
-                                if (_currentBatchId.AccessionNumber != _currentDocument.AccessionNumber)
-                                    _currentBatchId = BatchObj.GetNextBatchId(_currentDocument.AccessionNumber);
-
-                                // If the current document's batch is not assigned.
-                                if (_currentDocument.BatchId == 0)
-                                    _currentDocument.BatchId = _currentBatchId.BatchId;
-                            }
-
-                            UtilityObj.writeLog("Fix Display image");
-                            // Display the document.
-                            SetForm();
-
-                            // Transfer images to our list of images for this document.
-                            _scannedImageList.Clear();
-
-                            // FOREACH of the pages scanned in this session.
-                            foreach (var imageFile in _scanSessionFileList)
-                            {
-                                Bitmap image = UtilityObj.readFileAsImage(imageFile);
-                                // go to next page if this one cant be read
-                                if (image == null) { continue; }
-                                // Calculate the page size and add the image to the overall scanned list.
-                                var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
-
-                                _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
-                                image = null;
-                            }
-
-                            UtilityObj.writeLog("Fix SetImageNav");
-                            // Display the first document.
-                            _currentImageIndex = 0;
-                            SetImageNav();
-                        }                        
-                    }
-                    // NOTE If logic wanted to be added to create a new record for the scanned image it could be added here.
-                    // _currentDocument.SetToNew();
-                }
-                else
-                {                    
-                    // Clear Image
-                    imageBox.Image = null;
-                }                
-            }
-
-            // Existing document.
-            else
-            {
-                // IF we have a barcode and it doesn't match the previous barcode
-                if (barcodes.Count != 0 && barcodes[0].ToString() != _currentDocument.BarCode)
-                {
-                    // Display a warning message.
-                    string title = "Warning: Double Barcode";
-                    string msg = "A barcode was found on this page.\n.";
-                    string comp = "First barcode: " + barcodes[0].ToString() + "\nSecond Barcode: " + _currentDocument.BarCode;
-                    MessageBox.Show(msg + comp, title);
-                }
-
-                // Save the images.
-                foreach (var imageFile in _scanSessionFileList)
-                {
-                    var image = UtilityObj.readFileAsImage(imageFile);
-                    // go to next page if this one cant be read
-                    if (image == null) { continue; }
-                    _currentImageIndex++;
-                    var pageSize = ImageObj.GetPageSize(image.Width, image.Height);
-                    _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait, pageSize));
-                }
-
-                SetImageNav();
-
-            }            
+            SetImageNav();
+            
+            // Enable the form.
+            Enabled = true;
+                     
         }
 
         #endregion
@@ -525,7 +431,8 @@ namespace RegScan
             progressBar.Visible = true;
             Application.DoEvents();
 
-            UtilityObj.writeLog(Convert.ToString(_scannedImageList.Count) + " btnViewAsPDF_Click Scanner  Objects");
+            UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
+                " btnViewAsPDF_Click Scanner  Objects");
 
             // FOREACH image create a new page.
             foreach (var bp in _scannedImageList)
@@ -649,7 +556,8 @@ namespace RegScan
             // This is discouraged in Microsoft Docs.
             Application.DoEvents();
 
-            UtilityObj.writeLog(_scannedImageList.Count.ToString() + " _scannedImageList Objects");
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " _scannedImageList Objects");
 
             // FOREACH image convert to a PDF page and add to the PDF document
             foreach (var bp in _scannedImageList)
@@ -662,8 +570,8 @@ namespace RegScan
                 {
                     string img_num = _scannedImageList.IndexOf(bp).ToString() +
                                      " of " + _scannedImageList.Count();
-                    UtilityObj.writeLog("Unable to process image " + img_num + " to PDF page.\n" +
-                                         ex.ToString());
+                    UtilityObj.WriteLog(UtilityObj.error, "Unable to process image " + img_num +
+                        " to PDF page.\n" + ex.ToString());
                 }
                 
                 // Update progress bar
@@ -964,7 +872,8 @@ namespace RegScan
         protected void SetForm()
         {
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = _currentDocument.DocumentServiceId == "" ? "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
+            txtDocumentId.Text = string.IsNullOrEmpty(_currentDocument.DocumentServiceId) ?
+                "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtOwner.Text = _currentDocument.Owner;
             txtDocumentDescription.Text = _currentDocument.Description;
@@ -1114,7 +1023,7 @@ namespace RegScan
         /// <param name="e"></param>
         private void device_AsyncEvent(object sender, DeviceAsyncEventArgs e)
         {
-            UtilityObj.writeLog("device_AsyncEvent");
+            UtilityObj.WriteLog(UtilityObj.debug, "device_AsyncEvent");
             switch (e.DeviceEvent)
             {
                 case DeviceEventId.PaperJam:
@@ -1201,12 +1110,17 @@ namespace RegScan
         /// <param name="sender"> "Scan" button on Main Form </param>
         /// <param name="e"> Mouse events that may need to be handled </param>
         private void btnScanPage_Click(object sender, EventArgs e)
-        {            
-            //UtilityObj.deleteFolder("Images");
-            //_scanSessionFileList.Clear();
+        {    
+            // If we are starting a new scanning session we want to ensure any files created in
+            // past sessions are cleared.
+            if (_currentDocument == null)
+            {
+                UtilityObj.DeleteFolder("Images");
+                _scanSessionFileList.Clear();
+                UtilityObj.CreateFolder("Images");
+            }
+            
             image0 = null;
-            //UtilityObj.createFolder("Images");
-
             progressBar.Visible = true;
 
             try
@@ -1271,47 +1185,40 @@ namespace RegScan
                 {
                     _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
                 }
+                UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
+                // if device supports asynchronous events
+                if (_currentDevice.IsAsyncEventsSupported)
+                {
+                    UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
+                    // enable all asynchronous events supported by device
+                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
+                }
             }
             catch (TwainDeviceCapabilityException)
             {
                 MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
-            catch(Exception ex2)
+
+            catch (Exception ex2)
             {
                 MessageBox.Show(ex2.Message);
                 return;
             }
-
-            UtilityObj.writeLog("Checking for asynchronous scanning...");
-            // if device supports asynchronous events
-            if (_currentDevice.IsAsyncEventsSupported)
-            {
-                try
-                {
-                    UtilityObj.writeLog("Device supports asynchronous scanning");
-                    // enable all asynchronous events supported by device
-                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
-                }
-                catch
-                {
-                }
-            }
-
+            
 
             try
             {
-                UtilityObj.writeLog("Start image acquisition");
+                UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
 
                 // start image acquisition process
                 _currentDevice.Acquire();
 
-                UtilityObj.writeLog("End of image acquisition");
+                UtilityObj.WriteLog(UtilityObj.debug, "End of image acquisition");
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
-                UtilityObj.writeLog("Image acquisition error: " + ex);
+                UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
                 MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }

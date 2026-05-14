@@ -59,67 +59,6 @@ namespace RegScan
         /// This creates a nested relationship where each DocTypeObj has a list of DocTypeObjs. This is not ideal and should be refactored.
         /// </summary>
         static private List<DocTypeObj> _list = new List<DocTypeObj>();
-        /// <summary>
-        /// Currently this method is not being called anywhere in the application. If it is not necessary it should be removed.
-        /// </summary>
-        /// <param name="_Code"></param>
-        /// <returns></returns>
-        static public DocTypeObj Find(string _Code)
-        {
-            if (_list.Count == 0)
-                Refresh();
-
-            try
-            {
-                return _list.Where(c => c.Code == _Code).First();
-            }
-            catch
-            {
-                return new DocTypeObj(_Code, "Description Not Found!", false, "NA");
-            }
-        }       
-
-
-        /// <summary>
-        /// This method only exists to call another method. 
-        /// I dont believe that this is necessary and the call to `SetListFromApi()` can be made directly where needed.
-        /// </summary>
-        static public void Refresh()
-        {
-            SetListFromApi();
-        }
-
-        /// <summary>
-        /// This method calls the API to get document type information and creates DocTypeObjs to store that information in the class variable list of DocTypeObjs.
-        /// The endpoint hit within `documentTypeApi.get()` returns a list of all document types. This endpoint does not need to be hit more than once.
-        /// </summary>
-        static private void SetListFromApi()
-        {
-            string resp = documentTypeApi.get();
-
-            if (resp == "") { return; }
-            if (resp.Contains("errorMessage"))
-            {
-                MessageBox.Show("Error: " + resp);
-                Application.Exit();
-            }
-
-            if (JsonParser.FromJson(resp).Count > 0)
-            {
-                _list.Clear();
-
-                // Because we are checking if this value has any elements before this we are doing this work twice.
-                // This conversion should happen outside this if statement and stored. 
-                var respArray = JsonParser.FromJson(resp).ElementAt(0);
-                List<object> docTypes = (List<object>)respArray.Value;
-
-                foreach (Dictionary<string, object> record in docTypes)
-                {
-                    // It may be better here to create the DocTypeObj directly from the API response rather than parsing the information out of the record and then creating a DocTypeObj.
-                    _list.Add(new DocTypeObj(Convert.ToString(record.ElementAt(2).Value), Convert.ToString(record.ElementAt(3).Value), Convert.ToBoolean(record.ElementAt(0).Value),
-                                            Convert.ToString(record.ElementAt(1).Value)));
-                }
-            }
-        }
+    
     }
 }
