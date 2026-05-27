@@ -39,19 +39,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="documentType.cs" />
     <Compile Include="DocumentApi.cs" />
-    <Compile Include="documentTypeApi.cs" />
-    <Compile Include="documentClass.cs" />
-    <Compile Include="documentTypeSummary.cs" />
-    <Compile Include="OptionsApi.cs" />
     <Compile Include="OwnerTypeApi.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="ScanningAuthorApi.cs" />
     <Compile Include="ScanningBatchApi.cs" />
     <Compile Include="ScanningBoxApi.cs" />
-    <Compile Include="ScanningDocumentApi.cs" />
-    <Compile Include="ScanningInformationApi.cs" />
     <Compile Include="ScanningParameterApi.cs" />
     <Compile Include="ScheduleApi.cs" />
   </ItemGroup>
