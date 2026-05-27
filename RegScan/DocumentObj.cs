@@ -137,7 +137,8 @@ namespace RegScan
         /// </summary>
         private void Update()
         {
-            CopyToModel();
+            // Will be recreating this in a more meningful way
+            //CopyToModel();
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
             
@@ -300,35 +301,6 @@ namespace RegScan
             // Return list ordered by Version Number Descending.
             return documentList.OrderByDescending(l => l.VersionNumber).ToList();
 
-        }
-
-        /// <summary>
-        /// Take the elements of the DocumentObj and 
-        /// </summary>
-        public void CopyToModel()
-        {
-            //ApiScanModel.accessionNumber = _accessionNumber;
-            //ApiScanModel.author = _authorId;
-            //ApiScanModel.batchId = _batchId;
-            //ApiScanModel.createDateTime = _createDateTime;
-            //ApiScanModel.pagecount = _pageCount;
-            //ApiScanModel.scannedDate = _scannedDate;
-
-            ApiDocModel.author = _author;
-            ApiDocModel.consumerDocumentId = _barCode;
-            ApiDocModel.consumerFilename = _fileName;
-            ApiDocModel.consumerFilingDate = DateTime.Now;
-            ApiDocModel.consumerIdentifier = _consumerIdentifier;
-            ApiDocModel.consumerReferenceId = "";
-            ApiDocModel.createDateTime = _createDateTime;
-            ApiDocModel.documentClass = _documentClass;
-            ApiDocModel.documentExists = "";
-            ApiDocModel.documentServiceId = _documentServiceId;
-            ApiDocModel.documentType = _documentTypeCode;
-            ApiDocModel.documentTypeDescription = "";
-            ApiDocModel.documentURL = "";
-            //ApiDocModel.scanningInformation = ApiScanModel;
-          
         }
         
         /// <summary>

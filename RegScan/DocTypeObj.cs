@@ -51,14 +51,6 @@ namespace RegScan
             _applicationId = _ApplicationId;
         }
 
-        public DocTypeObj()
-        { }
-
-        /// <summary>
-        /// This list holds DocTypeObjs. It is a member of the DocTypeObj class. 
-        /// This creates a nested relationship where each DocTypeObj has a list of DocTypeObjs. This is not ideal and should be refactored.
-        /// </summary>
-        static private List<DocTypeObj> _list = new List<DocTypeObj>();
     
     }
 }
