@@ -1,19 +1,14 @@
 ﻿using ApiScanner;
 using Utilities;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
-using PdfSharp.Drawing.BarCodes;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.PerformanceData;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace RegScan
 {
@@ -26,25 +21,18 @@ namespace RegScan
         private string _documentURL;
         private string _documentClass;
         private string _documentServiceId;
-        //private string _documentExists;
         private string _documentTypeDescription;
         private DateTime _consumerFilingDate;
         private string _consumerIdentifier;
         private int _consumerReferenceId;
-        //private int _consumerDocumentId;
         JObject scanInfo;
 
-        //private long _documentId = UtilityObj.NOID;
-        //private string _documentId = "";
         private string _legalEntityKey;
-        //private string _ownerTypeCode;
         private string _documentTypeCode;
         private string _author;
         private string _description;
         private string _fileName;
-        private string _fileExtension;
         private bool _isScanned;
-        //private bool _isPurged;
         private DateTime _createDateTime;
 
         // Scanning Information
@@ -56,8 +44,6 @@ namespace RegScan
         private int _batchId;
         private int _versionNumber;
         private string _owner;
-        //private int _eventId;
-        //private bool _eventIdIsNull;
         private string _scannerId;
         private DateTime _scannedDate;
 
@@ -70,22 +56,31 @@ namespace RegScan
         private PdfDocument _pdfDocument = null;
         private List<Bitmap> _imageList = new List<Bitmap>();
 
-        // From document table
+        // Public variables other classes can use
+        // Document Information Form
+        public string BarCode { get { return _barCode.ToString(); } }
+        public string Owner { get { return _owner; } }
+        public string LegalEntityKey { get { return _legalEntityKey; } }
+        public string ConsumerFilingDateString { get { return _consumerFilingDate.ToString(); } }
+        public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
+        public string DocumentClass { get { return _documentClass; } }
+        public string DocTypeDesc { get { return _documentTypeDescription; } }
+        public string Description { get { return _description; } set { _description = value; } }
         public string DocumentURL { get { return _documentURL; } }
         public string DocumentServiceId { get { return _documentServiceId; } }
-        public string LegalEntityKey { get { return _legalEntityKey; } }
-        //public string OwnerTypeCode { get { return _ownerTypeCode; } }
-        public string DocumentTypeCode { get { return _documentTypeCode; } }
-        public string Author { get { return _author; } }
-        public string Description { get { return _description; } set { _description = value; } }
-        public string FileName { get { return _fileName; } }
-        public string FileExtension { get { return _fileExtension; } }
-        public bool IsScanned { get { return _isScanned; } }
-        //public bool IsPurged { get { return _isPurged; } }
-        public DateTime CreateDateTime { get { return _createDateTime; } }
-        public string BarCode { get { return _barCode.ToString(); } }
-        public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
-        public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
+        // Accention Number Elements
+        public string SequenceNumberString { 
+            get { return _sequenceNumber.ToString(); } }
+        public string ScheduleNumberString {
+            get { return _scheduleNumber.ToString(); } }
+        public string BoxNumberString {
+            get { return _boxNumber.ToString(); } }
+        public int SequenceNumber {
+            get { return _sequenceNumber; } }
+        public int ScheduleNumber {
+            get { return _scheduleNumber; } }
+        public int BoxNumber {
+            get { return _boxNumber; } }
         public string AccessionNumberString { 
             get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
                                        _scheduleNumber.ToString().PadLeft(4, '0'), 
@@ -94,12 +89,14 @@ namespace RegScan
             get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-",
                                        _scheduleNumber.ToString().PadLeft(4, '0'), "-",
                                        _boxNumber.ToString().PadLeft(4, '0')); } }
+        public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
+        
+        public bool IsScanned { get { return _isScanned; } }
         public int BatchId { get { return _batchId; } set { _batchId = value; } }
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
         public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
         public DateTime ScannedDate { get { return _scannedDate; } set { _scannedDate = value; } }
 
-        public string Owner { get { return _owner; } }
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
         public Boolean UpdateRecord { 
@@ -109,17 +106,6 @@ namespace RegScan
         public PdfDocument PDFDocument { 
             get { return _pdfDocument; } set { _pdfDocument = value; } }
         public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
-
-        public int SequenceNumber { 
-            get { return int.Parse(AccessionNumberString.Substring(0, 2)); } }
-        public int ScheduleNumber { 
-            get { return int.Parse(AccessionNumberString.Substring(2, 4)); } }
-        public int BoxNumber { 
-            get { return int.Parse(AccessionNumberString.Substring(6, 4)); } }
-
-        public int PagesInBox { get { return _boxObj == null ? 0 : _boxObj.PageCount; } }
-        public int PdfPages { get { return _pdfDocument.PageCount; } }
-        public string FQDocType { get { return _documentTypeDescription; } }
 
         public string Error = "";
 
@@ -167,7 +153,6 @@ namespace RegScan
         {
             // Set some values before database requests.
             _isScanned = true;
-            _fileExtension = "PDF";
             _fileName = _legalEntityKey + DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss");
 
             if (_replaceRecordFlag)
