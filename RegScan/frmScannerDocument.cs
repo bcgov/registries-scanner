@@ -85,15 +85,6 @@ namespace RegScan
             SetSettingValues();
             useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
 
-            // Load combo boxes
-            cBoxOrientation.Items.Add(PdfSharp.PageOrientation.Landscape.ToString());
-            cBoxOrientation.Items.Add(PdfSharp.PageOrientation.Portrait.ToString());
-            cBoxOrientation.SelectedIndex = -1;
-
-            cBoxPageSize.Items.Add(PdfSharp.PageSize.Letter.ToString());
-            cBoxPageSize.Items.Add(PdfSharp.PageSize.Legal.ToString());
-            cBoxPageSize.SelectedIndex = -1;
-
             // Create a path to where debugging logs should be stored. 
             string scannerDir = "c:\\scanner25";
             string scannerFile = "vstwain.log";
@@ -243,8 +234,6 @@ namespace RegScan
                 if (_currentDocument.DocumentURL != "")
                 {
                     UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
-                    // Turn off buttons for new box number.
-                    btnNewBox.Enabled = false;
 
                     // Ask if this is a new version.
                     if (MessageBox.Show("Document with barcode " + barCode +
@@ -377,28 +366,30 @@ namespace RegScan
                 // display error if this one cant be read
                 if (image == null) 
                 { 
-                    MessageBox.Show("Error loading image for page " + Convert.ToString(_currentImageIndex + 1));
+                    MessageBox.Show("Error loading image for page " + 
+                        Convert.ToString(_currentImageIndex + 1));
                     return;
                 }
                 SetImage(image);
-                SetOrientation(_scannedImageList[_currentImageIndex].Orientation.ToString());
-                SetPageSize(_scannedImageList[_currentImageIndex].PageSize.ToString());
             }
 
-            lbPagesScanned.Text = "Pages Scanned: " + _scannedImageList.Count().ToString();
-            string display = (_currentImageIndex + 1).ToString();
-            lbDisplayImage.Text = display + " of " + _scannedImageList.Count.ToString();
-            if (_currentImageIndex != 0)
-                btnDeleteImage.Visible = true;
-            else
-                btnDeleteImage.Visible = false;
+            //Update current and total page labels in the status label
+            statusLblCurImage.Text = (_currentImageIndex + 1).ToString();
+            statusLblTotalImage.Text = _scannedImageList.Count.ToString();
 
-            btnViewAsPDF.Enabled = true;
-            btnSharpen.Enabled = true;
-            btnPrintBatchLabel.Enabled = true;
-            btnNewBox.Enabled = true;
-            cBoxOrientation.Enabled = true;
-            cBoxPageSize.Enabled = true;
+            // Dont allow the first page to be deleted
+            if (_currentImageIndex != 0)
+            {
+                statusBtnDeleteImage.BackColor = UI.Theme.DangerBackground;
+                statusBtnDeleteImage.ForeColor = UI.Theme.TextInverse;
+                statusBtnDeleteImage.Enabled = true;
+            }
+            else
+            {
+                statusBtnDeleteImage.BackColor = UI.Theme.Disabled;
+                statusBtnDeleteImage.ForeColor = UI.Theme.TextDisabled;
+                statusBtnDeleteImage.Enabled = false;
+            }
         }
 
         #endregion
@@ -443,7 +434,6 @@ namespace RegScan
                 xgr.DrawImage(img, 0, 0);
 
                 // Update progress bar
-                txtMessage.Text += "\r\n" + "Page Size: " + pdfPage.Size.ToString();
                 progressBar.Value += updateCount;
                 Application.DoEvents();
 
@@ -577,7 +567,7 @@ namespace RegScan
 
             // Update the document.
             _currentDocument.PDFDocument = pdf;
-            _currentDocument.Description = txtDocumentDescription.Text;
+            _currentDocument.Description = txtDocumentClass.Text;
             _currentDocument.PageCount = _scannedImageList.Count;
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
@@ -630,47 +620,6 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Print the batch label.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnPrintBatchLabel_Click(object sender, EventArgs e)
-        {
-
-            // IF no document or batch, then don't proceed.
-            if (_currentDocument == null || _currentBatchId == null)
-                return;
-
-            // Display the batch form.
-            var frm = new frmBatchPrint(_currentBatchId, true);
-            frm.ShowDialog();
-
-            // If the batch ID was changed
-            if (_currentBatchId.BatchId != int.Parse(txtBatchNumber.Text))
-            {
-                // Then update on the form and in the document object.
-                txtBatchNumber.Text = _currentBatchId.BatchId.ToString();
-                _currentDocument.BatchId = _currentBatchId.BatchId;
-            }
-        }
-
-        /// <summary>
-        ///  Delete the current image from teh list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnDeleteImage_Click(object sender, EventArgs e)
-        {
-            // Confirm this image is to be deleted.
-            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-            {
-                _scannedImageList.RemoveAt(_currentImageIndex);
-                _currentImageIndex--;
-                UpdateImageDisplay();
-            }
-        }
-
-        /// <summary>
         /// Fires when this forms becomes active.
         /// </summary>
         /// <param name="sender"></param>
@@ -684,39 +633,14 @@ namespace RegScan
             btnScanPage.Focus();
         }
 
-        /// <summary>
-        /// The orientation was changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cBoxOrientation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cBoxOrientation.Text == PdfSharp.PageOrientation.Landscape.ToString())
-                _scannedImageList[_currentImageIndex].Orientation = PdfSharp.PageOrientation.Landscape;
-            else if (cBoxOrientation.Text == PdfSharp.PageOrientation.Portrait.ToString())
-                _scannedImageList[_currentImageIndex].Orientation = PdfSharp.PageOrientation.Portrait;
-        }
-
-        /// <summary>
-        /// The Page size was changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cBoxPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cBoxPageSize.Text == PdfSharp.PageSize.Letter.ToString())
-                _scannedImageList[_currentImageIndex].PageSize = PdfSharp.PageSize.Letter;
-            else if (cBoxPageSize.Text == PdfSharp.PageSize.Legal.ToString())
-                _scannedImageList[_currentImageIndex].PageSize = PdfSharp.PageSize.Legal;
-        }
         #endregion
 
         #region house keeping methods
 
         /// <summary>
         /// Reset the document.
-        /// NOTE - This is not necessary. An new instance of this class can be used instead of
-        /// attempting to clear an old version. 
+        /// TODO - Fix this entire method. It may clear the form but there is a lot of in-app
+        /// memory still being consumed. 
         /// </summary>
         private void ResetDocument()
         {
@@ -727,29 +651,13 @@ namespace RegScan
 
             // Clear the document.
             txtBarCode.Text = "";
-            txtDocumentId.Text = "";
             txtLegalEntityKey.Text = "";
-            txtOwner.Text = "";
-            txtDocumentDescription.Text = "";
+            txtIndexer.Text = "";
+            txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
-            txtVersionNumber.Text = "";
             txtPagesInDocument.Text = "";
-            txtBatchNumber.Text = "";
-            txtAccessionNumber.Text = "";
-            txtPagesInBox.Text = "";
+            txtSeqNumber.Text = "";
             imageBox.Image = null;
-            heightLabel.Text = "";
-            widthLabel.Text = "";
-            lbDisplayImage.Text = "0 of 0";
-            lbPagesScanned.Text = "Pages Scanned: 0";
-            btnDeleteImage.Visible = false;
-            btnNewBox.Enabled = false;
-            btnPrintBatchLabel.Enabled = false;
-            btnViewAsPDF.Enabled = false;
-            btnSharpen.Enabled = false;
-            cBoxOrientation.Enabled = false;
-            cBoxOrientation.SelectedIndex = -1;
-            cBoxPageSize.Enabled = false;
 
             // Delete any temporary FileNames.
             try
@@ -760,35 +668,7 @@ namespace RegScan
             }
             catch { }
 
-            txtMessage.Text = "";
             imageBox.Image = null;
-        }
-
-        /// <summary>
-        ///  Set the current selected Orientation in the combo box.
-        /// </summary>
-        /// <param name="_Orientation"></param>
-        private void SetOrientation(string _Orientation)
-        {
-
-            for (int i = 0; i < cBoxOrientation.Items.Count; i++)
-            {
-                if (cBoxOrientation.Items[i].ToString() == _Orientation)
-                    cBoxOrientation.SelectedIndex = i;
-            }
-        }
-
-        /// <summary>
-        /// Set the current selected Page Size in the combo box.
-        /// </summary>
-        /// <param name="_PageSize"></param>
-        private void SetPageSize(string _PageSize)
-        {
-            for (int i = 0; i < cBoxPageSize.Items.Count; i++)
-            {
-                if (cBoxPageSize.Items[i].ToString() == _PageSize)
-                    cBoxPageSize.SelectedIndex = i;
-            }
         }
 
         /// <summary>
@@ -825,9 +705,7 @@ namespace RegScan
                     _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
                     _currentBatchId.BatchId = 1;
                     _currentDocument.BatchId = _currentBatchId.BatchId;
-                    txtBatchNumber.Text = _currentBatchId.BatchId.ToString();
-                    txtAccessionNumber.Text = box.AccessionNumber;
-                    txtPagesInBox.Text = box.PageCount.ToString();
+                    txtSeqNumber.Text = box.AccessionNumber;
                 }
             }
 
@@ -866,66 +744,30 @@ namespace RegScan
         /// </summary>
         protected void SetForm()
         {
+            // Document Record Details
+
+            // Indexing/ Filing information
             txtBarCode.Text = _currentDocument.BarCode;
-            txtDocumentId.Text = string.IsNullOrEmpty(_currentDocument.DocumentServiceId) ?
-                "[not assigned]" : _currentDocument.DocumentServiceId.ToString();
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
-            txtOwner.Text = _currentDocument.Owner;
-            txtDocumentDescription.Text = _currentDocument.Description;
-            //txtDocumentType.Text = _currentDocument.FQDocType;
-            txtVersionNumber.Text = _currentDocument.VersionNumber.ToString();
+            txtIndexer.Text = _currentDocument.Owner;
+            //txtFilingDate.Text = _currentDocument.ConsumerFilingDate;
+            txtDocumentClass.Text = _currentDocument.Description;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
-            txtBatchNumber.Text = _currentDocument.BatchId.ToString();
-            txtAccessionNumber.Text = _currentDocument.AccessionNumberText;
-            //txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
+
+            // Document Information
+            //txtDocumentClass.Text = _currentDocument.DocumentClass;
+            //txtDocumentType.Text = _currentDocument.DocumentTypeCode;
+            txtDocumentClass.Text = _currentDocument.DocTypeDesc;
+
+            // Accession Numbers
+            //txtSequenceNumber.Text = _currentDocument.SequenceNumber;
+            //txtScheduleNumber.Text = _currentDocument.ScheduleNumber;
+            //txtBoxNumber.Text = _currentDocument.BoxNumber;
+
+            // Notes / Description
+            //txtNotes.Text = _currentDocument.Description;
         }
         #endregion
-
-
-
-        #region  Image Zoom Event Handlers
-
-        /// <summary>
-        /// Image was scrolled.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void imageBox_Scroll(object sender, ScrollEventArgs e)
-        {
-            this.UpdateStatusBar();
-        }
-
-        /// <summary>
-        /// Update the status bar for the image.
-        /// </summary>
-        private void UpdateStatusBar()
-        {
-            positionToolStripStatusLabel.Text = imageBox.AutoScrollPosition.ToString();
-            imageSizeToolStripStatusLabel.Text = imageBox.GetImageViewPort().ToString();
-            zoomToolStripStatusLabel.Text = string.Format("{0}%", imageBox.Zoom);
-        }
-
-        /// <summary>
-        /// Image was zoomed in or out.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void imageBox_ZoomChanged(object sender, EventArgs e)
-        {
-            this.UpdateStatusBar();
-        }
-
-        /// <summary>
-        /// Image was resized.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void imageBox_Resize(object sender, EventArgs e)
-        {
-            this.UpdateStatusBar();
-        }
-
-        #endregion  Event Handlers
 
         #region Scanning Session.
 
@@ -942,9 +784,13 @@ namespace RegScan
                 device.AsyncEvent += new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
                 device.ScanFinished += new EventHandler(device_ScanFinished);
             }
-            catch
+            catch (Exception e)
             {
-                MessageBox.Show("Error, scanner not found. Is the scanner turned on?", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error, scanner not found. Is the scanner turned on?",
+                    "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UtilityObj.WriteLog(UtilityObj.error, 
+                    "Unable to Subscribe to Device Events" + e.ToString());
+                // TODO - handle error gracefully instead of exiting
                 Environment.Exit(0);
             }
         }
@@ -1122,6 +968,81 @@ namespace RegScan
             progressBar.Value = 0;
         }
 
+        private void setUpScanner()
+        {
+            // Open device manager, if not open.
+            if (_deviceManager.State == DeviceManagerState.Closed)
+                _deviceManager.Open();
+
+            if (_currentDevice != null)
+                // unsubscribe from the device events
+                UnsubscribeFromDeviceEvents(_currentDevice);
+
+            // Get and set the current device
+            Device device = _deviceManager.DefaultDevice;
+            _currentDevice = device;
+
+            // subscribe to the device events
+            SubscribeToDeviceEvents(_currentDevice);
+
+            // set the image acquisition parameters
+            _currentDevice.ShowUI = useUICheckBox.Checked;
+            _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
+            _currentDevice.ModalUI = false;
+            _currentDevice.DisableAfterAcquire = false;
+            _currentDevice.TransferMode = TransferMode.Memory;
+
+            try
+            {
+                // open the device
+                _currentDevice.Open();
+            }
+            catch (Vintasoft.Twain.TwainException ex)
+            {
+                // specify that image acquisition is finished
+                //_isImageAcquiring = false;
+                MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName +
+                    " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+            // set device capabilities
+            // unit of measure
+            if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
+                _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
+
+            // resolution
+            if (ckBoxLowResolution.Checked)
+                _currentDevice.Resolution = new Resolution(400, 400);
+            else
+                _currentDevice.Resolution = new Resolution(600, 600);
+
+            // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
+            // NOTE - There could be a test implemented here to check if the device supports
+            //     an ADF and if not, show a warning to the user that it can not be used.
+            _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
+
+            // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
+            // If the device does not support duplex scanning, then this will fail and be
+            // caught by the exception. 
+            // NOTE - currently the catch is not handling the scenario instead just buffing the
+            //    error. Logs/ warnings to user should be shown. There could also be a check
+            //    before attempting to set the value to determine support. The device currently
+            //    does not support this feature and the catch is always hit.
+            if (_currentDevice.DocumentFeeder.Enabled)
+            {
+                _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
+            }
+            UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
+            // if device supports asynchronous events
+            if (_currentDevice.IsAsyncEventsSupported)
+            {
+                UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
+                // enable all asynchronous events supported by device
+                _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
+            }
+        }
+
         /// <summary>
         /// Ensure the scanning device is open and use the form fields to configure scanning
         /// options. 
@@ -1140,92 +1061,25 @@ namespace RegScan
             }
             
             image0 = null;
-            progressBar.Visible = true;
+            showProgressBar();
 
             try
             {
-                // Open device manager, if not open.
-                if (_deviceManager.State == DeviceManagerState.Closed)
-                    _deviceManager.Open();
-
-                if (_currentDevice != null)
-                    // unsubscribe from the device events
-                    UnsubscribeFromDeviceEvents(_currentDevice);
-
-                // Get and set the current device
-                Device device = _deviceManager.DefaultDevice;
-                _currentDevice = device;
-
-                // subscribe to the device events
-                SubscribeToDeviceEvents(_currentDevice);
-
-                // set the image acquisition parameters
-                _currentDevice.ShowUI = useUICheckBox.Checked;
-                _currentDevice.ShowIndicators = showProgressIndicatorUICheckBox.Checked;
-                _currentDevice.ModalUI = false;
-                _currentDevice.DisableAfterAcquire = false;
-                _currentDevice.TransferMode = TransferMode.Memory;
-
-                try
-                {
-                    // open the device
-                    _currentDevice.Open();
-                }
-                catch (Vintasoft.Twain.TwainException ex)
-                {
-                    // specify that image acquisition is finished
-                    //_isImageAcquiring = false;
-
-                    MessageBox.Show("Error with scanner. Is " + _currentDevice.Info.ProductName + " turned on?\n\n" + ex.Message, "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                // set device capabilities
-                // unit of measure
-                if (_currentDevice.UnitOfMeasure != UnitOfMeasure.Inches)
-                    _currentDevice.UnitOfMeasure = UnitOfMeasure.Inches;
-
-                // resolution
-                if (ckBoxLowResolution.Checked)
-                    _currentDevice.Resolution = new Resolution(400, 400);
-                else
-                    _currentDevice.Resolution = new Resolution(600, 600);
-
-                // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
-                // NOTE - There could be a test implemented here to check if the device supports
-                //     an ADF and if not, show a warning to the user that it can not be used.
-                _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
-                // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
-                // If the device does not support duplex scanning, then this will fail and be caught by the exception. 
-                // NOTE - currently the catch is not handling the scenario instead just buffing the error. Logs/ warnings to user should be shown.
-                //    There could also be a check before attempting to set the value to determine support.
-                //    The device currently does not support this feature and the catch is always hit.
-                if (_currentDevice.DocumentFeeder.Enabled)
-                {
-                    _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
-                }
-                UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
-                // if device supports asynchronous events
-                if (_currentDevice.IsAsyncEventsSupported)
-                {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
-                    // enable all asynchronous events supported by device
-                    _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
-                }
+                setUpScanner();
             }
             catch (TwainDeviceCapabilityException)
             {
-                MessageBox.Show("Scanning device is not compatible with the request.", "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Scanning device is not compatible with the request.",
+                    "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                 return;
             }
-
             catch (Exception ex2)
             {
                 MessageBox.Show(ex2.Message);
                 return;
             }
             
-
             try
             {
                 UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
@@ -1244,5 +1098,33 @@ namespace RegScan
         }
         #endregion
 
+        #region Event Handlers
+        private void statusBtnPrevImage_Click(object sender, EventArgs e)
+        {
+            if (_currentImageIndex - 1 < 0)
+                return;
+            --_currentImageIndex;
+            UpdateImageDisplay();
+        }
+
+        private void statusLblNextImage_Click(object sender, EventArgs e)
+        {
+            if (_currentImageIndex + 2 > _scannedImageList.Count)
+                return;
+            ++_currentImageIndex;
+            UpdateImageDisplay();
+        }
+
+        private void statusBtnDeleteImage_Click(object sender, EventArgs e)
+        {
+            // Confirm this image is to be deleted.
+            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                _scannedImageList.RemoveAt(_currentImageIndex);
+                _currentImageIndex--;
+                UpdateImageDisplay();
+            }
+        }
+        #endregion
     }
 }

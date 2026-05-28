@@ -142,7 +142,7 @@ namespace RegScan
                 MessageBox.Show("Scanned image failed to load into database. " + 
                                 "Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.WriteLog(UtilityObj.error, 
-                    "Scanned document Image failed PUT of scanned image.");
+                    "Scanned document Image failed PUT of scanned image." + e.ToString());
                 Environment.Exit(0);
             }
 
