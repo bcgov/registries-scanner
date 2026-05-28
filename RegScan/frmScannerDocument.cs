@@ -153,7 +153,7 @@ namespace RegScan
             UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
         }
 
-        private void ProocessFristPage()
+        private void ProcessFirstPage()
         {
             // List to hold the documents.
             List<DocumentObj> docs = null;
@@ -302,7 +302,7 @@ namespace RegScan
             // IF we have a new document process the first page
             if (_currentDocument == null)
             {
-                ProocessFristPage();
+                ProcessFirstPage();
             } 
             // Here we are adding an additional page to the document. We just need to adjust the index
             else {  _currentImageIndex++; }
@@ -377,7 +377,7 @@ namespace RegScan
             statusLblCurImage.Text = (_currentImageIndex + 1).ToString();
             statusLblTotalImage.Text = _scannedImageList.Count.ToString();
 
-            // Dont allow the first page to be deleted
+            // Don't allow the first page to be deleted
             if (_currentImageIndex != 0)
             {
                 statusBtnDeleteImage.BackColor = UI.Theme.DangerBackground;

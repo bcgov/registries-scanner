@@ -7,7 +7,7 @@ namespace ApiScanner
     {      
         static public string get()
         {
-            // We arent controlling these setting per user, anything that is set (or got) by these
+            // We aren't controlling these setting per user, anything that is set (or got) by these
             // methods will be overwritten as soon as a new user uses the application and makes any
             // change. If that feature is desired in the future it should be implemented fully.
             //string endpoint = "/doc/api/v1/scanning/parameters";

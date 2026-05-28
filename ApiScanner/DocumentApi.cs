@@ -8,10 +8,10 @@ namespace ApiScanner
 {
     /// <summary>
     /// The DocumentApi class is used as a controller for any API calls to the DRS API.
-    /// Currently this applicaiton should only be making calls for the following:
+    /// Currently this application should only be making calls for the following:
     ///   - Requesting information on a document record
     ///     - searchByBarcode -> Using BarcodeId as a query parameter
-    ///     - getSearch -> [documentClass in the path] and DocumentServiceId as a query parmater
+    ///     - getSearch -> [documentClass in the path] and DocumentServiceId as a query parameter
     ///   - Updating/ adding data associated with a document record
     ///     - updateDocumentRecord -> update metadata 
     ///     - uploadDocument -> Uploading a PDF 
@@ -49,7 +49,7 @@ namespace ApiScanner
         /// <param name="data"> 
         ///     other elements to be used in the request. Backup if _fileName is an empty string
         /// </param>
-        /// <returns>String representation of the result fromt the request</returns>
+        /// <returns>String representation of the result from the request</returns>
         public static string uploadDocument(byte[] pdfBytes, string filename, string docServiceId)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
@@ -91,8 +91,8 @@ namespace ApiScanner
         }
 
         /// <summary>
-        /// Use the second serach endpoint (with a document class) to get more information on the
-        /// record. Any additional queries are used to refine the search as query paramaters.
+        /// Use the second search endpoint (with a document class) to get more information on the
+        /// record. Any additional queries are used to refine the search as query parameters.
         /// </summary>
         /// <param name="docClass">The class of the document record</param>
         /// <param name="queries">

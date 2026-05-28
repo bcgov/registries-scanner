@@ -68,7 +68,7 @@ namespace RegScan
         public string Description { get { return _description; } set { _description = value; } }
         public string DocumentURL { get { return _documentURL; } }
         public string DocumentServiceId { get { return _documentServiceId; } }
-        // Accention Number Elements
+        // Accession Number Elements
         public string SequenceNumberString { 
             get { return _sequenceNumber.ToString().PadLeft(2, '0'); } }
         public string ScheduleNumberString {
@@ -130,7 +130,7 @@ namespace RegScan
 
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
 
-            // TODO - we shouldnt exit, we should show the error then handle it gracefully
+            // TODO - we should not exit, we should show the error then handle it gracefully
             try
             {
                 // upload the scanned image
@@ -165,7 +165,7 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Controls the flow of logic between inserting or updatating a document record.
+        /// Controls the flow of logic between inserting or updating a document record.
         /// If the _replaceFlag is true, (there is an existing document) 
         ///     -> Update: replace the existing document.
         /// If the _replaceFlag is false, (no existing document).
@@ -343,7 +343,7 @@ namespace RegScan
         {
             if (docObj == null || jDoc == null)
             {
-                UtilityObj.WriteLog(UtilityObj.error, "Unable to copy from model, objest null.");
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to copy from model, objet null.");
                 throw new Exception("Attempting to pull data from a null object."); 
             }
 
