@@ -64,6 +64,7 @@ namespace RegScan
             get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
         public string DocumentClass { get { return _documentClass; } }
+        public string DocumentType {  get { return _documentTypeCode; } }
         public string DocTypeDesc { get { return _documentTypeDescription; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string DocumentURL { get { return _documentURL; } }

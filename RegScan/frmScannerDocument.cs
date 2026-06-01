@@ -216,6 +216,7 @@ namespace RegScan
                 // The first document is the latest and is the one that will be displayed
                 _currentDocument = docs[0];
 
+                // TODO -> better error handling here
                 // Display the warning if there was some sort of error getting the document
                 if (_currentDocument.Error != "")
                     MessageBox.Show("Warning an error was found -> " +
@@ -257,6 +258,7 @@ namespace RegScan
                 // IF scan is to be cancelled
                 if (cancelScan)
                 {
+                    // TODO -> Reset form better here.
                     // Set current document back to null.
                     _currentDocument = null;
                     UtilityObj.DeleteFolder("Images");
@@ -750,22 +752,21 @@ namespace RegScan
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtIndexer.Text = _currentDocument.Owner;
-            //txtFilingDate.Text = _currentDocument.ConsumerFilingDate;
-            txtDocumentClass.Text = _currentDocument.Description;
+            txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
             // Document Information
-            //txtDocumentClass.Text = _currentDocument.DocumentClass;
-            //txtDocumentType.Text = _currentDocument.DocumentTypeCode;
-            txtDocumentClass.Text = _currentDocument.DocTypeDesc;
+            txtDocumentClass.Text = _currentDocument.DocumentClass;
+            txtDocumentType.Text = string.Concat(
+                _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
 
             // Accession Numbers
-            //txtSequenceNumber.Text = _currentDocument.SequenceNumber;
-            //txtScheduleNumber.Text = _currentDocument.ScheduleNumber;
-            //txtBoxNumber.Text = _currentDocument.BoxNumber;
+            txtSeqNumber.Text = _currentDocument.SequenceNumberString;
+            txtSchNumber.Text = _currentDocument.ScheduleNumberString;
+            txtBoxNumber.Text = _currentDocument.BoxNumberString;
 
             // Notes / Description
-            //txtNotes.Text = _currentDocument.Description;
+            txtDocumentNotes.Text = _currentDocument.Description;
         }
         #endregion
 
@@ -1126,5 +1127,6 @@ namespace RegScan
             }
         }
         #endregion
+
     }
 }
