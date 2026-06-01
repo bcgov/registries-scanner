@@ -144,12 +144,12 @@ namespace RegScan
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtOwner.Text = _currentDocument.Owner;
             txtDocumentDescription.Text = _currentDocument.Description;
-            txtDocumentType.Text = _currentDocument.FQDocType;
+            //txtDocumentType.Text = _currentDocument.DocumentTypeCode;
             txtVersionNumber.Text = _currentDocument.VersionNumber.ToString();
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
             txtBatchNumber.Text = _currentDocument.BatchId.ToString();
             txtAccessionNumber.Text = _currentDocument.AccessionNumberText;
-            txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
+            //txtPagesInBox.Text = _currentDocument.PagesInBox.ToString();
 
             if (_currentDocument.IsScanned)
                 _currentDocument.ConvertPDFToImageList();

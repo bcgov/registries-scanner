@@ -6,6 +6,16 @@ using System.Collections.Generic;
 
 namespace ApiScanner
 {
+    /// <summary>
+    /// The DocumentApi class is used as a controller for any API calls to the DRS API.
+    /// Currently this application should only be making calls for the following:
+    ///   - Requesting information on a document record
+    ///     - searchByBarcode -> Using BarcodeId as a query parameter
+    ///     - getSearch -> [documentClass in the path] and DocumentServiceId as a query parameter
+    ///   - Updating/ adding data associated with a document record
+    ///     - updateDocumentRecord -> update metadata 
+    ///     - uploadDocument -> Uploading a PDF 
+    /// </summary>
     public class DocumentApi
     {
         #region Updating Document and Record Endpoints
@@ -20,13 +30,13 @@ namespace ApiScanner
         ///     The unique identifier of an existing document service document
         /// </param>
         /// <returns></returns>
-        public static string updateDocumentRecord(object data, string docServId)
+        public static string updateDocumentRecord(DocumentModel data, string docServId)
         {
-            DocumentModel myData = (DocumentModel)data;
+            // TODO - update how we pass information back to the API 
+            //     - verification & checking that the data should be changed
 
             string endpoint = "doc/api/v1/documents/" + docServId;
-            string resp = APIRequest.MakeKeyRequest(data, endpoint, RestSharp.Method.PATCH);
-            return resp;
+            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.PATCH);
         }
 
         /// <summary>
@@ -39,28 +49,19 @@ namespace ApiScanner
         /// <param name="data"> 
         ///     other elements to be used in the request. Backup if _fileName is an empty string
         /// </param>
-        /// <returns>String representation of the result fromt the request</returns>
-        public static string uploadDocument(byte[] pdfBytes, object data)
+        /// <returns>String representation of the result from the request</returns>
+        public static string uploadDocument(byte[] pdfBytes, string filename, string docServiceId)
         {
-            DocumentModel myData = (DocumentModel)data;
-            string resp = null;
-
             Dictionary<string, object> param = new Dictionary<string, object>();
-            if (myData.consumerFilename != "")
+            if (!string.IsNullOrEmpty(filename))
             {
                 // TODO: handle passing in any parameters with param. Ticket #33043
-                param.Add("consumerFilename", (string)myData.consumerFilename);
+                param.Add("consumerFilename", filename);
             }
-            string endpoint = "/doc/api/v1/documents/" + myData.documentServiceId;
-            try
-            {
-                resp = APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
-            }
-            catch (Exception e)
-            {
-                UtilityObj.WriteLog(UtilityObj.error, "Error trying to PUT data: " + e);
-            }
-                return resp;
+            string endpoint = "/doc/api/v1/documents/" + docServiceId;
+
+            return APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
+
         }
         #endregion
 
@@ -90,8 +91,8 @@ namespace ApiScanner
         }
 
         /// <summary>
-        /// Use the second serach endpoint (with a document class) to get more information on the
-        /// record. Any additional queries are used to refine the search as query paramaters.
+        /// Use the second search endpoint (with a document class) to get more information on the
+        /// record. Any additional queries are used to refine the search as query parameters.
         /// </summary>
         /// <param name="docClass">The class of the document record</param>
         /// <param name="queries">
@@ -107,8 +108,7 @@ namespace ApiScanner
                 endpoint += "?" + kvp.Key + "=" + kvp.Value;
             }
             
-            string resp = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
-            return resp;
+            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
         }
 
         #endregion
@@ -117,20 +117,24 @@ namespace ApiScanner
 
     public class DocumentModel
     {
-        public string author;
-        public int consumerDocumentId;
-        public string consumerFilename;
-        public DateTime consumerFilingDate;
+        public string consumerDocumentId;
         public string consumerIdentifier;
-        public string consumerReferenceId;
-        public DateTime createDateTime;
-        public string documentClass;
-        public string documentExists;
-        public string documentServiceId;
+        public string consumerFilename;
+        public string consumerFilingDate;
+        public string description;
         public string documentType;
-        public string documentTypeDescription;
-        public string documentURL;
-        public object scanningInformation;
+        public string documentClass;
+        public string consumerReferenceId;
+        public ScanningInformation scanInfo;
+        public class ScanningInformation
+        {
+            public string consumerDocumentId;
+            public string scanDateTime;
+            public string documentClass;
+            public string accessionNumber;
+            public string batchId;
+            public int pageCount;
+            public string author;
+        }
     }
-
 }
