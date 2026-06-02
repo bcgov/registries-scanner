@@ -28,69 +28,197 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.imageBox = new RegScan.ImageBox();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.tablePanelMainForm = new System.Windows.Forms.TableLayoutPanel();
+            this.panelScanningOptions = new System.Windows.Forms.FlowLayoutPanel();
             this.useDuplexCheckBox = new System.Windows.Forms.CheckBox();
             this.useAdfCheckBox = new System.Windows.Forms.CheckBox();
+            this.showProgressIndicatorUICheckBox = new System.Windows.Forms.CheckBox();
+            this.ckBoxLowResolution = new System.Windows.Forms.CheckBox();
+            this.useUICheckBox = new System.Windows.Forms.CheckBox();
+            this.btnScanPage = new System.Windows.Forms.Button();
+            this.lblDocRecord = new System.Windows.Forms.Label();
+            this.panelBarcode = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtBarCode = new System.Windows.Forms.TextBox();
+            this.lblBarcode = new System.Windows.Forms.Label();
+            this.panelLegalEntity = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtLegalEntityKey = new System.Windows.Forms.TextBox();
+            this.lblLegalEntity = new System.Windows.Forms.Label();
+            this.panelIndexer = new System.Windows.Forms.FlowLayoutPanel();
             this.txtIndexer = new System.Windows.Forms.TextBox();
             this.lblIndexer = new System.Windows.Forms.Label();
-            this.txtLegalEntityKey = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtSeqNumber = new System.Windows.Forms.TextBox();
-            this.txtPagesInDocument = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtDocumentType = new System.Windows.Forms.TextBox();
-            this.lblDocumentType = new System.Windows.Forms.Label();
-            this.txtDocumentClass = new System.Windows.Forms.TextBox();
-            this.lblDocumentClass = new System.Windows.Forms.Label();
-            this.txtBarCode = new System.Windows.Forms.TextBox();
-            this.showProgressIndicatorUICheckBox = new System.Windows.Forms.CheckBox();
-            this.useUICheckBox = new System.Windows.Forms.CheckBox();
-            this.ckBoxLowResolution = new System.Windows.Forms.CheckBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.btnCancelScan = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.lblDocRecord = new System.Windows.Forms.Label();
+            this.panelFilingDate = new System.Windows.Forms.FlowLayoutPanel();
             this.txtFilingDate = new System.Windows.Forms.TextBox();
             this.lblFilingDate = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.lblDocNotes = new System.Windows.Forms.Label();
-            this.lblBoxNumber = new System.Windows.Forms.Label();
-            this.lblSchNumber = new System.Windows.Forms.Label();
-            this.lblSeqNumber = new System.Windows.Forms.Label();
-            this.txtBoxNumber = new System.Windows.Forms.TextBox();
-            this.txtSchNumber = new System.Windows.Forms.TextBox();
-            this.lblAccessionNumber = new System.Windows.Forms.Label();
+            this.panelPages = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtPagesInDocument = new System.Windows.Forms.TextBox();
+            this.lblTotalPages = new System.Windows.Forms.Label();
             this.lblRecordClass = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
-            this.rotateImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewDocumentAsPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusLblDisplayImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusBtnPrevImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLblCurImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLblOf = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLblTotalImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLblNextImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusBtnDeleteImage = new System.Windows.Forms.ToolStripStatusLabel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnScanPage = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.imageBox = new RegScan.ImageBox();
+            this.panelDocType = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtDocumentType = new System.Windows.Forms.TextBox();
+            this.lblDocumentType = new System.Windows.Forms.Label();
+            this.panelDocClass = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtDocumentClass = new System.Windows.Forms.TextBox();
+            this.lblDocumentClass = new System.Windows.Forms.Label();
+            this.lblAccessionNumber = new System.Windows.Forms.Label();
+            this.panelBoxNumber = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtBoxNumber = new System.Windows.Forms.TextBox();
+            this.lblBoxNumber = new System.Windows.Forms.Label();
+            this.panelSchNumber = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtSchNumber = new System.Windows.Forms.TextBox();
+            this.lblSchNumber = new System.Windows.Forms.Label();
+            this.panelSeqNumber = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtSeqNumber = new System.Windows.Forms.TextBox();
+            this.lblSeqNumber = new System.Windows.Forms.Label();
+            this.lblDocNotes = new System.Windows.Forms.Label();
             this.txtDocumentNotes = new System.Windows.Forms.TextBox();
+            this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
+            this.lblDisplayImgOf = new System.Windows.Forms.Label();
+            this.lblTotalImage = new System.Windows.Forms.Label();
+            this.btnDeleteImage = new System.Windows.Forms.Button();
+            this.lblDisplay = new System.Windows.Forms.Label();
+            this.btnlNextImage = new System.Windows.Forms.Button();
+            this.btnRotateImg = new System.Windows.Forms.Button();
+            this.btnImagePDF = new System.Windows.Forms.Button();
+            this.btnPrevImage = new System.Windows.Forms.Button();
+            this.lblCurImage = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutScanOptions = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnCancelScan = new System.Windows.Forms.Button();
+            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowPanelDocumentRecoed = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowPanelRecordClassification = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowPanelAccession = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowPanelDocumentNotes = new System.Windows.Forms.FlowLayoutPanel();
+            this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.imageBox.SuspendLayout();
+            this.tablePanelMainForm.SuspendLayout();
+            this.panelScanningOptions.SuspendLayout();
+            this.panelBarcode.SuspendLayout();
+            this.panelLegalEntity.SuspendLayout();
+            this.panelIndexer.SuspendLayout();
+            this.panelFilingDate.SuspendLayout();
+            this.panelPages.SuspendLayout();
+            this.panelDocType.SuspendLayout();
+            this.panelDocClass.SuspendLayout();
+            this.panelBoxNumber.SuspendLayout();
+            this.panelSchNumber.SuspendLayout();
+            this.panelSeqNumber.SuspendLayout();
+            this.panelImageControl.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
+            this.flowLayoutScanOptions.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
+            this.flowLayoutPanel6.SuspendLayout();
+            this.flowPanelDocumentRecoed.SuspendLayout();
+            this.flowPanelRecordClassification.SuspendLayout();
+            this.flowPanelAccession.SuspendLayout();
+            this.flowPanelDocumentNotes.SuspendLayout();
+            this.panelRejectSaveScan.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tablePanelMainForm);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.imageBox);
+            this.splitContainer1.Size = new System.Drawing.Size(1178, 857);
+            this.splitContainer1.SplitterDistance = 520;
+            this.splitContainer1.TabIndex = 67;
+            // 
+            // imageBox
+            // 
+            this.imageBox.AutoScroll = true;
+            this.imageBox.AutoSize = false;
+            this.imageBox.Controls.Add(this.progressBar);
+            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(654, 857);
+            this.imageBox.TabIndex = 0;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(36, 414);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(579, 23);
+            this.progressBar.TabIndex = 59;
+            this.progressBar.Visible = false;
+            // 
+            // tablePanelMainForm
+            // 
+            this.tablePanelMainForm.AutoSize = true;
+            this.tablePanelMainForm.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.OutsetPartial;
+            this.tablePanelMainForm.ColumnCount = 1;
+            this.tablePanelMainForm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tablePanelMainForm.Controls.Add(this.flowPanelDocumentNotes, 0, 4);
+            this.tablePanelMainForm.Controls.Add(this.flowPanelAccession, 0, 3);
+            this.tablePanelMainForm.Controls.Add(this.flowLayoutPanel6, 0, 5);
+            this.tablePanelMainForm.Controls.Add(this.flowPanelRecordClassification, 0, 2);
+            this.tablePanelMainForm.Controls.Add(this.flowLayoutScanOptions, 0, 0);
+            this.tablePanelMainForm.Controls.Add(this.flowPanelDocumentRecoed, 0, 1);
+            this.tablePanelMainForm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tablePanelMainForm.Location = new System.Drawing.Point(0, 0);
+            this.tablePanelMainForm.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.tablePanelMainForm.MaximumSize = new System.Drawing.Size(520, 851);
+            this.tablePanelMainForm.Name = "tablePanelMainForm";
+            this.tablePanelMainForm.RowCount = 6;
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tablePanelMainForm.Size = new System.Drawing.Size(520, 851);
+            this.tablePanelMainForm.TabIndex = 60;
+            // 
+            // panelScanningOptions
+            // 
+            this.panelScanningOptions.Controls.Add(this.useUICheckBox);
+            this.panelScanningOptions.Controls.Add(this.ckBoxLowResolution);
+            this.panelScanningOptions.Controls.Add(this.showProgressIndicatorUICheckBox);
+            this.panelScanningOptions.Controls.Add(this.useAdfCheckBox);
+            this.panelScanningOptions.Controls.Add(this.useDuplexCheckBox);
+            this.panelScanningOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelScanningOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.panelScanningOptions.Location = new System.Drawing.Point(7, 7);
+            this.panelScanningOptions.MaximumSize = new System.Drawing.Size(322, 175);
+            this.panelScanningOptions.MinimumSize = new System.Drawing.Size(322, 98);
+            this.panelScanningOptions.Name = "panelScanningOptions";
+            this.panelScanningOptions.Padding = new System.Windows.Forms.Padding(8);
+            this.panelScanningOptions.Size = new System.Drawing.Size(322, 98);
+            this.panelScanningOptions.TabIndex = 6;
             // 
             // useDuplexCheckBox
             // 
             this.useDuplexCheckBox.AutoSize = true;
-            this.useDuplexCheckBox.Location = new System.Drawing.Point(144, 42);
+            this.useDuplexCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useDuplexCheckBox.Location = new System.Drawing.Point(132, 55);
             this.useDuplexCheckBox.Name = "useDuplexCheckBox";
-            this.useDuplexCheckBox.Size = new System.Drawing.Size(105, 17);
+            this.useDuplexCheckBox.Size = new System.Drawing.Size(116, 21);
             this.useDuplexCheckBox.TabIndex = 34;
             this.useDuplexCheckBox.Text = "Scan Both Sides";
             this.useDuplexCheckBox.UseVisualStyleBackColor = true;
@@ -98,553 +226,813 @@
             // useAdfCheckBox
             // 
             this.useAdfCheckBox.AutoSize = true;
-            this.useAdfCheckBox.Location = new System.Drawing.Point(144, 6);
+            this.useAdfCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useAdfCheckBox.Location = new System.Drawing.Point(132, 11);
             this.useAdfCheckBox.Name = "useAdfCheckBox";
-            this.useAdfCheckBox.Size = new System.Drawing.Size(111, 30);
+            this.useAdfCheckBox.Size = new System.Drawing.Size(127, 38);
             this.useAdfCheckBox.TabIndex = 29;
             this.useAdfCheckBox.Text = "Use Automatic\r\nDocument Feeder";
             this.useAdfCheckBox.UseVisualStyleBackColor = true;
             this.useAdfCheckBox.CheckedChanged += new System.EventHandler(this.useAdfCheckBox_CheckedChanged);
-            // 
-            // txtIndexer
-            // 
-            this.txtIndexer.BackColor = System.Drawing.SystemColors.Info;
-            this.txtIndexer.Location = new System.Drawing.Point(182, 144);
-            this.txtIndexer.Name = "txtIndexer";
-            this.txtIndexer.ReadOnly = true;
-            this.txtIndexer.Size = new System.Drawing.Size(141, 20);
-            this.txtIndexer.TabIndex = 86;
-            // 
-            // lblIndexer
-            // 
-            this.lblIndexer.AutoSize = true;
-            this.lblIndexer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIndexer.Location = new System.Drawing.Point(182, 125);
-            this.lblIndexer.Name = "lblIndexer";
-            this.lblIndexer.Size = new System.Drawing.Size(51, 16);
-            this.lblIndexer.TabIndex = 85;
-            this.lblIndexer.Text = "Indexer";
-            // 
-            // txtLegalEntityKey
-            // 
-            this.txtLegalEntityKey.BackColor = System.Drawing.SystemColors.Info;
-            this.txtLegalEntityKey.Location = new System.Drawing.Point(21, 187);
-            this.txtLegalEntityKey.Name = "txtLegalEntityKey";
-            this.txtLegalEntityKey.ReadOnly = true;
-            this.txtLegalEntityKey.Size = new System.Drawing.Size(141, 20);
-            this.txtLegalEntityKey.TabIndex = 84;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(21, 168);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(76, 16);
-            this.label10.TabIndex = 83;
-            this.label10.Text = "Legal Entity";
-            // 
-            // txtSeqNumber
-            // 
-            this.txtSeqNumber.BackColor = System.Drawing.SystemColors.Info;
-            this.txtSeqNumber.Location = new System.Drawing.Point(21, 350);
-            this.txtSeqNumber.Name = "txtSeqNumber";
-            this.txtSeqNumber.ReadOnly = true;
-            this.txtSeqNumber.Size = new System.Drawing.Size(141, 20);
-            this.txtSeqNumber.TabIndex = 78;
-            this.txtSeqNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtPagesInDocument
-            // 
-            this.txtPagesInDocument.BackColor = System.Drawing.SystemColors.Info;
-            this.txtPagesInDocument.Location = new System.Drawing.Point(182, 187);
-            this.txtPagesInDocument.Name = "txtPagesInDocument";
-            this.txtPagesInDocument.ReadOnly = true;
-            this.txtPagesInDocument.Size = new System.Drawing.Size(141, 20);
-            this.txtPagesInDocument.TabIndex = 74;
-            this.txtPagesInDocument.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(182, 168);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(127, 16);
-            this.label6.TabIndex = 73;
-            this.label6.Text = "Pages In Document:";
-            // 
-            // txtDocumentType
-            // 
-            this.txtDocumentType.BackColor = System.Drawing.SystemColors.Info;
-            this.txtDocumentType.Location = new System.Drawing.Point(182, 267);
-            this.txtDocumentType.Name = "txtDocumentType";
-            this.txtDocumentType.ReadOnly = true;
-            this.txtDocumentType.Size = new System.Drawing.Size(141, 20);
-            this.txtDocumentType.TabIndex = 70;
-            // 
-            // lblDocumentType
-            // 
-            this.lblDocumentType.AutoSize = true;
-            this.lblDocumentType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentType.Location = new System.Drawing.Point(183, 248);
-            this.lblDocumentType.Name = "lblDocumentType";
-            this.lblDocumentType.Size = new System.Drawing.Size(39, 16);
-            this.lblDocumentType.TabIndex = 69;
-            this.lblDocumentType.Text = "Type";
-            // 
-            // txtDocumentClass
-            // 
-            this.txtDocumentClass.BackColor = System.Drawing.SystemColors.Info;
-            this.txtDocumentClass.Location = new System.Drawing.Point(21, 267);
-            this.txtDocumentClass.Name = "txtDocumentClass";
-            this.txtDocumentClass.ReadOnly = true;
-            this.txtDocumentClass.Size = new System.Drawing.Size(141, 20);
-            this.txtDocumentClass.TabIndex = 65;
-            // 
-            // lblDocumentClass
-            // 
-            this.lblDocumentClass.AutoSize = true;
-            this.lblDocumentClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentClass.Location = new System.Drawing.Point(21, 248);
-            this.lblDocumentClass.Name = "lblDocumentClass";
-            this.lblDocumentClass.Size = new System.Drawing.Size(41, 16);
-            this.lblDocumentClass.TabIndex = 68;
-            this.lblDocumentClass.Text = "Class";
-            // 
-            // txtBarCode
-            // 
-            this.txtBarCode.BackColor = System.Drawing.SystemColors.Info;
-            this.txtBarCode.Location = new System.Drawing.Point(21, 144);
-            this.txtBarCode.Name = "txtBarCode";
-            this.txtBarCode.ReadOnly = true;
-            this.txtBarCode.Size = new System.Drawing.Size(141, 20);
-            this.txtBarCode.TabIndex = 67;
-            this.txtBarCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // showProgressIndicatorUICheckBox
             // 
             this.showProgressIndicatorUICheckBox.AutoSize = true;
             this.showProgressIndicatorUICheckBox.Checked = true;
             this.showProgressIndicatorUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showProgressIndicatorUICheckBox.Location = new System.Drawing.Point(291, 13);
+            this.showProgressIndicatorUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showProgressIndicatorUICheckBox.Location = new System.Drawing.Point(11, 65);
             this.showProgressIndicatorUICheckBox.Name = "showProgressIndicatorUICheckBox";
-            this.showProgressIndicatorUICheckBox.Size = new System.Drawing.Size(97, 17);
+            this.showProgressIndicatorUICheckBox.Size = new System.Drawing.Size(110, 21);
             this.showProgressIndicatorUICheckBox.TabIndex = 33;
             this.showProgressIndicatorUICheckBox.Text = "Show Progress";
             this.showProgressIndicatorUICheckBox.UseVisualStyleBackColor = true;
-            // 
-            // useUICheckBox
-            // 
-            this.useUICheckBox.AutoSize = true;
-            this.useUICheckBox.Checked = true;
-            this.useUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.useUICheckBox.Location = new System.Drawing.Point(3, 13);
-            this.useUICheckBox.Name = "useUICheckBox";
-            this.useUICheckBox.Size = new System.Drawing.Size(105, 17);
-            this.useUICheckBox.TabIndex = 30;
-            this.useUICheckBox.Text = "Show Advanced";
-            this.useUICheckBox.UseVisualStyleBackColor = true;
             // 
             // ckBoxLowResolution
             // 
             this.ckBoxLowResolution.AutoSize = true;
             this.ckBoxLowResolution.Checked = true;
             this.ckBoxLowResolution.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBoxLowResolution.Location = new System.Drawing.Point(3, 42);
+            this.ckBoxLowResolution.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckBoxLowResolution.Location = new System.Drawing.Point(11, 38);
             this.ckBoxLowResolution.Name = "ckBoxLowResolution";
-            this.ckBoxLowResolution.Size = new System.Drawing.Size(99, 17);
+            this.ckBoxLowResolution.Size = new System.Drawing.Size(110, 21);
             this.ckBoxLowResolution.TabIndex = 31;
             this.ckBoxLowResolution.Text = "Low Resolution";
             this.ckBoxLowResolution.UseVisualStyleBackColor = true;
             // 
-            // progressBar
+            // useUICheckBox
             // 
-            this.progressBar.Location = new System.Drawing.Point(3, 6);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(464, 23);
-            this.progressBar.TabIndex = 59;
-            this.progressBar.Visible = false;
+            this.useUICheckBox.AutoSize = true;
+            this.useUICheckBox.Checked = true;
+            this.useUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.useUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useUICheckBox.Location = new System.Drawing.Point(11, 11);
+            this.useUICheckBox.Name = "useUICheckBox";
+            this.useUICheckBox.Size = new System.Drawing.Size(115, 21);
+            this.useUICheckBox.TabIndex = 30;
+            this.useUICheckBox.Text = "Show Advanced";
+            this.useUICheckBox.UseVisualStyleBackColor = true;
             // 
-            // btnCancelScan
+            // btnScanPage
             // 
-            this.btnCancelScan.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelScan.Location = new System.Drawing.Point(186, 521);
-            this.btnCancelScan.Name = "btnCancelScan";
-            this.btnCancelScan.Size = new System.Drawing.Size(136, 37);
-            this.btnCancelScan.TabIndex = 4;
-            this.btnCancelScan.Text = "Reject Scan";
-            this.btnCancelScan.UseVisualStyleBackColor = true;
-            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.Color.Green;
-            this.btnSave.Location = new System.Drawing.Point(348, 521);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(136, 37);
-            this.btnSave.TabIndex = 3;
-            this.btnSave.Text = "Save Scan";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.txtDocumentNotes);
-            this.splitContainer1.Panel1.Controls.Add(this.lblDocRecord);
-            this.splitContainer1.Panel1.Controls.Add(this.txtFilingDate);
-            this.splitContainer1.Panel1.Controls.Add(this.lblFilingDate);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
-            this.splitContainer1.Panel1.Controls.Add(this.lblDocNotes);
-            this.splitContainer1.Panel1.Controls.Add(this.lblBoxNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.btnCancelScan);
-            this.splitContainer1.Panel1.Controls.Add(this.lblSchNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.lblSeqNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.txtBoxNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.txtSchNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.btnSave);
-            this.splitContainer1.Panel1.Controls.Add(this.lblAccessionNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.lblRecordClass);
-            this.splitContainer1.Panel1.Controls.Add(this.statusStrip1);
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            this.splitContainer1.Panel1.Controls.Add(this.txtIndexer);
-            this.splitContainer1.Panel1.Controls.Add(this.lblIndexer);
-            this.splitContainer1.Panel1.Controls.Add(this.txtLegalEntityKey);
-            this.splitContainer1.Panel1.Controls.Add(this.label10);
-            this.splitContainer1.Panel1.Controls.Add(this.txtSeqNumber);
-            this.splitContainer1.Panel1.Controls.Add(this.txtPagesInDocument);
-            this.splitContainer1.Panel1.Controls.Add(this.label6);
-            this.splitContainer1.Panel1.Controls.Add(this.txtDocumentType);
-            this.splitContainer1.Panel1.Controls.Add(this.lblDocumentType);
-            this.splitContainer1.Panel1.Controls.Add(this.txtDocumentClass);
-            this.splitContainer1.Panel1.Controls.Add(this.lblDocumentClass);
-            this.splitContainer1.Panel1.Controls.Add(this.txtBarCode);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.imageBox);
-            this.splitContainer1.Size = new System.Drawing.Size(1034, 602);
-            this.splitContainer1.SplitterDistance = 514;
-            this.splitContainer1.TabIndex = 67;
+            this.btnScanPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnScanPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(33)))), ((int)(((byte)(66)))));
+            this.btnScanPage.Font = new System.Drawing.Font("BC Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnScanPage.ForeColor = System.Drawing.Color.White;
+            this.btnScanPage.Location = new System.Drawing.Point(335, 53);
+            this.btnScanPage.MaximumSize = new System.Drawing.Size(153, 52);
+            this.btnScanPage.MinimumSize = new System.Drawing.Size(153, 52);
+            this.btnScanPage.Name = "btnScanPage";
+            this.btnScanPage.Size = new System.Drawing.Size(153, 52);
+            this.btnScanPage.TabIndex = 5;
+            this.btnScanPage.Text = "Scan";
+            this.btnScanPage.UseVisualStyleBackColor = false;
             // 
             // lblDocRecord
             // 
+            this.lblDocRecord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblDocRecord.AutoSize = true;
-            this.lblDocRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocRecord.Location = new System.Drawing.Point(13, 91);
+            this.lblDocRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocRecord.Location = new System.Drawing.Point(3, 4);
             this.lblDocRecord.Name = "lblDocRecord";
-            this.lblDocRecord.Size = new System.Drawing.Size(137, 17);
+            this.lblDocRecord.Size = new System.Drawing.Size(179, 24);
             this.lblDocRecord.TabIndex = 103;
             this.lblDocRecord.Text = "Document Record";
+            // 
+            // panelBarcode
+            // 
+            this.panelBarcode.Controls.Add(this.lblBarcode);
+            this.panelBarcode.Controls.Add(this.txtBarCode);
+            this.panelBarcode.Location = new System.Drawing.Point(3, 7);
+            this.panelBarcode.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelBarcode.Name = "panelBarcode";
+            this.panelBarcode.Padding = new System.Windows.Forms.Padding(8);
+            this.panelBarcode.Size = new System.Drawing.Size(167, 79);
+            this.panelBarcode.TabIndex = 119;
+            // 
+            // txtBarCode
+            // 
+            this.txtBarCode.BackColor = System.Drawing.SystemColors.Info;
+            this.txtBarCode.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBarCode.Location = new System.Drawing.Point(11, 31);
+            this.txtBarCode.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtBarCode.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtBarCode.Name = "txtBarCode";
+            this.txtBarCode.ReadOnly = true;
+            this.txtBarCode.Size = new System.Drawing.Size(141, 29);
+            this.txtBarCode.TabIndex = 67;
+            this.txtBarCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblBarcode
+            // 
+            this.lblBarcode.AutoSize = true;
+            this.lblBarcode.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBarcode.Location = new System.Drawing.Point(11, 8);
+            this.lblBarcode.Name = "lblBarcode";
+            this.lblBarcode.Size = new System.Drawing.Size(65, 20);
+            this.lblBarcode.TabIndex = 66;
+            this.lblBarcode.Text = "Barcode";
+            // 
+            // panelLegalEntity
+            // 
+            this.panelLegalEntity.Controls.Add(this.lblLegalEntity);
+            this.panelLegalEntity.Controls.Add(this.txtLegalEntityKey);
+            this.panelLegalEntity.Location = new System.Drawing.Point(176, 7);
+            this.panelLegalEntity.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelLegalEntity.Name = "panelLegalEntity";
+            this.panelLegalEntity.Padding = new System.Windows.Forms.Padding(8);
+            this.panelLegalEntity.Size = new System.Drawing.Size(341, 79);
+            this.panelLegalEntity.TabIndex = 114;
+            // 
+            // txtLegalEntityKey
+            // 
+            this.txtLegalEntityKey.BackColor = System.Drawing.SystemColors.Info;
+            this.txtLegalEntityKey.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLegalEntityKey.Location = new System.Drawing.Point(11, 31);
+            this.txtLegalEntityKey.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtLegalEntityKey.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtLegalEntityKey.Name = "txtLegalEntityKey";
+            this.txtLegalEntityKey.ReadOnly = true;
+            this.txtLegalEntityKey.Size = new System.Drawing.Size(310, 29);
+            this.txtLegalEntityKey.TabIndex = 84;
+            // 
+            // lblLegalEntity
+            // 
+            this.lblLegalEntity.AutoSize = true;
+            this.lblLegalEntity.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLegalEntity.Location = new System.Drawing.Point(11, 8);
+            this.lblLegalEntity.Name = "lblLegalEntity";
+            this.lblLegalEntity.Size = new System.Drawing.Size(86, 20);
+            this.lblLegalEntity.TabIndex = 83;
+            this.lblLegalEntity.Text = "Legal Entity";
+            // 
+            // panelIndexer
+            // 
+            this.panelIndexer.Controls.Add(this.lblIndexer);
+            this.panelIndexer.Controls.Add(this.txtIndexer);
+            this.panelIndexer.Location = new System.Drawing.Point(349, 92);
+            this.panelIndexer.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelIndexer.Name = "panelIndexer";
+            this.panelIndexer.Padding = new System.Windows.Forms.Padding(8);
+            this.panelIndexer.Size = new System.Drawing.Size(167, 79);
+            this.panelIndexer.TabIndex = 116;
+            // 
+            // txtIndexer
+            // 
+            this.txtIndexer.BackColor = System.Drawing.SystemColors.Info;
+            this.txtIndexer.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtIndexer.Location = new System.Drawing.Point(11, 31);
+            this.txtIndexer.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtIndexer.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtIndexer.Name = "txtIndexer";
+            this.txtIndexer.ReadOnly = true;
+            this.txtIndexer.Size = new System.Drawing.Size(141, 29);
+            this.txtIndexer.TabIndex = 86;
+            // 
+            // lblIndexer
+            // 
+            this.lblIndexer.AutoSize = true;
+            this.lblIndexer.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIndexer.Location = new System.Drawing.Point(11, 8);
+            this.lblIndexer.Name = "lblIndexer";
+            this.lblIndexer.Size = new System.Drawing.Size(62, 20);
+            this.lblIndexer.TabIndex = 85;
+            this.lblIndexer.Text = "Indexer";
+            // 
+            // panelFilingDate
+            // 
+            this.panelFilingDate.Controls.Add(this.lblFilingDate);
+            this.panelFilingDate.Controls.Add(this.txtFilingDate);
+            this.panelFilingDate.Location = new System.Drawing.Point(176, 92);
+            this.panelFilingDate.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelFilingDate.Name = "panelFilingDate";
+            this.panelFilingDate.Padding = new System.Windows.Forms.Padding(8);
+            this.panelFilingDate.Size = new System.Drawing.Size(167, 79);
+            this.panelFilingDate.TabIndex = 117;
             // 
             // txtFilingDate
             // 
             this.txtFilingDate.BackColor = System.Drawing.SystemColors.Info;
-            this.txtFilingDate.Location = new System.Drawing.Point(343, 144);
+            this.txtFilingDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilingDate.Location = new System.Drawing.Point(11, 31);
+            this.txtFilingDate.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtFilingDate.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtFilingDate.Name = "txtFilingDate";
             this.txtFilingDate.ReadOnly = true;
-            this.txtFilingDate.Size = new System.Drawing.Size(141, 20);
+            this.txtFilingDate.Size = new System.Drawing.Size(141, 29);
             this.txtFilingDate.TabIndex = 102;
             // 
             // lblFilingDate
             // 
             this.lblFilingDate.AutoSize = true;
-            this.lblFilingDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilingDate.Location = new System.Drawing.Point(343, 125);
+            this.lblFilingDate.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFilingDate.Location = new System.Drawing.Point(11, 8);
             this.lblFilingDate.Name = "lblFilingDate";
-            this.lblFilingDate.Size = new System.Drawing.Size(71, 16);
+            this.lblFilingDate.Size = new System.Drawing.Size(80, 20);
             this.lblFilingDate.TabIndex = 101;
             this.lblFilingDate.Text = "Filing Date";
             // 
-            // button1
+            // panelPages
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(404, 481);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 23);
-            this.button1.TabIndex = 67;
-            this.button1.Text = "Add Note";
-            this.button1.UseVisualStyleBackColor = true;
+            this.panelPages.Controls.Add(this.lblTotalPages);
+            this.panelPages.Controls.Add(this.txtPagesInDocument);
+            this.panelPages.Location = new System.Drawing.Point(3, 92);
+            this.panelPages.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelPages.Name = "panelPages";
+            this.panelPages.Padding = new System.Windows.Forms.Padding(8);
+            this.panelPages.Size = new System.Drawing.Size(167, 79);
+            this.panelPages.TabIndex = 118;
             // 
-            // lblDocNotes
+            // txtPagesInDocument
             // 
-            this.lblDocNotes.AutoSize = true;
-            this.lblDocNotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocNotes.Location = new System.Drawing.Point(9, 385);
-            this.lblDocNotes.Name = "lblDocNotes";
-            this.lblDocNotes.Size = new System.Drawing.Size(132, 17);
-            this.lblDocNotes.TabIndex = 100;
-            this.lblDocNotes.Text = "Document Notes:";
+            this.txtPagesInDocument.BackColor = System.Drawing.SystemColors.Info;
+            this.txtPagesInDocument.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPagesInDocument.Location = new System.Drawing.Point(11, 31);
+            this.txtPagesInDocument.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtPagesInDocument.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtPagesInDocument.Name = "txtPagesInDocument";
+            this.txtPagesInDocument.ReadOnly = true;
+            this.txtPagesInDocument.Size = new System.Drawing.Size(141, 29);
+            this.txtPagesInDocument.TabIndex = 74;
+            this.txtPagesInDocument.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // lblBoxNumber
+            // lblTotalPages
             // 
-            this.lblBoxNumber.AutoSize = true;
-            this.lblBoxNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBoxNumber.Location = new System.Drawing.Point(343, 331);
-            this.lblBoxNumber.Name = "lblBoxNumber";
-            this.lblBoxNumber.Size = new System.Drawing.Size(30, 16);
-            this.lblBoxNumber.TabIndex = 99;
-            this.lblBoxNumber.Text = "Box";
-            // 
-            // lblSchNumber
-            // 
-            this.lblSchNumber.AutoSize = true;
-            this.lblSchNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSchNumber.Location = new System.Drawing.Point(183, 331);
-            this.lblSchNumber.Name = "lblSchNumber";
-            this.lblSchNumber.Size = new System.Drawing.Size(64, 16);
-            this.lblSchNumber.TabIndex = 98;
-            this.lblSchNumber.Text = "Schedule";
-            // 
-            // lblSeqNumber
-            // 
-            this.lblSeqNumber.AutoSize = true;
-            this.lblSeqNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSeqNumber.Location = new System.Drawing.Point(21, 331);
-            this.lblSeqNumber.Name = "lblSeqNumber";
-            this.lblSeqNumber.Size = new System.Drawing.Size(69, 16);
-            this.lblSeqNumber.TabIndex = 97;
-            this.lblSeqNumber.Text = "Sequence";
-            // 
-            // txtBoxNumber
-            // 
-            this.txtBoxNumber.BackColor = System.Drawing.SystemColors.Info;
-            this.txtBoxNumber.Location = new System.Drawing.Point(343, 350);
-            this.txtBoxNumber.Name = "txtBoxNumber";
-            this.txtBoxNumber.ReadOnly = true;
-            this.txtBoxNumber.Size = new System.Drawing.Size(141, 20);
-            this.txtBoxNumber.TabIndex = 96;
-            this.txtBoxNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtSchNumber
-            // 
-            this.txtSchNumber.BackColor = System.Drawing.SystemColors.Info;
-            this.txtSchNumber.Location = new System.Drawing.Point(182, 350);
-            this.txtSchNumber.Name = "txtSchNumber";
-            this.txtSchNumber.ReadOnly = true;
-            this.txtSchNumber.Size = new System.Drawing.Size(141, 20);
-            this.txtSchNumber.TabIndex = 95;
-            this.txtSchNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // lblAccessionNumber
-            // 
-            this.lblAccessionNumber.AutoSize = true;
-            this.lblAccessionNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAccessionNumber.Location = new System.Drawing.Point(9, 304);
-            this.lblAccessionNumber.Name = "lblAccessionNumber";
-            this.lblAccessionNumber.Size = new System.Drawing.Size(147, 17);
-            this.lblAccessionNumber.TabIndex = 94;
-            this.lblAccessionNumber.Text = "Accession Number:";
+            this.lblTotalPages.AutoSize = true;
+            this.lblTotalPages.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalPages.Location = new System.Drawing.Point(11, 8);
+            this.lblTotalPages.Name = "lblTotalPages";
+            this.lblTotalPages.Size = new System.Drawing.Size(86, 20);
+            this.lblTotalPages.TabIndex = 73;
+            this.lblTotalPages.Text = "Total Pages";
             // 
             // lblRecordClass
             // 
             this.lblRecordClass.AutoSize = true;
-            this.lblRecordClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecordClass.Location = new System.Drawing.Point(9, 219);
+            this.lblRecordClass.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblRecordClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRecordClass.Location = new System.Drawing.Point(3, 4);
             this.lblRecordClass.Name = "lblRecordClass";
-            this.lblRecordClass.Size = new System.Drawing.Size(161, 17);
+            this.lblRecordClass.Size = new System.Drawing.Size(205, 24);
             this.lblRecordClass.TabIndex = 93;
             this.lblRecordClass.Text = "Record Classification";
             // 
-            // statusStrip1
+            // panelDocType
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSplitButton1,
-            this.statusLblDisplayImage,
-            this.statusBtnPrevImage,
-            this.statusLblCurImage,
-            this.statusLblOf,
-            this.statusLblTotalImage,
-            this.statusLblNextImage,
-            this.statusBtnDeleteImage});
-            this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 576);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(514, 26);
-            this.statusStrip1.TabIndex = 92;
+            this.panelDocType.Controls.Add(this.lblDocumentType);
+            this.panelDocType.Controls.Add(this.txtDocumentType);
+            this.panelDocType.Location = new System.Drawing.Point(176, 7);
+            this.panelDocType.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelDocType.Name = "panelDocType";
+            this.panelDocType.Padding = new System.Windows.Forms.Padding(8);
+            this.panelDocType.Size = new System.Drawing.Size(341, 79);
+            this.panelDocType.TabIndex = 113;
             // 
-            // toolStripSplitButton1
+            // txtDocumentType
             // 
-            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rotateImageToolStripMenuItem,
-            this.viewDocumentAsPDFToolStripMenuItem});
-            this.toolStripSplitButton1.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButton1.Margin = new System.Windows.Forms.Padding(3, 2, 10, 0);
-            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(112, 21);
-            this.toolStripSplitButton1.Text = "Image Options";
+            this.txtDocumentType.BackColor = System.Drawing.SystemColors.Info;
+            this.txtDocumentType.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentType.Location = new System.Drawing.Point(11, 31);
+            this.txtDocumentType.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtDocumentType.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtDocumentType.Name = "txtDocumentType";
+            this.txtDocumentType.ReadOnly = true;
+            this.txtDocumentType.Size = new System.Drawing.Size(310, 29);
+            this.txtDocumentType.TabIndex = 70;
             // 
-            // rotateImageToolStripMenuItem
+            // lblDocumentType
             // 
-            this.rotateImageToolStripMenuItem.Name = "rotateImageToolStripMenuItem";
-            this.rotateImageToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.rotateImageToolStripMenuItem.Text = "Rotate Image";
+            this.lblDocumentType.AutoSize = true;
+            this.lblDocumentType.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocumentType.Location = new System.Drawing.Point(11, 8);
+            this.lblDocumentType.Name = "lblDocumentType";
+            this.lblDocumentType.Size = new System.Drawing.Size(41, 20);
+            this.lblDocumentType.TabIndex = 69;
+            this.lblDocumentType.Text = "Type";
             // 
-            // viewDocumentAsPDFToolStripMenuItem
+            // panelDocClass
             // 
-            this.viewDocumentAsPDFToolStripMenuItem.Name = "viewDocumentAsPDFToolStripMenuItem";
-            this.viewDocumentAsPDFToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.viewDocumentAsPDFToolStripMenuItem.Text = "View Document as PDF";
+            this.panelDocClass.Controls.Add(this.lblDocumentClass);
+            this.panelDocClass.Controls.Add(this.txtDocumentClass);
+            this.panelDocClass.Location = new System.Drawing.Point(3, 7);
+            this.panelDocClass.MaximumSize = new System.Drawing.Size(167, 79);
+            this.panelDocClass.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelDocClass.Name = "panelDocClass";
+            this.panelDocClass.Padding = new System.Windows.Forms.Padding(8);
+            this.panelDocClass.Size = new System.Drawing.Size(167, 79);
+            this.panelDocClass.TabIndex = 109;
             // 
-            // statusLblDisplayImage
+            // txtDocumentClass
             // 
-            this.statusLblDisplayImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusLblDisplayImage.Margin = new System.Windows.Forms.Padding(10, 3, 3, 2);
-            this.statusLblDisplayImage.Name = "statusLblDisplayImage";
-            this.statusLblDisplayImage.Size = new System.Drawing.Size(76, 17);
-            this.statusLblDisplayImage.Text = "Displaying:";
+            this.txtDocumentClass.BackColor = System.Drawing.SystemColors.Info;
+            this.txtDocumentClass.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentClass.Location = new System.Drawing.Point(11, 31);
+            this.txtDocumentClass.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtDocumentClass.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtDocumentClass.Name = "txtDocumentClass";
+            this.txtDocumentClass.ReadOnly = true;
+            this.txtDocumentClass.Size = new System.Drawing.Size(141, 29);
+            this.txtDocumentClass.TabIndex = 65;
             // 
-            // statusBtnPrevImage
+            // lblDocumentClass
             // 
-            this.statusBtnPrevImage.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusBtnPrevImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusBtnPrevImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusBtnPrevImage.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.statusBtnPrevImage.Margin = new System.Windows.Forms.Padding(3, 3, 3, 2);
-            this.statusBtnPrevImage.Name = "statusBtnPrevImage";
-            this.statusBtnPrevImage.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.statusBtnPrevImage.Size = new System.Drawing.Size(25, 21);
-            this.statusBtnPrevImage.Text = "<";
-            this.statusBtnPrevImage.Click += new System.EventHandler(this.statusBtnPrevImage_Click);
+            this.lblDocumentClass.AutoSize = true;
+            this.lblDocumentClass.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocumentClass.Location = new System.Drawing.Point(11, 8);
+            this.lblDocumentClass.Name = "lblDocumentClass";
+            this.lblDocumentClass.Size = new System.Drawing.Size(43, 20);
+            this.lblDocumentClass.TabIndex = 68;
+            this.lblDocumentClass.Text = "Class";
             // 
-            // statusLblCurImage
+            // lblAccessionNumber
             // 
-            this.statusLblCurImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLblCurImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusLblCurImage.Name = "statusLblCurImage";
-            this.statusLblCurImage.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.statusLblCurImage.Size = new System.Drawing.Size(21, 17);
-            this.statusLblCurImage.Text = "0";
+            this.lblAccessionNumber.AutoSize = true;
+            this.lblAccessionNumber.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblAccessionNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAccessionNumber.Location = new System.Drawing.Point(3, 4);
+            this.lblAccessionNumber.Name = "lblAccessionNumber";
+            this.lblAccessionNumber.Size = new System.Drawing.Size(188, 24);
+            this.lblAccessionNumber.TabIndex = 94;
+            this.lblAccessionNumber.Text = "Accession Number";
             // 
-            // statusLblOf
+            // panelBoxNumber
             // 
-            this.statusLblOf.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLblOf.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusLblOf.Name = "statusLblOf";
-            this.statusLblOf.Size = new System.Drawing.Size(19, 17);
-            this.statusLblOf.Text = "of";
+            this.panelBoxNumber.Controls.Add(this.lblBoxNumber);
+            this.panelBoxNumber.Controls.Add(this.txtBoxNumber);
+            this.panelBoxNumber.Location = new System.Drawing.Point(349, 7);
+            this.panelBoxNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelBoxNumber.Name = "panelBoxNumber";
+            this.panelBoxNumber.Padding = new System.Windows.Forms.Padding(8);
+            this.panelBoxNumber.Size = new System.Drawing.Size(168, 79);
+            this.panelBoxNumber.TabIndex = 110;
             // 
-            // statusLblTotalImage
+            // txtBoxNumber
             // 
-            this.statusLblTotalImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLblTotalImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusLblTotalImage.Name = "statusLblTotalImage";
-            this.statusLblTotalImage.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.statusLblTotalImage.Size = new System.Drawing.Size(21, 17);
-            this.statusLblTotalImage.Text = "0";
+            this.txtBoxNumber.BackColor = System.Drawing.SystemColors.Info;
+            this.txtBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBoxNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtBoxNumber.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtBoxNumber.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtBoxNumber.Name = "txtBoxNumber";
+            this.txtBoxNumber.ReadOnly = true;
+            this.txtBoxNumber.Size = new System.Drawing.Size(141, 29);
+            this.txtBoxNumber.TabIndex = 96;
+            this.txtBoxNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // statusLblNextImage
+            // lblBoxNumber
             // 
-            this.statusLblNextImage.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusLblNextImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLblNextImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusLblNextImage.Margin = new System.Windows.Forms.Padding(0, 3, 10, 2);
-            this.statusLblNextImage.Name = "statusLblNextImage";
-            this.statusLblNextImage.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.statusLblNextImage.Size = new System.Drawing.Size(25, 21);
-            this.statusLblNextImage.Text = ">";
-            this.statusLblNextImage.Click += new System.EventHandler(this.statusLblNextImage_Click);
+            this.lblBoxNumber.AutoSize = true;
+            this.lblBoxNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBoxNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblBoxNumber.Name = "lblBoxNumber";
+            this.lblBoxNumber.Size = new System.Drawing.Size(35, 20);
+            this.lblBoxNumber.TabIndex = 99;
+            this.lblBoxNumber.Text = "Box";
             // 
-            // statusBtnDeleteImage
+            // panelSchNumber
             // 
-            this.statusBtnDeleteImage.ActiveLinkColor = System.Drawing.Color.Black;
-            this.statusBtnDeleteImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.statusBtnDeleteImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.statusBtnDeleteImage.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusBtnDeleteImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusBtnDeleteImage.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statusBtnDeleteImage.ForeColor = System.Drawing.Color.White;
-            this.statusBtnDeleteImage.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
-            this.statusBtnDeleteImage.Name = "statusBtnDeleteImage";
-            this.statusBtnDeleteImage.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.statusBtnDeleteImage.Size = new System.Drawing.Size(99, 21);
-            this.statusBtnDeleteImage.Text = "Delete Image";
-            this.statusBtnDeleteImage.Click += new System.EventHandler(this.statusBtnDeleteImage_Click);
+            this.panelSchNumber.Controls.Add(this.lblSchNumber);
+            this.panelSchNumber.Controls.Add(this.txtSchNumber);
+            this.panelSchNumber.Location = new System.Drawing.Point(176, 7);
+            this.panelSchNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelSchNumber.Name = "panelSchNumber";
+            this.panelSchNumber.Padding = new System.Windows.Forms.Padding(8);
+            this.panelSchNumber.Size = new System.Drawing.Size(167, 79);
+            this.panelSchNumber.TabIndex = 109;
             // 
-            // panel1
+            // txtSchNumber
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.useDuplexCheckBox);
-            this.panel1.Controls.Add(this.useAdfCheckBox);
-            this.panel1.Controls.Add(this.showProgressIndicatorUICheckBox);
-            this.panel1.Controls.Add(this.useUICheckBox);
-            this.panel1.Controls.Add(this.ckBoxLowResolution);
-            this.panel1.Controls.Add(this.btnScanPage);
-            this.panel1.Controls.Add(this.progressBar);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(472, 75);
-            this.panel1.TabIndex = 88;
+            this.txtSchNumber.BackColor = System.Drawing.SystemColors.Info;
+            this.txtSchNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSchNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtSchNumber.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtSchNumber.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtSchNumber.Name = "txtSchNumber";
+            this.txtSchNumber.ReadOnly = true;
+            this.txtSchNumber.Size = new System.Drawing.Size(141, 29);
+            this.txtSchNumber.TabIndex = 95;
+            this.txtSchNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // btnScanPage
+            // lblSchNumber
             // 
-            this.btnScanPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnScanPage.ForeColor = System.Drawing.Color.Blue;
-            this.btnScanPage.Location = new System.Drawing.Point(291, 42);
-            this.btnScanPage.Name = "btnScanPage";
-            this.btnScanPage.Size = new System.Drawing.Size(175, 26);
-            this.btnScanPage.TabIndex = 1;
-            this.btnScanPage.Text = "Scan";
-            this.btnScanPage.UseVisualStyleBackColor = true;
-            this.btnScanPage.Click += new System.EventHandler(this.btnScanPage_Click);
+            this.lblSchNumber.AutoSize = true;
+            this.lblSchNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSchNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblSchNumber.Name = "lblSchNumber";
+            this.lblSchNumber.Size = new System.Drawing.Size(70, 20);
+            this.lblSchNumber.TabIndex = 98;
+            this.lblSchNumber.Text = "Schedule";
             // 
-            // label1
+            // panelSeqNumber
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(21, 125);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 16);
-            this.label1.TabIndex = 66;
-            this.label1.Text = "Barcode";
+            this.panelSeqNumber.Controls.Add(this.lblSeqNumber);
+            this.panelSeqNumber.Controls.Add(this.txtSeqNumber);
+            this.panelSeqNumber.Location = new System.Drawing.Point(3, 7);
+            this.panelSeqNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelSeqNumber.Name = "panelSeqNumber";
+            this.panelSeqNumber.Padding = new System.Windows.Forms.Padding(8);
+            this.panelSeqNumber.Size = new System.Drawing.Size(167, 79);
+            this.panelSeqNumber.TabIndex = 108;
             // 
-            // imageBox
+            // txtSeqNumber
             // 
-            this.imageBox.AutoScroll = true;
-            this.imageBox.AutoSize = false;
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(516, 602);
-            this.imageBox.TabIndex = 0;
+            this.txtSeqNumber.BackColor = System.Drawing.SystemColors.Info;
+            this.txtSeqNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSeqNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtSeqNumber.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtSeqNumber.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtSeqNumber.Name = "txtSeqNumber";
+            this.txtSeqNumber.ReadOnly = true;
+            this.txtSeqNumber.Size = new System.Drawing.Size(141, 29);
+            this.txtSeqNumber.TabIndex = 78;
+            this.txtSeqNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblSeqNumber
+            // 
+            this.lblSeqNumber.AutoSize = true;
+            this.lblSeqNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSeqNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblSeqNumber.Name = "lblSeqNumber";
+            this.lblSeqNumber.Size = new System.Drawing.Size(75, 20);
+            this.lblSeqNumber.TabIndex = 97;
+            this.lblSeqNumber.Text = "Sequence";
+            // 
+            // lblDocNotes
+            // 
+            this.lblDocNotes.AutoSize = true;
+            this.lblDocNotes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblDocNotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocNotes.Location = new System.Drawing.Point(3, 4);
+            this.lblDocNotes.Name = "lblDocNotes";
+            this.lblDocNotes.Size = new System.Drawing.Size(171, 24);
+            this.lblDocNotes.TabIndex = 100;
+            this.lblDocNotes.Text = "Document Notes:";
             // 
             // txtDocumentNotes
             // 
             this.txtDocumentNotes.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtDocumentNotes.Location = new System.Drawing.Point(21, 405);
+            this.txtDocumentNotes.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txtDocumentNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentNotes.Location = new System.Drawing.Point(3, 31);
+            this.txtDocumentNotes.MaximumSize = new System.Drawing.Size(514, 142);
+            this.txtDocumentNotes.MinimumSize = new System.Drawing.Size(167, 79);
             this.txtDocumentNotes.Multiline = true;
             this.txtDocumentNotes.Name = "txtDocumentNotes";
             this.txtDocumentNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDocumentNotes.Size = new System.Drawing.Size(463, 70);
+            this.txtDocumentNotes.Size = new System.Drawing.Size(500, 104);
             this.txtDocumentNotes.TabIndex = 104;
+            // 
+            // panelImageControl
+            // 
+            this.panelImageControl.ColumnCount = 6;
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.16801F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.04161F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.16801F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.33134F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.04161F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.24941F));
+            this.panelImageControl.Controls.Add(this.tableLayoutPanel2, 5, 0);
+            this.panelImageControl.Controls.Add(this.btnDeleteImage, 0, 0);
+            this.panelImageControl.Controls.Add(this.btnRotateImg, 2, 0);
+            this.panelImageControl.Controls.Add(this.btnImagePDF, 3, 0);
+            this.panelImageControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelImageControl.Location = new System.Drawing.Point(1, 858);
+            this.panelImageControl.Margin = new System.Windows.Forms.Padding(1);
+            this.panelImageControl.MinimumSize = new System.Drawing.Size(708, 43);
+            this.panelImageControl.Name = "panelImageControl";
+            this.panelImageControl.RowCount = 1;
+            this.panelImageControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.panelImageControl.Size = new System.Drawing.Size(1176, 43);
+            this.panelImageControl.TabIndex = 93;
+            // 
+            // lblDisplayImgOf
+            // 
+            this.lblDisplayImgOf.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblDisplayImgOf.AutoSize = true;
+            this.lblDisplayImgOf.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDisplayImgOf.Location = new System.Drawing.Point(269, 10);
+            this.lblDisplayImgOf.Name = "lblDisplayImgOf";
+            this.lblDisplayImgOf.Size = new System.Drawing.Size(26, 22);
+            this.lblDisplayImgOf.TabIndex = 95;
+            this.lblDisplayImgOf.Text = "of";
+            this.lblDisplayImgOf.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTotalImage
+            // 
+            this.lblTotalImage.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblTotalImage.AutoSize = true;
+            this.lblTotalImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalImage.Location = new System.Drawing.Point(314, 11);
+            this.lblTotalImage.Name = "lblTotalImage";
+            this.lblTotalImage.Size = new System.Drawing.Size(18, 20);
+            this.lblTotalImage.TabIndex = 96;
+            this.lblTotalImage.Text = "0";
+            this.lblTotalImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnDeleteImage
+            // 
+            this.btnDeleteImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.btnDeleteImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDeleteImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
+            this.btnDeleteImage.Location = new System.Drawing.Point(27, 3);
+            this.btnDeleteImage.Name = "btnDeleteImage";
+            this.btnDeleteImage.Size = new System.Drawing.Size(136, 37);
+            this.btnDeleteImage.TabIndex = 4;
+            this.btnDeleteImage.Text = "Delete Image";
+            this.btnDeleteImage.UseVisualStyleBackColor = true;
+            // 
+            // lblDisplay
+            // 
+            this.lblDisplay.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblDisplay.AutoSize = true;
+            this.lblDisplay.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDisplay.Location = new System.Drawing.Point(47, 10);
+            this.lblDisplay.Name = "lblDisplay";
+            this.lblDisplay.Size = new System.Drawing.Size(100, 22);
+            this.lblDisplay.TabIndex = 7;
+            this.lblDisplay.Text = "Displaying:";
+            this.lblDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnlNextImage
+            // 
+            this.btnlNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnlNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnlNextImage.ForeColor = System.Drawing.Color.Black;
+            this.btnlNextImage.Location = new System.Drawing.Point(229, 3);
+            this.btnlNextImage.Name = "btnlNextImage";
+            this.btnlNextImage.Size = new System.Drawing.Size(31, 37);
+            this.btnlNextImage.TabIndex = 97;
+            this.btnlNextImage.Text = ">";
+            this.btnlNextImage.UseVisualStyleBackColor = true;
+            // 
+            // btnRotateImg
+            // 
+            this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
+            this.btnRotateImg.Location = new System.Drawing.Point(346, 3);
+            this.btnRotateImg.Name = "btnRotateImg";
+            this.btnRotateImg.Size = new System.Drawing.Size(136, 37);
+            this.btnRotateImg.TabIndex = 5;
+            this.btnRotateImg.Text = "Rotate Image";
+            this.btnRotateImg.UseVisualStyleBackColor = true;
+            // 
+            // btnImagePDF
+            // 
+            this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
+            this.btnImagePDF.Location = new System.Drawing.Point(537, 3);
+            this.btnImagePDF.Name = "btnImagePDF";
+            this.btnImagePDF.Size = new System.Drawing.Size(136, 37);
+            this.btnImagePDF.TabIndex = 6;
+            this.btnImagePDF.Text = "View as PDF";
+            this.btnImagePDF.UseVisualStyleBackColor = true;
+            // 
+            // btnPrevImage
+            // 
+            this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
+            this.btnPrevImage.Location = new System.Drawing.Point(153, 3);
+            this.btnPrevImage.Name = "btnPrevImage";
+            this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
+            this.btnPrevImage.TabIndex = 7;
+            this.btnPrevImage.Text = "<";
+            this.btnPrevImage.UseVisualStyleBackColor = true;
+            // 
+            // lblCurImage
+            // 
+            this.lblCurImage.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblCurImage.AutoSize = true;
+            this.lblCurImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurImage.Location = new System.Drawing.Point(198, 11);
+            this.lblCurImage.Name = "lblCurImage";
+            this.lblCurImage.Size = new System.Drawing.Size(18, 20);
+            this.lblCurImage.TabIndex = 96;
+            this.lblCurImage.Text = "0";
+            this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.panelImageControl, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 902);
+            this.tableLayoutPanel1.TabIndex = 94;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 43.7266F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.47003F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.93165F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.93165F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.47003F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.47003F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Controls.Add(this.lblCurImage, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblDisplay, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnlNextImage, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblTotalImage, 5, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnPrevImage, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblDisplayImgOf, 4, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(831, 1);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(1);
+            this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(300, 43);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(344, 43);
+            this.tableLayoutPanel2.TabIndex = 94;
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.panelBarcode);
+            this.flowLayoutPanel2.Controls.Add(this.panelLegalEntity);
+            this.flowLayoutPanel2.Controls.Add(this.panelPages);
+            this.flowLayoutPanel2.Controls.Add(this.panelFilingDate);
+            this.flowLayoutPanel2.Controls.Add(this.panelIndexer);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.flowLayoutPanel2.MaximumSize = new System.Drawing.Size(520, 431);
+            this.flowLayoutPanel2.MinimumSize = new System.Drawing.Size(190, 179);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(520, 180);
+            this.flowLayoutPanel2.TabIndex = 60;
+            // 
+            // flowLayoutScanOptions
+            // 
+            this.flowLayoutScanOptions.Controls.Add(this.panelScanningOptions);
+            this.flowLayoutScanOptions.Controls.Add(this.btnScanPage);
+            this.flowLayoutScanOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutScanOptions.Location = new System.Drawing.Point(7, 7);
+            this.flowLayoutScanOptions.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutScanOptions.MaximumSize = new System.Drawing.Size(520, 162);
+            this.flowLayoutScanOptions.MinimumSize = new System.Drawing.Size(190, 106);
+            this.flowLayoutScanOptions.Name = "flowLayoutScanOptions";
+            this.flowLayoutScanOptions.Padding = new System.Windows.Forms.Padding(4, 4, 4, 0);
+            this.flowLayoutScanOptions.Size = new System.Drawing.Size(506, 120);
+            this.flowLayoutScanOptions.TabIndex = 120;
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.Controls.Add(this.panelDocClass);
+            this.flowLayoutPanel4.Controls.Add(this.panelDocType);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.flowLayoutPanel4.MaximumSize = new System.Drawing.Size(520, 178);
+            this.flowLayoutPanel4.MinimumSize = new System.Drawing.Size(167, 93);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(520, 93);
+            this.flowLayoutPanel4.TabIndex = 121;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.Controls.Add(this.panelSeqNumber);
+            this.flowLayoutPanel5.Controls.Add(this.panelSchNumber);
+            this.flowLayoutPanel5.Controls.Add(this.panelBoxNumber);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.flowLayoutPanel5.MaximumSize = new System.Drawing.Size(520, 178);
+            this.flowLayoutPanel5.MinimumSize = new System.Drawing.Size(167, 93);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(520, 93);
+            this.flowLayoutPanel5.TabIndex = 122;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.Green;
+            this.btnSave.Location = new System.Drawing.Point(322, 5);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(136, 40);
+            this.btnSave.TabIndex = 3;
+            this.btnSave.Text = "Save Scan";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnCancelScan
+            // 
+            this.btnCancelScan.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCancelScan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
+            this.btnCancelScan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancelScan.ForeColor = System.Drawing.Color.White;
+            this.btnCancelScan.Location = new System.Drawing.Point(62, 5);
+            this.btnCancelScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnCancelScan.Name = "btnCancelScan";
+            this.btnCancelScan.Size = new System.Drawing.Size(136, 40);
+            this.btnCancelScan.TabIndex = 4;
+            this.btnCancelScan.Text = "Reject Scan";
+            this.btnCancelScan.UseVisualStyleBackColor = false;
+            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
+            // 
+            // flowLayoutPanel6
+            // 
+            this.flowLayoutPanel6.Controls.Add(this.panelRejectSaveScan);
+            this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 805);
+            this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel6.MaximumSize = new System.Drawing.Size(520, 178);
+            this.flowLayoutPanel6.MinimumSize = new System.Drawing.Size(167, 50);
+            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(514, 50);
+            this.flowLayoutPanel6.TabIndex = 123;
+            // 
+            // flowPanelDocumentRecoed
+            // 
+            this.flowPanelDocumentRecoed.Controls.Add(this.lblDocRecord);
+            this.flowPanelDocumentRecoed.Controls.Add(this.flowLayoutPanel2);
+            this.flowPanelDocumentRecoed.Location = new System.Drawing.Point(6, 137);
+            this.flowPanelDocumentRecoed.MaximumSize = new System.Drawing.Size(520, 483);
+            this.flowPanelDocumentRecoed.MinimumSize = new System.Drawing.Size(167, 118);
+            this.flowPanelDocumentRecoed.Name = "flowPanelDocumentRecoed";
+            this.flowPanelDocumentRecoed.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.flowPanelDocumentRecoed.Size = new System.Drawing.Size(508, 221);
+            this.flowPanelDocumentRecoed.TabIndex = 60;
+            // 
+            // flowPanelRecordClassification
+            // 
+            this.flowPanelRecordClassification.Controls.Add(this.lblRecordClass);
+            this.flowPanelRecordClassification.Controls.Add(this.flowLayoutPanel4);
+            this.flowPanelRecordClassification.Location = new System.Drawing.Point(6, 367);
+            this.flowPanelRecordClassification.MaximumSize = new System.Drawing.Size(520, 483);
+            this.flowPanelRecordClassification.MinimumSize = new System.Drawing.Size(167, 132);
+            this.flowPanelRecordClassification.Name = "flowPanelRecordClassification";
+            this.flowPanelRecordClassification.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.flowPanelRecordClassification.Size = new System.Drawing.Size(508, 132);
+            this.flowPanelRecordClassification.TabIndex = 104;
+            // 
+            // flowPanelAccession
+            // 
+            this.flowPanelAccession.Controls.Add(this.lblAccessionNumber);
+            this.flowPanelAccession.Controls.Add(this.flowLayoutPanel5);
+            this.flowPanelAccession.Location = new System.Drawing.Point(6, 508);
+            this.flowPanelAccession.MaximumSize = new System.Drawing.Size(520, 483);
+            this.flowPanelAccession.MinimumSize = new System.Drawing.Size(167, 132);
+            this.flowPanelAccession.Name = "flowPanelAccession";
+            this.flowPanelAccession.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.flowPanelAccession.Size = new System.Drawing.Size(508, 132);
+            this.flowPanelAccession.TabIndex = 105;
+            // 
+            // flowPanelDocumentNotes
+            // 
+            this.flowPanelDocumentNotes.Controls.Add(this.lblDocNotes);
+            this.flowPanelDocumentNotes.Controls.Add(this.txtDocumentNotes);
+            this.flowPanelDocumentNotes.Location = new System.Drawing.Point(6, 649);
+            this.flowPanelDocumentNotes.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.flowPanelDocumentNotes.MaximumSize = new System.Drawing.Size(520, 483);
+            this.flowPanelDocumentNotes.MinimumSize = new System.Drawing.Size(167, 108);
+            this.flowPanelDocumentNotes.Name = "flowPanelDocumentNotes";
+            this.flowPanelDocumentNotes.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.flowPanelDocumentNotes.Size = new System.Drawing.Size(511, 150);
+            this.flowPanelDocumentNotes.TabIndex = 104;
+            // 
+            // panelRejectSaveScan
+            // 
+            this.panelRejectSaveScan.ColumnCount = 2;
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelRejectSaveScan.Controls.Add(this.btnSave, 1, 0);
+            this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 0, 0);
+            this.panelRejectSaveScan.Location = new System.Drawing.Point(3, 0);
+            this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.panelRejectSaveScan.Name = "panelRejectSaveScan";
+            this.panelRejectSaveScan.RowCount = 1;
+            this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.panelRejectSaveScan.Size = new System.Drawing.Size(520, 50);
+            this.panelRejectSaveScan.TabIndex = 60;
             // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 602);
+            this.ClientSize = new System.Drawing.Size(1178, 902);
             this.ControlBox = false;
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(1194, 941);
             this.Name = "frmScannerDocument";
             this.Text = "Document Scanner";
             this.Activated += new System.EventHandler(this.frmScanDocument_Activated);
@@ -653,64 +1041,123 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.imageBox.ResumeLayout(false);
+            this.tablePanelMainForm.ResumeLayout(false);
+            this.panelScanningOptions.ResumeLayout(false);
+            this.panelScanningOptions.PerformLayout();
+            this.panelBarcode.ResumeLayout(false);
+            this.panelBarcode.PerformLayout();
+            this.panelLegalEntity.ResumeLayout(false);
+            this.panelLegalEntity.PerformLayout();
+            this.panelIndexer.ResumeLayout(false);
+            this.panelIndexer.PerformLayout();
+            this.panelFilingDate.ResumeLayout(false);
+            this.panelFilingDate.PerformLayout();
+            this.panelPages.ResumeLayout(false);
+            this.panelPages.PerformLayout();
+            this.panelDocType.ResumeLayout(false);
+            this.panelDocType.PerformLayout();
+            this.panelDocClass.ResumeLayout(false);
+            this.panelDocClass.PerformLayout();
+            this.panelBoxNumber.ResumeLayout(false);
+            this.panelBoxNumber.PerformLayout();
+            this.panelSchNumber.ResumeLayout(false);
+            this.panelSchNumber.PerformLayout();
+            this.panelSeqNumber.ResumeLayout(false);
+            this.panelSeqNumber.PerformLayout();
+            this.panelImageControl.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutScanOptions.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel6.ResumeLayout(false);
+            this.flowPanelDocumentRecoed.ResumeLayout(false);
+            this.flowPanelDocumentRecoed.PerformLayout();
+            this.flowPanelRecordClassification.ResumeLayout(false);
+            this.flowPanelRecordClassification.PerformLayout();
+            this.flowPanelAccession.ResumeLayout(false);
+            this.flowPanelAccession.PerformLayout();
+            this.flowPanelDocumentNotes.ResumeLayout(false);
+            this.flowPanelDocumentNotes.PerformLayout();
+            this.panelRejectSaveScan.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.CheckBox useDuplexCheckBox;
-        private System.Windows.Forms.CheckBox useAdfCheckBox;
-        private System.Windows.Forms.TextBox txtIndexer;
-        private System.Windows.Forms.Label lblIndexer;
-        private System.Windows.Forms.TextBox txtLegalEntityKey;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TableLayoutPanel tablePanelMainForm;
+        private System.Windows.Forms.TextBox txtDocumentNotes;
+        private System.Windows.Forms.Label lblDocNotes;
+        private System.Windows.Forms.FlowLayoutPanel panelSeqNumber;
+        private System.Windows.Forms.Label lblSeqNumber;
         private System.Windows.Forms.TextBox txtSeqNumber;
-        private System.Windows.Forms.TextBox txtPagesInDocument;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtDocumentType;
-        private System.Windows.Forms.Label lblDocumentType;
-        private System.Windows.Forms.TextBox txtDocumentClass;
+        private System.Windows.Forms.FlowLayoutPanel panelSchNumber;
+        private System.Windows.Forms.Label lblSchNumber;
+        private System.Windows.Forms.TextBox txtSchNumber;
+        private System.Windows.Forms.FlowLayoutPanel panelBoxNumber;
+        private System.Windows.Forms.Label lblBoxNumber;
+        private System.Windows.Forms.TextBox txtBoxNumber;
+        private System.Windows.Forms.Label lblAccessionNumber;
+        private System.Windows.Forms.FlowLayoutPanel panelDocClass;
         private System.Windows.Forms.Label lblDocumentClass;
+        private System.Windows.Forms.TextBox txtDocumentClass;
+        private System.Windows.Forms.FlowLayoutPanel panelDocType;
+        private System.Windows.Forms.Label lblDocumentType;
+        private System.Windows.Forms.TextBox txtDocumentType;
+        private System.Windows.Forms.Label lblRecordClass;
+        private System.Windows.Forms.FlowLayoutPanel panelPages;
+        private System.Windows.Forms.Label lblTotalPages;
+        private System.Windows.Forms.TextBox txtPagesInDocument;
+        private System.Windows.Forms.FlowLayoutPanel panelFilingDate;
+        private System.Windows.Forms.Label lblFilingDate;
+        private System.Windows.Forms.TextBox txtFilingDate;
+        private System.Windows.Forms.FlowLayoutPanel panelIndexer;
+        private System.Windows.Forms.Label lblIndexer;
+        private System.Windows.Forms.TextBox txtIndexer;
+        private System.Windows.Forms.FlowLayoutPanel panelLegalEntity;
+        private System.Windows.Forms.Label lblLegalEntity;
+        private System.Windows.Forms.TextBox txtLegalEntityKey;
+        private System.Windows.Forms.FlowLayoutPanel panelBarcode;
+        private System.Windows.Forms.Label lblBarcode;
         private System.Windows.Forms.TextBox txtBarCode;
-        private System.Windows.Forms.CheckBox showProgressIndicatorUICheckBox;
-        private ImageBox imageBox;
+        private System.Windows.Forms.Label lblDocRecord;
+        private System.Windows.Forms.Button btnScanPage;
+        private System.Windows.Forms.FlowLayoutPanel panelScanningOptions;
         private System.Windows.Forms.CheckBox useUICheckBox;
         private System.Windows.Forms.CheckBox ckBoxLowResolution;
+        private System.Windows.Forms.CheckBox showProgressIndicatorUICheckBox;
+        private System.Windows.Forms.CheckBox useAdfCheckBox;
+        private System.Windows.Forms.CheckBox useDuplexCheckBox;
+        private ImageBox imageBox;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.TableLayoutPanel panelImageControl;
+        private System.Windows.Forms.Label lblCurImage;
+        private System.Windows.Forms.Button btnPrevImage;
+        private System.Windows.Forms.Button btnImagePDF;
+        private System.Windows.Forms.Button btnRotateImg;
+        private System.Windows.Forms.Button btnlNextImage;
+        private System.Windows.Forms.Label lblDisplay;
+        private System.Windows.Forms.Button btnDeleteImage;
+        private System.Windows.Forms.Label lblTotalImage;
+        private System.Windows.Forms.Label lblDisplayImgOf;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutScanOptions;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
         private System.Windows.Forms.Button btnCancelScan;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnScanPage;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.Label lblRecordClass;
-        private System.Windows.Forms.Label lblAccessionNumber;
-        private System.Windows.Forms.TextBox txtBoxNumber;
-        private System.Windows.Forms.TextBox txtSchNumber;
-        private System.Windows.Forms.Label lblSchNumber;
-        private System.Windows.Forms.Label lblSeqNumber;
-        private System.Windows.Forms.Label lblBoxNumber;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label lblDocNotes;
-        private System.Windows.Forms.Label lblDocRecord;
-        private System.Windows.Forms.TextBox txtFilingDate;
-        private System.Windows.Forms.Label lblFilingDate;
-        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
-        private System.Windows.Forms.ToolStripMenuItem viewDocumentAsPDFToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rotateImageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel statusLblDisplayImage;
-        private System.Windows.Forms.ToolStripStatusLabel statusBtnPrevImage;
-        private System.Windows.Forms.ToolStripStatusLabel statusLblCurImage;
-        private System.Windows.Forms.ToolStripStatusLabel statusLblOf;
-        private System.Windows.Forms.ToolStripStatusLabel statusLblTotalImage;
-        private System.Windows.Forms.ToolStripStatusLabel statusLblNextImage;
-        private System.Windows.Forms.ToolStripStatusLabel statusBtnDeleteImage;
-        private System.Windows.Forms.TextBox txtDocumentNotes;
+        private System.Windows.Forms.FlowLayoutPanel flowPanelDocumentRecoed;
+        private System.Windows.Forms.FlowLayoutPanel flowPanelAccession;
+        private System.Windows.Forms.FlowLayoutPanel flowPanelRecordClassification;
+        private System.Windows.Forms.FlowLayoutPanel flowPanelDocumentNotes;
+        private System.Windows.Forms.TableLayoutPanel panelRejectSaveScan;
     }
 }

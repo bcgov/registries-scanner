@@ -376,21 +376,21 @@ namespace RegScan
             }
 
             //Update current and total page labels in the status label
-            statusLblCurImage.Text = (_currentImageIndex + 1).ToString();
-            statusLblTotalImage.Text = _scannedImageList.Count.ToString();
+            lblCurImage.Text = (_currentImageIndex + 1).ToString();
+            lblTotalImage.Text = _scannedImageList.Count.ToString();
 
             // Don't allow the first page to be deleted
             if (_currentImageIndex != 0)
             {
-                statusBtnDeleteImage.BackColor = UI.Theme.DangerBackground;
-                statusBtnDeleteImage.ForeColor = UI.Theme.TextInverse;
-                statusBtnDeleteImage.Enabled = true;
+                btnDeleteImage.BackColor = UI.Theme.DangerBackground;
+                btnDeleteImage.ForeColor = UI.Theme.TextInverse;
+                btnDeleteImage.Enabled = true;
             }
             else
             {
-                statusBtnDeleteImage.BackColor = UI.Theme.Disabled;
-                statusBtnDeleteImage.ForeColor = UI.Theme.TextDisabled;
-                statusBtnDeleteImage.Enabled = false;
+                btnDeleteImage.BackColor = UI.Theme.Disabled;
+                btnDeleteImage.ForeColor = UI.Theme.TextDisabled;
+                btnDeleteImage.Enabled = false;
             }
         }
 
@@ -939,11 +939,12 @@ namespace RegScan
             progressBar.Visible = false;
 
             // Show scanning options when processing scan is complete
-            useUICheckBox.Visible = true;
-            useAdfCheckBox.Visible = true;
-            useDuplexCheckBox.Visible = true;
-            useUICheckBox.Visible = true;
-            showProgressIndicatorUICheckBox.Visible = true;
+            useUICheckBox.Enabled = true;
+            useAdfCheckBox.Enabled = true;
+            useDuplexCheckBox.Enabled = true;
+            useUICheckBox.Enabled = true;
+            ckBoxLowResolution.Enabled = true;
+            showProgressIndicatorUICheckBox.Enabled = true;
 
             // Allow the user to interact with the form
             Enabled = true;
@@ -958,14 +959,15 @@ namespace RegScan
             Enabled = false;
 
             // Hide scanning options when processing scan
-            useUICheckBox.Visible = false;
-            useAdfCheckBox.Visible = false;
-            useDuplexCheckBox.Visible = false;
-            useUICheckBox.Visible = false;
-            showProgressIndicatorUICheckBox.Visible = false;
+            useUICheckBox.Enabled = false;
+            useAdfCheckBox.Enabled = false;
+            useDuplexCheckBox.Enabled = false;
+            useUICheckBox.Enabled = false;
+            ckBoxLowResolution.Enabled = false;
+            showProgressIndicatorUICheckBox.Enabled = false;
 
             // show the progress bar
-            progressBar.Visible = true;
+            progressBar.Enabled = true;
             progressBar.Value = 0;
         }
 
