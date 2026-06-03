@@ -1,4 +1,5 @@
-﻿using PdfSharp.Drawing;
+﻿using ApiScanner;
+using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -307,7 +308,7 @@ namespace RegScan
                 ProcessFirstPage();
             } 
             // Here we are adding an additional page to the document. We just need to adjust the index
-            else {  _currentImageIndex++; }
+            else {  _currentImageIndex = _scanSessionFileList.Count - 1; }
 
             SetImageNav();
             
@@ -335,7 +336,7 @@ namespace RegScan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnNextImage_Click(object sender, EventArgs e)
+        private void btnlNextImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex + 2 > _scannedImageList.Count)
                 return;
@@ -348,7 +349,7 @@ namespace RegScan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnPreviousImage_Click(object sender, EventArgs e)
+        private void btnPrevImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex - 1 < 0)
                 return;
@@ -396,7 +397,7 @@ namespace RegScan
 
         #endregion
         #region click events.
-        private void btnRotate_Click(object sender, EventArgs e)
+        private void btnRotateImg_Click(object sender, EventArgs e)
         {
             // Rotate current image and 
             _scannedImageList[_currentImageIndex].Rotate();
@@ -408,7 +409,7 @@ namespace RegScan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnViewAsPDF_Click(object sender, EventArgs e)
+        private void btnImagePDF_Click(object sender, EventArgs e)
         {
             // Nothing to view if no document
             if (_currentDocument == null)
@@ -442,7 +443,7 @@ namespace RegScan
             }
 
             _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
-            progressBar.Visible = false;
+            hideProgressBar();
 
         }
 
@@ -519,6 +520,7 @@ namespace RegScan
         /// <param name="e"> Events from user </param>
         private void btnSave_Click(object sender, EventArgs e)
         {
+            PdfDocument pdf = null;
 
             // Validation
             if (_currentDocument == null)
@@ -533,11 +535,7 @@ namespace RegScan
                     return;
             }
 
-            // Create a PDF document.
-            var pdf = new PdfDocument();
-
-            // Percentage updated based on number of images to process
-            int updateCount = (int)100 / _scannedImageList.Count;
+            // Show progress bar and disable form elements 
             showProgressBar();
 
             // This is discouraged in Microsoft Docs.
@@ -546,40 +544,57 @@ namespace RegScan
             UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
                 " _scannedImageList Objects");
 
-            // FOREACH image convert to a PDF page and add to the PDF document
-            foreach (var bp in _scannedImageList)
+
+            try
             {
-                try
-                {
-                    imageToPDF(pdf, bp);
-                }
-                catch (Exception ex)
-                {
-                    string img_num = _scannedImageList.IndexOf(bp).ToString() +
-                                     " of " + _scannedImageList.Count();
-                    UtilityObj.WriteLog(UtilityObj.error, "Unable to process image " + img_num +
-                        " to PDF page.\n" + ex.ToString());
-                }
-                
-                // Update progress bar
-                progressBar.Value += updateCount;
-                // This is discouraged in Microsoft Docs.
-                Application.DoEvents();
+                pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
             }
+            catch (Exception ex)
+            {
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to process images to PDF.\n" +
+                    ex.ToString());
+            }
+            // TODO - This is discouraged in Microsoft Docs.
+            Application.DoEvents();
+
 
             // Update the document.
             _currentDocument.PDFDocument = pdf;
-            _currentDocument.Description = txtDocumentClass.Text;
-            _currentDocument.PageCount = _scannedImageList.Count;
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
-            _currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
+
+            // Get the form fields we want to update
+            _currentDocument.Description = txtDocumentClass.Text;
+            try
+            {
+                // If any of the fields are missing values
+                if (string.IsNullOrEmpty(txtSeqNumber.Text) || 
+                    string.IsNullOrEmpty(txtSchNumber.Text) || 
+                    string.IsNullOrEmpty(txtBoxNumber.Text))
+                    throw new FormatException();
+                // or if there is an error trying to parse them as ints
+                var seqNumber = Int32.Parse(txtSeqNumber.Text);
+                var schNumber = Int32.Parse(txtSchNumber.Text);
+                var boxNumber = Int32.Parse(txtBoxNumber.Text);
+
+                _currentDocument.SequenceNumber = seqNumber;
+                _currentDocument.ScheduleNumber = schNumber;
+                _currentDocument.BoxNumber = boxNumber;
+            }
+            // Catch the formatting error
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
+                UtilityObj.WriteLog(UtilityObj.error, "Couldnt process form fields to int.\n" + ex.ToString());
+                return;
+            }
+            //_currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
+
             _currentDocument.UpdateInsert();
 
             // Reset the document and display.
             ResetDocument();
             hideProgressBar();
-
         }
 
         /// <summary>
@@ -609,16 +624,6 @@ namespace RegScan
                 useDuplexCheckBox.Enabled = false;
                 useDuplexCheckBox.Checked = false;
             }
-        }
-
-        /// <summary>
-        /// Create a new box number.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnNewBox_Click(object sender, EventArgs e)
-        {
-            CreateNewBoxNumber();
         }
 
         /// <summary>
@@ -659,6 +664,10 @@ namespace RegScan
             txtDocumentType.Text = "";
             txtPagesInDocument.Text = "";
             txtSeqNumber.Text = "";
+            txtFilingDate.Text = "";
+            txtSchNumber.Text = "";
+            txtBoxNumber.Text = "";
+            txtDocumentNotes.Text = "";
             imageBox.Image = null;
 
             // Delete any temporary FileNames.
@@ -668,65 +677,21 @@ namespace RegScan
                     File.Delete(fileName);
                 _tempFileNameList.Clear();
             }
-            catch { }
+            catch ( Exception e )
+            {
+                UtilityObj.WriteLog(UtilityObj.warn, 
+                    "Unable to delete all images in file list. Next scanning session may not run as" +
+                    " expected:\n" + e.ToString());
+                MessageBox.Show("Warning: The previous session did not clear as expected. There may" +
+                    " be carry-over images that persist. Please try 'Reject Scan' process again or" +
+                    " restarting this application.", "Scan Session Failed to Clear");
+            }
+
+            // reset img numbers
+            lblCurImage.Text = "0";
+            lblTotalImage.Text = _tempFileNameList.Count().ToString();
 
             imageBox.Image = null;
-        }
-
-        /// <summary>
-        /// Create a new box number.
-        /// </summary>
-        private void CreateNewBoxNumber()
-        {
-            // Don't proceed if no current document.
-            if (_currentDocument == null)
-                return;
-
-            // Create a copy of our box.
-            var box = new BoxObj();
-            BoxObj.CopyBox(_currentDocument.Box, box);
-
-            // Make use of our existing form to create the new box.
-            var frm = new frmBox();
-            var status = frm.SetBoxNumber(box);
-            if (status != "")
-            {
-                MessageBox.Show(status);
-                frm.Dispose();
-            }
-            else
-            {
-                // Display the form.
-                frm.ShowDialog();
-
-                // IF a new box was created.
-                if (!CompareBoxes(box, _currentDocument.Box))
-                {
-                    // Reset everything on this end.
-                    _currentDocument.Box = box;
-                    _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
-                    _currentBatchId.BatchId = 1;
-                    _currentDocument.BatchId = _currentBatchId.BatchId;
-                    txtSeqNumber.Text = box.AccessionNumber;
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Compare two boxes to see if they are the same
-        /// </summary>
-        /// <param name="_Box1"></param>
-        /// <param name="_Box2"></param>
-        /// <returns>False if they are not the same.</returns>
-        private bool CompareBoxes(BoxObj _Box1, BoxObj _Box2)
-        {
-            bool result = false;
-
-            if (_Box1.SequenceNumber == _Box2.SequenceNumber && _Box1.ScheduleNumber == _Box2.ScheduleNumber && _Box1.BoxNumber == _Box2.BoxNumber)
-                result = true;
-
-            return result;
         }
 
         /// <summary>
@@ -935,9 +900,6 @@ namespace RegScan
         /// </summary>
         private void hideProgressBar()
         {
-            // hide the progress bar
-            progressBar.Visible = false;
-
             // Show scanning options when processing scan is complete
             useUICheckBox.Enabled = true;
             useAdfCheckBox.Enabled = true;
@@ -945,6 +907,10 @@ namespace RegScan
             useUICheckBox.Enabled = true;
             ckBoxLowResolution.Enabled = true;
             showProgressIndicatorUICheckBox.Enabled = true;
+
+            // hide the progress bar
+            progressBar.Visible = false;
+            progressBar.Enabled = false;
 
             // Allow the user to interact with the form
             Enabled = true;
@@ -1118,7 +1084,7 @@ namespace RegScan
             UpdateImageDisplay();
         }
 
-        private void statusBtnDeleteImage_Click(object sender, EventArgs e)
+        private void btnDeleteImage_Click(object sender, EventArgs e)
         {
             // Confirm this image is to be deleted.
             if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
@@ -1128,7 +1094,7 @@ namespace RegScan
                 UpdateImageDisplay();
             }
         }
-        #endregion
 
+        #endregion
     }
 }

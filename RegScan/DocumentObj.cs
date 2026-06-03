@@ -77,11 +77,11 @@ namespace RegScan
         public string BoxNumberString {
             get { return _boxNumber.ToString().PadLeft(4, '0'); } }
         public int SequenceNumber {
-            get { return _sequenceNumber; } }
+            get { return _sequenceNumber; } set { _sequenceNumber = value; } }
         public int ScheduleNumber {
-            get { return _scheduleNumber; } }
+            get { return _scheduleNumber; } set { _scheduleNumber = value; } }
         public int BoxNumber {
-            get { return _boxNumber; } }
+            get { return _boxNumber; } set { _boxNumber = value; } }
         public string AccessionNumberString { 
             get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
                                        _scheduleNumber.ToString().PadLeft(4, '0'), 
@@ -210,32 +210,6 @@ namespace RegScan
             File.Delete(fileName);
         }
 
-
-        /// <summary>
-        /// NOTE - Truthfully I am not sure what the intent is here. This method is only called if
-        /// there is a preexisting version of this document and the user indicates they would like
-        /// to create a new version of the document. This would not suggest that neither the 
-        /// document class should be changed nor a new box should be created. 
-        /// </summary>
-        public void SetToNew()
-        {
-            // _documentId = "" indicates a database insert, instead of an update.
-            _replaceRecordFlag = true;
-
-            //if (_documentClass == "SOCIETY")
-            //{
-            //    _ownerTypeCode = "SOC";
-            //}
-            //else
-            //{
-            //    _ownerTypeCode = _documentClass;
-            //}
-            
-            //// Get the latest open box ... if one is not found, then one will be created.            
-            //_boxObj = BoxObj.Find(_ownerTypeCode);
-            //_accessionNumber = GetAccessionNumber(_boxObj);
-            //_batchId = 0;                           // Batch Id is reset to zero.
-        }
         #endregion
 
         #region Static Find, Select and utility methods
@@ -310,15 +284,18 @@ namespace RegScan
             // get the current time
             DateTime currentTime = DateTime.Now;
 
+            // get info from form 
+            
+
             // Build the scanning information model
             DocumentModel.ScanningInformation scanInfo = new DocumentModel.ScanningInformation();
             scanInfo.consumerDocumentId = _barCode.ToString();
-            scanInfo.scanDateTime = currentTime.ToString();
+            scanInfo.scanDateTime = _scannedDate.ToString();
             scanInfo.documentClass = _documentClass;
             scanInfo.accessionNumber = AccessionNumberString;
             scanInfo.batchId = null;
             scanInfo.pageCount = _pageCount;
-            scanInfo.author = _author;
+            scanInfo.author = _scannerId;
 
             // Build the UpdateDocument model
             model.consumerDocumentId = _barCode.ToString();
