@@ -88,17 +88,17 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblCurImage = new System.Windows.Forms.Label();
-            this.lblDisplay = new System.Windows.Forms.Label();
-            this.btnlNextImage = new System.Windows.Forms.Button();
-            this.lblTotalImage = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnPrevImage = new System.Windows.Forms.Button();
+            this.lblCurImage = new System.Windows.Forms.Label();
+            this.btnlNextImage = new System.Windows.Forms.Button();
+            this.lblDisplay = new System.Windows.Forms.Label();
+            this.lblTotalImage = new System.Windows.Forms.Label();
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
             this.btnRotateImg = new System.Windows.Forms.Button();
             this.btnImagePDF = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -128,12 +128,13 @@
             this.imageBox.SuspendLayout();
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.Color.White;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -154,6 +155,7 @@
             // tablePanelMainForm
             // 
             this.tablePanelMainForm.AutoSize = true;
+            this.tablePanelMainForm.BackColor = System.Drawing.Color.Transparent;
             this.tablePanelMainForm.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.OutsetPartial;
             this.tablePanelMainForm.ColumnCount = 1;
             this.tablePanelMainForm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -182,13 +184,13 @@
             // 
             this.flowPanelDocumentNotes.Controls.Add(this.lblDocNotes);
             this.flowPanelDocumentNotes.Controls.Add(this.txtDocumentNotes);
-            this.flowPanelDocumentNotes.Location = new System.Drawing.Point(6, 649);
-            this.flowPanelDocumentNotes.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.flowPanelDocumentNotes.Location = new System.Drawing.Point(5, 642);
+            this.flowPanelDocumentNotes.Margin = new System.Windows.Forms.Padding(2);
             this.flowPanelDocumentNotes.MaximumSize = new System.Drawing.Size(520, 483);
             this.flowPanelDocumentNotes.MinimumSize = new System.Drawing.Size(167, 108);
             this.flowPanelDocumentNotes.Name = "flowPanelDocumentNotes";
             this.flowPanelDocumentNotes.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.flowPanelDocumentNotes.Size = new System.Drawing.Size(511, 150);
+            this.flowPanelDocumentNotes.Size = new System.Drawing.Size(510, 150);
             this.flowPanelDocumentNotes.TabIndex = 104;
             // 
             // lblDocNotes
@@ -196,7 +198,8 @@
             this.lblDocNotes.AutoSize = true;
             this.lblDocNotes.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblDocNotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocNotes.Location = new System.Drawing.Point(3, 4);
+            this.lblDocNotes.Location = new System.Drawing.Point(4, 8);
+            this.lblDocNotes.Margin = new System.Windows.Forms.Padding(4);
             this.lblDocNotes.Name = "lblDocNotes";
             this.lblDocNotes.Size = new System.Drawing.Size(171, 24);
             this.lblDocNotes.TabIndex = 100;
@@ -204,10 +207,11 @@
             // 
             // txtDocumentNotes
             // 
+            this.txtDocumentNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDocumentNotes.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtDocumentNotes.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.txtDocumentNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentNotes.Location = new System.Drawing.Point(3, 31);
+            this.txtDocumentNotes.Location = new System.Drawing.Point(3, 39);
             this.txtDocumentNotes.MaximumSize = new System.Drawing.Size(514, 142);
             this.txtDocumentNotes.MinimumSize = new System.Drawing.Size(167, 79);
             this.txtDocumentNotes.Multiline = true;
@@ -220,7 +224,8 @@
             // 
             this.flowPanelAccession.Controls.Add(this.lblAccessionNumber);
             this.flowPanelAccession.Controls.Add(this.flowLayoutPanel5);
-            this.flowPanelAccession.Location = new System.Drawing.Point(6, 508);
+            this.flowPanelAccession.Location = new System.Drawing.Point(5, 503);
+            this.flowPanelAccession.Margin = new System.Windows.Forms.Padding(2);
             this.flowPanelAccession.MaximumSize = new System.Drawing.Size(520, 483);
             this.flowPanelAccession.MinimumSize = new System.Drawing.Size(167, 132);
             this.flowPanelAccession.Name = "flowPanelAccession";
@@ -233,7 +238,8 @@
             this.lblAccessionNumber.AutoSize = true;
             this.lblAccessionNumber.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblAccessionNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAccessionNumber.Location = new System.Drawing.Point(3, 4);
+            this.lblAccessionNumber.Location = new System.Drawing.Point(4, 8);
+            this.lblAccessionNumber.Margin = new System.Windows.Forms.Padding(4);
             this.lblAccessionNumber.Name = "lblAccessionNumber";
             this.lblAccessionNumber.Size = new System.Drawing.Size(188, 24);
             this.lblAccessionNumber.TabIndex = 94;
@@ -245,7 +251,7 @@
             this.flowLayoutPanel5.Controls.Add(this.panelSchNumber);
             this.flowLayoutPanel5.Controls.Add(this.panelBoxNumber);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 39);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.flowLayoutPanel5.MaximumSize = new System.Drawing.Size(520, 178);
             this.flowLayoutPanel5.MinimumSize = new System.Drawing.Size(167, 93);
@@ -258,18 +264,19 @@
             // 
             this.panelSeqNumber.Controls.Add(this.lblSeqNumber);
             this.panelSeqNumber.Controls.Add(this.txtSeqNumber);
-            this.panelSeqNumber.Location = new System.Drawing.Point(3, 7);
-            this.panelSeqNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelSeqNumber.Location = new System.Drawing.Point(4, 8);
+            this.panelSeqNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.panelSeqNumber.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelSeqNumber.Name = "panelSeqNumber";
-            this.panelSeqNumber.Padding = new System.Windows.Forms.Padding(8);
-            this.panelSeqNumber.Size = new System.Drawing.Size(167, 79);
+            this.panelSeqNumber.Padding = new System.Windows.Forms.Padding(4);
+            this.panelSeqNumber.Size = new System.Drawing.Size(155, 79);
             this.panelSeqNumber.TabIndex = 108;
             // 
             // lblSeqNumber
             // 
             this.lblSeqNumber.AutoSize = true;
             this.lblSeqNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSeqNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblSeqNumber.Location = new System.Drawing.Point(7, 4);
             this.lblSeqNumber.Name = "lblSeqNumber";
             this.lblSeqNumber.Size = new System.Drawing.Size(75, 20);
             this.lblSeqNumber.TabIndex = 97;
@@ -278,8 +285,9 @@
             // txtSeqNumber
             // 
             this.txtSeqNumber.BackColor = System.Drawing.Color.White;
+            this.txtSeqNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSeqNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSeqNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtSeqNumber.Location = new System.Drawing.Point(7, 27);
             this.txtSeqNumber.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtSeqNumber.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtSeqNumber.Name = "txtSeqNumber";
@@ -291,18 +299,19 @@
             // 
             this.panelSchNumber.Controls.Add(this.lblSchNumber);
             this.panelSchNumber.Controls.Add(this.txtSchNumber);
-            this.panelSchNumber.Location = new System.Drawing.Point(176, 7);
-            this.panelSchNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelSchNumber.Location = new System.Drawing.Point(167, 8);
+            this.panelSchNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.panelSchNumber.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelSchNumber.Name = "panelSchNumber";
-            this.panelSchNumber.Padding = new System.Windows.Forms.Padding(8);
-            this.panelSchNumber.Size = new System.Drawing.Size(167, 79);
+            this.panelSchNumber.Padding = new System.Windows.Forms.Padding(4);
+            this.panelSchNumber.Size = new System.Drawing.Size(155, 79);
             this.panelSchNumber.TabIndex = 109;
             // 
             // lblSchNumber
             // 
             this.lblSchNumber.AutoSize = true;
             this.lblSchNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSchNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblSchNumber.Location = new System.Drawing.Point(7, 4);
             this.lblSchNumber.Name = "lblSchNumber";
             this.lblSchNumber.Size = new System.Drawing.Size(70, 20);
             this.lblSchNumber.TabIndex = 98;
@@ -311,8 +320,9 @@
             // txtSchNumber
             // 
             this.txtSchNumber.BackColor = System.Drawing.Color.White;
+            this.txtSchNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSchNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSchNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtSchNumber.Location = new System.Drawing.Point(7, 27);
             this.txtSchNumber.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtSchNumber.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtSchNumber.Name = "txtSchNumber";
@@ -324,18 +334,19 @@
             // 
             this.panelBoxNumber.Controls.Add(this.lblBoxNumber);
             this.panelBoxNumber.Controls.Add(this.txtBoxNumber);
-            this.panelBoxNumber.Location = new System.Drawing.Point(349, 7);
-            this.panelBoxNumber.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelBoxNumber.Location = new System.Drawing.Point(330, 8);
+            this.panelBoxNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.panelBoxNumber.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelBoxNumber.Name = "panelBoxNumber";
-            this.panelBoxNumber.Padding = new System.Windows.Forms.Padding(8);
-            this.panelBoxNumber.Size = new System.Drawing.Size(168, 79);
+            this.panelBoxNumber.Padding = new System.Windows.Forms.Padding(4);
+            this.panelBoxNumber.Size = new System.Drawing.Size(155, 79);
             this.panelBoxNumber.TabIndex = 110;
             // 
             // lblBoxNumber
             // 
             this.lblBoxNumber.AutoSize = true;
             this.lblBoxNumber.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBoxNumber.Location = new System.Drawing.Point(11, 8);
+            this.lblBoxNumber.Location = new System.Drawing.Point(7, 4);
             this.lblBoxNumber.Name = "lblBoxNumber";
             this.lblBoxNumber.Size = new System.Drawing.Size(35, 20);
             this.lblBoxNumber.TabIndex = 99;
@@ -344,8 +355,9 @@
             // txtBoxNumber
             // 
             this.txtBoxNumber.BackColor = System.Drawing.Color.White;
+            this.txtBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBoxNumber.Location = new System.Drawing.Point(11, 31);
+            this.txtBoxNumber.Location = new System.Drawing.Point(7, 27);
             this.txtBoxNumber.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtBoxNumber.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtBoxNumber.Name = "txtBoxNumber";
@@ -357,12 +369,12 @@
             // 
             this.flowLayoutPanel6.Controls.Add(this.panelRejectSaveScan);
             this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 805);
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 797);
             this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel6.MaximumSize = new System.Drawing.Size(520, 178);
             this.flowLayoutPanel6.MinimumSize = new System.Drawing.Size(167, 50);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(514, 50);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(514, 51);
             this.flowLayoutPanel6.TabIndex = 123;
             // 
             // panelRejectSaveScan
@@ -373,13 +385,13 @@
             this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.panelRejectSaveScan.Controls.Add(this.btnSave, 1, 0);
             this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 0, 0);
-            this.panelRejectSaveScan.Location = new System.Drawing.Point(3, 0);
-            this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.panelRejectSaveScan.Location = new System.Drawing.Point(2, 2);
+            this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(2);
             this.panelRejectSaveScan.Name = "panelRejectSaveScan";
             this.panelRejectSaveScan.RowCount = 1;
             this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.panelRejectSaveScan.Size = new System.Drawing.Size(520, 50);
+            this.panelRejectSaveScan.Size = new System.Drawing.Size(510, 50);
             this.panelRejectSaveScan.TabIndex = 60;
             // 
             // btnSave
@@ -387,7 +399,7 @@
             this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.Color.Green;
-            this.btnSave.Location = new System.Drawing.Point(322, 5);
+            this.btnSave.Location = new System.Drawing.Point(314, 5);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(136, 40);
@@ -402,7 +414,7 @@
             this.btnCancelScan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
             this.btnCancelScan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelScan.ForeColor = System.Drawing.Color.White;
-            this.btnCancelScan.Location = new System.Drawing.Point(62, 5);
+            this.btnCancelScan.Location = new System.Drawing.Point(59, 5);
             this.btnCancelScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(136, 40);
@@ -415,7 +427,8 @@
             // 
             this.flowPanelRecordClassification.Controls.Add(this.lblRecordClass);
             this.flowPanelRecordClassification.Controls.Add(this.flowLayoutPanel4);
-            this.flowPanelRecordClassification.Location = new System.Drawing.Point(6, 367);
+            this.flowPanelRecordClassification.Location = new System.Drawing.Point(5, 364);
+            this.flowPanelRecordClassification.Margin = new System.Windows.Forms.Padding(2);
             this.flowPanelRecordClassification.MaximumSize = new System.Drawing.Size(520, 483);
             this.flowPanelRecordClassification.MinimumSize = new System.Drawing.Size(167, 132);
             this.flowPanelRecordClassification.Name = "flowPanelRecordClassification";
@@ -428,7 +441,8 @@
             this.lblRecordClass.AutoSize = true;
             this.lblRecordClass.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRecordClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecordClass.Location = new System.Drawing.Point(3, 4);
+            this.lblRecordClass.Location = new System.Drawing.Point(4, 8);
+            this.lblRecordClass.Margin = new System.Windows.Forms.Padding(4);
             this.lblRecordClass.Name = "lblRecordClass";
             this.lblRecordClass.Size = new System.Drawing.Size(205, 24);
             this.lblRecordClass.TabIndex = 93;
@@ -439,7 +453,7 @@
             this.flowLayoutPanel4.Controls.Add(this.panelDocClass);
             this.flowLayoutPanel4.Controls.Add(this.panelDocType);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 39);
             this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.flowLayoutPanel4.MaximumSize = new System.Drawing.Size(520, 178);
             this.flowLayoutPanel4.MinimumSize = new System.Drawing.Size(167, 93);
@@ -452,19 +466,20 @@
             // 
             this.panelDocClass.Controls.Add(this.lblDocumentClass);
             this.panelDocClass.Controls.Add(this.txtDocumentClass);
-            this.panelDocClass.Location = new System.Drawing.Point(3, 7);
+            this.panelDocClass.Location = new System.Drawing.Point(4, 8);
+            this.panelDocClass.Margin = new System.Windows.Forms.Padding(4);
             this.panelDocClass.MaximumSize = new System.Drawing.Size(167, 79);
-            this.panelDocClass.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelDocClass.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelDocClass.Name = "panelDocClass";
-            this.panelDocClass.Padding = new System.Windows.Forms.Padding(8);
-            this.panelDocClass.Size = new System.Drawing.Size(167, 79);
+            this.panelDocClass.Padding = new System.Windows.Forms.Padding(4);
+            this.panelDocClass.Size = new System.Drawing.Size(155, 79);
             this.panelDocClass.TabIndex = 109;
             // 
             // lblDocumentClass
             // 
             this.lblDocumentClass.AutoSize = true;
             this.lblDocumentClass.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentClass.Location = new System.Drawing.Point(11, 8);
+            this.lblDocumentClass.Location = new System.Drawing.Point(7, 4);
             this.lblDocumentClass.Name = "lblDocumentClass";
             this.lblDocumentClass.Size = new System.Drawing.Size(43, 20);
             this.lblDocumentClass.TabIndex = 68;
@@ -472,9 +487,10 @@
             // 
             // txtDocumentClass
             // 
-            this.txtDocumentClass.BackColor = System.Drawing.SystemColors.Info;
+            this.txtDocumentClass.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtDocumentClass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDocumentClass.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentClass.Location = new System.Drawing.Point(11, 31);
+            this.txtDocumentClass.Location = new System.Drawing.Point(7, 27);
             this.txtDocumentClass.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtDocumentClass.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtDocumentClass.Name = "txtDocumentClass";
@@ -486,18 +502,19 @@
             // 
             this.panelDocType.Controls.Add(this.lblDocumentType);
             this.panelDocType.Controls.Add(this.txtDocumentType);
-            this.panelDocType.Location = new System.Drawing.Point(176, 7);
-            this.panelDocType.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelDocType.Location = new System.Drawing.Point(165, 6);
+            this.panelDocType.Margin = new System.Windows.Forms.Padding(2);
+            this.panelDocType.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelDocType.Name = "panelDocType";
-            this.panelDocType.Padding = new System.Windows.Forms.Padding(8);
-            this.panelDocType.Size = new System.Drawing.Size(341, 79);
+            this.panelDocType.Padding = new System.Windows.Forms.Padding(4);
+            this.panelDocType.Size = new System.Drawing.Size(324, 79);
             this.panelDocType.TabIndex = 113;
             // 
             // lblDocumentType
             // 
             this.lblDocumentType.AutoSize = true;
             this.lblDocumentType.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentType.Location = new System.Drawing.Point(11, 8);
+            this.lblDocumentType.Location = new System.Drawing.Point(7, 4);
             this.lblDocumentType.Name = "lblDocumentType";
             this.lblDocumentType.Size = new System.Drawing.Size(41, 20);
             this.lblDocumentType.TabIndex = 69;
@@ -505,9 +522,10 @@
             // 
             // txtDocumentType
             // 
-            this.txtDocumentType.BackColor = System.Drawing.SystemColors.Info;
+            this.txtDocumentType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtDocumentType.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDocumentType.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentType.Location = new System.Drawing.Point(11, 31);
+            this.txtDocumentType.Location = new System.Drawing.Point(7, 27);
             this.txtDocumentType.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtDocumentType.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtDocumentType.Name = "txtDocumentType";
@@ -628,7 +646,8 @@
             // 
             this.flowPanelDocumentRecoed.Controls.Add(this.lblDocRecord);
             this.flowPanelDocumentRecoed.Controls.Add(this.flowLayoutPanel2);
-            this.flowPanelDocumentRecoed.Location = new System.Drawing.Point(6, 137);
+            this.flowPanelDocumentRecoed.Location = new System.Drawing.Point(5, 136);
+            this.flowPanelDocumentRecoed.Margin = new System.Windows.Forms.Padding(2);
             this.flowPanelDocumentRecoed.MaximumSize = new System.Drawing.Size(520, 483);
             this.flowPanelDocumentRecoed.MinimumSize = new System.Drawing.Size(167, 118);
             this.flowPanelDocumentRecoed.Name = "flowPanelDocumentRecoed";
@@ -641,7 +660,8 @@
             this.lblDocRecord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblDocRecord.AutoSize = true;
             this.lblDocRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocRecord.Location = new System.Drawing.Point(3, 4);
+            this.lblDocRecord.Location = new System.Drawing.Point(4, 8);
+            this.lblDocRecord.Margin = new System.Windows.Forms.Padding(4);
             this.lblDocRecord.Name = "lblDocRecord";
             this.lblDocRecord.Size = new System.Drawing.Size(179, 24);
             this.lblDocRecord.TabIndex = 103;
@@ -654,7 +674,7 @@
             this.flowLayoutPanel2.Controls.Add(this.panelPages);
             this.flowLayoutPanel2.Controls.Add(this.panelFilingDate);
             this.flowLayoutPanel2.Controls.Add(this.panelIndexer);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 31);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 39);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.flowLayoutPanel2.MaximumSize = new System.Drawing.Size(520, 431);
             this.flowLayoutPanel2.MinimumSize = new System.Drawing.Size(190, 179);
@@ -667,18 +687,19 @@
             // 
             this.panelBarcode.Controls.Add(this.lblBarcode);
             this.panelBarcode.Controls.Add(this.txtBarCode);
-            this.panelBarcode.Location = new System.Drawing.Point(3, 7);
-            this.panelBarcode.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelBarcode.Location = new System.Drawing.Point(4, 8);
+            this.panelBarcode.Margin = new System.Windows.Forms.Padding(4);
+            this.panelBarcode.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelBarcode.Name = "panelBarcode";
-            this.panelBarcode.Padding = new System.Windows.Forms.Padding(8);
-            this.panelBarcode.Size = new System.Drawing.Size(167, 79);
+            this.panelBarcode.Padding = new System.Windows.Forms.Padding(4);
+            this.panelBarcode.Size = new System.Drawing.Size(155, 79);
             this.panelBarcode.TabIndex = 119;
             // 
             // lblBarcode
             // 
             this.lblBarcode.AutoSize = true;
             this.lblBarcode.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBarcode.Location = new System.Drawing.Point(11, 8);
+            this.lblBarcode.Location = new System.Drawing.Point(7, 4);
             this.lblBarcode.Name = "lblBarcode";
             this.lblBarcode.Size = new System.Drawing.Size(65, 20);
             this.lblBarcode.TabIndex = 66;
@@ -686,9 +707,10 @@
             // 
             // txtBarCode
             // 
-            this.txtBarCode.BackColor = System.Drawing.SystemColors.Info;
+            this.txtBarCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtBarCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBarCode.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBarCode.Location = new System.Drawing.Point(11, 31);
+            this.txtBarCode.Location = new System.Drawing.Point(7, 27);
             this.txtBarCode.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtBarCode.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtBarCode.Name = "txtBarCode";
@@ -701,18 +723,19 @@
             // 
             this.panelLegalEntity.Controls.Add(this.lblLegalEntity);
             this.panelLegalEntity.Controls.Add(this.txtLegalEntityKey);
-            this.panelLegalEntity.Location = new System.Drawing.Point(176, 7);
-            this.panelLegalEntity.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelLegalEntity.Location = new System.Drawing.Point(165, 6);
+            this.panelLegalEntity.Margin = new System.Windows.Forms.Padding(2);
+            this.panelLegalEntity.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelLegalEntity.Name = "panelLegalEntity";
-            this.panelLegalEntity.Padding = new System.Windows.Forms.Padding(8);
-            this.panelLegalEntity.Size = new System.Drawing.Size(341, 79);
+            this.panelLegalEntity.Padding = new System.Windows.Forms.Padding(4);
+            this.panelLegalEntity.Size = new System.Drawing.Size(324, 79);
             this.panelLegalEntity.TabIndex = 114;
             // 
             // lblLegalEntity
             // 
             this.lblLegalEntity.AutoSize = true;
             this.lblLegalEntity.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLegalEntity.Location = new System.Drawing.Point(11, 8);
+            this.lblLegalEntity.Location = new System.Drawing.Point(7, 4);
             this.lblLegalEntity.Name = "lblLegalEntity";
             this.lblLegalEntity.Size = new System.Drawing.Size(86, 20);
             this.lblLegalEntity.TabIndex = 83;
@@ -720,9 +743,10 @@
             // 
             // txtLegalEntityKey
             // 
-            this.txtLegalEntityKey.BackColor = System.Drawing.SystemColors.Info;
+            this.txtLegalEntityKey.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtLegalEntityKey.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtLegalEntityKey.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLegalEntityKey.Location = new System.Drawing.Point(11, 31);
+            this.txtLegalEntityKey.Location = new System.Drawing.Point(7, 27);
             this.txtLegalEntityKey.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtLegalEntityKey.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtLegalEntityKey.Name = "txtLegalEntityKey";
@@ -734,18 +758,19 @@
             // 
             this.panelPages.Controls.Add(this.lblTotalPages);
             this.panelPages.Controls.Add(this.txtPagesInDocument);
-            this.panelPages.Location = new System.Drawing.Point(3, 92);
-            this.panelPages.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelPages.Location = new System.Drawing.Point(4, 95);
+            this.panelPages.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPages.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelPages.Name = "panelPages";
-            this.panelPages.Padding = new System.Windows.Forms.Padding(8);
-            this.panelPages.Size = new System.Drawing.Size(167, 79);
+            this.panelPages.Padding = new System.Windows.Forms.Padding(4);
+            this.panelPages.Size = new System.Drawing.Size(155, 79);
             this.panelPages.TabIndex = 118;
             // 
             // lblTotalPages
             // 
             this.lblTotalPages.AutoSize = true;
             this.lblTotalPages.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalPages.Location = new System.Drawing.Point(11, 8);
+            this.lblTotalPages.Location = new System.Drawing.Point(7, 4);
             this.lblTotalPages.Name = "lblTotalPages";
             this.lblTotalPages.Size = new System.Drawing.Size(86, 20);
             this.lblTotalPages.TabIndex = 73;
@@ -753,9 +778,10 @@
             // 
             // txtPagesInDocument
             // 
-            this.txtPagesInDocument.BackColor = System.Drawing.SystemColors.Info;
+            this.txtPagesInDocument.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtPagesInDocument.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPagesInDocument.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPagesInDocument.Location = new System.Drawing.Point(11, 31);
+            this.txtPagesInDocument.Location = new System.Drawing.Point(7, 27);
             this.txtPagesInDocument.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtPagesInDocument.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtPagesInDocument.Name = "txtPagesInDocument";
@@ -768,18 +794,19 @@
             // 
             this.panelFilingDate.Controls.Add(this.lblFilingDate);
             this.panelFilingDate.Controls.Add(this.txtFilingDate);
-            this.panelFilingDate.Location = new System.Drawing.Point(176, 92);
-            this.panelFilingDate.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelFilingDate.Location = new System.Drawing.Point(167, 95);
+            this.panelFilingDate.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFilingDate.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelFilingDate.Name = "panelFilingDate";
-            this.panelFilingDate.Padding = new System.Windows.Forms.Padding(8);
-            this.panelFilingDate.Size = new System.Drawing.Size(167, 79);
+            this.panelFilingDate.Padding = new System.Windows.Forms.Padding(4);
+            this.panelFilingDate.Size = new System.Drawing.Size(155, 79);
             this.panelFilingDate.TabIndex = 117;
             // 
             // lblFilingDate
             // 
             this.lblFilingDate.AutoSize = true;
             this.lblFilingDate.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilingDate.Location = new System.Drawing.Point(11, 8);
+            this.lblFilingDate.Location = new System.Drawing.Point(7, 4);
             this.lblFilingDate.Name = "lblFilingDate";
             this.lblFilingDate.Size = new System.Drawing.Size(80, 20);
             this.lblFilingDate.TabIndex = 101;
@@ -787,9 +814,10 @@
             // 
             // txtFilingDate
             // 
-            this.txtFilingDate.BackColor = System.Drawing.SystemColors.Info;
+            this.txtFilingDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtFilingDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFilingDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFilingDate.Location = new System.Drawing.Point(11, 31);
+            this.txtFilingDate.Location = new System.Drawing.Point(7, 27);
             this.txtFilingDate.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtFilingDate.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtFilingDate.Name = "txtFilingDate";
@@ -801,18 +829,19 @@
             // 
             this.panelIndexer.Controls.Add(this.lblIndexer);
             this.panelIndexer.Controls.Add(this.txtIndexer);
-            this.panelIndexer.Location = new System.Drawing.Point(349, 92);
-            this.panelIndexer.MinimumSize = new System.Drawing.Size(167, 79);
+            this.panelIndexer.Location = new System.Drawing.Point(330, 95);
+            this.panelIndexer.Margin = new System.Windows.Forms.Padding(4);
+            this.panelIndexer.MinimumSize = new System.Drawing.Size(155, 79);
             this.panelIndexer.Name = "panelIndexer";
-            this.panelIndexer.Padding = new System.Windows.Forms.Padding(8);
-            this.panelIndexer.Size = new System.Drawing.Size(167, 79);
+            this.panelIndexer.Padding = new System.Windows.Forms.Padding(4);
+            this.panelIndexer.Size = new System.Drawing.Size(155, 79);
             this.panelIndexer.TabIndex = 116;
             // 
             // lblIndexer
             // 
             this.lblIndexer.AutoSize = true;
             this.lblIndexer.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIndexer.Location = new System.Drawing.Point(11, 8);
+            this.lblIndexer.Location = new System.Drawing.Point(7, 4);
             this.lblIndexer.Name = "lblIndexer";
             this.lblIndexer.Size = new System.Drawing.Size(62, 20);
             this.lblIndexer.TabIndex = 85;
@@ -820,9 +849,10 @@
             // 
             // txtIndexer
             // 
-            this.txtIndexer.BackColor = System.Drawing.SystemColors.Info;
+            this.txtIndexer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtIndexer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtIndexer.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIndexer.Location = new System.Drawing.Point(11, 31);
+            this.txtIndexer.Location = new System.Drawing.Point(7, 27);
             this.txtIndexer.MaximumSize = new System.Drawing.Size(310, 29);
             this.txtIndexer.MinimumSize = new System.Drawing.Size(141, 29);
             this.txtIndexer.Name = "txtIndexer";
@@ -894,6 +924,32 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(354, 43);
             this.tableLayoutPanel2.TabIndex = 94;
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.btnPrevImage);
+            this.flowLayoutPanel1.Controls.Add(this.lblCurImage);
+            this.flowLayoutPanel1.Controls.Add(this.btnlNextImage);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(148, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(124, 43);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(124, 43);
+            this.flowLayoutPanel1.TabIndex = 60;
+            // 
+            // btnPrevImage
+            // 
+            this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
+            this.btnPrevImage.Location = new System.Drawing.Point(7, 3);
+            this.btnPrevImage.Name = "btnPrevImage";
+            this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
+            this.btnPrevImage.TabIndex = 7;
+            this.btnPrevImage.Text = "<";
+            this.btnPrevImage.UseVisualStyleBackColor = true;
+            this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
+            // 
             // lblCurImage
             // 
             this.lblCurImage.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -906,18 +962,6 @@
             this.lblCurImage.TabIndex = 96;
             this.lblCurImage.Text = "0";
             this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblDisplay
-            // 
-            this.lblDisplay.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDisplay.AutoSize = true;
-            this.lblDisplay.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplay.Location = new System.Drawing.Point(41, 10);
-            this.lblDisplay.Name = "lblDisplay";
-            this.lblDisplay.Size = new System.Drawing.Size(100, 22);
-            this.lblDisplay.TabIndex = 7;
-            this.lblDisplay.Text = "Displaying:";
-            this.lblDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnlNextImage
             // 
@@ -932,6 +976,18 @@
             this.btnlNextImage.UseVisualStyleBackColor = true;
             this.btnlNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
             // 
+            // lblDisplay
+            // 
+            this.lblDisplay.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblDisplay.AutoSize = true;
+            this.lblDisplay.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDisplay.Location = new System.Drawing.Point(41, 10);
+            this.lblDisplay.Name = "lblDisplay";
+            this.lblDisplay.Size = new System.Drawing.Size(100, 22);
+            this.lblDisplay.TabIndex = 7;
+            this.lblDisplay.Text = "Displaying:";
+            this.lblDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // lblTotalImage
             // 
             this.lblTotalImage.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -943,19 +999,6 @@
             this.lblTotalImage.TabIndex = 96;
             this.lblTotalImage.Text = "0";
             this.lblTotalImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnPrevImage
-            // 
-            this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
-            this.btnPrevImage.Location = new System.Drawing.Point(7, 3);
-            this.btnPrevImage.Name = "btnPrevImage";
-            this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
-            this.btnPrevImage.TabIndex = 7;
-            this.btnPrevImage.Text = "<";
-            this.btnPrevImage.UseVisualStyleBackColor = true;
-            this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
             // 
             // lblDisplayImgOf
             // 
@@ -1024,19 +1067,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 925);
             this.tableLayoutPanel1.TabIndex = 94;
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.btnPrevImage);
-            this.flowLayoutPanel1.Controls.Add(this.lblCurImage);
-            this.flowLayoutPanel1.Controls.Add(this.btnlNextImage);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(148, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(124, 43);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(124, 43);
-            this.flowLayoutPanel1.TabIndex = 60;
-            // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1096,9 +1126,9 @@
             this.panelImageControl.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
