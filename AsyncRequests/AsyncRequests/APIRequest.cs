@@ -3,6 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Newtonsoft;
 
 namespace AsyncRequests
 {
@@ -69,7 +70,9 @@ namespace AsyncRequests
             }
             
             var request = CreateRequest(requestType);
-            request.AddJsonBody(data);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(json);
 
             return GetHttpResponseContent(request, endPoint);
         }
@@ -123,7 +126,7 @@ namespace AsyncRequests
         private static string GetHttpResponseContent(RestRequest request, string endPoint)
         {
             var client = new RestClient(ConfigKeys.API_URL + endPoint);
-            IRestResponse response = client.Execute(request);
+            var response = client.Execute(request);
 
             // If the request was not successful (completed with a good status)
             // throw a new error. 

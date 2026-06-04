@@ -2,6 +2,7 @@
 using Utilities;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 
 namespace ApiScanner
@@ -35,7 +36,7 @@ namespace ApiScanner
             // TODO - update how we pass information back to the API 
             //     - verification & checking that the data should be changed
 
-            string endpoint = "doc/api/v1/documents/" + docServId;
+            string endpoint = "/doc/api/v1/documents/" + docServId;
             return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.PATCH);
         }
 

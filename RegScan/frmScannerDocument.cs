@@ -204,7 +204,7 @@ namespace RegScan
                     }
                 }
                 // If documents were found continue to next step
-                if (docs.Count > 0)
+                if (docs != null && docs.Count > 0)
                 {
                     documentsFound = true;
                     checkBarcode = false;
@@ -538,7 +538,7 @@ namespace RegScan
             // Show progress bar and disable form elements 
             showProgressBar();
 
-            // This is discouraged in Microsoft Docs.
+            // TODO: This is discouraged in Microsoft Docs.
             Application.DoEvents();
 
             UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +

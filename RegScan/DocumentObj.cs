@@ -284,29 +284,30 @@ namespace RegScan
             // get the current time
             DateTime currentTime = DateTime.Now;
 
-            // get info from form 
-            
-
             // Build the scanning information model
             DocumentModel.ScanningInformation scanInfo = new DocumentModel.ScanningInformation();
+            
+            // Currently these are the only fields we want to update from the scanning application
             scanInfo.consumerDocumentId = _barCode.ToString();
             scanInfo.scanDateTime = _scannedDate.ToString();
-            scanInfo.documentClass = _documentClass;
             scanInfo.accessionNumber = AccessionNumberString;
+            scanInfo.author = _scannerId;
             scanInfo.batchId = null;
             scanInfo.pageCount = _pageCount;
-            scanInfo.author = _scannerId;
+            scanInfo.documentClass = _documentClass;
 
-            // Build the UpdateDocument model
-            model.consumerDocumentId = _barCode.ToString();
-            model.consumerIdentifier = _consumerIdentifier;
-            model.consumerFilename = _legalEntityKey + currentTime.ToString("yyyy_MM_dd_hh_mm_ss");
-            model.consumerFilingDate = _consumerFilingDate.ToString();
             model.description = _description;
-            model.documentType = _documentTypeCode;
-            model.documentClass = _documentClass;
-            model.consumerReferenceId = _consumerReferenceId.ToString();
             model.scanInfo = scanInfo;
+            
+            // Currently we dont want to update any of the following.
+            // These can be uncommented if we want to send them in the API request. 
+            // Build the UpdateDocument model 
+            //model.consumerDocumentId = _barCode.ToString();
+            //model.consumerIdentifier = _consumerIdentifier;
+            //model.consumerFilingDate = _consumerFilingDate.ToString();
+            //model.documentType = _documentTypeCode;
+            //model.documentClass = _documentClass;
+            //model.consumerReferenceId = _consumerReferenceId.ToString();
         }
         
         /// <summary>
