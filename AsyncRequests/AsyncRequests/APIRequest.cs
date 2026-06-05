@@ -1,9 +1,10 @@
 ﻿using AppConfiguration;
+using Newtonsoft;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Newtonsoft;
 
 namespace AsyncRequests
 {
@@ -70,7 +71,10 @@ namespace AsyncRequests
             }
             
             var request = CreateRequest(requestType);
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(data, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(json);
 

@@ -156,8 +156,8 @@ namespace RegScan
 
         private void ProcessFirstPage()
         {
-            // List to hold the documents.
-            List<DocumentObj> docs = null;
+            // Document object, holds all information about the current document
+            DocumentObj doc = null;
             // Control flow based on if a record exists for this document
             bool documentsFound = false;
             // Control loop to get a barcode and check for a record.
@@ -179,7 +179,19 @@ namespace RegScan
                 // There may be more than one document (known as versions)
                 try
                 {
-                    docs = DocumentObj.Find(barCode);
+                    doc = DocumentObj.Find(barCode)[0];
+                }
+                catch (ArgumentException ae)
+                {
+                    // This type of exception is thrown when the accession number is not in an
+                    // expected format. This message box will display the number to the user
+                    // and warn them to verify it.
+                    UtilityObj.WriteLog(UtilityObj.error, ae.ToString());
+                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " + 
+                        "verification as it will not be displayed in the application.");
+                    // continue the process
+                    documentsFound = false;
+                    checkBarcode = false;
                 }
                 catch (Exception e)
                 {
@@ -204,7 +216,7 @@ namespace RegScan
                     }
                 }
                 // If documents were found continue to next step
-                if (docs != null && docs.Count > 0)
+                if (doc != null)
                 {
                     documentsFound = true;
                     checkBarcode = false;
@@ -213,9 +225,9 @@ namespace RegScan
 
             if (documentsFound)
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to docs[0]");
+                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to doc");
                 // The first document is the latest and is the one that will be displayed
-                _currentDocument = docs[0];
+                _currentDocument = doc;
 
                 // TODO -> better error handling here
                 // Display the warning if there was some sort of error getting the document
@@ -399,7 +411,7 @@ namespace RegScan
         #region click events.
         private void btnRotateImg_Click(object sender, EventArgs e)
         {
-            // Rotate current image and 
+            // TODO - currently this doesnt actually rotate the image it mirrors it?
             _scannedImageList[_currentImageIndex].Rotate();
             UpdateImageDisplay();
         }
@@ -425,6 +437,7 @@ namespace RegScan
                 " btnViewAsPDF_Click Scanner  Objects");
 
             // FOREACH image create a new page.
+            // TODO - swap in PDFDoc method
             foreach (var bp in _scannedImageList)
             {
                 // Create a new page and add in the image.
@@ -520,6 +533,8 @@ namespace RegScan
         /// <param name="e"> Events from user </param>
         private void btnSave_Click(object sender, EventArgs e)
         {
+            bool descChange = false;
+            bool accNChange = false;
             PdfDocument pdf = null;
 
             // Validation
@@ -564,33 +579,48 @@ namespace RegScan
             _currentDocument.ScannedDate = DateTime.Now;
 
             // Get the form fields we want to update
-            _currentDocument.Description = txtDocumentClass.Text;
+            // If the description field changes we can use one endpoint
+            // If it isnt updated we have to use a different endpoint.
+            if (_currentDocument.Description != txtDocumentNotes.Text)
+            {
+                descChange = true;
+                _currentDocument.Description = txtDocumentNotes.Text;
+            }
+            
             try
             {
                 // If any of the fields are missing values
-                if (string.IsNullOrEmpty(txtSeqNumber.Text) || 
-                    string.IsNullOrEmpty(txtSchNumber.Text) || 
-                    string.IsNullOrEmpty(txtBoxNumber.Text))
+                if (string.IsNullOrEmpty(maskSeqNumber.Text) || 
+                    string.IsNullOrEmpty(maskSchNumber.Text) || 
+                    string.IsNullOrEmpty(maskBoxNumber.Text))
                     throw new FormatException();
                 // or if there is an error trying to parse them as ints
-                var seqNumber = Int32.Parse(txtSeqNumber.Text);
-                var schNumber = Int32.Parse(txtSchNumber.Text);
-                var boxNumber = Int32.Parse(txtBoxNumber.Text);
+                var seqNumber = Int32.Parse(maskSeqNumber.Text);
+                var schNumber = Int32.Parse(maskSchNumber.Text);
+                var boxNumber = Int32.Parse(maskBoxNumber.Text);
 
-                _currentDocument.SequenceNumber = seqNumber;
-                _currentDocument.ScheduleNumber = schNumber;
-                _currentDocument.BoxNumber = boxNumber;
+                // we only need to update the values if there were changes made
+                if (seqNumber != _currentDocument.SequenceNumber || 
+                    schNumber != _currentDocument.ScheduleNumber || 
+                    boxNumber != _currentDocument.BoxNumber)
+                {
+                    _currentDocument.SequenceNumber = seqNumber;
+                    _currentDocument.ScheduleNumber = schNumber;
+                    _currentDocument.BoxNumber = boxNumber;
+                    accNChange = true;
+                }
+                
             }
             // Catch the formatting error
             catch (FormatException ex)
             {
                 MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
                 UtilityObj.WriteLog(UtilityObj.error, "Couldnt process form fields to int.\n" + ex.ToString());
+                hideProgressBar();
                 return;
             }
-            //_currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
 
-            _currentDocument.UpdateInsert();
+            _currentDocument.UpdateInsert(descChange || accNChange);
 
             // Reset the document and display.
             ResetDocument();
@@ -663,10 +693,10 @@ namespace RegScan
             txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
             txtPagesInDocument.Text = "";
-            txtSeqNumber.Text = "";
+            maskSeqNumber.Text = "";
             txtFilingDate.Text = "";
-            txtSchNumber.Text = "";
-            txtBoxNumber.Text = "";
+            maskSchNumber.Text = "";
+            maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
             imageBox.Image = null;
 
@@ -726,9 +756,9 @@ namespace RegScan
                 _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
 
             // Accession Numbers
-            txtSeqNumber.Text = _currentDocument.SequenceNumberString;
-            txtSchNumber.Text = _currentDocument.ScheduleNumberString;
-            txtBoxNumber.Text = _currentDocument.BoxNumberString;
+            maskSeqNumber.Text = _currentDocument.SequenceNumberString;
+            maskSchNumber.Text = _currentDocument.ScheduleNumberString;
+            maskBoxNumber.Text = _currentDocument.BoxNumberString;
 
             // Notes / Description
             txtDocumentNotes.Text = _currentDocument.Description;
@@ -934,6 +964,7 @@ namespace RegScan
 
             // show the progress bar
             progressBar.Enabled = true;
+            progressBar.Visible = true;
             progressBar.Value = 0;
         }
 

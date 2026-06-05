@@ -126,7 +126,7 @@ namespace ApiScanner
         public string documentType;
         public string documentClass;
         public string consumerReferenceId;
-        public ScanningInformation scanInfo;
+        public ScanningInformation scanningInformation;
         public class ScanningInformation
         {
             public string consumerDocumentId;

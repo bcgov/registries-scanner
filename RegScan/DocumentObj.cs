@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Linq.Expressions;
+using PdfSharp.Pdf.Content.Objects;
 
 namespace RegScan
 {
@@ -118,17 +119,12 @@ namespace RegScan
         #endregion
 
         #region dml
-               
+
         /// <summary>
         /// Handles the logic of updating a current record with the scanned document.
         /// </summary>
-        private void Update()
+        private void UploadImage(string fileName)
         {
-            // Object to hold the document record information
-            DocumentModel apiDocModel = new DocumentModel();
-            // Copy local information to obj
-            CopyToModel(apiDocModel);
-
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
 
             // TODO - we should not exit, we should show the error then handle it gracefully
@@ -136,17 +132,20 @@ namespace RegScan
             {
                 // upload the scanned image
                 string uploadResp = DocumentApi.uploadDocument(
-                    pdfBytes, apiDocModel.consumerFilename, _documentServiceId);
+                    pdfBytes, fileName, _documentServiceId);
             }
             catch (Exception e)
             {
-                MessageBox.Show("Scanned image failed to load into database. " + 
+                MessageBox.Show("Scanned image failed to load into database. " +
                                 "Current data for " + BarCode + " may be inaccurate.");
-                UtilityObj.WriteLog(UtilityObj.error, 
+                UtilityObj.WriteLog(UtilityObj.error,
                     "Scanned document Image failed PUT of scanned image." + e.ToString());
                 Environment.Exit(0);
             }
+        }
 
+        private void UpdateDocumentRecord(DocumentModel apiDocModel)
+        { 
             try
             {
                 // update the document record
@@ -158,7 +157,7 @@ namespace RegScan
                 MessageBox.Show("Unable to update document record." +
                                 "Current data for " + BarCode + " may be inaccurate.");
                 UtilityObj.WriteLog(UtilityObj.error,
-                    "Scanned document Image failed PATCH to update document record." +
+                    "Scanned document Image failed PATCH to update document record.\n" +
                     e.ToString());
                 Environment.Exit(0);
             }
@@ -174,13 +173,26 @@ namespace RegScan
         ///        application does not have the ability to create a new document record through
         ///        DRS API. This functionality could be added in the future.
         /// </summary>
-        public void UpdateInsert()
+        public void UpdateInsert(bool updateRecordFlag)
         {
             // Set some values before database requests.
             _isScanned = true;
 
             if (_replaceRecordFlag)
-                Update();
+            {
+                // Object to hold the document record information
+                DocumentModel apiDocModel = new DocumentModel();
+                // Copy local information to obj
+                CopyToModel(apiDocModel);
+
+                UploadImage(apiDocModel.consumerFilename);
+
+                // Only update the record if there was a change made to one of the fields
+                if (updateRecordFlag)
+                {
+                    UpdateDocumentRecord(apiDocModel);
+                }
+            }
             // The scanning application should never create a new record through the DRS API.
             else
             {
@@ -222,11 +234,12 @@ namespace RegScan
         /// </summary>
         /// <param name="BarCode"> 8-digit barcode string </param>
         /// <returns> 
-        ///     List of DocumentObjs for each returned record matching the _BarCode
+        ///     a DocumentObj with a result of the API call for the given barcode.
         /// </returns>
         static public List<DocumentObj> Find(string BarCode)
         {
             List<DocumentObj> documentList = new List<DocumentObj>();
+            DocumentObj docObj;
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
@@ -249,7 +262,7 @@ namespace RegScan
                     UtilityObj.WriteLog(UtilityObj.warn, "Got more than one result from DRS API.");
                 }
 
-                DocumentObj docObj;
+                
                 // The barcode should be unique and only one item (Document Record) in the results
                 // This loop will catch any unexpected results and save them to the documentList
                 foreach (JObject record in resultList["results"])
@@ -267,16 +280,13 @@ namespace RegScan
                     var betterResultList = (JObject)JToken.Parse(betterResponse)[0];
                     docObj = new DocumentObj();
                     // Take the elements from the returned JObject and save them to a DocumentObj
-                    copyFromModel(docObj, betterResultList);
+                    CopyFromModel(docObj, betterResultList);
                     documentList.Add(docObj);
                 }
             }
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Return Ordered docs");
-
-            // Return list ordered by Version Number Descending.
-            return documentList.OrderByDescending(l => l.VersionNumber).ToList();
-
+            // Return the 'list' of records 
+            return documentList;
         }
 
         public void CopyToModel(DocumentModel model)
@@ -289,7 +299,7 @@ namespace RegScan
             
             // Currently these are the only fields we want to update from the scanning application
             scanInfo.consumerDocumentId = _barCode.ToString();
-            scanInfo.scanDateTime = _scannedDate.ToString();
+            scanInfo.scanDateTime = _scannedDate.ToString("yyyy-MM-dd");
             scanInfo.accessionNumber = AccessionNumberString;
             scanInfo.author = _scannerId;
             scanInfo.batchId = null;
@@ -297,7 +307,7 @@ namespace RegScan
             scanInfo.documentClass = _documentClass;
 
             model.description = _description;
-            model.scanInfo = scanInfo;
+            model.scanningInformation = scanInfo;
             
             // Currently we dont want to update any of the following.
             // These can be uncommented if we want to send them in the API request. 
@@ -309,6 +319,51 @@ namespace RegScan
             //model.documentClass = _documentClass;
             //model.consumerReferenceId = _consumerReferenceId.ToString();
         }
+
+        /// <summary>
+        /// Uses a regex string will match and group digits based on their placement. Because the
+        /// API returns a string value we we have to assume that it may not be well formatted. 
+        /// If accNumb does not match the regex pattern there will be issues. See more about the
+        /// Regex pattern used in the "<remarks>" section
+        /// </summary>
+        /// <param name="docObj">Object to add the Accession Number values to</param>
+        /// <param name="accNumb">String to be parsed for individual numbers</param>
+        /// <remarks>
+        /// The Regex pattern @"^(\d{0,2}).?(?\d{4}).?(\d{4})$" can be read as:
+        ///   @ verbatim text string. Wont interoperate 'escape' characters
+        ///   ^ matches the start of the string (limits time and effort from 'greedy' algorithm)
+        ///   (\d{0,2}) Group 1 matches 0 to 2 digits
+        ///   .? matches 0 or 1 of any character
+        ///   (\d{4}) Group 2 matches exactly 4 characters
+        ///   (\d{4}) Group 3 matches exactly 4 characters
+        ///   $ matches the end of the string
+        /// So the following strings will match and result in the following groups:
+        ///   "11-2222-3333" -> group 1 = "11", group 2 = "2222", group 3 = "3333"
+        ///   "11 2222 3333" -> group 1 = "11", group 2 = "2222", group 3 = "3333"
+        ///   "1122223333"   -> group 1 = "11", group 2 = "2222", group 3 = "3333"
+        ///   "122223333"    -> group 1 = "1",  group 2 = "2222", group 3 = "3333"
+        /// </remarks>
+        static public bool SetAccessionNumbers(DocumentObj docObj, string accNumb)
+        {
+            bool success = false;
+            if (accNumb.Length >= 8)
+            {
+                string pattern = @"^(\d{0,2}).?(\d{4}).?(\d{4})$";
+
+                var match = System.Text.RegularExpressions.Regex.Match(accNumb, pattern);
+
+                // If the input matched our pattern we can parse the groups
+                if (match.Success)
+                {
+                    docObj._sequenceNumber = int.Parse(match.Groups[1].Value);
+                    docObj._scheduleNumber = int.Parse(match.Groups[2].Value);
+                    docObj._boxNumber = int.Parse(match.Groups[3].Value);
+                    success = true;
+                }
+            }
+            return success;
+            
+        }
         
         /// <summary>
         /// Copy elements from a JObject to a DocumentObj. Include checks for elements that are not
@@ -318,7 +373,7 @@ namespace RegScan
         ///     DocumentObj that we want to hold the current documents information
         /// </param>
         /// <param name="jDoc"> JObject of items returned from DRS API </param>
-        static public void copyFromModel(DocumentObj docObj, JObject jDoc)
+        static public void CopyFromModel(DocumentObj docObj, JObject jDoc)
         {
             if (docObj == null || jDoc == null)
             {
@@ -364,7 +419,7 @@ namespace RegScan
             // - Unique identifier for the consumer application transaction/filing/registration
             if (jDoc.ContainsKey("consumerReferenceId"))
             {
-                if (dataCheck(jDoc["consumerReferenceId"].ToString()))
+                if (!string.IsNullOrEmpty((jDoc["consumerReferenceId"].ToString())))
                 {
                     docObj._consumerReferenceId = 
                         Int32.Parse(jDoc["consumerReferenceId"].ToString());
@@ -397,17 +452,6 @@ namespace RegScan
                 // Make the nested object easier to parse
                 JObject scanInfo = (JObject)jDoc["scanningInformation"];
 
-                if (scanInfo.ContainsKey("accessionNumber")) {
-                    // The Accession Number is returned as a string with the following form:
-                    // "12-3456-7890" - From this we can extract the following
-                    // sequence number <12>, schedule number <3456> and box number <7890>.
-                    string accNumb = (string)scanInfo["accessionNumber"];
-                    string[] accNumbersSplit = accNumb.Split('-');
-                    docObj._sequenceNumber = int.Parse(accNumbersSplit[0]);
-                    docObj._scheduleNumber = int.Parse(accNumbersSplit[1]);
-                    docObj._boxNumber = int.Parse(accNumbersSplit[2]);
-                }
-
                 // Another author field, save as owner
                 if (scanInfo.ContainsKey("author"))
                     { docObj._owner = (string)scanInfo["author"]; }
@@ -422,14 +466,14 @@ namespace RegScan
 
                 // The date of the consumer application document scan date
                 if (scanInfo.ContainsKey("scanDateTime"))
-                    { docObj._scannedDate = (DateTime)scanInfo["scanDateTime"];}             
+                    { docObj._scannedDate = (DateTime)scanInfo["scanDateTime"];}        
+                
+                // Try processing the Accession Number last, this is the area tha may have issues.
+                if (scanInfo.ContainsKey("accessionNumber")) {
+                    string inAccNumber = (string)scanInfo["accessionNumber"];
+                    SetAccessionNumbers(docObj, inAccNumber);
+                }
             }
-        }        
-
-        static private Boolean dataCheck(string jDoc)
-        {
-            if (string.IsNullOrEmpty(jDoc)) { return false; }
-            return true;
         }
 
         #endregion      

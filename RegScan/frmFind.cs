@@ -40,7 +40,7 @@ namespace RegScan
         private void btnFind_Click(object sender, EventArgs e)
         {
             _versionIndex = 0;
-            _docList = DocumentObj.Find(txtBarCodeToFind.Text).OrderBy(d => d.VersionNumber).ToList();
+            _docList = DocumentObj.Find(txtBarCodeToFind.Text);
             if (_docList.Count() == 0)
                 MessageBox.Show("No document(s) found for this barcode");
             else
