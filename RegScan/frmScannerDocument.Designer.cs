@@ -38,13 +38,16 @@
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelSeqNumber = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSeqNumber = new System.Windows.Forms.Label();
-            this.txtSeqNumber = new System.Windows.Forms.TextBox();
+            this.panelSeq = new System.Windows.Forms.Panel();
+            this.maskSeqNumber = new System.Windows.Forms.MaskedTextBox();
             this.panelSchNumber = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSchNumber = new System.Windows.Forms.Label();
-            this.txtSchNumber = new System.Windows.Forms.TextBox();
+            this.panelSch = new System.Windows.Forms.Panel();
+            this.maskSchNumber = new System.Windows.Forms.MaskedTextBox();
             this.panelBoxNumber = new System.Windows.Forms.FlowLayoutPanel();
             this.lblBoxNumber = new System.Windows.Forms.Label();
-            this.txtBoxNumber = new System.Windows.Forms.TextBox();
+            this.panelBox = new System.Windows.Forms.Panel();
+            this.maskBoxNumber = new System.Windows.Forms.MaskedTextBox();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new System.Windows.Forms.Button();
@@ -108,8 +111,11 @@
             this.flowPanelAccession.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.panelSeqNumber.SuspendLayout();
+            this.panelSeq.SuspendLayout();
             this.panelSchNumber.SuspendLayout();
+            this.panelSch.SuspendLayout();
             this.panelBoxNumber.SuspendLayout();
+            this.panelBox.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
             this.panelRejectSaveScan.SuspendLayout();
             this.flowPanelRecordClassification.SuspendLayout();
@@ -263,7 +269,7 @@
             // panelSeqNumber
             // 
             this.panelSeqNumber.Controls.Add(this.lblSeqNumber);
-            this.panelSeqNumber.Controls.Add(this.txtSeqNumber);
+            this.panelSeqNumber.Controls.Add(this.panelSeq);
             this.panelSeqNumber.Location = new System.Drawing.Point(4, 8);
             this.panelSeqNumber.Margin = new System.Windows.Forms.Padding(4);
             this.panelSeqNumber.MinimumSize = new System.Drawing.Size(155, 79);
@@ -282,23 +288,33 @@
             this.lblSeqNumber.TabIndex = 97;
             this.lblSeqNumber.Text = "Sequence";
             // 
-            // txtSeqNumber
+            // panelSeq
             // 
-            this.txtSeqNumber.BackColor = System.Drawing.Color.White;
-            this.txtSeqNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSeqNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSeqNumber.Location = new System.Drawing.Point(7, 27);
-            this.txtSeqNumber.MaximumSize = new System.Drawing.Size(310, 29);
-            this.txtSeqNumber.MinimumSize = new System.Drawing.Size(141, 29);
-            this.txtSeqNumber.Name = "txtSeqNumber";
-            this.txtSeqNumber.Size = new System.Drawing.Size(141, 29);
-            this.txtSeqNumber.TabIndex = 78;
-            this.txtSeqNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.panelSeq.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSeq.Controls.Add(this.maskSeqNumber);
+            this.panelSeq.Location = new System.Drawing.Point(7, 27);
+            this.panelSeq.Name = "panelSeq";
+            this.panelSeq.Size = new System.Drawing.Size(141, 29);
+            this.panelSeq.TabIndex = 63;
+            // 
+            // maskSeqNumber
+            // 
+            this.maskSeqNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.maskSeqNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskSeqNumber.Location = new System.Drawing.Point(-1, 3);
+            this.maskSeqNumber.Margin = new System.Windows.Forms.Padding(0);
+            this.maskSeqNumber.Mask = "00";
+            this.maskSeqNumber.Name = "maskSeqNumber";
+            this.maskSeqNumber.PromptChar = ' ';
+            this.maskSeqNumber.ResetOnSpace = false;
+            this.maskSeqNumber.Size = new System.Drawing.Size(141, 22);
+            this.maskSeqNumber.TabIndex = 60;
+            this.maskSeqNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panelSchNumber
             // 
             this.panelSchNumber.Controls.Add(this.lblSchNumber);
-            this.panelSchNumber.Controls.Add(this.txtSchNumber);
+            this.panelSchNumber.Controls.Add(this.panelSch);
             this.panelSchNumber.Location = new System.Drawing.Point(167, 8);
             this.panelSchNumber.Margin = new System.Windows.Forms.Padding(4);
             this.panelSchNumber.MinimumSize = new System.Drawing.Size(155, 79);
@@ -317,23 +333,32 @@
             this.lblSchNumber.TabIndex = 98;
             this.lblSchNumber.Text = "Schedule";
             // 
-            // txtSchNumber
+            // panelSch
             // 
-            this.txtSchNumber.BackColor = System.Drawing.Color.White;
-            this.txtSchNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSchNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSchNumber.Location = new System.Drawing.Point(7, 27);
-            this.txtSchNumber.MaximumSize = new System.Drawing.Size(310, 29);
-            this.txtSchNumber.MinimumSize = new System.Drawing.Size(141, 29);
-            this.txtSchNumber.Name = "txtSchNumber";
-            this.txtSchNumber.Size = new System.Drawing.Size(141, 29);
-            this.txtSchNumber.TabIndex = 95;
-            this.txtSchNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.panelSch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSch.Controls.Add(this.maskSchNumber);
+            this.panelSch.Location = new System.Drawing.Point(7, 27);
+            this.panelSch.Name = "panelSch";
+            this.panelSch.Size = new System.Drawing.Size(141, 29);
+            this.panelSch.TabIndex = 64;
+            // 
+            // maskSchNumber
+            // 
+            this.maskSchNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.maskSchNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskSchNumber.Location = new System.Drawing.Point(-1, 2);
+            this.maskSchNumber.Mask = "0000";
+            this.maskSchNumber.Name = "maskSchNumber";
+            this.maskSchNumber.PromptChar = ' ';
+            this.maskSchNumber.ResetOnSpace = false;
+            this.maskSchNumber.Size = new System.Drawing.Size(141, 22);
+            this.maskSchNumber.TabIndex = 61;
+            this.maskSchNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panelBoxNumber
             // 
             this.panelBoxNumber.Controls.Add(this.lblBoxNumber);
-            this.panelBoxNumber.Controls.Add(this.txtBoxNumber);
+            this.panelBoxNumber.Controls.Add(this.panelBox);
             this.panelBoxNumber.Location = new System.Drawing.Point(330, 8);
             this.panelBoxNumber.Margin = new System.Windows.Forms.Padding(4);
             this.panelBoxNumber.MinimumSize = new System.Drawing.Size(155, 79);
@@ -352,18 +377,27 @@
             this.lblBoxNumber.TabIndex = 99;
             this.lblBoxNumber.Text = "Box";
             // 
-            // txtBoxNumber
+            // panelBox
             // 
-            this.txtBoxNumber.BackColor = System.Drawing.Color.White;
-            this.txtBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBoxNumber.Location = new System.Drawing.Point(7, 27);
-            this.txtBoxNumber.MaximumSize = new System.Drawing.Size(310, 29);
-            this.txtBoxNumber.MinimumSize = new System.Drawing.Size(141, 29);
-            this.txtBoxNumber.Name = "txtBoxNumber";
-            this.txtBoxNumber.Size = new System.Drawing.Size(141, 29);
-            this.txtBoxNumber.TabIndex = 96;
-            this.txtBoxNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.panelBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBox.Controls.Add(this.maskBoxNumber);
+            this.panelBox.Location = new System.Drawing.Point(7, 27);
+            this.panelBox.Name = "panelBox";
+            this.panelBox.Size = new System.Drawing.Size(141, 29);
+            this.panelBox.TabIndex = 64;
+            // 
+            // maskBoxNumber
+            // 
+            this.maskBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.maskBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskBoxNumber.Location = new System.Drawing.Point(-1, 3);
+            this.maskBoxNumber.Mask = "0000";
+            this.maskBoxNumber.Name = "maskBoxNumber";
+            this.maskBoxNumber.PromptChar = ' ';
+            this.maskBoxNumber.ResetOnSpace = false;
+            this.maskBoxNumber.Size = new System.Drawing.Size(141, 22);
+            this.maskBoxNumber.TabIndex = 62;
+            this.maskBoxNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // flowLayoutPanel6
             // 
@@ -873,7 +907,9 @@
             // 
             // progressBar
             // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(36, 414);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(12);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(579, 23);
             this.progressBar.TabIndex = 59;
@@ -1093,10 +1129,16 @@
             this.flowLayoutPanel5.ResumeLayout(false);
             this.panelSeqNumber.ResumeLayout(false);
             this.panelSeqNumber.PerformLayout();
+            this.panelSeq.ResumeLayout(false);
+            this.panelSeq.PerformLayout();
             this.panelSchNumber.ResumeLayout(false);
             this.panelSchNumber.PerformLayout();
+            this.panelSch.ResumeLayout(false);
+            this.panelSch.PerformLayout();
             this.panelBoxNumber.ResumeLayout(false);
             this.panelBoxNumber.PerformLayout();
+            this.panelBox.ResumeLayout(false);
+            this.panelBox.PerformLayout();
             this.flowLayoutPanel6.ResumeLayout(false);
             this.panelRejectSaveScan.ResumeLayout(false);
             this.flowPanelRecordClassification.ResumeLayout(false);
@@ -1141,13 +1183,10 @@
         private System.Windows.Forms.Label lblDocNotes;
         private System.Windows.Forms.FlowLayoutPanel panelSeqNumber;
         private System.Windows.Forms.Label lblSeqNumber;
-        private System.Windows.Forms.TextBox txtSeqNumber;
         private System.Windows.Forms.FlowLayoutPanel panelSchNumber;
         private System.Windows.Forms.Label lblSchNumber;
-        private System.Windows.Forms.TextBox txtSchNumber;
         private System.Windows.Forms.FlowLayoutPanel panelBoxNumber;
         private System.Windows.Forms.Label lblBoxNumber;
-        private System.Windows.Forms.TextBox txtBoxNumber;
         private System.Windows.Forms.Label lblAccessionNumber;
         private System.Windows.Forms.FlowLayoutPanel panelDocClass;
         private System.Windows.Forms.Label lblDocumentClass;
@@ -1206,5 +1245,11 @@
         private System.Windows.Forms.FlowLayoutPanel flowPanelDocumentNotes;
         private System.Windows.Forms.TableLayoutPanel panelRejectSaveScan;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.MaskedTextBox maskSeqNumber;
+        private System.Windows.Forms.MaskedTextBox maskBoxNumber;
+        private System.Windows.Forms.MaskedTextBox maskSchNumber;
+        private System.Windows.Forms.Panel panelSeq;
+        private System.Windows.Forms.Panel panelSch;
+        private System.Windows.Forms.Panel panelBox;
     }
 }
