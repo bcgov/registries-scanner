@@ -427,8 +427,6 @@ namespace RegScan
             if (_currentDocument == null)
                 return;
 
-            // Create a PDF document.
-            var pdf = new PdfDocument();
             int updateCount = ((int)100 / _scannedImageList.Count);
             showProgressBar();
             Application.DoEvents();
@@ -436,94 +434,12 @@ namespace RegScan
             UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
                 " btnViewAsPDF_Click Scanner  Objects");
 
-            // FOREACH image create a new page.
-            // TODO - swap in PDFDoc method
-            foreach (var bp in _scannedImageList)
-            {
-                // Create a new page and add in the image.
-                var pdfPage = new PdfPage();
-                pdfPage.Size = bp.PageSize;
-                pdfPage.Orientation = bp.Orientation;
-                pdf.AddPage(pdfPage);
-                var xgr = XGraphics.FromPdfPage(pdfPage);
-                var img = XImage.FromGdiPlusImage(bp.Image);
-                xgr.DrawImage(img, 0, 0);
-
-                // Update progress bar
-                progressBar.Value += updateCount;
-                Application.DoEvents();
-
-            }
+            // Create the PDF Document to open in default PDF viewing app
+            PdfDocument pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
 
             _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
             hideProgressBar();
 
-        }
-
-        /// <summary>
-        /// Method called when a user selects the 'Save' button on the main form.
-        /// Given an image create a new page and 'draw' the image to that page. The page is added
-        /// to the given PDF document. We should verify the form and its contents, then make a
-        /// call to push the document and all related metadata to the DRS API.
-        /// </summary>
-        /// <param name="pdf">PDF Document to add image to</param>
-        /// <param name="scannedImage">Image to be added to PDF document</param>
-        private void imageToPDF(PdfDocument pdf, ImageObj scannedImage)
-        {
-            // Create a new page and with the document scans specifications
-            var pdfPage = new PdfPage();
-            pdfPage.Size = scannedImage.PageSize;
-            pdfPage.Orientation = scannedImage.Orientation;
-
-            // Add the new page to the PDF document
-            pdf.AddPage(pdfPage);
-
-            // Make the PDF Page a drawable canvas
-            var xgr = XGraphics.FromPdfPage(pdfPage);
-            // Turn the scanned document into an XImage
-            var img = XImage.FromGdiPlusImage(scannedImage.Image);
-
-            // Get the PDF Pages 
-            double pageWidth = pdfPage.Width.Point;
-            double pageHeight = pdfPage.Height.Point;
-
-            // Maintain aspect ratio, fit within page, centered
-            // Get the shape of the scanned document and PDF page
-            double imgAspect = (double)scannedImage.Image.Width / scannedImage.Image.Height;
-            double pageAspect = pageWidth / pageHeight;
-
-            double drawWidth, drawHeight, drawX, drawY;
-            // if the images' shape is larger than the pages' shape 
-            if (imgAspect > pageAspect)
-            {
-                // limit the width to the width of the page
-                drawWidth = pageWidth;
-                // the height is set to the width of the page / the images' shape
-                //  -> Pw / (Iw / Ih) -> Pw * Ih / Iw
-                //  -> The images aspect ratio scaled to the pages width
-                drawHeight = pageWidth / imgAspect;
-                // 
-                drawX = 0;
-                // 
-                drawY = (pageHeight - drawHeight) / 2;
-            }
-            // if the pages' shape is larger than (or equal to) the images' shape 
-            else
-            {
-                // set the height to the pages height
-                drawHeight = pageHeight;
-                // set the width to the height of the page * the images' shape
-                //  -> Ph * (Iw / Ih) -> Ph * Ih / Iw
-                //  -> The images aspect ratio scaled to the pages height
-                drawWidth = pageHeight * imgAspect;
-                //
-                drawX = (pageWidth - drawWidth) / 2;
-                //
-                drawY = 0;
-            }
-
-            xgr.DrawImage(img, drawX, drawY, drawWidth, drawHeight);
-           
         }
 
         /// <summary>
@@ -615,7 +531,7 @@ namespace RegScan
             catch (FormatException ex)
             {
                 MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
-                UtilityObj.WriteLog(UtilityObj.error, "Couldnt process form fields to int.\n" + ex.ToString());
+                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
                 hideProgressBar();
                 return;
             }
