@@ -88,6 +88,7 @@
             this.lblIndexer = new System.Windows.Forms.Label();
             this.txtIndexer = new System.Windows.Forms.TextBox();
             this.imageBox = new RegScan.ImageBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -132,6 +133,7 @@
             this.panelFilingDate.SuspendLayout();
             this.panelIndexer.SuspendLayout();
             this.imageBox.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -905,6 +907,17 @@
             this.imageBox.Size = new System.Drawing.Size(654, 880);
             this.imageBox.TabIndex = 0;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnRotateImg);
+            this.panel1.Controls.Add(this.btnImagePDF);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(341, 3);
+            this.panel1.MaximumSize = new System.Drawing.Size(354, 43);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(323, 37);
+            this.panel1.TabIndex = 60;
+            // 
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -918,17 +931,16 @@
             // panelImageControl
             // 
             this.panelImageControl.ColumnCount = 7;
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.080808F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.080808F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.30303F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.080808F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.476152F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.01919F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.03557F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.03838F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
+            this.panelImageControl.Controls.Add(this.panel1, 3, 0);
             this.panelImageControl.Controls.Add(this.tableLayoutPanel2, 5, 0);
-            this.panelImageControl.Controls.Add(this.btnDeleteImage, 0, 0);
-            this.panelImageControl.Controls.Add(this.btnRotateImg, 2, 0);
-            this.panelImageControl.Controls.Add(this.btnImagePDF, 3, 0);
+            this.panelImageControl.Controls.Add(this.btnDeleteImage, 1, 0);
             this.panelImageControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImageControl.Location = new System.Drawing.Point(1, 881);
             this.panelImageControl.Margin = new System.Windows.Forms.Padding(1);
@@ -951,13 +963,14 @@
             this.tableLayoutPanel2.Controls.Add(this.lblTotalImage, 3, 0);
             this.tableLayoutPanel2.Controls.Add(this.lblDisplayImgOf, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(725, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(755, 1);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(1);
+            this.tableLayoutPanel2.MaximumSize = new System.Drawing.Size(354, 43);
             this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(300, 43);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(354, 43);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(327, 43);
             this.tableLayoutPanel2.TabIndex = 94;
             // 
             // flowLayoutPanel1
@@ -965,7 +978,7 @@
             this.flowLayoutPanel1.Controls.Add(this.btnPrevImage);
             this.flowLayoutPanel1.Controls.Add(this.lblCurImage);
             this.flowLayoutPanel1.Controls.Add(this.btnlNextImage);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(148, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(137, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(124, 43);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -1017,7 +1030,7 @@
             this.lblDisplay.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblDisplay.AutoSize = true;
             this.lblDisplay.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplay.Location = new System.Drawing.Point(41, 10);
+            this.lblDisplay.Location = new System.Drawing.Point(30, 10);
             this.lblDisplay.Name = "lblDisplay";
             this.lblDisplay.Size = new System.Drawing.Size(100, 22);
             this.lblDisplay.TabIndex = 7;
@@ -1029,7 +1042,7 @@
             this.lblTotalImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTotalImage.AutoSize = true;
             this.lblTotalImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalImage.Location = new System.Drawing.Point(325, 11);
+            this.lblTotalImage.Location = new System.Drawing.Point(299, 11);
             this.lblTotalImage.Name = "lblTotalImage";
             this.lblTotalImage.Size = new System.Drawing.Size(18, 20);
             this.lblTotalImage.TabIndex = 96;
@@ -1041,7 +1054,7 @@
             this.lblDisplayImgOf.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblDisplayImgOf.AutoSize = true;
             this.lblDisplayImgOf.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplayImgOf.Location = new System.Drawing.Point(282, 10);
+            this.lblDisplayImgOf.Location = new System.Drawing.Point(260, 10);
             this.lblDisplayImgOf.Name = "lblDisplayImgOf";
             this.lblDisplayImgOf.Size = new System.Drawing.Size(26, 22);
             this.lblDisplayImgOf.TabIndex = 95;
@@ -1053,7 +1066,7 @@
             this.btnDeleteImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnDeleteImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDeleteImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.btnDeleteImage.Location = new System.Drawing.Point(21, 3);
+            this.btnDeleteImage.Location = new System.Drawing.Point(101, 3);
             this.btnDeleteImage.Name = "btnDeleteImage";
             this.btnDeleteImage.Size = new System.Drawing.Size(136, 37);
             this.btnDeleteImage.TabIndex = 4;
@@ -1066,9 +1079,9 @@
             this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
-            this.btnRotateImg.Location = new System.Drawing.Point(294, 3);
+            this.btnRotateImg.Location = new System.Drawing.Point(12, 3);
             this.btnRotateImg.Name = "btnRotateImg";
-            this.btnRotateImg.Size = new System.Drawing.Size(136, 37);
+            this.btnRotateImg.Size = new System.Drawing.Size(136, 31);
             this.btnRotateImg.TabIndex = 5;
             this.btnRotateImg.Text = "Rotate Image";
             this.btnRotateImg.UseVisualStyleBackColor = true;
@@ -1079,9 +1092,9 @@
             this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
-            this.btnImagePDF.Location = new System.Drawing.Point(472, 3);
+            this.btnImagePDF.Location = new System.Drawing.Point(178, 3);
             this.btnImagePDF.Name = "btnImagePDF";
-            this.btnImagePDF.Size = new System.Drawing.Size(136, 37);
+            this.btnImagePDF.Size = new System.Drawing.Size(136, 31);
             this.btnImagePDF.TabIndex = 6;
             this.btnImagePDF.Text = "View as PDF";
             this.btnImagePDF.UseVisualStyleBackColor = true;
@@ -1165,6 +1178,7 @@
             this.panelIndexer.ResumeLayout(false);
             this.panelIndexer.PerformLayout();
             this.imageBox.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.panelImageControl.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -1251,5 +1265,6 @@
         private System.Windows.Forms.Panel panelSeq;
         private System.Windows.Forms.Panel panelSch;
         private System.Windows.Forms.Panel panelBox;
+        private System.Windows.Forms.Panel panel1;
     }
 }
