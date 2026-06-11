@@ -43,7 +43,7 @@ namespace RegScan
         private string _scannerId;
         private DateTime _scannedDate;
 
-        private Boolean _replaceRecordFlag = false;
+        private bool _updateRecord = false;
        
 
         // Calculated.
@@ -97,8 +97,8 @@ namespace RegScan
 
         public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
-        public Boolean UpdateRecord { 
-            get { return _replaceRecordFlag; } set { _replaceRecordFlag = value; } }
+        public bool UpdateRecord { 
+            get { return _updateRecord; } set { _updateRecord = value; } }
 
         // Calculated
         public PdfDocument PDFDocument { 
@@ -124,7 +124,6 @@ namespace RegScan
         {
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
 
-            // TODO - we should not exit, we should show the error then handle it gracefully
             try
             {
                 // upload the scanned image
@@ -133,11 +132,11 @@ namespace RegScan
             }
             catch (Exception e)
             {
-                MessageBox.Show("Scanned image failed to load into database. " +
-                                "Current data for " + BarCode + " may be inaccurate.");
+                string msg = "Scanned image failed to load into database. " +
+                                "Current data for " + BarCode + " may be inaccurate.";
                 UtilityObj.WriteLog(UtilityObj.error,
                     "Scanned document Image failed PUT of scanned image." + e.ToString());
-                Environment.Exit(0);
+                throw new ApplicationException(msg);
             }
         }
 
@@ -151,12 +150,12 @@ namespace RegScan
             }
             catch (Exception e)
             {
-                MessageBox.Show("Unable to update document record." +
-                                "Current data for " + BarCode + " may be inaccurate.");
+                string msg = "Unable to update document record." +
+                                "Current data for " + BarCode + " may be inaccurate.";
                 UtilityObj.WriteLog(UtilityObj.error,
                     "Scanned document Image failed PATCH to update document record.\n" +
                     e.ToString());
-                Environment.Exit(0);
+                throw new ApplicationException(msg);
             }
 
         }
@@ -180,7 +179,7 @@ namespace RegScan
             // Set some values before database requests.
             _isScanned = true;
 
-            if (_replaceRecordFlag)
+            if (_updateRecord)
             {
                 // Object to hold the document record information
                 DocumentModel apiDocModel = new DocumentModel();
@@ -198,14 +197,14 @@ namespace RegScan
             // The scanning application should never create a new record through the DRS API.
             else
             {
-                MessageBox.Show("Unable to create a new record for document with barcode: " +
-                                 BarCode + ". Please try again once document has been indexed.");
+                string msg = "Unable to create a new record for document with barcode: " +
+                                 BarCode + ". Please try again once document has been indexed.";
                 UtilityObj.WriteLog(UtilityObj.error, "No existing record for barcode: " + BarCode);
-                Environment.Exit(0);
+                throw new ArgumentException(msg);
             }
 
             // Once done reset flag
-            _replaceRecordFlag = false;
+            _updateRecord = false;
         }
 
         #endregion
@@ -320,7 +319,7 @@ namespace RegScan
 
             model.description = _description;
             model.scanningInformation = scanInfo;
-            
+             
             // Build the UpdateDocument model 
             //model.consumerDocumentId = _barCode.ToString();
             //model.consumerIdentifier = _consumerIdentifier;
