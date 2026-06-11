@@ -111,18 +111,7 @@ namespace RegScan
             ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
 
-        public void CreateTwainDeviceManager()
-        {
-            try
-            {
-                if (_deviceManager != null)
-                    _deviceManager.Close();
-                _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
-                //Set the twain DSM path to the local folder if using 64 bit
-                //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
-            }
-            catch { }
-        }
+
 
         #region Scanning Session
         /// <summary>
@@ -336,6 +325,52 @@ namespace RegScan
                      
         }
 
+
+        /// <summary>
+        /// All steps used to hide the progress bar, show scanner controls and enable the form
+        /// </summary>
+        private void hideProgressBar()
+        {
+            // Show scanning options when processing scan is complete
+            useUICheckBox.Enabled = true;
+            useAdfCheckBox.Enabled = true;
+            useDuplexCheckBox.Enabled = true;
+            useUICheckBox.Enabled = true;
+            ckBoxLowResolution.Enabled = true;
+            showProgressIndicatorUICheckBox.Enabled = true;
+
+            // hide the progress bar
+            progressBar.Visible = false;
+            progressBar.SendToBack();
+            progressBar.Enabled = false;
+
+            // Allow the user to interact with the form
+            Enabled = true;
+        }
+
+        /// <summary>
+        /// All steps used to show the progress bar, hide scanner controls and disable the form
+        /// </summary>
+        private void showProgressBar()
+        {
+            // Disable interaction with the form
+            Enabled = false;
+
+            // Hide scanning options when processing scan
+            useUICheckBox.Enabled = false;
+            useAdfCheckBox.Enabled = false;
+            useDuplexCheckBox.Enabled = false;
+            useUICheckBox.Enabled = false;
+            ckBoxLowResolution.Enabled = false;
+            showProgressIndicatorUICheckBox.Enabled = false;
+
+            // show the progress bar
+            progressBar.Enabled = true;
+            progressBar.BringToFront();
+            progressBar.Visible = true;
+            progressBar.Value = 0;
+        }
+
         #endregion
 
         #region Image Display.
@@ -412,185 +447,6 @@ namespace RegScan
                 btnDeleteImage.ForeColor = UI.Theme.TextDisabled;
                 btnDeleteImage.Enabled = false;
             }
-        }
-
-        #endregion
-        #region click events.
-        private void btnRotateImg_Click(object sender, EventArgs e)
-        {
-            // TODO - currently this doesnt actually rotate the image it mirrors it?
-            _scannedImageList[_currentImageIndex].Rotate();
-            UpdateImageDisplay();
-        }
-
-        /// <summary>
-        /// View the scanned pages as a PDF.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnImagePDF_Click(object sender, EventArgs e)
-        {
-            // Nothing to view if no document
-            if (_currentDocument == null)
-                return;
-
-            int updateCount = ((int)100 / _scannedImageList.Count);
-            showProgressBar();
-            Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
-                " btnViewAsPDF_Click Scanner  Objects");
-
-            // Create the PDF Document to open in default PDF viewing app
-            PdfDocument pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
-
-            _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
-            hideProgressBar();
-
-        }
-
-        /// <summary>
-        ///  Save the document to the database.
-        /// </summary>
-        /// <param name="sender"> Save Scan Button </param>
-        /// <param name="e"> Events from user </param>
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            bool descChange = false;
-            bool accNChange = false;
-            PdfDocument pdf = null;
-
-            // Validation
-            if (_currentDocument == null)
-                return;
-
-            if (_currentDocument.PageCount != _scannedImageList.Count)
-            {
-                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
-                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
-                    MessageBoxButtons.YesNo);
-                if ( usr_rsp == System.Windows.Forms.DialogResult.No)
-                    return;
-            }
-
-            // Show progress bar and disable form elements 
-            showProgressBar();
-
-            // TODO: This is discouraged in Microsoft Docs.
-            Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " _scannedImageList Objects");
-
-
-            try
-            {
-                pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
-            }
-            catch (Exception ex)
-            {
-                UtilityObj.WriteLog(UtilityObj.error, "Unable to process images to PDF.\n" +
-                    ex.ToString());
-            }
-            // TODO - This is discouraged in Microsoft Docs.
-            Application.DoEvents();
-
-
-            // Update the document.
-            _currentDocument.PDFDocument = pdf;
-            _currentDocument.ScannerId = Environment.UserName;
-            _currentDocument.ScannedDate = DateTime.Now;
-
-            // Get the form fields we want to update
-            // If the description field changes we can use one endpoint
-            // If it isnt updated we have to use a different endpoint.
-            if (_currentDocument.Description != txtDocumentNotes.Text)
-            {
-                descChange = true;
-                _currentDocument.Description = txtDocumentNotes.Text;
-            }
-            
-            try
-            {
-                // If any of the fields are missing values
-                if (string.IsNullOrEmpty(maskSeqNumber.Text) || 
-                    string.IsNullOrEmpty(maskSchNumber.Text) || 
-                    string.IsNullOrEmpty(maskBoxNumber.Text))
-                    throw new FormatException();
-                // or if there is an error trying to parse them as ints
-                var seqNumber = Int32.Parse(maskSeqNumber.Text);
-                var schNumber = Int32.Parse(maskSchNumber.Text);
-                var boxNumber = Int32.Parse(maskBoxNumber.Text);
-
-                // we only need to update the values if there were changes made
-                if (seqNumber != _currentDocument.SequenceNumber || 
-                    schNumber != _currentDocument.ScheduleNumber || 
-                    boxNumber != _currentDocument.BoxNumber)
-                {
-                    _currentDocument.SequenceNumber = seqNumber;
-                    _currentDocument.ScheduleNumber = schNumber;
-                    _currentDocument.BoxNumber = boxNumber;
-                    accNChange = true;
-                }
-                
-            }
-            // Catch the formatting error
-            catch (FormatException ex)
-            {
-                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
-                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
-                hideProgressBar();
-                return;
-            }
-
-            _currentDocument.UpdateInsert(descChange || accNChange);
-
-            // Reset the document and display.
-            ResetDocument();
-            hideProgressBar();
-        }
-
-        /// <summary>
-        /// Cancel the scan.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCancelScan_Click(object sender, EventArgs e)
-        {
-            // Reset the document and clear the display.
-            ResetDocument();
-        }
-
-        /// <summary>
-        /// Automated Document Feeder checkbox clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            // If adf, then allow duplex.
-            if (useAdfCheckBox.Checked)
-                useDuplexCheckBox.Enabled = true;
-            else
-            {
-                // otherwise insure not checked or can be checked.
-                useDuplexCheckBox.Enabled = false;
-                useDuplexCheckBox.Checked = false;
-            }
-        }
-
-        /// <summary>
-        /// Fires when this forms becomes active.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void frmScanDocument_Activated(object sender, EventArgs e)
-        {
-            // Form is maximized.
-            this.WindowState = FormWindowState.Maximized;                      
-
-            // Scan button is set as the focus.
-            btnScanPage.Focus();
         }
 
         #endregion
@@ -688,7 +544,21 @@ namespace RegScan
         }
         #endregion
 
-        #region Scanning Session.
+        #region Scanner Methods
+
+        public void CreateTwainDeviceManager()
+        {
+            try
+            {
+                if (_deviceManager != null)
+                    _deviceManager.Close();
+                _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
+                //Set the twain DSM path to the local folder if using 64 bit
+                //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
+            }
+            // TODO - Make this catch do something.
+            catch { }
+        }
 
         /// <summary>
         /// Subscribe to the device events.
@@ -838,57 +708,11 @@ namespace RegScan
             // close the device
             _currentDevice.Close();
 
-            // specify that image acquisition is finished
-            //_isImageAcquiring = false;
-
             // Clear program bar.
             hideProgressBar();
 
             // process the scanned images.
             ProcessCompleted();
-        }
-
-        /// <summary>
-        /// All steps used to hide the progress bar, show scanner controls and enable the form
-        /// </summary>
-        private void hideProgressBar()
-        {
-            // Show scanning options when processing scan is complete
-            useUICheckBox.Enabled = true;
-            useAdfCheckBox.Enabled = true;
-            useDuplexCheckBox.Enabled = true;
-            useUICheckBox.Enabled = true;
-            ckBoxLowResolution.Enabled = true;
-            showProgressIndicatorUICheckBox.Enabled = true;
-
-            // hide the progress bar
-            progressBar.Visible = false;
-            progressBar.Enabled = false;
-
-            // Allow the user to interact with the form
-            Enabled = true;
-        }
-
-        /// <summary>
-        /// All steps used to show the progress bar, hide scanner controls and disable the form
-        /// </summary>
-        private void showProgressBar()
-        {
-            // Disable interaction with the form
-            Enabled = false;
-
-            // Hide scanning options when processing scan
-            useUICheckBox.Enabled = false;
-            useAdfCheckBox.Enabled = false;
-            useDuplexCheckBox.Enabled = false;
-            useUICheckBox.Enabled = false;
-            ckBoxLowResolution.Enabled = false;
-            showProgressIndicatorUICheckBox.Enabled = false;
-
-            // show the progress bar
-            progressBar.Enabled = true;
-            progressBar.Visible = true;
-            progressBar.Value = 0;
         }
 
         private void setUpScanner()
@@ -966,6 +790,10 @@ namespace RegScan
             }
         }
 
+        #endregion
+
+        #region Event Handlers
+
         /// <summary>
         /// Ensure the scanning device is open and use the form fields to configure scanning
         /// options. 
@@ -1019,9 +847,200 @@ namespace RegScan
                 return;
             }
         }
-        #endregion
 
-        #region Event Handlers
+        private void btnRotateImg_Click(object sender, EventArgs e)
+        {
+            // TODO - currently this doesnt actually rotate the image it mirrors it?
+            _scannedImageList[_currentImageIndex].Rotate();
+            UpdateImageDisplay();
+        }
+
+        /// <summary>
+        /// View the scanned pages as a PDF.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnImagePDF_Click(object sender, EventArgs e)
+        {
+            // Nothing to view if no document
+            if (_currentDocument == null)
+                return;
+
+            int updateCount = ((int)100 / _scannedImageList.Count);
+            showProgressBar();
+            Application.DoEvents();
+
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " btnViewAsPDF_Click Scanner  Objects");
+
+            // TODO - investigate how to do this asynchronously
+            // Create the PDF Document to open in default PDF viewing app
+            PdfDocument pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
+
+            _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
+            hideProgressBar();
+
+        }
+
+        /// <summary>
+        ///  Save the document to the database.
+        /// </summary>
+        /// <param name="sender"> Save Scan Button </param>
+        /// <param name="e"> Events from user </param>
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            bool descChange = false;
+            bool accNChange = false;
+            PdfDocument pdf = null;
+
+            // Validation
+            if (_currentDocument == null)
+                return;
+
+            if (_currentDocument.PageCount != _scannedImageList.Count)
+            {
+                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
+                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
+                    MessageBoxButtons.YesNo);
+                if (usr_rsp == System.Windows.Forms.DialogResult.No)
+                    return;
+            }
+
+            // Show progress bar and disable form elements 
+            showProgressBar();
+
+            // TODO: This is discouraged in Microsoft Docs.
+            Application.DoEvents();
+
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " _scannedImageList Objects");
+
+
+            try
+            {
+                pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
+            }
+            catch (Exception ex)
+            {
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to process images to PDF.\n" +
+                    ex.ToString());
+            }
+            // TODO - This is discouraged in Microsoft Docs.
+            Application.DoEvents();
+
+
+            // Update the document.
+            _currentDocument.PDFDocument = pdf;
+            _currentDocument.ScannerId = Environment.UserName;
+            _currentDocument.ScannedDate = DateTime.Now;
+
+            // Get the form fields we want to update
+            // If the description field changes we can use one endpoint
+            // If it isnt updated we have to use a different endpoint.
+            if (string.Equals(_currentDocument.Description ?? string.Empty, 
+                txtDocumentNotes.Text, StringComparison.Ordinal))
+            {
+                descChange = true;
+                _currentDocument.Description = txtDocumentNotes.Text;
+            }
+
+            try
+            {
+                // If any of the fields are missing values
+                if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
+                    string.IsNullOrEmpty(maskSchNumber.Text) ||
+                    string.IsNullOrEmpty(maskBoxNumber.Text))
+                    throw new FormatException();
+                // or if there is an error trying to parse them as ints
+                var seqNumber = Int32.Parse(maskSeqNumber.Text);
+                var schNumber = Int32.Parse(maskSchNumber.Text);
+                var boxNumber = Int32.Parse(maskBoxNumber.Text);
+
+                // we only need to update the values if there were changes made
+                if (seqNumber != _currentDocument.SequenceNumber ||
+                    schNumber != _currentDocument.ScheduleNumber ||
+                    boxNumber != _currentDocument.BoxNumber)
+                {
+                    _currentDocument.SequenceNumber = seqNumber;
+                    _currentDocument.ScheduleNumber = schNumber;
+                    _currentDocument.BoxNumber = boxNumber;
+                    accNChange = true;
+                }
+
+            }
+            // Catch the formatting error
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
+                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
+                hideProgressBar();
+                return;
+            }
+
+            try
+            {
+                _currentDocument.UpdateInsert(descChange || accNChange);
+            }
+            catch (ApplicationException ae)
+            {
+                MessageBox.Show("There was an error in the Saving process. Please try again, or " +
+                    "if there have been multiple failures please contact support.\n" + ae.Message,
+                    "Unable to Process Save");
+            }
+            catch (ArgumentException age)
+            {
+                MessageBox.Show(age.Message);
+            }
+
+            // Reset the document and display.
+            ResetDocument();
+            hideProgressBar();
+        }
+
+        /// <summary>
+        /// Cancel the scan.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCancelScan_Click(object sender, EventArgs e)
+        {
+            // Reset the document and clear the display.
+            ResetDocument();
+        }
+
+        /// <summary>
+        /// Automated Document Feeder checkbox clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // If adf, then allow duplex.
+            if (useAdfCheckBox.Checked)
+                useDuplexCheckBox.Enabled = true;
+            else
+            {
+                // otherwise insure not checked or can be checked.
+                useDuplexCheckBox.Enabled = false;
+                useDuplexCheckBox.Checked = false;
+            }
+        }
+
+        /// <summary>
+        /// Fires when this forms becomes active.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmScanDocument_Activated(object sender, EventArgs e)
+        {
+            // Form is maximized.
+            this.WindowState = FormWindowState.Maximized;
+
+            // Scan button is set as the focus.
+            btnScanPage.Focus();
+        }
+
+
         private void statusBtnPrevImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex - 1 < 0)
