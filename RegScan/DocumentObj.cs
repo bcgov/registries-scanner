@@ -128,7 +128,7 @@ namespace RegScan
             try
             {
                 // upload the scanned image
-                string uploadResp = DocumentApi.uploadDocument(
+                string uploadResp = DocumentApi.UploadDocument(
                     pdfBytes, fileName, _documentServiceId);
             }
             catch (Exception e)
@@ -146,7 +146,7 @@ namespace RegScan
             try
             {
                 // update the document record
-                string updateResp = DocumentApi.updateDocumentRecord(
+                string updateResp = DocumentApi.UpdateDocumentRecord(
                     apiDocModel, _documentServiceId);
             }
             catch (Exception e)
@@ -247,7 +247,7 @@ namespace RegScan
 
             // This value will hold the information we need for the document. 
             // The Call to `getDocObjectList()` is not necessary.
-            string resp = DocumentApi.searchByBarcode(BarCode);
+            string resp = DocumentApi.SearchByBarcode(BarCode);
        
             if (!string.IsNullOrEmpty(resp))
             {
@@ -277,7 +277,7 @@ namespace RegScan
                     var queries = new Dictionary<string, string>() { 
                         { "documentServiceId", record["documentServiceId"].ToString() } 
                     };
-                    var betterResponse = DocumentApi.getSearch(docClass, queries);
+                    var betterResponse = DocumentApi.GetSearch(docClass, queries);
 
                     // This does return a list but the documentClass documentServiceId pairing is
                     //     unique -> only one element

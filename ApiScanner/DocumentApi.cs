@@ -1,8 +1,10 @@
 ﻿using AsyncRequests;
-using Utilities;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Web.UI.WebControls;
+using Utilities;
 
 
 namespace ApiScanner
@@ -31,7 +33,7 @@ namespace ApiScanner
         ///     The unique identifier of an existing document service document
         /// </param>
         /// <returns></returns>
-        public static string updateDocumentRecord(DocumentModel data, string docServId)
+        public static string UpdateDocumentRecord(DocumentModel data, string docServId)
         {
             // TODO - update how we pass information back to the API 
             //     - verification & checking that the data should be changed
@@ -51,7 +53,7 @@ namespace ApiScanner
         ///     other elements to be used in the request. Backup if _fileName is an empty string
         /// </param>
         /// <returns>String representation of the result from the request</returns>
-        public static string uploadDocument(byte[] pdfBytes, string filename, string docServiceId)
+        public static string UploadDocument(byte[] pdfBytes, string filename, string docServiceId)
         {
             Dictionary<string, object> param = new Dictionary<string, object>();
             if (!string.IsNullOrEmpty(filename))
@@ -76,7 +78,7 @@ namespace ApiScanner
         /// </param>
         /// <returns>string response from search endpoint</returns>
         /// <exception cref="Exception">If barcode is empty or null throw an error</exception>
-        public static string searchByBarcode(string barcode)
+        public static string SearchByBarcode(string barcode)
         {
             string endpoint = "/doc/api/v1/searches";
 
@@ -85,7 +87,7 @@ namespace ApiScanner
             {
                 UtilityObj.WriteLog(UtilityObj.error, "Document is either null or empty. " + 
                         "Cannot hit search endpoint.");
-                throw new Exception("Unable to process search without Barcode. Please try again.");
+                throw new ArgumentNullException("Unable to process search without Barcode. Please try again.");
             }
 
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
@@ -100,7 +102,7 @@ namespace ApiScanner
         ///     Any additional queries (documentServiceID or consumerId) to get a unique result
         /// </param>
         /// <returns>string representation of the result of the query</returns>
-        public static string getSearch(string docClass, Dictionary<string, string> queries)
+        public static string GetSearch(string docClass, Dictionary<string, string> queries)
         {
             List<string> queryStrings = new List<string>();
             string endpoint = "/doc/api/v1/searches/" + docClass + "?";
@@ -109,7 +111,7 @@ namespace ApiScanner
             {
                 queryStrings.Add(kvp.Key + "=" + kvp.Value);
             }
-            
+
             endpoint += string.Join("&", queryStrings);
             
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
