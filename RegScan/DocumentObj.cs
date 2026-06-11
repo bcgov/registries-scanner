@@ -401,22 +401,16 @@ namespace RegScan
             // Consumer information
             // - identifier of one[+] document(s) associated with the consumer application entity
             if (jDoc.ContainsKey("consumerDocumentId"))
-                { docObj._barCode = (int)jDoc["consumerDocumentId"]; }
+                { docObj._barCode = jDoc["consumerDocumentId"].Value<int>(); }
             // - Either a singular consumerFileName is returned, or a list of consumerFileNames
             if (jDoc.ContainsKey("consumerFilename"))
                 { docObj._fileName = (string)jDoc["consumerFilename"]; }
             else if (jDoc.ContainsKey("consumerFilenames")) 
             {
                 // Convert to an array type and add all names to a string sep by a comma
-                JArray filenameList = (JArray)jDoc["consumerFileNames"];
-                foreach (string filename in filenameList)
-                {
-                    docObj._fileName += (string)filename;
-                    if (filename != (string)filenameList.Last())
-                    {
-                        docObj._fileName += ", ";
-                    }
-                }
+                JArray filenameList = (JArray)jDoc["consumerFilenames"];
+                // Get the first filenname from the list.
+                docObj._fileName = (string)filenameList[0];
             }
             // - The DateTime of application/ filing
             if (jDoc.ContainsKey("consumerFilingDateTime")) 
@@ -468,11 +462,11 @@ namespace RegScan
                 
                 // Batch ID that the scan was processed with
                 if (scanInfo.ContainsKey("batchId"))
-                    { docObj._batchId = (int)scanInfo["batchId"];}
+                    { docObj._batchId = scanInfo["batchId"].Value<int>(); }
 
                 // Number of pages expected in the document
                 if (scanInfo.ContainsKey("pageCount"))
-                    { docObj._pageCount = (int)scanInfo["pageCount"];}
+                    { docObj._pageCount = scanInfo["pageCount"].Value<int>(); }
 
                 // The date of the consumer application document scan date
                 if (scanInfo.ContainsKey("scanDateTime"))

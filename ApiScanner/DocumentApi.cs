@@ -102,12 +102,15 @@ namespace ApiScanner
         /// <returns>string representation of the result of the query</returns>
         public static string getSearch(string docClass, Dictionary<string, string> queries)
         {
-            string endpoint = "/doc/api/v1/searches/" + docClass;
+            List<string> queryStrings = new List<string>();
+            string endpoint = "/doc/api/v1/searches/" + docClass + "?";
             
             foreach (KeyValuePair<string, string> kvp in queries)
             {
-                endpoint += "?" + kvp.Key + "=" + kvp.Value;
+                queryStrings.Add(kvp.Key + "=" + kvp.Value);
             }
+            
+            endpoint += string.Join("&", queryStrings);
             
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
         }

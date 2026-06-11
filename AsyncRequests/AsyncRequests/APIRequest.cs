@@ -107,7 +107,7 @@ namespace AsyncRequests
             
             foreach (var keyValuePair in param)
             {
-                request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
+                request.AddQueryParameter(keyValuePair.Key, keyValuePair.Value.ToString());
             }
 
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);

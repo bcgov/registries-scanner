@@ -79,7 +79,7 @@ namespace RegScan
         {
             InitializeComponent();
 
-            UtilityObj.CreateFolder("Images");
+            UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
 
             // Set scanner defaults.
             _defaultSetting = new ScannerSettingObj();
@@ -117,8 +117,8 @@ namespace RegScan
         /// <summary>
         /// Process the scanned image as a bitmap.
         /// </summary>
-        /// <param name="_Image"> Bitmap image from scan process </param>
-        private void ProcessScan(Bitmap _Image)
+        /// <param name="image"> Bitmap image from scan process </param>
+        private void ProcessScan(Bitmap image)
         {
             UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
@@ -127,21 +127,25 @@ namespace RegScan
             //     eliminate the need for image0.
             if (image0 == null)
             {
-                image0 = _Image;
+                image0 = image;
             }
 
-            string fileNumber = _scanSessionFileList.Count > 0 ? Convert.ToString(_scanSessionFileList.Count) : "";
+            int fileCount = _scanSessionFileList.Count;
+
+            string fileNumber = fileCount > 0 ? 
+                fileCount.ToString() : "";
             string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
-            UtilityObj.SaveImageAsFile(fileName, _Image);
+            UtilityObj.SaveImageAsFile(fileName, image);
 
             // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
             
             // Create a new ImageObj and add to the list of scanned images
-            _scannedImageList.Add(new ImageObj(image0, PdfSharp.PageOrientation.Portrait,
-                ImageObj.GetPageSize(image0.Width, image0.Height)));
+            _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait,
+                ImageObj.GetPageSize(image.Width, image.Height)));
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
+            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + 
+                (fileNumber == "" ? "0" : fileNumber));
         }
 
         /// <summary>
@@ -176,7 +180,9 @@ namespace RegScan
                 // There may be more than one document (known as versions)
                 try
                 {
-                    doc = DocumentObj.Find(barCode)[0];
+                    List<DocumentObj> resp = DocumentObj.Find(barCode);
+                    if (resp.Count >= 1)
+                        doc = resp[0];
                 }
                 catch (ArgumentException ae)
                 {
@@ -199,7 +205,7 @@ namespace RegScan
                     // Ask the user if they would like to try again 
                     if (MessageBox.Show(msg + System.Environment.NewLine +
                         "Would you like to try again?", "Missing/ Not Found Barcode",
-                        MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // start loop over with a request for a new barcode
                         barCode = null;
@@ -250,7 +256,7 @@ namespace RegScan
                     if (MessageBox.Show("Document with barcode " + barCode +
                         " has already been scanned. Do you want to create a new version?",
                         "Document Already Scanned", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         // If a new version, then update the version number
                         // TODO - get previous version number from filename. Then add one.
@@ -285,12 +291,15 @@ namespace RegScan
             }
             // NOTE Create a new record for the scanned image logic could be added here
             
+            if (_currentDocument != null)
+            {
             // if the barcode was not set
             if (string.IsNullOrEmpty(_currentDocument.BarCode))
             {
                 // Clear Image
                 imageBox.Image = null;
             }
+        }
         }
 
         /// <summary>
@@ -424,7 +433,7 @@ namespace RegScan
                 if (image == null) 
                 { 
                     MessageBox.Show("Error loading image for page " + 
-                        Convert.ToString(_currentImageIndex + 1));
+                        (_currentImageIndex + 1).ToString());
                     return;
                 }
                 SetImage(image);
@@ -437,8 +446,8 @@ namespace RegScan
             // Don't allow the first page to be deleted
             if (_currentImageIndex != 0)
             {
-                btnDeleteImage.BackColor = UI.Theme.DangerBackground;
-                btnDeleteImage.ForeColor = UI.Theme.TextInverse;
+                btnDeleteImage.BackColor = UI.Theme.BackgroundPrimary;
+                btnDeleteImage.ForeColor = UI.Theme.DangerBackground;
                 btnDeleteImage.Enabled = true;
             }
             else
@@ -477,7 +486,6 @@ namespace RegScan
             maskSchNumber.Text = "";
             maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
-            imageBox.Image = null;
 
             // Delete any temporary FileNames.
             try
@@ -498,7 +506,7 @@ namespace RegScan
 
             // reset img numbers
             lblCurImage.Text = "0";
-            lblTotalImage.Text = _tempFileNameList.Count().ToString();
+            lblTotalImage.Text = "0";
 
             imageBox.Image = null;
         }
@@ -506,11 +514,11 @@ namespace RegScan
         /// <summary>
         /// Sets the image in the image box.
         /// </summary>
-        /// <param name="_Image"></param>
-        protected void SetImage(Bitmap _Image)
+        /// <param name="image"></param>
+        protected void SetImage(Bitmap image)
         {
             imageBox.SizeToFit = true;
-            imageBox.Image = _Image;
+            imageBox.Image = image;
             imageBox.SizeToFit = false;
         }
 
@@ -614,20 +622,12 @@ namespace RegScan
         /// <param name="e"> Holds the image and it's properties </param>
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // image acquisition must be canceled because application's form is closing
-            //if (_cancelTransferBecauseFormIsClosing)
-            //{
-            //    // cancel image acquisition
-            //    _currentDevice.CancelTransfer();
-            //    return;
-            //}
-
-            // Transform the acquired image into a Bitmap.
-            Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
-
+            // Transform the acquired image into a temporary Bitmap.
+            using (Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap()))
+            { 
             // Method call to process the bitmap
             ProcessScan(acquiredImage);
-
+            }
         }
 
         /// <summary>
@@ -1060,7 +1060,7 @@ namespace RegScan
         private void btnDeleteImage_Click(object sender, EventArgs e)
         {
             // Confirm this image is to be deleted.
-            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 _scannedImageList.RemoveAt(_currentImageIndex);
                 _currentImageIndex--;
