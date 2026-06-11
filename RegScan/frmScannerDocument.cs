@@ -134,7 +134,8 @@ namespace RegScan
             UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
             // Set the first image to image0 for barcode scanning and display purposes.
-            // NOTE - It may be possible to use _Image and image0 interchangeably and eliminate the need for image0.
+            // NOTE - It may be possible to use image and image0 interchangeably and
+            //     eliminate the need for image0.
             if (image0 == null)
             {
                 image0 = _Image;
@@ -154,6 +155,13 @@ namespace RegScan
             UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
         }
 
+        /// <summary>
+        /// Attempts to find a barcode on the first page scanned then tries to request information
+        /// the DRS API on the barcode. If the barcode is unable to be read by the `BarCodeObj` the
+        /// user will be prompted to enter a barcode manually. This is looped until a barcode is
+        /// acquired or until the user indicates they do not want to enter a barcode; in that case
+        /// the form is reset.
+        /// </summary>
         private void ProcessFirstPage()
         {
             // Document object, holds all information about the current document
@@ -265,7 +273,6 @@ namespace RegScan
                         // Cancel this scan if a new version is not required.
                         cancelScan = true;
                     }
-                        
                 }
 
                 // IF scan is to be cancelled

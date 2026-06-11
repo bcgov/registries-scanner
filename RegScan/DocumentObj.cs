@@ -4,13 +4,9 @@ using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using System.Linq.Expressions;
-using PdfSharp.Pdf.Content.Objects;
 
 namespace RegScan
 {
@@ -121,8 +117,9 @@ namespace RegScan
         #region dml
 
         /// <summary>
-        /// Handles the logic of updating a current record with the scanned document.
+        /// Handles the logic of uploading the scanned document to the DRS API.
         /// </summary>
+        /// <param name="fileName">Name to use for the document in DRS API</param>
         private void UploadImage(string fileName)
         {
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
@@ -173,6 +170,11 @@ namespace RegScan
         ///        application does not have the ability to create a new document record through
         ///        DRS API. This functionality could be added in the future.
         /// </summary>
+        /// <param name="updateRecordFlag">
+        /// Determines if the applicaiton will update the record and upload image. If this is true
+        /// the scanning app shows a warning. This is because at this time the scanning applicaiton
+        /// is not intended to create new records. 
+        /// </param>
         public void UpdateInsert(bool updateRecordFlag)
         {
             // Set some values before database requests.
@@ -209,6 +211,8 @@ namespace RegScan
         #endregion
 
         #region Utility 
+        // TODO - this should be in the utility class, and need to be reworked.
+        //     Reading and writing to FileIO is not optimal.
         public void ConvertPDFToImageList()
         {
             // The document will be null if this is a new scan
@@ -289,6 +293,14 @@ namespace RegScan
             return documentList;
         }
 
+        /// <summary>
+        /// Assign values from this DocumentObj to the DocumentModel passed in. 
+        /// </summary>
+        /// <param name="model">Model to add vaules to</param>
+        /// <remarks>
+        /// Currently we dont want to update any of the items commented out at the end of the
+        /// function. These can be uncommented if we want to send them in the API request. 
+        /// </remarks>
         public void CopyToModel(DocumentModel model)
         {
             // get the current time
@@ -309,8 +321,6 @@ namespace RegScan
             model.description = _description;
             model.scanningInformation = scanInfo;
             
-            // Currently we dont want to update any of the following.
-            // These can be uncommented if we want to send them in the API request. 
             // Build the UpdateDocument model 
             //model.consumerDocumentId = _barCode.ToString();
             //model.consumerIdentifier = _consumerIdentifier;
@@ -329,7 +339,7 @@ namespace RegScan
         /// <param name="docObj">Object to add the Accession Number values to</param>
         /// <param name="accNumb">String to be parsed for individual numbers</param>
         /// <remarks>
-        /// The Regex pattern @"^(\d{0,2}).?(?\d{4}).?(\d{4})$" can be read as:
+        /// The Regex pattern @"^(\d{0,2}).?(\d{4}).?(\d{4})$" can be read as:
         ///   @ verbatim text string. Wont interoperate 'escape' characters
         ///   ^ matches the start of the string (limits time and effort from 'greedy' algorithm)
         ///   (\d{0,2}) Group 1 matches 0 to 2 digits
