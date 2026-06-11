@@ -184,6 +184,16 @@ namespace RegScan
                     if (resp.Count >= 1)
                         doc = resp[0];
                 }
+                catch (ArgumentNullException ane)
+                {
+                    // This exception is thrown if the barcode is not passed into the controller
+                    // correctly or if it is an empty string.
+                    UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
+                    MessageBox.Show(ane.Message, "Unable to Process Request");
+                    // continue the process
+                    documentsFound = false;
+                    checkBarcode = false;
+                }
                 catch (ArgumentException ae)
                 {
                     // This type of exception is thrown when the accession number is not in an
@@ -290,16 +300,16 @@ namespace RegScan
                 }
             }
             // NOTE Create a new record for the scanned image logic could be added here
-            
+
             if (_currentDocument != null)
             {
-            // if the barcode was not set
-            if (string.IsNullOrEmpty(_currentDocument.BarCode))
-            {
-                // Clear Image
-                imageBox.Image = null;
+                // if the barcode was not set
+                if (string.IsNullOrEmpty(_currentDocument.BarCode))
+                {
+                    // Clear Image
+                    imageBox.Image = null;
+                }
             }
-        }
         }
 
         /// <summary>
@@ -625,8 +635,8 @@ namespace RegScan
             // Transform the acquired image into a temporary Bitmap.
             using (Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap()))
             { 
-            // Method call to process the bitmap
-            ProcessScan(acquiredImage);
+                // Method call to process the bitmap
+                ProcessScan(acquiredImage);
             }
         }
 
@@ -801,7 +811,7 @@ namespace RegScan
         /// <param name="sender"> "Scan" button on Main Form </param>
         /// <param name="e"> Mouse events that may need to be handled </param>
         private void btnScanPage_Click(object sender, EventArgs e)
-        {    
+        {
             // If we are starting a new scanning session we want to ensure any files created in
             // past sessions are cleared.
             if (_currentDocument == null)
@@ -810,7 +820,7 @@ namespace RegScan
                 _scanSessionFileList.Clear();
                 UtilityObj.CreateFolder("Images");
             }
-            
+
             image0 = null;
             showProgressBar();
 
@@ -830,7 +840,7 @@ namespace RegScan
                 MessageBox.Show(ex2.Message);
                 return;
             }
-            
+
             try
             {
                 UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
