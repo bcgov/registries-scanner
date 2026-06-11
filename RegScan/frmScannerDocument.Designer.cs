@@ -88,8 +88,10 @@
             this.lblIndexer = new System.Windows.Forms.Label();
             this.txtIndexer = new System.Windows.Forms.TextBox();
             this.imageBox = new RegScan.ImageBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnRotateImg = new System.Windows.Forms.Button();
+            this.btnImagePDF = new System.Windows.Forms.Button();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -100,8 +102,6 @@
             this.lblTotalImage = new System.Windows.Forms.Label();
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
-            this.btnRotateImg = new System.Windows.Forms.Button();
-            this.btnImagePDF = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -907,6 +907,16 @@
             this.imageBox.Size = new System.Drawing.Size(654, 880);
             this.imageBox.TabIndex = 0;
             // 
+            // progressBar
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.Location = new System.Drawing.Point(-522, 837);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(12);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(1176, 43);
+            this.progressBar.TabIndex = 59;
+            this.progressBar.Visible = false;
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnRotateImg);
@@ -918,15 +928,31 @@
             this.panel1.Size = new System.Drawing.Size(323, 37);
             this.panel1.TabIndex = 60;
             // 
-            // progressBar
+            // btnRotateImg
             // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(36, 414);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(12);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(579, 23);
-            this.progressBar.TabIndex = 59;
-            this.progressBar.Visible = false;
+            this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
+            this.btnRotateImg.Location = new System.Drawing.Point(12, 3);
+            this.btnRotateImg.Name = "btnRotateImg";
+            this.btnRotateImg.Size = new System.Drawing.Size(136, 31);
+            this.btnRotateImg.TabIndex = 5;
+            this.btnRotateImg.Text = "Rotate Image";
+            this.btnRotateImg.UseVisualStyleBackColor = true;
+            this.btnRotateImg.Click += new System.EventHandler(this.btnRotateImg_Click);
+            // 
+            // btnImagePDF
+            // 
+            this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
+            this.btnImagePDF.Location = new System.Drawing.Point(178, 3);
+            this.btnImagePDF.Name = "btnImagePDF";
+            this.btnImagePDF.Size = new System.Drawing.Size(136, 31);
+            this.btnImagePDF.TabIndex = 6;
+            this.btnImagePDF.Text = "View as PDF";
+            this.btnImagePDF.UseVisualStyleBackColor = true;
+            this.btnImagePDF.Click += new System.EventHandler(this.btnImagePDF_Click);
             // 
             // panelImageControl
             // 
@@ -1073,32 +1099,6 @@
             this.btnDeleteImage.Text = "Delete Image";
             this.btnDeleteImage.UseVisualStyleBackColor = true;
             this.btnDeleteImage.Click += new System.EventHandler(this.btnDeleteImage_Click);
-            // 
-            // btnRotateImg
-            // 
-            this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
-            this.btnRotateImg.Location = new System.Drawing.Point(12, 3);
-            this.btnRotateImg.Name = "btnRotateImg";
-            this.btnRotateImg.Size = new System.Drawing.Size(136, 31);
-            this.btnRotateImg.TabIndex = 5;
-            this.btnRotateImg.Text = "Rotate Image";
-            this.btnRotateImg.UseVisualStyleBackColor = true;
-            this.btnRotateImg.Click += new System.EventHandler(this.btnRotateImg_Click);
-            // 
-            // btnImagePDF
-            // 
-            this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
-            this.btnImagePDF.Location = new System.Drawing.Point(178, 3);
-            this.btnImagePDF.Name = "btnImagePDF";
-            this.btnImagePDF.Size = new System.Drawing.Size(136, 31);
-            this.btnImagePDF.TabIndex = 6;
-            this.btnImagePDF.Text = "View as PDF";
-            this.btnImagePDF.UseVisualStyleBackColor = true;
-            this.btnImagePDF.Click += new System.EventHandler(this.btnImagePDF_Click);
             // 
             // tableLayoutPanel1
             // 
