@@ -51,9 +51,9 @@ namespace RegScan
         private List<string> _scanSessionFileList = new List<string>();
 
         /// <summary>
-        /// image0 is the first page of the document and possibly contains a barcode.
+        /// _image0 is the first page of the document and possibly contains a barcode.
         /// </summary>
-        private Bitmap image0;
+        private Bitmap _image0;
 
         /// <summary>
         /// PDF files created during viewing that can be deleted when form closes.
@@ -118,12 +118,12 @@ namespace RegScan
         {
             UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
-            // Set the first image to image0 for barcode scanning and display purposes.
-            // NOTE - It may be possible to use image and image0 interchangeably and
-            //     eliminate the need for image0.
-            if (image0 == null)
+            // Set the first image to _image0 for barcode scanning and display purposes.
+            // NOTE - It may be possible to use image and _image0 interchangeably and
+            //     eliminate the need for _image0.
+            if (_image0 == null)
             {
-                image0 = image;
+                _image0 = new Bitmap(image);
             }
 
             int fileCount = _scanSessionFileList.Count;
@@ -161,7 +161,7 @@ namespace RegScan
             bool checkBarcode = true;
 
             // Scan the first page for Barcodes
-            string barCode = BarCodeObj.ScanForBarcode(image0);
+            string barCode = BarCodeObj.ScanForBarcode(_image0);
 
             // Loop to get a document record for a given barcode
             while (checkBarcode)
@@ -185,7 +185,7 @@ namespace RegScan
                     // This exception is thrown if the barcode is not passed into the controller
                     // correctly or if it is an empty string.
                     UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
-                    MessageBox.Show(ane.Message, "Unable to Process Request");
+                    MessageBox.Show(ane.Message, "Unable to Process Request. Barcode can not be empty.");
                     // continue the process
                     documentsFound = false;
                     checkBarcode = false;
@@ -196,7 +196,7 @@ namespace RegScan
                     // expected format. This message box will display the number to the user
                     // and warn them to verify it.
                     UtilityObj.WriteLog(UtilityObj.error, ae.ToString());
-                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " + 
+                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " +
                         "verification as it will not be displayed in the application.");
                     // continue the process
                     documentsFound = false;
@@ -224,6 +224,7 @@ namespace RegScan
                         checkBarcode = false;
                     }
                 }
+               
                 // If documents were found continue to next step
                 if (doc != null)
                 {
@@ -395,9 +396,8 @@ namespace RegScan
         /// </summary>
         private void SetImageNav()
         {
-            if (_currentImageIndex == -1)
-                return;
-            UpdateImageDisplay();
+            if (_currentImageIndex != -1)
+                UpdateImageDisplay();
         }
 
         /// <summary>
@@ -477,6 +477,7 @@ namespace RegScan
         {
             // Clear document.
             _currentDocument = null;
+            _image0 = null;
             _scannedImageList.Clear();
             _currentImageIndex = -1;
 
@@ -628,12 +629,12 @@ namespace RegScan
         /// <param name="e"> Holds the image and it's properties </param>
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // Transform the acquired image into a temporary Bitmap.
-            using (Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap()))
-            { 
-                // Method call to process the bitmap
-                ProcessScan(acquiredImage);
-            }
+            // Transform the acquired image into a Bitmap variable.
+            Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
+            
+            // Method call to process the bitmap
+            ProcessScan(acquiredImage);
+            
         }
 
         /// <summary>
@@ -714,11 +715,11 @@ namespace RegScan
             // close the device
             _currentDevice.Close();
 
-            // Clear program bar.
-            hideProgressBar();
-
             // process the scanned images.
             ProcessCompleted();
+
+            // Clear program bar.
+            hideProgressBar();
         }
 
         private void setUpScanner()
@@ -817,7 +818,7 @@ namespace RegScan
                 UtilityObj.CreateFolder("Images");
             }
 
-            image0 = null;
+            _image0 = null;
             showProgressBar();
 
             try

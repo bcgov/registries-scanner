@@ -110,8 +110,8 @@ namespace ApiScanner
             }
 
             endpoint += string.Join("&", queryStrings);
-            
-            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+
+            return "";// APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
         }
 
         #endregion
