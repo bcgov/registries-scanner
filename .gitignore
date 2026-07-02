@@ -430,4 +430,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Files specific to this project that are causing issues
 /RegScan/.vs/RegScan.csproj.dtbcache.json
+/VSTTwain/
+**/Examples/
