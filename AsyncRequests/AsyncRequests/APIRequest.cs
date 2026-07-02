@@ -1,4 +1,6 @@
 ﻿using AppConfiguration;
+using Newtonsoft;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -69,7 +71,12 @@ namespace AsyncRequests
             }
             
             var request = CreateRequest(requestType);
-            request.AddJsonBody(data);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(data, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(json);
 
             return GetHttpResponseContent(request, endPoint);
         }
@@ -100,7 +107,7 @@ namespace AsyncRequests
             
             foreach (var keyValuePair in param)
             {
-                request.AddQueryParameter(keyValuePair.Key, Convert.ToString(keyValuePair.Value));
+                request.AddQueryParameter(keyValuePair.Key, keyValuePair.Value.ToString());
             }
 
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
@@ -123,7 +130,7 @@ namespace AsyncRequests
         private static string GetHttpResponseContent(RestRequest request, string endPoint)
         {
             var client = new RestClient(ConfigKeys.API_URL + endPoint);
-            IRestResponse response = client.Execute(request);
+            var response = client.Execute(request);
 
             // If the request was not successful (completed with a good status)
             // throw a new error. 

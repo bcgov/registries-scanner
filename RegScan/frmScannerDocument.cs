@@ -1,11 +1,8 @@
-﻿using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+﻿using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Utilities;
 using Vintasoft.Twain;
@@ -54,9 +51,9 @@ namespace RegScan
         private List<string> _scanSessionFileList = new List<string>();
 
         /// <summary>
-        /// image0 is the first page of the document and possibly contains a barcode.
+        /// _image0 is the first page of the document and possibly contains a barcode.
         /// </summary>
-        private Bitmap image0;
+        private Bitmap _image0;
 
         /// <summary>
         /// PDF files created during viewing that can be deleted when form closes.
@@ -78,7 +75,7 @@ namespace RegScan
         {
             InitializeComponent();
 
-            UtilityObj.CreateFolder("Images");
+            UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
 
             // Set scanner defaults.
             _defaultSetting = new ScannerSettingObj();
@@ -110,60 +107,61 @@ namespace RegScan
             ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
 
-        public void CreateTwainDeviceManager()
-        {
-            try
-            {
-                if (_deviceManager != null)
-                    _deviceManager.Close();
-                _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
-                //Set the twain DSM path to the local folder if using 64 bit
-                //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
-            }
-            catch { }
-        }
+
 
         #region Scanning Session
         /// <summary>
         /// Process the scanned image as a bitmap.
         /// </summary>
-        /// <param name="_Image"> Bitmap image from scan process </param>
-        private void ProcessScan(Bitmap _Image)
+        /// <param name="image"> Bitmap image from scan process </param>
+        private void ProcessScan(Bitmap image)
         {
             UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
 
-            // Set the first image to image0 for barcode scanning and display purposes.
-            // NOTE - It may be possible to use _Image and image0 interchangeably and eliminate the need for image0.
-            if (image0 == null)
+            // Set the first image to _image0 for barcode scanning and display purposes.
+            // NOTE - It may be possible to use image and _image0 interchangeably and
+            //     eliminate the need for _image0.
+            if (_image0 == null)
             {
-                image0 = _Image;
+                _image0 = new Bitmap(image);
             }
 
-            string fileNumber = _scanSessionFileList.Count > 0 ? Convert.ToString(_scanSessionFileList.Count) : "";
+            int fileCount = _scanSessionFileList.Count;
+
+            string fileNumber = fileCount > 0 ? 
+                fileCount.ToString() : "";
             string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
-            UtilityObj.SaveImageAsFile(fileName, _Image);
+            UtilityObj.SaveImageAsFile(fileName, image);
 
             // Save the created filename to a list of scanned files for this session.
             _scanSessionFileList.Add(fileName);
             
             // Create a new ImageObj and add to the list of scanned images
-            _scannedImageList.Add(new ImageObj(image0, PdfSharp.PageOrientation.Portrait,
-                ImageObj.GetPageSize(image0.Width, image0.Height)));
+            _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait,
+                ImageObj.GetPageSize(image.Width, image.Height)));
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + fileNumber == "" ? "0" : fileNumber);
+            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + 
+                (fileNumber == "" ? "0" : fileNumber));
         }
 
+        /// <summary>
+        /// Attempts to find a barcode on the first page scanned then tries to request information
+        /// the DRS API on the barcode. If the barcode is unable to be read by the `BarCodeObj` the
+        /// user will be prompted to enter a barcode manually. This is looped until a barcode is
+        /// acquired or until the user indicates they do not want to enter a barcode; in that case
+        /// the form is reset.
+        /// </summary>
         private void ProcessFirstPage()
         {
-            // List to hold the documents.
-            List<DocumentObj> docs = null;
+            // Document object, holds all information about the current document
+            DocumentObj doc = null;
             // Control flow based on if a record exists for this document
             bool documentsFound = false;
             // Control loop to get a barcode and check for a record.
             bool checkBarcode = true;
 
             // Scan the first page for Barcodes
-            string barCode = BarCodeObj.ScanForBarcode(image0);
+            string barCode = BarCodeObj.ScanForBarcode(_image0);
 
             // Loop to get a document record for a given barcode
             while (checkBarcode)
@@ -178,7 +176,31 @@ namespace RegScan
                 // There may be more than one document (known as versions)
                 try
                 {
-                    docs = DocumentObj.Find(barCode);
+                    List<DocumentObj> resp = DocumentObj.Find(barCode);
+                    if (resp.Count >= 1)
+                        doc = resp[0];
+                }
+                catch (ArgumentNullException ane)
+                {
+                    // This exception is thrown if the barcode is not passed into the controller
+                    // correctly or if it is an empty string.
+                    UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
+                    MessageBox.Show(ane.Message, "Unable to Process Request. Barcode can not be empty.");
+                    // continue the process
+                    documentsFound = false;
+                    checkBarcode = false;
+                }
+                catch (ArgumentException ae)
+                {
+                    // This type of exception is thrown when the accession number is not in an
+                    // expected format. This message box will display the number to the user
+                    // and warn them to verify it.
+                    UtilityObj.WriteLog(UtilityObj.error, ae.ToString());
+                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " +
+                        "verification as it will not be displayed in the application.");
+                    // continue the process
+                    documentsFound = false;
+                    checkBarcode = false;
                 }
                 catch (Exception e)
                 {
@@ -189,7 +211,7 @@ namespace RegScan
                     // Ask the user if they would like to try again 
                     if (MessageBox.Show(msg + System.Environment.NewLine +
                         "Would you like to try again?", "Missing/ Not Found Barcode",
-                        MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         // start loop over with a request for a new barcode
                         barCode = null;
@@ -202,8 +224,9 @@ namespace RegScan
                         checkBarcode = false;
                     }
                 }
+               
                 // If documents were found continue to next step
-                if (docs.Count > 0)
+                if (doc != null)
                 {
                     documentsFound = true;
                     checkBarcode = false;
@@ -212,10 +235,11 @@ namespace RegScan
 
             if (documentsFound)
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to docs[0]");
+                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to doc");
                 // The first document is the latest and is the one that will be displayed
-                _currentDocument = docs[0];
+                _currentDocument = doc;
 
+                // TODO -> better error handling here
                 // Display the warning if there was some sort of error getting the document
                 if (_currentDocument.Error != "")
                     MessageBox.Show("Warning an error was found -> " +
@@ -239,7 +263,7 @@ namespace RegScan
                     if (MessageBox.Show("Document with barcode " + barCode +
                         " has already been scanned. Do you want to create a new version?",
                         "Document Already Scanned", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         // If a new version, then update the version number
                         // TODO - get previous version number from filename. Then add one.
@@ -251,12 +275,12 @@ namespace RegScan
                         // Cancel this scan if a new version is not required.
                         cancelScan = true;
                     }
-                        
                 }
 
                 // IF scan is to be cancelled
                 if (cancelScan)
                 {
+                    // TODO -> Reset form better here.
                     // Set current document back to null.
                     _currentDocument = null;
                     UtilityObj.DeleteFolder("Images");
@@ -273,12 +297,15 @@ namespace RegScan
                 }
             }
             // NOTE Create a new record for the scanned image logic could be added here
-            
-            // if the barcode was not set
-            if (string.IsNullOrEmpty(_currentDocument.BarCode))
+
+            if (_currentDocument != null)
             {
-                // Clear Image
-                imageBox.Image = null;
+                // if the barcode was not set
+                if (string.IsNullOrEmpty(_currentDocument.BarCode))
+                {
+                    // Clear Image
+                    imageBox.Image = null;
+                }
             }
         }
 
@@ -305,13 +332,59 @@ namespace RegScan
                 ProcessFirstPage();
             } 
             // Here we are adding an additional page to the document. We just need to adjust the index
-            else {  _currentImageIndex++; }
+            else {  _currentImageIndex = _scanSessionFileList.Count - 1; }
 
             SetImageNav();
             
             // Enable the form.
             Enabled = true;
                      
+        }
+
+
+        /// <summary>
+        /// All steps used to hide the progress bar, show scanner controls and enable the form
+        /// </summary>
+        private void hideProgressBar()
+        {
+            // Show scanning options when processing scan is complete
+            useUICheckBox.Enabled = true;
+            useAdfCheckBox.Enabled = true;
+            useDuplexCheckBox.Enabled = true;
+            useUICheckBox.Enabled = true;
+            ckBoxLowResolution.Enabled = true;
+            showProgressIndicatorUICheckBox.Enabled = true;
+
+            // hide the progress bar
+            progressBar.Visible = false;
+            progressBar.SendToBack();
+            progressBar.Enabled = false;
+
+            // Allow the user to interact with the form
+            Enabled = true;
+        }
+
+        /// <summary>
+        /// All steps used to show the progress bar, hide scanner controls and disable the form
+        /// </summary>
+        private void showProgressBar()
+        {
+            // Disable interaction with the form
+            Enabled = false;
+
+            // Hide scanning options when processing scan
+            useUICheckBox.Enabled = false;
+            useAdfCheckBox.Enabled = false;
+            useDuplexCheckBox.Enabled = false;
+            useUICheckBox.Enabled = false;
+            ckBoxLowResolution.Enabled = false;
+            showProgressIndicatorUICheckBox.Enabled = false;
+
+            // show the progress bar
+            progressBar.Enabled = true;
+            progressBar.BringToFront();
+            progressBar.Visible = true;
+            progressBar.Value = 0;
         }
 
         #endregion
@@ -323,9 +396,8 @@ namespace RegScan
         /// </summary>
         private void SetImageNav()
         {
-            if (_currentImageIndex == -1)
-                return;
-            UpdateImageDisplay();
+            if (_currentImageIndex != -1)
+                UpdateImageDisplay();
         }
 
         /// <summary>
@@ -333,7 +405,7 @@ namespace RegScan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnNextImage_Click(object sender, EventArgs e)
+        private void btnlNextImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex + 2 > _scannedImageList.Count)
                 return;
@@ -346,7 +418,7 @@ namespace RegScan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnPreviousImage_Click(object sender, EventArgs e)
+        private void btnPrevImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex - 1 < 0)
                 return;
@@ -367,270 +439,29 @@ namespace RegScan
                 if (image == null) 
                 { 
                     MessageBox.Show("Error loading image for page " + 
-                        Convert.ToString(_currentImageIndex + 1));
+                        (_currentImageIndex + 1).ToString());
                     return;
                 }
                 SetImage(image);
             }
 
             //Update current and total page labels in the status label
-            statusLblCurImage.Text = (_currentImageIndex + 1).ToString();
-            statusLblTotalImage.Text = _scannedImageList.Count.ToString();
+            lblCurImage.Text = (_currentImageIndex + 1).ToString();
+            lblTotalImage.Text = _scannedImageList.Count.ToString();
 
             // Don't allow the first page to be deleted
             if (_currentImageIndex != 0)
             {
-                statusBtnDeleteImage.BackColor = UI.Theme.DangerBackground;
-                statusBtnDeleteImage.ForeColor = UI.Theme.TextInverse;
-                statusBtnDeleteImage.Enabled = true;
+                btnDeleteImage.BackColor = UI.Theme.BackgroundPrimary;
+                btnDeleteImage.ForeColor = UI.Theme.DangerBackground;
+                btnDeleteImage.Enabled = true;
             }
             else
             {
-                statusBtnDeleteImage.BackColor = UI.Theme.Disabled;
-                statusBtnDeleteImage.ForeColor = UI.Theme.TextDisabled;
-                statusBtnDeleteImage.Enabled = false;
+                btnDeleteImage.BackColor = UI.Theme.Disabled;
+                btnDeleteImage.ForeColor = UI.Theme.TextDisabled;
+                btnDeleteImage.Enabled = false;
             }
-        }
-
-        #endregion
-        #region click events.
-        private void btnRotate_Click(object sender, EventArgs e)
-        {
-            // Rotate current image and 
-            _scannedImageList[_currentImageIndex].Rotate();
-            UpdateImageDisplay();
-        }
-
-        /// <summary>
-        /// View the scanned pages as a PDF.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnViewAsPDF_Click(object sender, EventArgs e)
-        {
-            // Nothing to view if no document
-            if (_currentDocument == null)
-                return;
-
-            // Create a PDF document.
-            var pdf = new PdfDocument();
-            int updateCount = ((int)100 / _scannedImageList.Count);
-            showProgressBar();
-            Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, Convert.ToString(_scannedImageList.Count) +
-                " btnViewAsPDF_Click Scanner  Objects");
-
-            // FOREACH image create a new page.
-            foreach (var bp in _scannedImageList)
-            {
-                // Create a new page and add in the image.
-                var pdfPage = new PdfPage();
-                pdfPage.Size = bp.PageSize;
-                pdfPage.Orientation = bp.Orientation;
-                pdf.AddPage(pdfPage);
-                var xgr = XGraphics.FromPdfPage(pdfPage);
-                var img = XImage.FromGdiPlusImage(bp.Image);
-                xgr.DrawImage(img, 0, 0);
-
-                // Update progress bar
-                progressBar.Value += updateCount;
-                Application.DoEvents();
-
-            }
-
-            _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
-            progressBar.Visible = false;
-
-        }
-
-        /// <summary>
-        /// Method called when a user selects the 'Save' button on the main form.
-        /// Given an image create a new page and 'draw' the image to that page. The page is added
-        /// to the given PDF document. We should verify the form and its contents, then make a
-        /// call to push the document and all related metadata to the DRS API.
-        /// </summary>
-        /// <param name="pdf">PDF Document to add image to</param>
-        /// <param name="scannedImage">Image to be added to PDF document</param>
-        private void imageToPDF(PdfDocument pdf, ImageObj scannedImage)
-        {
-            // Create a new page and with the document scans specifications
-            var pdfPage = new PdfPage();
-            pdfPage.Size = scannedImage.PageSize;
-            pdfPage.Orientation = scannedImage.Orientation;
-
-            // Add the new page to the PDF document
-            pdf.AddPage(pdfPage);
-
-            // Make the PDF Page a drawable canvas
-            var xgr = XGraphics.FromPdfPage(pdfPage);
-            // Turn the scanned document into an XImage
-            var img = XImage.FromGdiPlusImage(scannedImage.Image);
-
-            // Get the PDF Pages 
-            double pageWidth = pdfPage.Width.Point;
-            double pageHeight = pdfPage.Height.Point;
-
-            // Maintain aspect ratio, fit within page, centered
-            // Get the shape of the scanned document and PDF page
-            double imgAspect = (double)scannedImage.Image.Width / scannedImage.Image.Height;
-            double pageAspect = pageWidth / pageHeight;
-
-            double drawWidth, drawHeight, drawX, drawY;
-            // if the images' shape is larger than the pages' shape 
-            if (imgAspect > pageAspect)
-            {
-                // limit the width to the width of the page
-                drawWidth = pageWidth;
-                // the height is set to the width of the page / the images' shape
-                //  -> Pw / (Iw / Ih) -> Pw * Ih / Iw
-                //  -> The images aspect ratio scaled to the pages width
-                drawHeight = pageWidth / imgAspect;
-                // 
-                drawX = 0;
-                // 
-                drawY = (pageHeight - drawHeight) / 2;
-            }
-            // if the pages' shape is larger than (or equal to) the images' shape 
-            else
-            {
-                // set the height to the pages height
-                drawHeight = pageHeight;
-                // set the width to the height of the page * the images' shape
-                //  -> Ph * (Iw / Ih) -> Ph * Ih / Iw
-                //  -> The images aspect ratio scaled to the pages height
-                drawWidth = pageHeight * imgAspect;
-                //
-                drawX = (pageWidth - drawWidth) / 2;
-                //
-                drawY = 0;
-            }
-
-            xgr.DrawImage(img, drawX, drawY, drawWidth, drawHeight);
-           
-        }
-
-        /// <summary>
-        ///  Save the document to the database.
-        /// </summary>
-        /// <param name="sender"> Save Scan Button </param>
-        /// <param name="e"> Events from user </param>
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-
-            // Validation
-            if (_currentDocument == null)
-                return;
-
-            if (_currentDocument.PageCount != _scannedImageList.Count)
-            {
-                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
-                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
-                    MessageBoxButtons.YesNo);
-                if ( usr_rsp == System.Windows.Forms.DialogResult.No)
-                    return;
-            }
-
-            // Create a PDF document.
-            var pdf = new PdfDocument();
-
-            // Percentage updated based on number of images to process
-            int updateCount = (int)100 / _scannedImageList.Count;
-            showProgressBar();
-
-            // This is discouraged in Microsoft Docs.
-            Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " _scannedImageList Objects");
-
-            // FOREACH image convert to a PDF page and add to the PDF document
-            foreach (var bp in _scannedImageList)
-            {
-                try
-                {
-                    imageToPDF(pdf, bp);
-                }
-                catch (Exception ex)
-                {
-                    string img_num = _scannedImageList.IndexOf(bp).ToString() +
-                                     " of " + _scannedImageList.Count();
-                    UtilityObj.WriteLog(UtilityObj.error, "Unable to process image " + img_num +
-                        " to PDF page.\n" + ex.ToString());
-                }
-                
-                // Update progress bar
-                progressBar.Value += updateCount;
-                // This is discouraged in Microsoft Docs.
-                Application.DoEvents();
-            }
-
-            // Update the document.
-            _currentDocument.PDFDocument = pdf;
-            _currentDocument.Description = txtDocumentClass.Text;
-            _currentDocument.PageCount = _scannedImageList.Count;
-            _currentDocument.ScannerId = Environment.UserName;
-            _currentDocument.ScannedDate = DateTime.Now;
-            _currentDocument.ImageList = _scannedImageList.Select(i => i.Image).ToList();
-            _currentDocument.UpdateInsert();
-
-            // Reset the document and display.
-            ResetDocument();
-            hideProgressBar();
-
-        }
-
-        /// <summary>
-        /// Cancel the scan.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCancelScan_Click(object sender, EventArgs e)
-        {
-            // Reset the document and clear the display.
-            ResetDocument();
-        }
-
-        /// <summary>
-        /// Automated Document Feeder checkbox clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            // If adf, then allow duplex.
-            if (useAdfCheckBox.Checked)
-                useDuplexCheckBox.Enabled = true;
-            else
-            {
-                // otherwise insure not checked or can be checked.
-                useDuplexCheckBox.Enabled = false;
-                useDuplexCheckBox.Checked = false;
-            }
-        }
-
-        /// <summary>
-        /// Create a new box number.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnNewBox_Click(object sender, EventArgs e)
-        {
-            CreateNewBoxNumber();
-        }
-
-        /// <summary>
-        /// Fires when this forms becomes active.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void frmScanDocument_Activated(object sender, EventArgs e)
-        {
-            // Form is maximized.
-            this.WindowState = FormWindowState.Maximized;                      
-
-            // Scan button is set as the focus.
-            btnScanPage.Focus();
         }
 
         #endregion
@@ -646,6 +477,7 @@ namespace RegScan
         {
             // Clear document.
             _currentDocument = null;
+            _image0 = null;
             _scannedImageList.Clear();
             _currentImageIndex = -1;
 
@@ -656,8 +488,11 @@ namespace RegScan
             txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
             txtPagesInDocument.Text = "";
-            txtSeqNumber.Text = "";
-            imageBox.Image = null;
+            maskSeqNumber.Text = "";
+            txtFilingDate.Text = "";
+            maskSchNumber.Text = "";
+            maskBoxNumber.Text = "";
+            txtDocumentNotes.Text = "";
 
             // Delete any temporary FileNames.
             try
@@ -666,75 +501,31 @@ namespace RegScan
                     File.Delete(fileName);
                 _tempFileNameList.Clear();
             }
-            catch { }
+            catch ( Exception e )
+            {
+                UtilityObj.WriteLog(UtilityObj.warn, 
+                    "Unable to delete all images in file list. Next scanning session may not run as" +
+                    " expected:\n" + e.ToString());
+                MessageBox.Show("Warning: The previous session did not clear as expected. There may" +
+                    " be carry-over images that persist. Please try 'Reject Scan' process again or" +
+                    " restarting this application.", "Scan Session Failed to Clear");
+            }
+
+            // reset img numbers
+            lblCurImage.Text = "0";
+            lblTotalImage.Text = "0";
 
             imageBox.Image = null;
         }
 
         /// <summary>
-        /// Create a new box number.
-        /// </summary>
-        private void CreateNewBoxNumber()
-        {
-            // Don't proceed if no current document.
-            if (_currentDocument == null)
-                return;
-
-            // Create a copy of our box.
-            var box = new BoxObj();
-            BoxObj.CopyBox(_currentDocument.Box, box);
-
-            // Make use of our existing form to create the new box.
-            var frm = new frmBox();
-            var status = frm.SetBoxNumber(box);
-            if (status != "")
-            {
-                MessageBox.Show(status);
-                frm.Dispose();
-            }
-            else
-            {
-                // Display the form.
-                frm.ShowDialog();
-
-                // IF a new box was created.
-                if (!CompareBoxes(box, _currentDocument.Box))
-                {
-                    // Reset everything on this end.
-                    _currentDocument.Box = box;
-                    _currentBatchId.AccessionNumber = _currentDocument.AccessionNumber;
-                    _currentBatchId.BatchId = 1;
-                    _currentDocument.BatchId = _currentBatchId.BatchId;
-                    txtSeqNumber.Text = box.AccessionNumber;
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Compare two boxes to see if they are the same
-        /// </summary>
-        /// <param name="_Box1"></param>
-        /// <param name="_Box2"></param>
-        /// <returns>False if they are not the same.</returns>
-        private bool CompareBoxes(BoxObj _Box1, BoxObj _Box2)
-        {
-            bool result = false;
-
-            if (_Box1.SequenceNumber == _Box2.SequenceNumber && _Box1.ScheduleNumber == _Box2.ScheduleNumber && _Box1.BoxNumber == _Box2.BoxNumber)
-                result = true;
-
-            return result;
-        }
-
-        /// <summary>
         /// Sets the image in the image box.
         /// </summary>
-        /// <param name="_Image"></param>
-        protected void SetImage(Bitmap _Image)
+        /// <param name="image"></param>
+        protected void SetImage(Bitmap image)
         {
             imageBox.SizeToFit = true;
-            imageBox.Image = _Image;
+            imageBox.Image = image;
             imageBox.SizeToFit = false;
         }
 
@@ -750,26 +541,39 @@ namespace RegScan
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtIndexer.Text = _currentDocument.Owner;
-            //txtFilingDate.Text = _currentDocument.ConsumerFilingDate;
-            txtDocumentClass.Text = _currentDocument.Description;
+            txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
             // Document Information
-            //txtDocumentClass.Text = _currentDocument.DocumentClass;
-            //txtDocumentType.Text = _currentDocument.DocumentTypeCode;
-            txtDocumentClass.Text = _currentDocument.DocTypeDesc;
+            txtDocumentClass.Text = _currentDocument.DocumentClass;
+            txtDocumentType.Text = string.Concat(
+                _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
 
             // Accession Numbers
-            //txtSequenceNumber.Text = _currentDocument.SequenceNumber;
-            //txtScheduleNumber.Text = _currentDocument.ScheduleNumber;
-            //txtBoxNumber.Text = _currentDocument.BoxNumber;
+            maskSeqNumber.Text = _currentDocument.SequenceNumberString;
+            maskSchNumber.Text = _currentDocument.ScheduleNumberString;
+            maskBoxNumber.Text = _currentDocument.BoxNumberString;
 
             // Notes / Description
-            //txtNotes.Text = _currentDocument.Description;
+            txtDocumentNotes.Text = _currentDocument.Description;
         }
         #endregion
 
-        #region Scanning Session.
+        #region Scanner Methods
+
+        public void CreateTwainDeviceManager()
+        {
+            try
+            {
+                if (_deviceManager != null)
+                    _deviceManager.Close();
+                _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
+                //Set the twain DSM path to the local folder if using 64 bit
+                //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
+            }
+            // TODO - Make this catch do something.
+            catch { }
+        }
 
         /// <summary>
         /// Subscribe to the device events.
@@ -825,20 +629,12 @@ namespace RegScan
         /// <param name="e"> Holds the image and it's properties </param>
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // image acquisition must be canceled because application's form is closing
-            //if (_cancelTransferBecauseFormIsClosing)
-            //{
-            //    // cancel image acquisition
-            //    _currentDevice.CancelTransfer();
-            //    return;
-            //}
-
-            // Transform the acquired image into a Bitmap.
+            // Transform the acquired image into a Bitmap variable.
             Bitmap acquiredImage = new Bitmap(e.Image.GetAsBitmap());
-
+            
             // Method call to process the bitmap
             ProcessScan(acquiredImage);
-
+            
         }
 
         /// <summary>
@@ -919,53 +715,11 @@ namespace RegScan
             // close the device
             _currentDevice.Close();
 
-            // specify that image acquisition is finished
-            //_isImageAcquiring = false;
+            // process the scanned images.
+            ProcessCompleted();
 
             // Clear program bar.
             hideProgressBar();
-
-            // process the scanned images.
-            ProcessCompleted();
-        }
-
-        /// <summary>
-        /// All steps used to hide the progress bar, show scanner controls and enable the form
-        /// </summary>
-        private void hideProgressBar()
-        {
-            // hide the progress bar
-            progressBar.Visible = false;
-
-            // Show scanning options when processing scan is complete
-            useUICheckBox.Visible = true;
-            useAdfCheckBox.Visible = true;
-            useDuplexCheckBox.Visible = true;
-            useUICheckBox.Visible = true;
-            showProgressIndicatorUICheckBox.Visible = true;
-
-            // Allow the user to interact with the form
-            Enabled = true;
-        }
-
-        /// <summary>
-        /// All steps used to show the progress bar, hide scanner controls and disable the form
-        /// </summary>
-        private void showProgressBar()
-        {
-            // Disable interaction with the form
-            Enabled = false;
-
-            // Hide scanning options when processing scan
-            useUICheckBox.Visible = false;
-            useAdfCheckBox.Visible = false;
-            useDuplexCheckBox.Visible = false;
-            useUICheckBox.Visible = false;
-            showProgressIndicatorUICheckBox.Visible = false;
-
-            // show the progress bar
-            progressBar.Visible = true;
-            progressBar.Value = 0;
         }
 
         private void setUpScanner()
@@ -1043,6 +797,10 @@ namespace RegScan
             }
         }
 
+        #endregion
+
+        #region Event Handlers
+
         /// <summary>
         /// Ensure the scanning device is open and use the form fields to configure scanning
         /// options. 
@@ -1050,7 +808,7 @@ namespace RegScan
         /// <param name="sender"> "Scan" button on Main Form </param>
         /// <param name="e"> Mouse events that may need to be handled </param>
         private void btnScanPage_Click(object sender, EventArgs e)
-        {    
+        {
             // If we are starting a new scanning session we want to ensure any files created in
             // past sessions are cleared.
             if (_currentDocument == null)
@@ -1059,8 +817,8 @@ namespace RegScan
                 _scanSessionFileList.Clear();
                 UtilityObj.CreateFolder("Images");
             }
-            
-            image0 = null;
+
+            _image0 = null;
             showProgressBar();
 
             try
@@ -1079,7 +837,7 @@ namespace RegScan
                 MessageBox.Show(ex2.Message);
                 return;
             }
-            
+
             try
             {
                 UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
@@ -1096,9 +854,200 @@ namespace RegScan
                 return;
             }
         }
-        #endregion
 
-        #region Event Handlers
+        private void btnRotateImg_Click(object sender, EventArgs e)
+        {
+            // TODO - currently this doesnt actually rotate the image it mirrors it?
+            _scannedImageList[_currentImageIndex].Rotate();
+            UpdateImageDisplay();
+        }
+
+        /// <summary>
+        /// View the scanned pages as a PDF.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnImagePDF_Click(object sender, EventArgs e)
+        {
+            // Nothing to view if no document
+            if (_currentDocument == null)
+                return;
+
+            int updateCount = ((int)100 / _scannedImageList.Count);
+            showProgressBar();
+            Application.DoEvents();
+
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " btnViewAsPDF_Click Scanner  Objects");
+
+            // TODO - investigate how to do this asynchronously
+            // Create the PDF Document to open in default PDF viewing app
+            PdfDocument pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
+
+            _tempFileNameList.Add(PDFObj.DisplayPdf(pdf));
+            hideProgressBar();
+
+        }
+
+        /// <summary>
+        ///  Save the document to the database.
+        /// </summary>
+        /// <param name="sender"> Save Scan Button </param>
+        /// <param name="e"> Events from user </param>
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            bool descChange = false;
+            bool accNChange = false;
+            PdfDocument pdf = null;
+
+            // Validation
+            if (_currentDocument == null)
+                return;
+
+            if (_currentDocument.PageCount != _scannedImageList.Count)
+            {
+                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
+                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
+                    MessageBoxButtons.YesNo);
+                if (usr_rsp == System.Windows.Forms.DialogResult.No)
+                    return;
+            }
+
+            // Show progress bar and disable form elements 
+            showProgressBar();
+
+            // TODO: This is discouraged in Microsoft Docs.
+            Application.DoEvents();
+
+            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
+                " _scannedImageList Objects");
+
+
+            try
+            {
+                pdf = PDFObj.ImageListToPdf(_scannedImageList, progressBar);
+            }
+            catch (Exception ex)
+            {
+                UtilityObj.WriteLog(UtilityObj.error, "Unable to process images to PDF.\n" +
+                    ex.ToString());
+            }
+            // TODO - This is discouraged in Microsoft Docs.
+            Application.DoEvents();
+
+
+            // Update the document.
+            _currentDocument.PDFDocument = pdf;
+            _currentDocument.ScannerId = Environment.UserName;
+            _currentDocument.ScannedDate = DateTime.Now;
+
+            // Get the form fields we want to update
+            // If the description field changes we can use one endpoint
+            // If it isnt updated we have to use a different endpoint.
+            if (string.Equals(_currentDocument.Description ?? string.Empty, 
+                txtDocumentNotes.Text, StringComparison.Ordinal))
+            {
+                descChange = true;
+                _currentDocument.Description = txtDocumentNotes.Text;
+            }
+
+            try
+            {
+                // If any of the fields are missing values
+                if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
+                    string.IsNullOrEmpty(maskSchNumber.Text) ||
+                    string.IsNullOrEmpty(maskBoxNumber.Text))
+                    throw new FormatException();
+                // or if there is an error trying to parse them as ints
+                var seqNumber = Int32.Parse(maskSeqNumber.Text);
+                var schNumber = Int32.Parse(maskSchNumber.Text);
+                var boxNumber = Int32.Parse(maskBoxNumber.Text);
+
+                // we only need to update the values if there were changes made
+                if (seqNumber != _currentDocument.SequenceNumber ||
+                    schNumber != _currentDocument.ScheduleNumber ||
+                    boxNumber != _currentDocument.BoxNumber)
+                {
+                    _currentDocument.SequenceNumber = seqNumber;
+                    _currentDocument.ScheduleNumber = schNumber;
+                    _currentDocument.BoxNumber = boxNumber;
+                    accNChange = true;
+                }
+
+            }
+            // Catch the formatting error
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
+                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
+                hideProgressBar();
+                return;
+            }
+
+            try
+            {
+                _currentDocument.UpdateInsert(descChange || accNChange);
+            }
+            catch (ApplicationException ae)
+            {
+                MessageBox.Show("There was an error in the Saving process. Please try again, or " +
+                    "if there have been multiple failures please contact support.\n" + ae.Message,
+                    "Unable to Process Save");
+            }
+            catch (ArgumentException age)
+            {
+                MessageBox.Show(age.Message);
+            }
+
+            // Reset the document and display.
+            ResetDocument();
+            hideProgressBar();
+        }
+
+        /// <summary>
+        /// Cancel the scan.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCancelScan_Click(object sender, EventArgs e)
+        {
+            // Reset the document and clear the display.
+            ResetDocument();
+        }
+
+        /// <summary>
+        /// Automated Document Feeder checkbox clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // If adf, then allow duplex.
+            if (useAdfCheckBox.Checked)
+                useDuplexCheckBox.Enabled = true;
+            else
+            {
+                // otherwise insure not checked or can be checked.
+                useDuplexCheckBox.Enabled = false;
+                useDuplexCheckBox.Checked = false;
+            }
+        }
+
+        /// <summary>
+        /// Fires when this forms becomes active.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmScanDocument_Activated(object sender, EventArgs e)
+        {
+            // Form is maximized.
+            this.WindowState = FormWindowState.Maximized;
+
+            // Scan button is set as the focus.
+            btnScanPage.Focus();
+        }
+
+
         private void statusBtnPrevImage_Click(object sender, EventArgs e)
         {
             if (_currentImageIndex - 1 < 0)
@@ -1115,16 +1064,18 @@ namespace RegScan
             UpdateImageDisplay();
         }
 
-        private void statusBtnDeleteImage_Click(object sender, EventArgs e)
+        private void btnDeleteImage_Click(object sender, EventArgs e)
         {
             // Confirm this image is to be deleted.
-            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you want to delete this page?", "Confirm Deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 _scannedImageList.RemoveAt(_currentImageIndex);
                 _currentImageIndex--;
                 UpdateImageDisplay();
             }
         }
+
         #endregion
+
     }
 }

@@ -163,7 +163,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScannerSettingObj.cs" />
-    <Compile Include="ScanningInfoObj.cs" />
     <Compile Include="ScheduleObj.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="UI\Theme.cs" />

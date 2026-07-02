@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     environment: TEST
     env:
       APP_CONFIG_DIR: RegScan
