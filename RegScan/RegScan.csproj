@@ -102,18 +102,6 @@
     <Compile Include="frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmBatchPrint.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmBatchPrint.Designer.cs">
-      <DependentUpon>frmBatchPrint.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmBox.Designer.cs">
-      <DependentUpon>frmBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmEnterBarCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,24 +113,6 @@
     </Compile>
     <Compile Include="frmFind.Designer.cs">
       <DependentUpon>frmFind.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmOptions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmOptions.Designer.cs">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmScannerSetting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmScannerSetting.Designer.cs">
-      <DependentUpon>frmScannerSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSetPrinterDefault.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSetPrinterDefault.Designer.cs">
-      <DependentUpon>frmSetPrinterDefault.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
@@ -174,29 +144,14 @@
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmBatchPrint.resx">
-      <DependentUpon>frmBatchPrint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmBox.resx">
-      <DependentUpon>frmBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmEnterBarCode.resx">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFind.resx">
       <DependentUpon>frmFind.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmScannerSetting.resx">
-      <DependentUpon>frmScannerSetting.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmMDIMain.resx">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSetPrinterDefault.resx">
-      <DependentUpon>frmSetPrinterDefault.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

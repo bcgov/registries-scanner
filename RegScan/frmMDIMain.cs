@@ -41,21 +41,7 @@ namespace RegScan
             //this.Text += " Using Database " + aso.DatabaseName;
             this.Text += " Using DRS API";
             UtilityObj.WriteLog(UtilityObj.debug, this.Text);
-
-            // Load up look up lists now.
-            // These API calls will not work as expected. They are hitting DRS API endpoints and
-            // storing the returned values as local variables. However; because there is no obj
-            // of each type to contain this values we can not guarentee that they will be set
-            // correctly or that the values will be accessable in the future. I have not hit errors
-            // from commenting these lines out yet but I am leaving them here in the event that
-            // they are required.
-            //DocTypeObj.Refresh();
-            //AuthorObj.Refresh();
-            //List<AuthorObj> mylist = AuthorObj._list;
-            //OwnerTypeObj.Refresh();
-            //BoxObj.Refresh();
-                           
-
+            
         }
 
         private void ShowNewForm(object sender, EventArgs e)
@@ -70,46 +56,6 @@ namespace RegScan
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void CascadeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.Cascade);
-        }
-
-        private void TileVerticalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.TileVertical);
-        }
-
-        private void TileHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.TileHorizontal);
-        }
-
-        private void ArrangeIconsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.ArrangeIcons);
-        }
-
-        private void CloseAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Form childForm in MdiChildren)
-            {
-                childForm.Close();
-            }
         }
 
         private void selectSourceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -143,24 +89,6 @@ namespace RegScan
             }
         }
 
-        private void boxMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmBox();
-            frm.ShowDialog();
-        }
-
-        private void scannerSettingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmScannerSetting();
-            frm.ShowDialog();
-        }
-
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmOptions();
-            frm.ShowDialog();
-        }
-
         private void MDIMain_Load(object sender, EventArgs e)
         {
             UtilityObj.WriteLog(UtilityObj.debug, "Load New Form");
@@ -174,12 +102,6 @@ namespace RegScan
             childForm.Text = "Find Document: ";
             childForm.WindowState = FormWindowState.Normal;
             childForm.Show();
-        }
-
-        private void printSetupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmSetPrinterDefault();
-            frm.ShowDialog();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
