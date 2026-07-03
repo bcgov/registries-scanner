@@ -108,12 +108,6 @@
     <Compile Include="frmEnterBarCode.Designer.cs">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFind.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFind.Designer.cs">
-      <DependentUpon>frmFind.cs</DependentUpon>
-    </Compile>
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -146,9 +140,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmEnterBarCode.resx">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmFind.resx">
-      <DependentUpon>frmFind.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMDIMain.resx">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
