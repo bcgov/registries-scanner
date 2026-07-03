@@ -91,13 +91,18 @@ namespace RegScan
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // If there isnt a scanning form already open start one
+            if (_scannerForm == null)
+            {
+                MDIMain_Load(this, EventArgs.Empty);
+            }
             string message = "Please manually enter a barcode.";
             var barCode = frmEnterBarCode.ManualBarcode(message);
-            //Form childForm = new frmFind();
-            //childForm.MdiParent = this;
-            //childForm.Text = "Find Document: ";
-            //childForm.WindowState = FormWindowState.Normal;
-            //childForm.Show();
+            var gotDoc = _scannerForm.GetBarcode(barCode);
+            if (!gotDoc)
+            {
+                MessageBox.Show("Unable to get a document record for the entered barcode.");
+            }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
