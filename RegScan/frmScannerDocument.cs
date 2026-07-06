@@ -512,13 +512,9 @@ namespace RegScan
                 btnDeleteImage.Enabled = false;
                 btnPrevImage.Enabled = false;
                 if (totalScanned > 1)
-                {
                     btnlNextImage.Enabled = true;
-                }
                 else
-                {
                     btnlNextImage.Enabled = false;
-                }
             }
             // Last page - can be deleted, can go to previous image, no next image
             else if (_currentImageIndex == totalScanned - 1)
