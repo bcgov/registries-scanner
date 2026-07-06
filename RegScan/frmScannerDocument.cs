@@ -20,11 +20,6 @@ namespace RegScan
         DocumentObj _currentDocument = null;
 
         /// <summary>
-        /// Current active batch number.
-        /// </summary>
-        BatchObj _currentBatchId = null;
-
-        /// <summary>
         /// Default setting for scanning parameters.
         /// </summary>
         private ScannerSettingObj _defaultSetting;
