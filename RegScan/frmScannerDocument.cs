@@ -615,7 +615,7 @@ namespace RegScan
             // Document Record Details
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
-            txtIndexer.Text = _currentDocument.Owner;
+            txtIndexer.Text = _currentDocument.ScannerId;
             txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
