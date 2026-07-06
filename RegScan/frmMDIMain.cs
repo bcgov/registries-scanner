@@ -1,4 +1,5 @@
 ﻿using AppConfiguration;
+using AsyncRequests;
 using System;
 using System.Windows.Forms;
 using Utilities;
@@ -28,6 +29,9 @@ namespace RegScan
 
         public frmMDIMain()
         {
+            // Init the AsyncRequest to ensure API settings are established before any API calls
+            APIRequest.SetAPISettings();
+
             InitializeComponent();
 
             // Register Twain SDK

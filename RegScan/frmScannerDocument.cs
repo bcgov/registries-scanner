@@ -350,6 +350,11 @@ namespace RegScan
                 {
                     // Display the first document.
                     _currentImageIndex = 0;
+                    // Enable buttons 
+                    btnCancelScan.Enabled = true;
+                    btnSave.Enabled = true;
+                    btnRotateImg.Enabled = true;
+                    btnImagePDF.Enabled = true;
                 }
             }
 
@@ -501,14 +506,6 @@ namespace RegScan
             lblTotalImage.Text = totalScanned.ToString();
 
             // Disable/ enable buttons based on the current image index
-            // On first page scanned. These dont need to be updated with each image nav change.
-            if (_currentImageIndex == 0 && totalScanned == 1)
-            {
-                btnCancelScan.Enabled = true;
-                btnSave.Enabled = true;
-                btnRotateImg.Enabled = true;
-                btnImagePDF.Enabled = true;
-            }
             // Fist page - can't delete, no previous image, only go to next image if there is one
             if (_currentImageIndex == 0)
             {

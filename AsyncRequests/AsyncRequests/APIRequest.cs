@@ -1,5 +1,4 @@
 ﻿using AppConfiguration;
-using Newtonsoft;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -13,12 +12,11 @@ namespace AsyncRequests
     {
         public static Method method;
 
-        public APIRequest()
+        public static void SetAPISettings()
         {
             // Set security protocols
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
         }
         private static RestRequest CreateRequest(Method reqType)
         {
