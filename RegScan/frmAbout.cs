@@ -6,6 +6,9 @@ namespace RegScan
 {
     partial class frmAbout : Form
     {
+        /// <summary>
+        /// Get and display information about the applicaiton to the user in a new form.
+        /// </summary>
         public frmAbout()
         {
             InitializeComponent();
@@ -17,6 +20,9 @@ namespace RegScan
             this.textBoxDescription.Text = AssemblyDescription;
         }
 
+        /// The methods in this section use standard Windows functions to retrieve information
+        /// about the applicaitons assembly. When this form is called this information is
+        /// collected then displayed - see the constructor frmAbbout() on how they are set.
         #region Assembly Attribute Accessors
 
         public string AssemblyTitle
