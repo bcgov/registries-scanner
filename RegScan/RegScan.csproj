@@ -81,7 +81,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettingObj.cs" />
     <Compile Include="AuthorObj.cs" />
     <Compile Include="BarCodeObj.cs" />
     <Compile Include="BarCodeString.cs" />
