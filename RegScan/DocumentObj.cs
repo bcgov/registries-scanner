@@ -107,11 +107,6 @@ namespace RegScan
         private int _pageCount;
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
 
-        
-        // Boolean to determine if the document has been scanned
-        private bool _isScanned;
-
-
         private int _versionNumber;
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
 
@@ -212,8 +207,6 @@ namespace RegScan
         /// </param>
         public void UpdateInsert(bool updateRecordFlag)
         {
-            // Set some values before database requests.
-            _isScanned = true;
 
             if (_updateRecord)
             {

@@ -274,12 +274,6 @@ namespace RegScan
         {
             // The first document is the latest and is the one that will be displayed
             _currentDocument = inDoc;
-            
-            // TODO -> better error handling here
-            // Display the warning if there was some sort of error getting the document
-            if (! string.IsNullOrEmpty(_currentDocument.Error))
-                MessageBox.Show("Warning an error was found -> " +
-                    _currentDocument.Error);
 
             // We have a record from DRS API that matches the barcode.
             // This means we will be updating the record.
