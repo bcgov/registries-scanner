@@ -481,14 +481,15 @@ namespace RegScan
         /// </summary>
         private void UpdateImageDisplay()
         {
-            if (_currentImageIndex > -1 && _currentImageIndex < _scannedImageList.Count)
+            var totalScanned = _scannedImageList.Count;
+            if (_currentImageIndex > -1 && _currentImageIndex < totalScanned)
             {
                 // we have already read in all the images, select the one from the index to display
                 var image = _scannedImageList[_currentImageIndex].Image;
                 // display error if this one cant be read
-                if (image == null) 
-                { 
-                    MessageBox.Show("Error loading image for page " + 
+                if (image == null)
+                {
+                    MessageBox.Show("Error loading image for page " +
                         (_currentImageIndex + 1).ToString());
                     return;
                 }
@@ -497,19 +498,45 @@ namespace RegScan
 
             //Update current and total page labels in the status label
             lblCurImage.Text = (_currentImageIndex + 1).ToString();
-            lblTotalImage.Text = _scannedImageList.Count.ToString();
+            lblTotalImage.Text = totalScanned.ToString();
 
-            // Don't allow the first page to be deleted
-            if (_currentImageIndex > 0)
+            // Disable/ enable buttons based on the current image index
+            // On first page scanned. These dont need to be updated with each image nav change.
+            if (_currentImageIndex == 0 && totalScanned == 1)
             {
-                btnDeleteImage.BackColor = UI.Theme.BackgroundPrimary;
-                btnDeleteImage.ForeColor = UI.Theme.DangerBackground;
-                btnDeleteImage.Enabled = true;
+                btnCancelScan.Enabled = true;
+                btnSave.Enabled = true;
+                btnRotateImg.Enabled = true;
+                btnImagePDF.Enabled = true;
             }
+            // Fist page - can't delete, no previous image, only go to next image if there is one
+            if (_currentImageIndex == 0)
+            {
+                btnDeleteImage.Enabled = false;
+                btnPrevImage.Enabled = false;
+                if (totalScanned > 1)
+                {
+                    btnlNextImage.Enabled = true;
+                }
+                else
+                {
+                    btnlNextImage.Enabled = false;
+                }
+            }
+            // Last page - can be deleted, can go to previous image, no next image
+            else if (_currentImageIndex == totalScanned - 1)
+            {
+                btnDeleteImage.Enabled = true;
+                btnPrevImage.Enabled = true;
+                btnlNextImage.Enabled = false;
+            }
+            // This will be the default for any page that isnt the last or first
+            // Can be deleted and can navigate to next or previous images
             else
             {
-                //UI.Controls.DisableButton(btnDeleteImage);
-                btnDeleteImage.Enabled = false;
+                btnDeleteImage.Enabled = true;
+                btnPrevImage.Enabled = true;
+                btnlNextImage.Enabled = true;
             }
         }
 
@@ -524,13 +551,7 @@ namespace RegScan
         /// </summary>
         private void ResetDocument()
         {
-            // Clear document.
-            _currentDocument = null;
-            _image0 = null;
-            _scannedImageList.Clear();
-            _currentImageIndex = -1;
-
-            // Clear the document.
+            // Clear the document form
             txtBarCode.Text = "";
             txtLegalEntityKey.Text = "";
             txtIndexer.Text = "";
@@ -543,6 +564,12 @@ namespace RegScan
             maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
 
+            // Disable Accession Number fields and notes
+            maskSeqNumber.Enabled = false;
+            maskSchNumber.Enabled = false;
+            maskBoxNumber.Enabled = false;
+            txtDocumentNotes.Enabled = false;
+
             // Delete any temporary FileNames.
             try
             {
@@ -550,16 +577,31 @@ namespace RegScan
                     File.Delete(fileName);
                 _tempFileNameList.Clear();
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-                UtilityObj.WriteLog(UtilityObj.warn, 
+                UtilityObj.WriteLog(UtilityObj.warn,
                     "Unable to delete all images in file list. Next scanning session may not run as" +
                     " expected:\n" + e.ToString());
                 MessageBox.Show("Warning: The previous session did not clear as expected. There may" +
                     " be carry-over images that persist. Please try 'Reject Scan' process again or" +
                     " restarting this application.", "Scan Session Failed to Clear");
             }
-            
+
+            // Clear document image
+            _currentDocument = null;
+            _image0 = null;
+            _scannedImageList.Clear();
+            _currentImageIndex = -1;
+
+            // Set buttons related to image to a disabled state
+            btnCancelScan.Enabled = false;
+            btnSave.Enabled = false;
+            btnDeleteImage.Enabled = false;
+            btnRotateImg.Enabled = false;
+            btnImagePDF.Enabled = false;
+            btnPrevImage.Enabled = false;
+            btnlNextImage.Enabled = false;
+
             // reset img numbers
             lblCurImage.Text = "0";
             lblTotalImage.Text = "0";
