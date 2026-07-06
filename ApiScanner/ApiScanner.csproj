@@ -40,12 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentApi.cs" />
-    <Compile Include="OwnerTypeApi.cs" />
-    <Compile Include="ScanningAuthorApi.cs" />
-    <Compile Include="ScanningBatchApi.cs" />
-    <Compile Include="ScanningBoxApi.cs" />
-    <Compile Include="ScanningParameterApi.cs" />
-    <Compile Include="ScheduleApi.cs" />
   </ItemGroup>
   <!-- Framework references only -->
   <ItemGroup>
