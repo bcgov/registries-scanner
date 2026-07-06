@@ -1,12 +1,4 @@
-﻿using ApiScanner;
-using Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections;
-using System;
-using System.Collections.Generic;
-using System.Data;
-
+﻿
 namespace RegScan
 {
     public class ScannerSettingObj
@@ -22,8 +14,6 @@ namespace RegScan
         public bool AutoRotateCheckBox;
         public bool AutoDetectBorderCheckBox;
         public bool checkBoxArea;
-
-        private ScannerParametersModel ApiModel = new ScannerParametersModel();
 
         public ScannerSettingObj()
         {
@@ -43,22 +33,6 @@ namespace RegScan
             AutoRotateCheckBox = true;
             AutoDetectBorderCheckBox = false;
             checkBoxArea = false;
-        }
-
-        public void Update()
-        {
-            copyToModel();
-            string resp = ScanningParameterApi.patch(ApiModel);          
-        }      
-
-        public void copyToModel()
-        {
-            ApiModel.maxPagesInBox = MaxPagesInBox;
-            ApiModel.useDocumentFeeder = UseDocumentFeeder;
-            ApiModel.showTwainUi = ShowTwainUI;
-            ApiModel.showTwainProgress = ShowProgressIndicatorUI;
-            ApiModel.useFullDuplex = UseDuplex;
-            ApiModel.useLowResolution = BlackAndWhiteCheckBox;
-        }           
+        }             
     }
 }

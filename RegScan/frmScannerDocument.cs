@@ -93,15 +93,13 @@ namespace RegScan
         /// at the top of the form.
         /// </summary>
         public void SetSettingValues()
-        {
+        { 
             useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
             useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
             useUICheckBox.Checked = _defaultSetting.ShowTwainUI;
             showProgressIndicatorUICheckBox.Checked = _defaultSetting.ShowProgressIndicatorUI;
             ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
-
-
 
         #region Scanning Session
 

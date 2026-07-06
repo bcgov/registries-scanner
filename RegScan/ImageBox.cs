@@ -6,6 +6,12 @@ using System.Windows.Forms;
 
 namespace RegScan
 {
+    /// <summary>
+    /// This class seems to overwrite a lot of default functions and methods. 
+    /// The right side of the applicaiton will break wif you change this file without knowing
+    /// what is being changed. 
+    /// All user actions (moust move, scroll, mouse right & left click) are handled in this class.
+    /// </summary>
     [DefaultProperty("Image"), ToolboxBitmap(typeof(ImageBox))]
     public partial class ImageBox : ScrollableControl
     {

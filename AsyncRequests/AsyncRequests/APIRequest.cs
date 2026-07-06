@@ -7,7 +7,9 @@ using System.Net;
 
 namespace AsyncRequests
 {
-    // Class to facilitate API calls
+    /// <summary>
+    /// Class to facilitate API calls
+    /// </summary>
     public class APIRequest
     {
         public static Method method;
@@ -143,9 +145,9 @@ namespace AsyncRequests
 
         }
 
-    }  //end class
+    }
 
-} // end namespace
+}
 
 
 

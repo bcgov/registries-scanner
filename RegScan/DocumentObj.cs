@@ -37,7 +37,6 @@ namespace RegScan
         private int _sequenceNumber;
         private int _scheduleNumber;
         private int _boxNumber;
-        private int _batchId;
         private int _versionNumber;
         private string _owner;
         private string _scannerId;
@@ -45,12 +44,7 @@ namespace RegScan
 
         private bool _updateRecord = false;
        
-
-        // Calculated.
-        private BoxObj _boxObj = null;        
-
         private PdfDocument _pdfDocument = null;
-        private List<Bitmap> _imageList = new List<Bitmap>();
 
         // Public variables other classes can use
         // Document Information Form
@@ -65,7 +59,6 @@ namespace RegScan
         public string DocTypeDesc { get { return _documentTypeDescription; } }
         public string Description { get { return _description; } set { _description = value; } }
         public string DocumentURL { get { return _documentURL; } }
-        public string DocumentServiceId { get { return _documentServiceId; } }
         // Accession Number Elements
         public string SequenceNumberString { 
             get { return _sequenceNumber.ToString().PadLeft(2, '0'); } }
@@ -83,19 +76,9 @@ namespace RegScan
             get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
                                        _scheduleNumber.ToString().PadLeft(4, '0'), 
                                        _boxNumber.ToString().PadLeft(4, '0')); } }
-        public string AccessionNumberText { 
-            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-",
-                                       _scheduleNumber.ToString().PadLeft(4, '0'), "-",
-                                       _boxNumber.ToString().PadLeft(4, '0')); } }
-        public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
-        
-        public bool IsScanned { get { return _isScanned; } }
-        public int BatchId { get { return _batchId; } set { _batchId = value; } }
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
         public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
         public DateTime ScannedDate { get { return _scannedDate; } set { _scannedDate = value; } }
-
-        public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
 
         public bool UpdateRecord { 
             get { return _updateRecord; } set { _updateRecord = value; } }
@@ -103,13 +86,9 @@ namespace RegScan
         // Calculated
         public PdfDocument PDFDocument { 
             get { return _pdfDocument; } set { _pdfDocument = value; } }
-        public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
-
-        public string Error = "";
-
+        
         public DocumentObj()
         {
-            _boxObj = new BoxObj();
         }
 
         #endregion
@@ -209,26 +188,8 @@ namespace RegScan
 
         #endregion
 
-        #region Utility 
-        // TODO - this should be in the utility class, and need to be reworked.
-        //     Reading and writing to FileIO is not optimal.
-        public void ConvertPDFToImageList()
-        {
-            // The document will be null if this is a new scan
-            if (_pdfDocument == null)
-                return;
-
-            string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".pdf";
-            File.WriteAllBytes(fileName, PDFObj.ConvertPdfToByteArray(_pdfDocument));
-            var pdf = new Cyotek.GhostScript.PdfConversion.Pdf2Image(fileName);
-            _imageList = pdf.GetImages().ToList();
-            File.Delete(fileName);
-        }
-
-        #endregion
-
         #region Static Find, Select and utility methods
-        static public string ErrorMessage = "";
+        
 
 
         /// <summary>
