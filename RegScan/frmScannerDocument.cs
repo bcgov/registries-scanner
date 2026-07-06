@@ -1,5 +1,4 @@
-﻿using PdfSharp.Drawing.BarCodes;
-using PdfSharp.Pdf;
+﻿using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -94,6 +93,10 @@ namespace RegScan
             CreateTwainDeviceManager();
         }
 
+        /// <summary>
+        /// Using the default settings set by ScannerSettingObj init function, set the checkboxes
+        /// at the top of the form.
+        /// </summary>
         public void SetSettingValues()
         {
             useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
@@ -107,6 +110,16 @@ namespace RegScan
 
         #region Scanning Session
 
+        /// <summary>
+        /// When the form is closed (by an error or user actions) this method is used to clean the
+        /// temporary files, in app memory, and any connections to externam devices. 
+        /// This function will trigger the ChildFormClosing() function in frmMDIMain.cs.
+        /// </summary>
+        /// <remarks>
+        /// Close() methods will ensure that the object in question is stopped 
+        /// Dispose() methods will release resources associated with the object and allow garbage
+        /// collection.
+        /// </remarks>
         public void CloseForm()
         {
             // Clean up the temp folder for storing scanned images.
@@ -151,8 +164,6 @@ namespace RegScan
         /// <param name="image"> Bitmap image from scan process </param>
         private void ProcessScan(Bitmap image)
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
-
             // Set the first image to _image0 for barcode scanning and display purposes.
             // NOTE - It may be possible to use image and _image0 interchangeably and
             //     eliminate the need for _image0.
@@ -174,9 +185,6 @@ namespace RegScan
             // Create a new ImageObj and add to the list of scanned images
             _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait,
                 ImageObj.GetPageSize(image.Width, image.Height)));
-
-            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + 
-                (fileNumber == "" ? "0" : fileNumber));
         }
 
         /// <summary>
@@ -284,7 +292,6 @@ namespace RegScan
             // This means we will be updating the record.
             _currentDocument.UpdateRecord = true;
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Set the form");
             // Display the document.
             SetForm();
         }
@@ -309,14 +316,12 @@ namespace RegScan
             if (gotDocument)
             {
                 // Will only be true if it is an existing scan and
-                // new version is not required.
+                // the user indicates a new version is not required.
                 bool cancelScan = false;
 
                 // IF document has already been scanned.
                 if (! string.IsNullOrEmpty(_currentDocument.DocumentURL))
                 {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
-
                     // Ask if this is a new version.
                     if (MessageBox.Show("Document with barcode " + barCode +
                         " has already been scanned. Do you want to create a new version?",
@@ -343,7 +348,6 @@ namespace RegScan
                 }
                 else
                 {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Fix SetImageNav");
                     // Display the first document.
                     _currentImageIndex = 0;
                 }
@@ -368,8 +372,6 @@ namespace RegScan
         /// </summary>
         private void ProcessCompleted()
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "Scanning finished");
-
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
                 return;
@@ -557,7 +559,7 @@ namespace RegScan
                     " be carry-over images that persist. Please try 'Reject Scan' process again or" +
                     " restarting this application.", "Scan Session Failed to Clear");
             }
-
+            
             // reset img numbers
             lblCurImage.Text = "0";
             lblTotalImage.Text = "0";
@@ -583,25 +585,27 @@ namespace RegScan
         protected void SetForm()
         {
             // Document Record Details
-
-            // Indexing/ Filing information
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtIndexer.Text = _currentDocument.Owner;
             txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
-            // Document Information
+            // Record Classification
             txtDocumentClass.Text = _currentDocument.DocumentClass;
             txtDocumentType.Text = string.Concat(
                 _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
 
-            // Accession Numbers
+            // Accession Number
+            maskSeqNumber.Enabled = true;
+            maskSchNumber.Enabled = true;
+            maskBoxNumber.Enabled = true;
             maskSeqNumber.Text = _currentDocument.SequenceNumberString;
             maskSchNumber.Text = _currentDocument.ScheduleNumberString;
             maskBoxNumber.Text = _currentDocument.BoxNumberString;
 
-            // Notes / Description
+            // Document Notes / Description
+            txtDocumentNotes.Enabled = true;
             txtDocumentNotes.Text = _currentDocument.Description;
         }
         #endregion
@@ -691,7 +695,6 @@ namespace RegScan
         /// <param name="e"></param>
         private void device_AsyncEvent(object sender, DeviceAsyncEventArgs e)
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "device_AsyncEvent");
             switch (e.DeviceEvent)
             {
                 case DeviceEventId.PaperJam:
@@ -769,6 +772,10 @@ namespace RegScan
             hideProgressBar();
         }
 
+        /// <summary>
+        /// Initialize the connection to the conencted scanner. If a connection is already
+        /// established it will be closed and a new connection started. 
+        /// </summary>
         private void setUpScanner()
         {
             // Open device manager, if not open.
@@ -834,11 +841,9 @@ namespace RegScan
             {
                 _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
             }
-            UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
             // if device supports asynchronous events
             if (_currentDevice.IsAsyncEventsSupported)
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
                 // enable all asynchronous events supported by device
                 _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
             }
@@ -887,12 +892,9 @@ namespace RegScan
 
             try
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
 
                 // start image acquisition process
                 _currentDevice.Acquire();
-
-                UtilityObj.WriteLog(UtilityObj.debug, "End of image acquisition");
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
@@ -923,9 +925,6 @@ namespace RegScan
             int updateCount = ((int)100 / _scannedImageList.Count);
             showProgressBar();
             Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " btnViewAsPDF_Click Scanner  Objects");
 
             // TODO - investigate how to do this asynchronously
             // Create the PDF Document to open in default PDF viewing app
@@ -965,10 +964,6 @@ namespace RegScan
 
             // TODO: This is discouraged in Microsoft Docs.
             Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " _scannedImageList Objects");
-
 
             try
             {
@@ -1092,25 +1087,11 @@ namespace RegScan
             // Form is maximized.
             this.WindowState = FormWindowState.Maximized;
 
+            // Reset the form to default state
+            ResetDocument();
+
             // Scan button is set as the focus.
             btnScanPage.Focus();
-        }
-
-
-        private void statusBtnPrevImage_Click(object sender, EventArgs e)
-        {
-            if (_currentImageIndex - 1 < 0)
-                return;
-            --_currentImageIndex;
-            UpdateImageDisplay();
-        }
-
-        private void statusLblNextImage_Click(object sender, EventArgs e)
-        {
-            if (_currentImageIndex + 2 > _scannedImageList.Count)
-                return;
-            ++_currentImageIndex;
-            UpdateImageDisplay();
         }
 
         private void btnDeleteImage_Click(object sender, EventArgs e)
