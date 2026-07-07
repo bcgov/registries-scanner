@@ -17,7 +17,7 @@ namespace RegScan
 
         public ScannerSettingObj()
         {
-            // Because we have default values that can be used we dont need to call the API to get
+            // Because we have default values that can be used we don't need to call the API to get
             // this information. If there was a way to tie settings to a specific user the API
             // might be more useful. 
             //load();

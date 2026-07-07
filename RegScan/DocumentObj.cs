@@ -12,7 +12,7 @@ namespace RegScan
     public class DocumentObj
     {
 
-        #region Doument Record Properties
+        #region Document Record Properties
         
         // DRS APIs unique identifier for this document record. 
         private string _documentServiceId;
@@ -22,7 +22,7 @@ namespace RegScan
         public string BarCode { get { return _barCode.ToString(); } }
         
         // Consumer Identifier/ Legal Entity. Used to identify the entity (ex. company, mobile home
-        // , etc) associated with the doument record
+        // , etc) associated with the document record
         private string _legalEntityKey;
         public string LegalEntityKey { get { return _legalEntityKey; } }
         
@@ -49,8 +49,8 @@ namespace RegScan
         public string ConsumerFilingDateString { 
             get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
 
-        // Doument URL. Only set after saving current document or if the document record has a
-        // verison of the document already uploaded.
+        // Document URL. Only set after saving current document or if the document record has a
+        // version of the document already uploaded.
         private string _documentURL;
         public string DocumentURL { get { return _documentURL; } }
 
@@ -59,7 +59,7 @@ namespace RegScan
         public string Description { get { return _description; } set { _description = value; } }
 
         // Not listed in DRS API documentation. However; sometimes this is returned.
-        // If not in Scanning Information it will hold the filing authors informaiton.
+        // If not in Scanning Information it will hold the filing authors information.
         private string _author;
 
         // Consumer Reference ID for the consumer application transaction/filing/registration
@@ -72,7 +72,7 @@ namespace RegScan
         // Scanning Information
 
         // consumer Document ID is also listed within the ScanningInformation object. This should
-        // be the same as the Barcode abouve.
+        // be the same as the Barcode above.
 
         // ScanDateTime. The date of the consumer application document scan date. Time is alway
         // set to 12:00pm in the local time zone.
@@ -81,7 +81,7 @@ namespace RegScan
 
         // Document Class is listed here again. It will be the same as the Document Class above.
 
-        // Accesion Number Values. 
+        // Accession Number Values. 
         private int _sequenceNumber;
         private int _scheduleNumber;
         private int _boxNumber;
@@ -104,14 +104,14 @@ namespace RegScan
 
         // batch number -> not used in this app
 
-        // Number of pages expeted in the document.
+        // Number of pages expected in the document.
         private int _pageCount;
         public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
 
         private int _versionNumber;
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
 
-        // This author field May be empty when requesting a document record (if it hasnt been
+        // This author field May be empty when requesting a document record (if it hasn't been
         // scanned.) Will be set to the current users IDIR when the document is saved.
         private string _scannerIDIR;
         public string ScannerId { get { return _scannerIDIR; } set { _scannerIDIR = value; } }
@@ -200,8 +200,8 @@ namespace RegScan
         ///        DRS API. This functionality could be added in the future.
         /// </summary>
         /// <param name="updateRecordFlag">
-        /// Determines if the applicaiton will update the record and upload image. If this is true
-        /// the scanning app shows a warning. This is because at this time the scanning applicaiton
+        /// Determines if the application will update the record and upload image. If this is true
+        /// the scanning app shows a warning. This is because at this time the scanning application
         /// is not intended to create new records. 
         /// </param>
         public void UpdateInsert(bool updateRecordFlag)
@@ -303,9 +303,9 @@ namespace RegScan
         /// <summary>
         /// Assign values from this DocumentObj to the DocumentModel passed in. 
         /// </summary>
-        /// <param name="model">Model to add vaules to</param>
+        /// <param name="model">Model to add values to</param>
         /// <remarks>
-        /// Currently we dont want to update any of the items commented out at the end of the
+        /// Currently we don't want to update any of the items commented out at the end of the
         /// function. These can be uncommented if we want to send them in the API request. 
         /// </remarks>
         public void CopyToModel(DocumentModel model)
@@ -408,7 +408,7 @@ namespace RegScan
             {
                 // Convert to an array type and add all names to a string sep by a comma
                 JArray filenameList = (JArray)jDoc["consumerFilenames"];
-                // Get the first filenname from the list.
+                // Get the first filename from the list.
                 docObj._fileName = (string)filenameList[0];
             }
             // - The DateTime of application/ filing

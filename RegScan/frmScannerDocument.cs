@@ -104,7 +104,7 @@ namespace RegScan
 
         /// <summary>
         /// When the form is closed (by an error or user actions) this method is used to clean the
-        /// temporary files, in app memory, and any connections to externam devices. 
+        /// temporary files, in app memory, and any connections to external devices. 
         /// This function will trigger the ChildFormClosing() function in frmMDIMain.cs.
         /// </summary>
         /// <remarks>
@@ -509,7 +509,7 @@ namespace RegScan
                 btnPrevImage.Enabled = true;
                 btnNextImage.Enabled = false;
             }
-            // This will be the default for any page that isnt the last or first
+            // This will be the default for any page that isn't the last or first
             // Can be deleted and can navigate to next or previous images
             else
             {
@@ -794,7 +794,7 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Initialize the connection to the conencted scanner. If a connection is already
+        /// Initialize the connection to the connected scanner. If a connection is already
         /// established it will be closed and a new connection started. 
         /// </summary>
         private void setUpScanner()
@@ -927,7 +927,7 @@ namespace RegScan
 
         private void btnRotateImg_Click(object sender, EventArgs e)
         {
-            // TODO - currently this doesnt actually rotate the image it mirrors it?
+            // TODO - currently this doesn't actually rotate the image it mirrors it?
             _scannedImageList[_currentImageIndex].Rotate();
             UpdateImageDisplay();
         }
@@ -1006,7 +1006,7 @@ namespace RegScan
 
             // Get the form fields we want to update
             // If the description field changes we can use one endpoint
-            // If it isnt updated we have to use a different endpoint.
+            // If it isn't updated we have to use a different endpoint.
             if (string.Equals(_currentDocument.Description ?? string.Empty, 
                 txtDocumentNotes.Text, StringComparison.Ordinal))
             {
