@@ -498,16 +498,16 @@ namespace RegScan
                 btnDeleteImage.Enabled = false;
                 btnPrevImage.Enabled = false;
                 if (totalScanned > 1)
-                    btnlNextImage.Enabled = true;
+                    btnNextImage.Enabled = true;
                 else
-                    btnlNextImage.Enabled = false;
+                    btnNextImage.Enabled = false;
             }
             // Last page - can be deleted, can go to previous image, no next image
             else if (_currentImageIndex == totalScanned - 1)
             {
                 btnDeleteImage.Enabled = true;
                 btnPrevImage.Enabled = true;
-                btnlNextImage.Enabled = false;
+                btnNextImage.Enabled = false;
             }
             // This will be the default for any page that isnt the last or first
             // Can be deleted and can navigate to next or previous images
@@ -515,7 +515,7 @@ namespace RegScan
             {
                 btnDeleteImage.Enabled = true;
                 btnPrevImage.Enabled = true;
-                btnlNextImage.Enabled = true;
+                btnNextImage.Enabled = true;
             }
         }
 
@@ -579,7 +579,7 @@ namespace RegScan
             btnRotateImg.Enabled = false;
             btnImagePDF.Enabled = false;
             btnPrevImage.Enabled = false;
-            btnlNextImage.Enabled = false;
+            btnNextImage.Enabled = false;
 
             // reset img numbers
             lblCurImage.Text = "0";

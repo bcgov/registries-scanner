@@ -97,7 +97,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnPrevImage = new System.Windows.Forms.Button();
             this.lblCurImage = new System.Windows.Forms.Label();
-            this.btnlNextImage = new System.Windows.Forms.Button();
+            this.btnNextImage = new System.Windows.Forms.Button();
             this.lblDisplay = new System.Windows.Forms.Label();
             this.lblTotalImage = new System.Windows.Forms.Label();
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
@@ -1003,7 +1003,7 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.btnPrevImage);
             this.flowLayoutPanel1.Controls.Add(this.lblCurImage);
-            this.flowLayoutPanel1.Controls.Add(this.btnlNextImage);
+            this.flowLayoutPanel1.Controls.Add(this.btnNextImage);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(137, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(124, 43);
@@ -1038,18 +1038,18 @@
             this.lblCurImage.Text = "0";
             this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnlNextImage
+            // btnNextImage
             // 
-            this.btnlNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnlNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnlNextImage.ForeColor = System.Drawing.Color.Black;
-            this.btnlNextImage.Location = new System.Drawing.Point(86, 3);
-            this.btnlNextImage.Name = "btnlNextImage";
-            this.btnlNextImage.Size = new System.Drawing.Size(31, 37);
-            this.btnlNextImage.TabIndex = 97;
-            this.btnlNextImage.Text = ">";
-            this.btnlNextImage.UseVisualStyleBackColor = true;
-            this.btnlNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
+            this.btnNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNextImage.ForeColor = System.Drawing.Color.Black;
+            this.btnNextImage.Location = new System.Drawing.Point(86, 3);
+            this.btnNextImage.Name = "btnNextImage";
+            this.btnNextImage.Size = new System.Drawing.Size(31, 37);
+            this.btnNextImage.TabIndex = 97;
+            this.btnNextImage.Text = ">";
+            this.btnNextImage.UseVisualStyleBackColor = true;
+            this.btnNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
             // 
             // lblDisplay
             // 
@@ -1239,7 +1239,7 @@
         private System.Windows.Forms.Button btnPrevImage;
         private System.Windows.Forms.Button btnImagePDF;
         private System.Windows.Forms.Button btnRotateImg;
-        private System.Windows.Forms.Button btnlNextImage;
+        private System.Windows.Forms.Button btnNextImage;
         private System.Windows.Forms.Label lblDisplay;
         private System.Windows.Forms.Button btnDeleteImage;
         private System.Windows.Forms.Label lblTotalImage;
