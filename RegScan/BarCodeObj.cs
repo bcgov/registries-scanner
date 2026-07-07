@@ -1,5 +1,4 @@
 ﻿using BarCodeScanner;
-using Utilities;
 using System.Drawing;
 using System;
 

@@ -1,8 +1,6 @@
 ﻿using AppConfiguration;
-using AsyncRequests;
 using System;
 using System.Windows.Forms;
-using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan

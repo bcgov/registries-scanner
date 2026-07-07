@@ -38,9 +38,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DocumentApi.cs" />
-  </ItemGroup>
   <!-- Framework references only -->
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

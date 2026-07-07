@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan

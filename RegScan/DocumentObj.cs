@@ -1,15 +1,16 @@
-﻿using ApiScanner;
-using Utilities;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 
 namespace RegScan
 {
+    /// <summary>
+    /// The DocumentObj class is used to hold the information for a document record. The properties
+    /// of the class are matched to the DRS APIs documentSummary schema as closely as possible.
+    /// </summary>
     public class DocumentObj
     {
-        #region Properties and Constructors
 
         #region Doument Record Properties
         
@@ -116,7 +117,7 @@ namespace RegScan
         public string ScannerId { get { return _scannerIDIR; } set { _scannerIDIR = value; } }
 
         #endregion
-        #region Other Propwerties
+        #region Other Properties
 
         // As far as I can tell this value is set to false, used as a flag, then reset to false.
         // There are no places currently that it can be set to true.
@@ -135,8 +136,6 @@ namespace RegScan
         public DocumentObj()
         {
         }
-
-        #endregion
 
         #region Updating Functions
 

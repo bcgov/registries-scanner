@@ -81,6 +81,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\APIRequest.cs" />
+    <Compile Include="API\DocumentApi.cs" />
     <Compile Include="BarCodeObj.cs" />
     <Compile Include="frmScannerDocument.cs">
       <SubType>Form</SubType>
@@ -102,13 +104,13 @@
     <Compile Include="frmEnterBarCode.Designer.cs">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageBox.cs">
+    <Compile Include="ImageBox\ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageBox.designer.cs" />
-    <Compile Include="ImageBoxGridDisplayMode.cs" />
-    <Compile Include="ImageBoxGridScale.cs" />
-    <Compile Include="ImageObj.cs" />
+    <Compile Include="ImageBox\ImageBox.designer.cs" />
+    <Compile Include="ImageBox\ImageBoxGridDisplayMode.cs" />
+    <Compile Include="ImageBox\ImageBoxGridScale.cs" />
+    <Compile Include="ImageBox\ImageObj.cs" />
     <Compile Include="frmMDIMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +123,7 @@
     <Compile Include="ScannerSettingObj.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="UI\Theme.cs" />
+    <Compile Include="Utilities\UtilityObj.cs" />
     <EmbeddedResource Include="frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -165,25 +168,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApiScanner\ApiScanner.csproj">
-      <Project>{2bb8b401-f03a-404e-b96a-0cbe1be48def}</Project>
-      <Name>ApiScanner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj">
       <Project>{91b5b3a5-f022-46cf-aa68-b63196e1aa73}</Project>
       <Name>AppConfiguration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AsyncRequests\AsyncRequests\AsyncRequests.csproj">
-      <Project>{2aa594f5-08a2-40e3-b733-b28b4527250b}</Project>
-      <Name>AsyncRequests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BarCodeScanner\BarCodeScanner.csproj">
       <Project>{bd27739d-f7b8-4b24-9373-fafda26703c6}</Project>
       <Name>BarCodeScanner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{d05439d1-dd91-49b4-a6f0-eb0f8f36db38}</Project>
-      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +222,7 @@
       <Version>106.15.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>;
