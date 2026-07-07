@@ -1,12 +1,18 @@
 ﻿using System.Configuration;
+using System.Security.Policy;
 
 namespace AppConfiguration
 {
-    /* This class is used to store the keys for configuration values.  
-     * The values are read from the app.config file and stored in these properties.  
-     * This allows for easy access to configuration values throughout the application as well as allowing intellisense and compile time checking.
-     * i.e. instead of using ConfigurationManager.AppSettings["PORT"] throughout the code, we can use ConfigKeys.PORT which is more readable and less error prone.
-     * */
+    /// <summary>
+    /// This class is used to store the keys for configuration values.  
+    /// The values are read from the app.config file and stored in these properties.
+    /// This allows for easy access to configuration values throughout the application as well as
+    /// allowing intellisense and compile time checking.
+    /// </summary>
+    /// <remarks>
+    /// Instead of using ConfigurationManager.AppSettings["PORT"] throughout the code, we can
+    /// use ConfigKeys.PORT which is more readable and less error prone.
+    /// </remarks>
     public class ConfigKeys
     {
         public static string PORT{ get; set; } = string.Empty;
@@ -26,6 +32,10 @@ namespace AppConfiguration
         public static string TWAINSDKEMAIL { get; set; } = string.Empty;
         public static string TWAINSDKKEY { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Load all configuration values from sensitive.config and store as class properties.
+        /// Any other project within the solution can referenec these values as required.
+        /// </summary>
         public ConfigKeys()
         {
             APIKEY = ConfigurationManager.AppSettings[nameof(ConfigKeys.APIKEY)];

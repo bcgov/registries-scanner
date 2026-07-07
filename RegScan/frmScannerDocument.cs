@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan
@@ -93,7 +92,7 @@ namespace RegScan
         /// at the top of the form.
         /// </summary>
         public void SetSettingValues()
-        {
+        { 
             useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
             useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
             useUICheckBox.Checked = _defaultSetting.ShowTwainUI;
@@ -101,13 +100,11 @@ namespace RegScan
             ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
 
-
-
         #region Scanning Session
 
         /// <summary>
         /// When the form is closed (by an error or user actions) this method is used to clean the
-        /// temporary files, in app memory, and any connections to externam devices. 
+        /// temporary files, in app memory, and any connections to external devices. 
         /// This function will trigger the ChildFormClosing() function in frmMDIMain.cs.
         /// </summary>
         /// <remarks>
@@ -276,12 +273,6 @@ namespace RegScan
         {
             // The first document is the latest and is the one that will be displayed
             _currentDocument = inDoc;
-            
-            // TODO -> better error handling here
-            // Display the warning if there was some sort of error getting the document
-            if (! string.IsNullOrEmpty(_currentDocument.Error))
-                MessageBox.Show("Warning an error was found -> " +
-                    _currentDocument.Error);
 
             // We have a record from DRS API that matches the barcode.
             // This means we will be updating the record.
@@ -507,24 +498,24 @@ namespace RegScan
                 btnDeleteImage.Enabled = false;
                 btnPrevImage.Enabled = false;
                 if (totalScanned > 1)
-                    btnlNextImage.Enabled = true;
+                    btnNextImage.Enabled = true;
                 else
-                    btnlNextImage.Enabled = false;
+                    btnNextImage.Enabled = false;
             }
             // Last page - can be deleted, can go to previous image, no next image
             else if (_currentImageIndex == totalScanned - 1)
             {
                 btnDeleteImage.Enabled = true;
                 btnPrevImage.Enabled = true;
-                btnlNextImage.Enabled = false;
+                btnNextImage.Enabled = false;
             }
-            // This will be the default for any page that isnt the last or first
+            // This will be the default for any page that isn't the last or first
             // Can be deleted and can navigate to next or previous images
             else
             {
                 btnDeleteImage.Enabled = true;
                 btnPrevImage.Enabled = true;
-                btnlNextImage.Enabled = true;
+                btnNextImage.Enabled = true;
             }
         }
 
@@ -588,7 +579,7 @@ namespace RegScan
             btnRotateImg.Enabled = false;
             btnImagePDF.Enabled = false;
             btnPrevImage.Enabled = false;
-            btnlNextImage.Enabled = false;
+            btnNextImage.Enabled = false;
 
             // reset img numbers
             lblCurImage.Text = "0";
@@ -617,7 +608,7 @@ namespace RegScan
             // Document Record Details
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
-            txtIndexer.Text = _currentDocument.Owner;
+            txtIndexer.Text = _currentDocument.ScannerId;
             txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
@@ -803,7 +794,7 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Initialize the connection to the conencted scanner. If a connection is already
+        /// Initialize the connection to the connected scanner. If a connection is already
         /// established it will be closed and a new connection started. 
         /// </summary>
         private void setUpScanner()
@@ -936,7 +927,7 @@ namespace RegScan
 
         private void btnRotateImg_Click(object sender, EventArgs e)
         {
-            // TODO - currently this doesnt actually rotate the image it mirrors it?
+            // TODO - currently this doesn't actually rotate the image it mirrors it?
             _scannedImageList[_currentImageIndex].Rotate();
             UpdateImageDisplay();
         }
@@ -1015,7 +1006,7 @@ namespace RegScan
 
             // Get the form fields we want to update
             // If the description field changes we can use one endpoint
-            // If it isnt updated we have to use a different endpoint.
+            // If it isn't updated we have to use a different endpoint.
             if (string.Equals(_currentDocument.Description ?? string.Empty, 
                 txtDocumentNotes.Text, StringComparison.Ordinal))
             {

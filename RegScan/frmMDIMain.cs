@@ -1,8 +1,6 @@
 ﻿using AppConfiguration;
-using AsyncRequests;
 using System;
 using System.Windows.Forms;
-using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan
@@ -13,10 +11,10 @@ namespace RegScan
     ///   - child window (frmScannerDocument) launching and state
     ///   - all operations from the menu bar
     /// </summary>
-    /// <remarkss>
-    /// MDI -> Multiple Document Interface. An applicaiton that can have multiple child windows 
+    /// <remarks>
+    /// MDI -> Multiple Document Interface. An application that can have multiple child windows 
     ///   showing their own documents.
-    /// </remarkss>
+    /// </remarks>
     public partial class frmMDIMain : Form
     {
 
@@ -42,14 +40,14 @@ namespace RegScan
         /// <summary>
         /// Event handler for catching when a frmScannerDocument form closes. If the user indicates
         /// that they would like to load a new session a new form is created, if not this form will
-        /// close and the applicaiton exits.
+        /// close and the application exits.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <remarks>
         /// If the form is closed for any non-user related event (i.e. OS shutdown, TaskManager 
         /// force close, etc) this function will not attempt to ask the user if they would like to
-        /// load a new session. -> The applicaiton will exit.
+        /// load a new session. -> The application will exit.
         /// </remarks>
         public void ChildFormClosing(object sender, FormClosingEventArgs e)
         {
@@ -131,7 +129,7 @@ namespace RegScan
         /// <param name="e">Event -> User selecting "Find"</param>
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // If there isnt a scanning form already open start one
+            // If there isn't a scanning form already open start one
             if (_scannerForm == null)
             {
                 MDIMain_Load(this, EventArgs.Empty);

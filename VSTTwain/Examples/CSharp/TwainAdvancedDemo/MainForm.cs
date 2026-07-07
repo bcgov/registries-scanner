@@ -40,7 +40,7 @@ namespace TwainAdvancedDemo
         int _imageIndex = -1;
 
         /// <summary>
-        /// Determines that image acquistion must be canceled because application's form is closing.
+        /// Determines that image acquisition must be canceled because application's form is closing.
         /// </summary>
         bool _cancelTransferBecauseFormIsClosing;
 
@@ -294,7 +294,7 @@ namespace TwainAdvancedDemo
                 device.ShowIndicators = showIndicatorsCheckBox.Checked;
                 device.DisableAfterAcquire = disableAfterScanCheckBox.Checked;
 
-                // trasfer mode
+                // transfer mode
                 if (transferModeComboBox.SelectedIndex == 0)
                     device.TransferMode = TransferMode.Native;
                 else
@@ -434,7 +434,7 @@ namespace TwainAdvancedDemo
 
                 try
                 {
-                    // start image acquition process
+                    // start image acquisition process
                     device.Acquire();
                 }
                 catch (TwainException ex)
@@ -482,7 +482,7 @@ namespace TwainAdvancedDemo
         /// </summary>
         private void device_ImageAcquiringProgress(object sender, ImageAcquiringProgressEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
+            // image acquisition must be canceled because application's form is closing
             if (_cancelTransferBecauseFormIsClosing)
             {
                 // cancel image acquisition
@@ -503,7 +503,7 @@ namespace TwainAdvancedDemo
         /// </summary>
         private void device_ImageAcquired(object sender, ImageAcquiredEventArgs e)
         {
-            // image acquistion must be canceled because application's form is closing
+            // image acquisition must be canceled because application's form is closing
             if (_cancelTransferBecauseFormIsClosing)
             {
                 // cancel image acquisition
@@ -797,7 +797,7 @@ namespace TwainAdvancedDemo
                     // save first image
                     _images[0].Save(filename, encoderSettings);
 
-                    // enable multipage support if necessary
+                    // enable multi page support if necessary
                     if (saveFileDialog1.FilterIndex == 5)
                         ((TwainTiffEncoderSettings)encoderSettings).TiffMultiPage = true;
                     else if (saveFileDialog1.FilterIndex == 6)

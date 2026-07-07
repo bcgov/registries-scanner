@@ -1,5 +1,4 @@
 ﻿using BarCodeScanner;
-using Utilities;
 using System.Drawing;
 using System;
 
@@ -7,38 +6,6 @@ namespace RegScan
 {
     class BarCodeObj
     {
-        /// <summary>
-        /// Used to specify what barcode type(s) to detect.
-        /// </summary>
-        public enum BarcodeType
-        {
-            /// <summary>Not specified</summary>
-            None = 0,
-            /// <summary>Code39</summary>
-            Code39 = 1,
-            /// <summary>EAN/UPC</summary>
-            EAN = 2,
-            /// <summary>Code128</summary>
-            Code128 = 4,
-            /// <summary>Use BarcodeType.All for all supported types</summary>
-            All = Code39 | EAN | Code128
-
-            // Note: Extend this enum with new types numbered as 8, 16, 32 ... ,
-            //       so that we can use bitwise logic: All = Code39 | EAN | <your favorite type here> | ...
-        }
-
-        /// <summary>
-        /// Used to specify whether to scan a page in vertical direction,
-        /// horizontally, or both.
-        /// </summary>
-        public enum ScanDirection
-        {
-            /// <summary>Scan top-to-bottom</summary>
-            Vertical = 1,
-            /// <summary>Scan left-to-right</summary>
-            Horizontal = 2
-        }
-
         /// <summary>
         /// parse a given bitmap image for a barcode. The first barcode that was found in the image
         /// is returned. 

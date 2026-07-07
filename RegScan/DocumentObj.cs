@@ -1,72 +1,90 @@
-﻿using ApiScanner;
-using Utilities;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 
 namespace RegScan
 {
+    /// <summary>
+    /// The DocumentObj class is used to hold the information for a document record. The properties
+    /// of the class are matched to the DRS APIs documentSummary schema as closely as possible.
+    /// </summary>
     public class DocumentObj
     {
-        #region Properties and Constructors
 
-        //DRS
-        private string _documentURL;
-        private string _documentClass;
+        #region Document Record Properties
+        
+        // DRS APIs unique identifier for this document record. 
         private string _documentServiceId;
-        private string _documentTypeDescription;
-        private DateTime _consumerFilingDate;
-        private string _consumerIdentifier;
-        private int _consumerReferenceId;
-
+        
+        // Consumer Document ID (Barcode) used to identify a document with a document record
+        private int _barCode;
+        public string BarCode { get { return _barCode.ToString(); } }
+        
+        // Consumer Identifier/ Legal Entity. Used to identify the entity (ex. company, mobile home
+        // , etc) associated with the document record
         private string _legalEntityKey;
-        private string _documentTypeCode;
-        private string _author;
-        private string _description;
+        public string LegalEntityKey { get { return _legalEntityKey; } }
+        
+        // Consumer File Name. Used to hold the new name of the file
         private string _fileName;
-        private bool _isScanned;
+
+        // Document Type. Used as the subcategory of the document type.
+        private string _documentTypeCode;
+        public string DocumentType {  get { return _documentTypeCode; } }
+
+        // Document Type Description. Used as the long form/description of the document type.
+        private string _documentTypeDescription;
+        public string DocTypeDesc { get { return _documentTypeDescription; } }
+
+        // Document Class. Used as the category of the document type.
+        private string _documentClass;
+        public string DocumentClass { get { return _documentClass; } }
+
+        // Create Date Time. The Date and time that the document record is saved/uploaded
         private DateTime _createDateTime;
 
+        // Consumer Filing Date Time. The datetime of the consumer application registration/filing
+        private DateTime _consumerFilingDate;
+        public string ConsumerFilingDateString { 
+            get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
+
+        // Document URL. Only set after saving current document or if the document record has a
+        // version of the document already uploaded.
+        private string _documentURL;
+        public string DocumentURL { get { return _documentURL; } }
+
+        // Holds notes/comments about the document record.
+        private string _description;
+        public string Description { get { return _description; } set { _description = value; } }
+
+        // Not listed in DRS API documentation. However; sometimes this is returned.
+        // If not in Scanning Information it will hold the filing authors information.
+        private string _author;
+
+        // Consumer Reference ID for the consumer application transaction/filing/registration
+        private int _consumerReferenceId;
+
+        #endregion
+
+        #region Scanning Information Properties
+
         // Scanning Information
-        private int _barCode;
-        private int _pageCount;
+
+        // consumer Document ID is also listed within the ScanningInformation object. This should
+        // be the same as the Barcode above.
+
+        // ScanDateTime. The date of the consumer application document scan date. Time is alway
+        // set to 12:00pm in the local time zone.
+        private DateTime _scannedDate;
+        public DateTime ScannedDate { get { return _scannedDate; } set { _scannedDate = value; } }
+
+        // Document Class is listed here again. It will be the same as the Document Class above.
+
+        // Accession Number Values. 
         private int _sequenceNumber;
         private int _scheduleNumber;
         private int _boxNumber;
-        private int _batchId;
-        private int _versionNumber;
-        private string _owner;
-        private string _scannerId;
-        private DateTime _scannedDate;
-
-        private bool _updateRecord = false;
-       
-
-        // Calculated.
-        private BoxObj _boxObj = null;        
-
-        private PdfDocument _pdfDocument = null;
-        private List<Bitmap> _imageList = new List<Bitmap>();
-
-        // Public variables other classes can use
-        // Document Information Form
-        public string BarCode { get { return _barCode.ToString(); } }
-        public string Owner { get { return _owner; } }
-        public string LegalEntityKey { get { return _legalEntityKey; } }
-        public string ConsumerFilingDateString { 
-            get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
-        public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
-        public string DocumentClass { get { return _documentClass; } }
-        public string DocumentType {  get { return _documentTypeCode; } }
-        public string DocTypeDesc { get { return _documentTypeDescription; } }
-        public string Description { get { return _description; } set { _description = value; } }
-        public string DocumentURL { get { return _documentURL; } }
-        public string DocumentServiceId { get { return _documentServiceId; } }
-        // Accession Number Elements
         public string SequenceNumberString { 
             get { return _sequenceNumber.ToString().PadLeft(2, '0'); } }
         public string ScheduleNumberString {
@@ -83,38 +101,43 @@ namespace RegScan
             get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
                                        _scheduleNumber.ToString().PadLeft(4, '0'), 
                                        _boxNumber.ToString().PadLeft(4, '0')); } }
-        public string AccessionNumberText { 
-            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), "-",
-                                       _scheduleNumber.ToString().PadLeft(4, '0'), "-",
-                                       _boxNumber.ToString().PadLeft(4, '0')); } }
-        public long AccessionNumber { get { return long.Parse(AccessionNumberString); } }
-        
-        public bool IsScanned { get { return _isScanned; } }
-        public int BatchId { get { return _batchId; } set { _batchId = value; } }
+
+        // batch number -> not used in this app
+
+        // Number of pages expected in the document.
+        private int _pageCount;
+        public int PageCount { get { return _pageCount; } set { _pageCount = value; } }
+
+        private int _versionNumber;
         public int VersionNumber { get { return _versionNumber; } set { _versionNumber = value; } }
-        public string ScannerId { get { return _scannerId; } set { _scannerId = value; } }
-        public DateTime ScannedDate { get { return _scannedDate; } set { _scannedDate = value; } }
 
-        public BoxObj Box { get { return _boxObj; } set { _boxObj = value; } }
+        // This author field May be empty when requesting a document record (if it hasn't been
+        // scanned.) Will be set to the current users IDIR when the document is saved.
+        private string _scannerIDIR;
+        public string ScannerId { get { return _scannerIDIR; } set { _scannerIDIR = value; } }
 
+        #endregion
+        #region Other Properties
+
+        // As far as I can tell this value is set to false, used as a flag, then reset to false.
+        // There are no places currently that it can be set to true.
+        // If this app was able to create new document records this flag may be useful.
+        private bool _updateRecord = false;
         public bool UpdateRecord { 
             get { return _updateRecord; } set { _updateRecord = value; } }
-
-        // Calculated
+       
+        // Used when a PDF is created of the scanned images.
+        private PdfDocument _pdfDocument = null;
         public PdfDocument PDFDocument { 
             get { return _pdfDocument; } set { _pdfDocument = value; } }
-        public List<Bitmap> ImageList { get { return _imageList; } set { _imageList = value; } }
-
-        public string Error = "";
-
-        public DocumentObj()
-        {
-            _boxObj = new BoxObj();
-        }
 
         #endregion
 
-        #region dml
+        public DocumentObj()
+        {
+        }
+
+        #region Updating Functions
 
         /// <summary>
         /// Handles the logic of uploading the scanned document to the DRS API.
@@ -140,6 +163,13 @@ namespace RegScan
             }
         }
 
+        /// <summary>
+        /// Used when the document record needs to be updated.
+        /// </summary>
+        /// <param name="apiDocModel">Document Model with updated information</param>
+        /// <exception cref="ApplicationException">
+        /// Thrown if an error is hit while trying to send the updated information to DRS API
+        /// </exception>
         private void UpdateDocumentRecord(DocumentModel apiDocModel)
         { 
             try
@@ -170,14 +200,12 @@ namespace RegScan
         ///        DRS API. This functionality could be added in the future.
         /// </summary>
         /// <param name="updateRecordFlag">
-        /// Determines if the applicaiton will update the record and upload image. If this is true
-        /// the scanning app shows a warning. This is because at this time the scanning applicaiton
+        /// Determines if the application will update the record and upload image. If this is true
+        /// the scanning app shows a warning. This is because at this time the scanning application
         /// is not intended to create new records. 
         /// </param>
         public void UpdateInsert(bool updateRecordFlag)
         {
-            // Set some values before database requests.
-            _isScanned = true;
 
             if (_updateRecord)
             {
@@ -209,28 +237,8 @@ namespace RegScan
 
         #endregion
 
-        #region Utility 
-        // TODO - this should be in the utility class, and need to be reworked.
-        //     Reading and writing to FileIO is not optimal.
-        public void ConvertPDFToImageList()
-        {
-            // The document will be null if this is a new scan
-            if (_pdfDocument == null)
-                return;
-
-            string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".pdf";
-            File.WriteAllBytes(fileName, PDFObj.ConvertPdfToByteArray(_pdfDocument));
-            var pdf = new Cyotek.GhostScript.PdfConversion.Pdf2Image(fileName);
-            _imageList = pdf.GetImages().ToList();
-            File.Delete(fileName);
-        }
-
-        #endregion
-
         #region Static Find, Select and utility methods
-        static public string ErrorMessage = "";
-
-
+        
         /// <summary>
         /// Given a barcode request record details. Store the returned items into a list of
         /// DocumentObjs
@@ -295,9 +303,9 @@ namespace RegScan
         /// <summary>
         /// Assign values from this DocumentObj to the DocumentModel passed in. 
         /// </summary>
-        /// <param name="model">Model to add vaules to</param>
+        /// <param name="model">Model to add values to</param>
         /// <remarks>
-        /// Currently we dont want to update any of the items commented out at the end of the
+        /// Currently we don't want to update any of the items commented out at the end of the
         /// function. These can be uncommented if we want to send them in the API request. 
         /// </remarks>
         public void CopyToModel(DocumentModel model)
@@ -312,21 +320,13 @@ namespace RegScan
             scanInfo.consumerDocumentId = _barCode.ToString();
             scanInfo.scanDateTime = _scannedDate.ToString("yyyy-MM-dd");
             scanInfo.accessionNumber = AccessionNumberString;
-            scanInfo.author = _scannerId;
+            scanInfo.author = _scannerIDIR;
             scanInfo.batchId = null;
             scanInfo.pageCount = _pageCount;
             scanInfo.documentClass = _documentClass;
 
             model.description = _description;
             model.scanningInformation = scanInfo;
-             
-            // Build the UpdateDocument model 
-            //model.consumerDocumentId = _barCode.ToString();
-            //model.consumerIdentifier = _consumerIdentifier;
-            //model.consumerFilingDate = _consumerFilingDate.ToString();
-            //model.documentType = _documentTypeCode;
-            //model.documentClass = _documentClass;
-            //model.consumerReferenceId = _consumerReferenceId.ToString();
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace RegScan
             {
                 // Convert to an array type and add all names to a string sep by a comma
                 JArray filenameList = (JArray)jDoc["consumerFilenames"];
-                // Get the first filenname from the list.
+                // Get the first filename from the list.
                 docObj._fileName = (string)filenameList[0];
             }
             // - The DateTime of application/ filing
@@ -417,7 +417,6 @@ namespace RegScan
             // - Identifier of the entity (BC Company or a manufactured home) in filing
             if (jDoc.ContainsKey("consumerIdentifier")) {
                 docObj._legalEntityKey = (string)jDoc["consumerIdentifier"];
-                docObj._consumerIdentifier = (string)jDoc["consumerIdentifier"];
             }
             // - Unique identifier for the consumer application transaction/filing/registration
             if (jDoc.ContainsKey("consumerReferenceId"))
@@ -457,11 +456,7 @@ namespace RegScan
 
                 // Another author field, save as owner
                 if (scanInfo.ContainsKey("author"))
-                    { docObj._owner = (string)scanInfo["author"]; }
-                
-                // Batch ID that the scan was processed with
-                if (scanInfo.ContainsKey("batchId"))
-                    { docObj._batchId = scanInfo["batchId"].Value<int>(); }
+                    { docObj._scannerIDIR = (string)scanInfo["author"]; }
 
                 // Number of pages expected in the document
                 if (scanInfo.ContainsKey("pageCount"))
