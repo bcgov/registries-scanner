@@ -87,8 +87,6 @@
             this.panelIndexer = new System.Windows.Forms.FlowLayoutPanel();
             this.lblIndexer = new System.Windows.Forms.Label();
             this.txtIndexer = new System.Windows.Forms.TextBox();
-            this.imageBox = new RegScan.ImageBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRotateImg = new System.Windows.Forms.Button();
             this.btnImagePDF = new System.Windows.Forms.Button();
@@ -103,6 +101,8 @@
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.imageBox = new RegScan.ImageBox();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -132,12 +132,12 @@
             this.panelPages.SuspendLayout();
             this.panelFilingDate.SuspendLayout();
             this.panelIndexer.SuspendLayout();
-            this.imageBox.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.imageBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -896,27 +896,6 @@
             this.txtIndexer.Size = new System.Drawing.Size(141, 29);
             this.txtIndexer.TabIndex = 86;
             // 
-            // imageBox
-            // 
-            this.imageBox.AutoScroll = true;
-            this.imageBox.AutoSize = false;
-            this.imageBox.Controls.Add(this.progressBar);
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(654, 880);
-            this.imageBox.TabIndex = 0;
-            // 
-            // progressBar
-            // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(-522, 837);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(12);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(1176, 43);
-            this.progressBar.TabIndex = 59;
-            this.progressBar.Visible = false;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnRotateImg);
@@ -1116,6 +1095,27 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 925);
             this.tableLayoutPanel1.TabIndex = 94;
             // 
+            // imageBox
+            // 
+            this.imageBox.AutoScroll = true;
+            this.imageBox.AutoSize = false;
+            this.imageBox.Controls.Add(this.progressBar);
+            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(654, 880);
+            this.imageBox.TabIndex = 0;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.Location = new System.Drawing.Point(-522, 837);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(12);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(1176, 43);
+            this.progressBar.TabIndex = 59;
+            this.progressBar.Visible = false;
+            // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1177,7 +1177,6 @@
             this.panelFilingDate.PerformLayout();
             this.panelIndexer.ResumeLayout(false);
             this.panelIndexer.PerformLayout();
-            this.imageBox.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panelImageControl.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -1185,6 +1184,7 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.imageBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
