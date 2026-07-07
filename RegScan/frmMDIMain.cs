@@ -1,192 +1,163 @@
-﻿using AsyncRequests;
+﻿using AppConfiguration;
+using AsyncRequests;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Utilities;
 using Vintasoft.Twain;
 
 namespace RegScan
 {
+    /// <summary>
+    /// frmMDIMain is the main window of the application. 
+    /// This window controls 
+    ///   - child window (frmScannerDocument) launching and state
+    ///   - all operations from the menu bar
+    /// </summary>
+    /// <remarkss>
+    /// MDI -> Multiple Document Interface. An applicaiton that can have multiple child windows 
+    ///   showing their own documents.
+    /// </remarkss>
     public partial class frmMDIMain : Form
     {
 
         #region Fields
 
+        // The current child frmScannerDocument form 
         frmScannerDocument _scannerForm = null;
 
         #endregion
 
         public frmMDIMain()
-        {            
-            APIRequest api = new APIRequest();
+        {
+            // Init the AsyncRequest to ensure API settings are established before any API calls
+            APIRequest.SetAPISettings();
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Initializing components");
             InitializeComponent();
 
-            UtilityObj.WriteLog(UtilityObj.debug, "Reading app settings");
-            // Get the application setting.
-            AppSettingObj aso = new AppSettingObj();
-
             // Register Twain SDK
-            UtilityObj.WriteLog(UtilityObj.debug, "Initialize twain settings");
             TwainGlobalSettings tgs = new TwainGlobalSettings();
-            tgs.Register(aso.TwainSDKUserName, aso.TwainSDKEmail, aso.TwainSDKKey);
+            tgs.Register(ConfigKeys.TWAINSDKUSERNAME, ConfigKeys.TWAINSDKEMAIL, ConfigKeys.TWAINSDKKEY);
+        }
 
-
-            // Set the database connection.
-            UtilityObj.WriteLog(UtilityObj.debug, "Set database connection");
-            // FIX DBSupport.SetConnection(DBSupport.BuildConnectionString(aso.UserName, aso.Password, aso.Host, aso.Port, aso.Sid));
-
-            // Assign which database that is being used.
-            //this.Text += " Using Database " + aso.DatabaseName;
-            this.Text += " Using DRS API";
-            UtilityObj.WriteLog(UtilityObj.debug, this.Text);
-
-            // Load up look up lists now.
-            // These API calls will not work as expected. They are hitting DRS API endpoints and
-            // storing the returned values as local variables. However; because there is no obj
-            // of each type to contain this values we can not guarentee that they will be set
-            // correctly or that the values will be accessable in the future. I have not hit errors
-            // from commenting these lines out yet but I am leaving them here in the event that
-            // they are required.
-            //DocTypeObj.Refresh();
-            //AuthorObj.Refresh();
-            //List<AuthorObj> mylist = AuthorObj._list;
-            //OwnerTypeObj.Refresh();
-            //BoxObj.Refresh();
-                           
+        /// <summary>
+        /// Event handler for catching when a frmScannerDocument form closes. If the user indicates
+        /// that they would like to load a new session a new form is created, if not this form will
+        /// close and the applicaiton exits.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <remarks>
+        /// If the form is closed for any non-user related event (i.e. OS shutdown, TaskManager 
+        /// force close, etc) this function will not attempt to ask the user if they would like to
+        /// load a new session. -> The applicaiton will exit.
+        /// </remarks>
+        public void ChildFormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Ask the user if they would like to start a new scanning session.
+            // If they select no the main form will close and exit
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                string message = "Do you want to load a new scanning session?";
+                if (MessageBox.Show(message, "Restart Application",
+                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    // start a new frmScannerDocument
+                    this.MDIMain_Load(this, EventArgs.Empty);
+                }
+                else
+                {
+                    this.Close();
+                    this.Dispose();
+                }
+            }
 
         }
 
-        private void ShowNewForm(object sender, EventArgs e)
+        /// <summary>
+        /// Handles creating a new child form. If the form closes automatically catch it and 
+        /// process with ChildFormClosing(). 
+        /// </summary>
+        /// <param name="sender">Any control that launches a new child form</param>
+        /// <param name="e">Any even that launches a new child form</param>
+        public void MDIMain_Load(object sender, EventArgs e)
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "Make new scanner form and display it");
             _scannerForm = new frmScannerDocument();
             _scannerForm.MdiParent = this;
             _scannerForm.WindowState = FormWindowState.Maximized;
+            // Catch and handle child form closing
+            _scannerForm.FormClosing += new FormClosingEventHandler(ChildFormClosing);
             _scannerForm.Show();
         }
 
-        private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #region Menu Item Event Handlers
 
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void CascadeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.Cascade);
-        }
-
-        private void TileVerticalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.TileVertical);
-        }
-
-        private void TileHorizontalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.TileHorizontal);
-        }
-
-        private void ArrangeIconsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.ArrangeIcons);
-        }
-
-        private void CloseAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Form childForm in MdiChildren)
-            {
-                childForm.Close();
-            }
-        }
-
+        /// <summary>
+        /// Allow the user to select a scanning device from the list of available options.
+        /// </summary>
+        /// <param name="sender">Menu Item Bar</param>
+        /// <param name="e">Event -> User selecting "Select Source"</param>
         private void selectSourceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                UtilityObj.WriteLog(UtilityObj.debug, 
-                    "Create new device manager using vintasoft twain");
                 // Create a device manager and display the built in selection dialog
                 DeviceManager deviceManager = new DeviceManager();
-                UtilityObj.WriteLog(UtilityObj.debug, "Open Manager");
+                
                 deviceManager.Open();
-                UtilityObj.WriteLog(UtilityObj.debug, 
-                    "Show default device selection dialog (choose scanner)");
                 deviceManager.ShowDefaultDeviceSelectionDialog();
 
                 // Close our device manger and ask scanning form to create a new one
                 // for its use to pick up on the new selected scanner.
-                UtilityObj.WriteLog(UtilityObj.debug, "Close manager after dialog");
                 deviceManager.Close();
-                UtilityObj.WriteLog(UtilityObj.debug, 
-                    "Create new device manager based on scanner selection");
                 _scannerForm.CreateTwainDeviceManager();
             }
-            catch (Exception _Error)
+            catch (Exception err)
             {
                 string msg = "TWAIN Device unable to reset.";
                 UtilityObj.WriteLog(UtilityObj.error, msg + Environment.NewLine +
-                    _Error.ToString());
-                MessageBox.Show(_Error.Message + msg + " Close and open scanning application");
+                    err.ToString());
+                MessageBox.Show(err.Message + msg + " Close and open scanning application");
             }
         }
 
-        private void boxMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the Find menu item being selected. 
+        /// The frmEnterBarCode form will return a barcode string from the user, which then can be
+        /// used to search for a document record. If one is found the record information will be
+        /// displayed in the frmScannerDocument form. 
+        /// If there is an error finding the document show an error message to the user.
+        /// </summary>
+        /// <param name="sender">Menu Item Bar</param>
+        /// <param name="e">Event -> User selecting "Find"</param>
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var frm = new frmBox();
-            frm.ShowDialog();
+            // If there isnt a scanning form already open start one
+            if (_scannerForm == null)
+            {
+                MDIMain_Load(this, EventArgs.Empty);
+            }
+            string message = "Please manually enter a barcode.";
+            var barCode = frmEnterBarCode.ManualBarcode(message);
+            var gotDoc = _scannerForm.GetBarcode(barCode);
+            if (!gotDoc)
+            {
+                MessageBox.Show("Unable to get a document record for the entered barcode.");
+            }
         }
 
-        private void scannerSettingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmScannerSetting();
-            frm.ShowDialog();
-        }
-
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmOptions();
-            frm.ShowDialog();
-        }
-
-        private void MDIMain_Load(object sender, EventArgs e)
-        {
-            UtilityObj.WriteLog(UtilityObj.debug, "Load New Form");
-            ShowNewForm(sender, e);
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Form childForm = new frmFind();
-            childForm.MdiParent = this;
-            childForm.Text = "Find Document: ";
-            childForm.WindowState = FormWindowState.Normal;
-            childForm.Show();
-        }
-
-        private void printSetupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new frmSetPrinterDefault();
-            frm.ShowDialog();
-        }
-
+        /// <summary>
+        /// Used to open and display the About Form (frmAbout). Only called if the user selects the
+        /// "About" menu item from the menu bar. 
+        /// </summary>
+        /// <param name="sender">Menu Item Bar</param>
+        /// <param name="e">Event -> User selecting "About"</param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = new frmAbout();
             frm.ShowDialog();
             frm.Dispose();
         }
+
+        #endregion
     }
 }

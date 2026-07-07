@@ -20,16 +20,6 @@ namespace RegScan
         DocumentObj _currentDocument = null;
 
         /// <summary>
-        /// Current active batch number.
-        /// </summary>
-        BatchObj _currentBatchId = null;
-
-        /// <summary>
-        /// Options that control functions of application.
-        /// </summary>
-        //private OptionsObj _options = null;
-
-        /// <summary>
         /// Default setting for scanning parameters.
         /// </summary>
         private ScannerSettingObj _defaultSetting;
@@ -98,6 +88,10 @@ namespace RegScan
             CreateTwainDeviceManager();
         }
 
+        /// <summary>
+        /// Using the default settings set by ScannerSettingObj init function, set the checkboxes
+        /// at the top of the form.
+        /// </summary>
         public void SetSettingValues()
         {
             useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
@@ -110,14 +104,61 @@ namespace RegScan
 
 
         #region Scanning Session
+
+        /// <summary>
+        /// When the form is closed (by an error or user actions) this method is used to clean the
+        /// temporary files, in app memory, and any connections to externam devices. 
+        /// This function will trigger the ChildFormClosing() function in frmMDIMain.cs.
+        /// </summary>
+        /// <remarks>
+        /// Close() methods will ensure that the object in question is stopped 
+        /// Dispose() methods will release resources associated with the object and allow garbage
+        /// collection.
+        /// </remarks>
+        public void CloseForm()
+        {
+            // Clean up the temp folder for storing scanned images.
+            UtilityObj.DeleteFolder("Images");
+
+            if (TwainEnvironment.IsDebuggingEnabled)
+            {
+                TwainEnvironment.DisableDebugging();
+            }
+            
+            // Close the device
+            if (_currentDevice != null)
+            {
+                if (_currentDevice.State > DeviceState.Enabled)
+                {
+                    _currentDevice.CancelTransfer();
+                }
+                // Stop catching device events
+                UnsubscribeFromDeviceEvents(_currentDevice);
+                
+                if (_currentDevice.State != DeviceState.Closed)
+                    _currentDevice.Close();
+            }
+
+            // Close the device manager
+            if (_deviceManager.State != DeviceManagerState.Closed)
+            {
+                _deviceManager.Close();
+                _deviceManager.Dispose();
+            }
+
+            UpdateImageDisplay();
+
+            // Close the form and dispose of it to allow garbage collection
+            this.Close();
+            this.Dispose();
+        }
+
         /// <summary>
         /// Process the scanned image as a bitmap.
         /// </summary>
         /// <param name="image"> Bitmap image from scan process </param>
         private void ProcessScan(Bitmap image)
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "ProcessScan: Saving Scan");
-
             // Set the first image to _image0 for barcode scanning and display purposes.
             // NOTE - It may be possible to use image and _image0 interchangeably and
             //     eliminate the need for _image0.
@@ -139,30 +180,21 @@ namespace RegScan
             // Create a new ImageObj and add to the list of scanned images
             _scannedImageList.Add(new ImageObj(image, PdfSharp.PageOrientation.Portrait,
                 ImageObj.GetPageSize(image.Width, image.Height)));
-
-            UtilityObj.WriteLog(UtilityObj.debug, "Scan List size: " + 
-                (fileNumber == "" ? "0" : fileNumber));
         }
 
         /// <summary>
-        /// Attempts to find a barcode on the first page scanned then tries to request information
-        /// the DRS API on the barcode. If the barcode is unable to be read by the `BarCodeObj` the
-        /// user will be prompted to enter a barcode manually. This is looped until a barcode is
-        /// acquired or until the user indicates they do not want to enter a barcode; in that case
-        /// the form is reset.
+        /// Given a string attempt to retrieve an associated document record from DRS API.
+        /// If the string is empty, or there was an issue ask the user to enter a barcode manually.
         /// </summary>
-        private void ProcessFirstPage()
+        /// <param name="barCode">
+        /// A string containing a barcode, if empty or null the user can enter a barcode manually
+        /// </param>
+        /// <returns>True if a document record was found. False if not</returns>
+        public bool GetBarcode(string barCode)
         {
-            // Document object, holds all information about the current document
             DocumentObj doc = null;
-            // Control flow based on if a record exists for this document
-            bool documentsFound = false;
-            // Control loop to get a barcode and check for a record.
+            bool documentSet = false;
             bool checkBarcode = true;
-
-            // Scan the first page for Barcodes
-            string barCode = BarCodeObj.ScanForBarcode(_image0);
-
             // Loop to get a document record for a given barcode
             while (checkBarcode)
             {
@@ -187,7 +219,7 @@ namespace RegScan
                     UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
                     MessageBox.Show(ane.Message, "Unable to Process Request. Barcode can not be empty.");
                     // continue the process
-                    documentsFound = false;
+                    doc = null;
                     checkBarcode = false;
                 }
                 catch (ArgumentException ae)
@@ -199,7 +231,7 @@ namespace RegScan
                     MessageBox.Show(ae.Message + "\nPlease copy the number listed for " +
                         "verification as it will not be displayed in the application.");
                     // continue the process
-                    documentsFound = false;
+                    doc = null;
                     checkBarcode = false;
                 }
                 catch (Exception e)
@@ -215,50 +247,76 @@ namespace RegScan
                     {
                         // start loop over with a request for a new barcode
                         barCode = null;
-                        continue;
                     }
                     else
                     {
                         // move on without a barcode
-                        documentsFound = false;
+                        doc = null;
                         checkBarcode = false;
                     }
                 }
-               
+
                 // If documents were found continue to next step
                 if (doc != null)
                 {
-                    documentsFound = true;
                     checkBarcode = false;
+                    documentSet = true;
+                    SetDocument(doc);
                 }
             }
+            
+            return documentSet;
+        }
 
-            if (documentsFound)
+        /// <summary>
+        /// Given a documentObj update the _currentDocument and update the form
+        /// </summary>
+        /// <param name="inDoc">Document information to be displayed</param>
+        public void SetDocument(DocumentObj inDoc)
+        {
+            // The first document is the latest and is the one that will be displayed
+            _currentDocument = inDoc;
+            
+            // TODO -> better error handling here
+            // Display the warning if there was some sort of error getting the document
+            if (! string.IsNullOrEmpty(_currentDocument.Error))
+                MessageBox.Show("Warning an error was found -> " +
+                    _currentDocument.Error);
+
+            // We have a record from DRS API that matches the barcode.
+            // This means we will be updating the record.
+            _currentDocument.UpdateRecord = true;
+
+            // Display the document.
+            SetForm();
+        }
+
+        /// <summary>
+        /// Attempts to find a barcode on the first page scanned then tries to request information
+        /// the DRS API on the barcode. If the barcode is unable to be read by the `BarCodeObj` the
+        /// user will be prompted to enter a barcode manually. This is looped until a barcode is
+        /// acquired or until the user indicates they do not want to enter a barcode; in that case
+        /// the form is reset.
+        /// </summary>
+        private void ProcessFirstPage()
+        {
+            // Control on if the document is set
+            bool gotDocument = false;
+
+            // Scan the first page for Barcodes
+            string barCode = BarCodeObj.ScanForBarcode(_image0);
+
+            gotDocument = GetBarcode(barCode);
+
+            if (gotDocument)
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Fix Set current doc to doc");
-                // The first document is the latest and is the one that will be displayed
-                _currentDocument = doc;
-
-                // TODO -> better error handling here
-                // Display the warning if there was some sort of error getting the document
-                if (_currentDocument.Error != "")
-                    MessageBox.Show("Warning an error was found -> " +
-                        _currentDocument.Error);
-
                 // Will only be true if it is an existing scan and
-                // new version is not required.
+                // the user indicates a new version is not required.
                 bool cancelScan = false;
 
-                // We have a record from DRS API that matches the barcode.
-                // This means we will be updating the record.
-                _currentDocument.UpdateRecord = true;
-
                 // IF document has already been scanned.
-                //if (_currentDocument.IsScanned)
-                if (_currentDocument.DocumentURL != "")
+                if (! string.IsNullOrEmpty(_currentDocument.DocumentURL))
                 {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Document barcode already exists.");
-
                     // Ask if this is a new version.
                     if (MessageBox.Show("Document with barcode " + barCode +
                         " has already been scanned. Do you want to create a new version?",
@@ -280,22 +338,21 @@ namespace RegScan
                 // IF scan is to be cancelled
                 if (cancelScan)
                 {
-                    // TODO -> Reset form better here.
                     // Set current document back to null.
-                    _currentDocument = null;
-                    UtilityObj.DeleteFolder("Images");
+                    CloseForm();
                 }
                 else
                 {
-                    UtilityObj.WriteLog(UtilityObj.debug, "Fix Display image");
-                    // Display the document.
-                    SetForm();
-
-                    UtilityObj.WriteLog(UtilityObj.debug, "Fix SetImageNav");
                     // Display the first document.
                     _currentImageIndex = 0;
+                    // Enable buttons 
+                    btnCancelScan.Enabled = true;
+                    btnSave.Enabled = true;
+                    btnRotateImg.Enabled = true;
+                    btnImagePDF.Enabled = true;
                 }
             }
+
             // NOTE Create a new record for the scanned image logic could be added here
 
             if (_currentDocument != null)
@@ -315,16 +372,9 @@ namespace RegScan
         /// </summary>
         private void ProcessCompleted()
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "Scanning finished");
-
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
                 return;
-            
-            // What follows here is a lot of if else statements. I believe breaking the components
-            // out into methods then only using this as the control to the flow.
-            //    Components: get barcode, get record, handle versions, display document
-            // This could also be accomplished by drawing out the process before rewriting.
 
             // IF we have a new document process the first page
             if (_currentDocument == null)
@@ -431,14 +481,15 @@ namespace RegScan
         /// </summary>
         private void UpdateImageDisplay()
         {
-            if (_currentImageIndex > -1 && _currentImageIndex < _scannedImageList.Count)
+            var totalScanned = _scannedImageList.Count;
+            if (_currentImageIndex > -1 && _currentImageIndex < totalScanned)
             {
                 // we have already read in all the images, select the one from the index to display
                 var image = _scannedImageList[_currentImageIndex].Image;
                 // display error if this one cant be read
-                if (image == null) 
-                { 
-                    MessageBox.Show("Error loading image for page " + 
+                if (image == null)
+                {
+                    MessageBox.Show("Error loading image for page " +
                         (_currentImageIndex + 1).ToString());
                     return;
                 }
@@ -447,20 +498,33 @@ namespace RegScan
 
             //Update current and total page labels in the status label
             lblCurImage.Text = (_currentImageIndex + 1).ToString();
-            lblTotalImage.Text = _scannedImageList.Count.ToString();
+            lblTotalImage.Text = totalScanned.ToString();
 
-            // Don't allow the first page to be deleted
-            if (_currentImageIndex != 0)
+            // Disable/ enable buttons based on the current image index
+            // Fist page - can't delete, no previous image, only go to next image if there is one
+            if (_currentImageIndex == 0)
             {
-                btnDeleteImage.BackColor = UI.Theme.BackgroundPrimary;
-                btnDeleteImage.ForeColor = UI.Theme.DangerBackground;
-                btnDeleteImage.Enabled = true;
+                btnDeleteImage.Enabled = false;
+                btnPrevImage.Enabled = false;
+                if (totalScanned > 1)
+                    btnlNextImage.Enabled = true;
+                else
+                    btnlNextImage.Enabled = false;
             }
+            // Last page - can be deleted, can go to previous image, no next image
+            else if (_currentImageIndex == totalScanned - 1)
+            {
+                btnDeleteImage.Enabled = true;
+                btnPrevImage.Enabled = true;
+                btnlNextImage.Enabled = false;
+            }
+            // This will be the default for any page that isnt the last or first
+            // Can be deleted and can navigate to next or previous images
             else
             {
-                btnDeleteImage.BackColor = UI.Theme.Disabled;
-                btnDeleteImage.ForeColor = UI.Theme.TextDisabled;
-                btnDeleteImage.Enabled = false;
+                btnDeleteImage.Enabled = true;
+                btnPrevImage.Enabled = true;
+                btnlNextImage.Enabled = true;
             }
         }
 
@@ -469,19 +533,13 @@ namespace RegScan
         #region house keeping methods
 
         /// <summary>
-        /// Reset the document.
-        /// TODO - Fix this entire method. It may clear the form but there is a lot of in-app
-        /// memory still being consumed. 
+        /// Reset the document form fields. 
+        /// Best if used with CloseForm() to ensure that in-app memory and temporary files are 
+        /// properly cleaned and connections to devices are reset. 
         /// </summary>
         private void ResetDocument()
         {
-            // Clear document.
-            _currentDocument = null;
-            _image0 = null;
-            _scannedImageList.Clear();
-            _currentImageIndex = -1;
-
-            // Clear the document.
+            // Clear the document form
             txtBarCode.Text = "";
             txtLegalEntityKey.Text = "";
             txtIndexer.Text = "";
@@ -494,6 +552,12 @@ namespace RegScan
             maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
 
+            // Disable Accession Number fields and notes
+            maskSeqNumber.Enabled = false;
+            maskSchNumber.Enabled = false;
+            maskBoxNumber.Enabled = false;
+            txtDocumentNotes.Enabled = false;
+
             // Delete any temporary FileNames.
             try
             {
@@ -501,15 +565,30 @@ namespace RegScan
                     File.Delete(fileName);
                 _tempFileNameList.Clear();
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-                UtilityObj.WriteLog(UtilityObj.warn, 
+                UtilityObj.WriteLog(UtilityObj.warn,
                     "Unable to delete all images in file list. Next scanning session may not run as" +
                     " expected:\n" + e.ToString());
                 MessageBox.Show("Warning: The previous session did not clear as expected. There may" +
                     " be carry-over images that persist. Please try 'Reject Scan' process again or" +
                     " restarting this application.", "Scan Session Failed to Clear");
             }
+
+            // Clear document image
+            _currentDocument = null;
+            _image0 = null;
+            _scannedImageList.Clear();
+            _currentImageIndex = -1;
+
+            // Set buttons related to image to a disabled state
+            btnCancelScan.Enabled = false;
+            btnSave.Enabled = false;
+            btnDeleteImage.Enabled = false;
+            btnRotateImg.Enabled = false;
+            btnImagePDF.Enabled = false;
+            btnPrevImage.Enabled = false;
+            btnlNextImage.Enabled = false;
 
             // reset img numbers
             lblCurImage.Text = "0";
@@ -536,25 +615,27 @@ namespace RegScan
         protected void SetForm()
         {
             // Document Record Details
-
-            // Indexing/ Filing information
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
             txtIndexer.Text = _currentDocument.Owner;
             txtFilingDate.Text = _currentDocument.ConsumerFilingDateString;
             txtPagesInDocument.Text = _currentDocument.PageCount.ToString();
 
-            // Document Information
+            // Record Classification
             txtDocumentClass.Text = _currentDocument.DocumentClass;
             txtDocumentType.Text = string.Concat(
                 _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
 
-            // Accession Numbers
+            // Accession Number
+            maskSeqNumber.Enabled = true;
+            maskSchNumber.Enabled = true;
+            maskBoxNumber.Enabled = true;
             maskSeqNumber.Text = _currentDocument.SequenceNumberString;
             maskSchNumber.Text = _currentDocument.ScheduleNumberString;
             maskBoxNumber.Text = _currentDocument.BoxNumberString;
 
-            // Notes / Description
+            // Document Notes / Description
+            txtDocumentNotes.Enabled = true;
             txtDocumentNotes.Text = _currentDocument.Description;
         }
         #endregion
@@ -644,7 +725,6 @@ namespace RegScan
         /// <param name="e"></param>
         private void device_AsyncEvent(object sender, DeviceAsyncEventArgs e)
         {
-            UtilityObj.WriteLog(UtilityObj.debug, "device_AsyncEvent");
             switch (e.DeviceEvent)
             {
                 case DeviceEventId.PaperJam:
@@ -722,6 +802,10 @@ namespace RegScan
             hideProgressBar();
         }
 
+        /// <summary>
+        /// Initialize the connection to the conencted scanner. If a connection is already
+        /// established it will be closed and a new connection started. 
+        /// </summary>
         private void setUpScanner()
         {
             // Open device manager, if not open.
@@ -787,11 +871,9 @@ namespace RegScan
             {
                 _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
             }
-            UtilityObj.WriteLog(UtilityObj.debug, "Checking for asynchronous scanning...");
             // if device supports asynchronous events
             if (_currentDevice.IsAsyncEventsSupported)
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Device supports asynchronous scanning");
                 // enable all asynchronous events supported by device
                 _currentDevice.AsyncEvents = _currentDevice.GetSupportedAsyncEvents();
             }
@@ -840,12 +922,9 @@ namespace RegScan
 
             try
             {
-                UtilityObj.WriteLog(UtilityObj.debug, "Start image acquisition");
 
                 // start image acquisition process
                 _currentDevice.Acquire();
-
-                UtilityObj.WriteLog(UtilityObj.debug, "End of image acquisition");
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
@@ -876,9 +955,6 @@ namespace RegScan
             int updateCount = ((int)100 / _scannedImageList.Count);
             showProgressBar();
             Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " btnViewAsPDF_Click Scanner  Objects");
 
             // TODO - investigate how to do this asynchronously
             // Create the PDF Document to open in default PDF viewing app
@@ -918,10 +994,6 @@ namespace RegScan
 
             // TODO: This is discouraged in Microsoft Docs.
             Application.DoEvents();
-
-            UtilityObj.WriteLog(UtilityObj.debug, _scannedImageList.Count.ToString() +
-                " _scannedImageList Objects");
-
 
             try
             {
@@ -1002,6 +1074,7 @@ namespace RegScan
             // Reset the document and display.
             ResetDocument();
             hideProgressBar();
+            CloseForm();
         }
 
         /// <summary>
@@ -1013,6 +1086,7 @@ namespace RegScan
         {
             // Reset the document and clear the display.
             ResetDocument();
+            CloseForm();
         }
 
         /// <summary>
@@ -1043,25 +1117,11 @@ namespace RegScan
             // Form is maximized.
             this.WindowState = FormWindowState.Maximized;
 
+            // Reset the form to default state
+            ResetDocument();
+
             // Scan button is set as the focus.
             btnScanPage.Focus();
-        }
-
-
-        private void statusBtnPrevImage_Click(object sender, EventArgs e)
-        {
-            if (_currentImageIndex - 1 < 0)
-                return;
-            --_currentImageIndex;
-            UpdateImageDisplay();
-        }
-
-        private void statusLblNextImage_Click(object sender, EventArgs e)
-        {
-            if (_currentImageIndex + 2 > _scannedImageList.Count)
-                return;
-            ++_currentImageIndex;
-            UpdateImageDisplay();
         }
 
         private void btnDeleteImage_Click(object sender, EventArgs e)
