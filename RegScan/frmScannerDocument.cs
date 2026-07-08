@@ -411,6 +411,14 @@ namespace RegScan
         /// </summary>
         private void showProgressBar()
         {
+            // Get the forms current size
+            var screenSize = this.ClientSize;
+            // set progress bar size (width based on screen size)
+            this.progressBar.Height = 43;
+            this.progressBar.Width = screenSize.Width / 2;
+            // set progress bar location (centered)
+            this.progressBar.Location = new Point((screenSize.Width - progressBar.Width) / 2 , (screenSize.Height - progressBar.Height) / 2 );
+            
             // Disable interaction with the form
             Enabled = false;
 
@@ -631,23 +639,22 @@ namespace RegScan
             txtDocumentNotes.Text = _currentDocument.Description;
         }
         
+        /// <summary>
+        /// Add a progress bar to the form. If this is added through the UI it will be within
+        /// another control. We want it to stay infront of all controls. 
+        /// </summary>
         protected void LoadControls()
         {
-            // Get window information
-            var screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
-            var progressBarWidth = screenSize.Width / 2;
-            var progressBarHeight = 43;
-            var progressBarLocation = new System.Drawing.Point((this.Width / 2) - (progressBarWidth / 2), (this.Height / 2) - (progressBarHeight / 2));
             // Create the progress bar
             this.progressBar = new System.Windows.Forms.ProgressBar()
             {
                 Name = "progressBar",
-                Size = new System.Drawing.Size(progressBarWidth, progressBarHeight),
-                Location = progressBarLocation,
                 Visible = false
             };
+            // add to form
             this.Controls.Add(progressBar);
         }
+
         #endregion
 
         #region Scanner Methods
