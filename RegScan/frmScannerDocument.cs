@@ -63,6 +63,7 @@ namespace RegScan
         public frmScannerDocument()
         {
             InitializeComponent();
+            LoadControls();
 
             UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
 
@@ -629,6 +630,24 @@ namespace RegScan
             txtDocumentNotes.Enabled = true;
             txtDocumentNotes.Text = _currentDocument.Description;
         }
+        
+        protected void LoadControls()
+        {
+            // Get window information
+            var screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+            var progressBarWidth = screenSize.Width / 2;
+            var progressBarHeight = 43;
+            var progressBarLocation = new System.Drawing.Point((this.Width / 2) - (progressBarWidth / 2), (this.Height / 2) - (progressBarHeight / 2));
+            // Create the progress bar
+            this.progressBar = new System.Windows.Forms.ProgressBar()
+            {
+                Name = "progressBar",
+                Size = new System.Drawing.Size(progressBarWidth, progressBarHeight),
+                Location = progressBarLocation,
+                Visible = false
+            };
+            this.Controls.Add(progressBar);
+        }
         #endregion
 
         #region Scanner Methods
@@ -1004,19 +1023,20 @@ namespace RegScan
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
 
-            // Get the form fields we want to update
-            // If the description field changes we can use one endpoint
-            // If it isn't updated we have to use a different endpoint.
-            if (string.Equals(_currentDocument.Description ?? string.Empty, 
-                txtDocumentNotes.Text, StringComparison.Ordinal))
+            // Test description field for changes
+            // Ordinal comparison checks the numeric values of char objects between each string
+            // If _currentDocument.Description is null we will compare to an empty string.
+            descChange = !(string.Equals(_currentDocument.Description ?? string.Empty,
+                txtDocumentNotes.Text, StringComparison.Ordinal));
+            if (descChange)
             {
-                descChange = true;
                 _currentDocument.Description = txtDocumentNotes.Text;
             }
 
+            // Check Accession Number fields for updates
             try
             {
-                // If any of the fields are missing values
+                // If any of the fields are missing values -> throw an error
                 if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
                     string.IsNullOrEmpty(maskSchNumber.Text) ||
                     string.IsNullOrEmpty(maskBoxNumber.Text))
@@ -1027,14 +1047,14 @@ namespace RegScan
                 var boxNumber = Int32.Parse(maskBoxNumber.Text);
 
                 // we only need to update the values if there were changes made
-                if (seqNumber != _currentDocument.SequenceNumber ||
+                accNChange = seqNumber != _currentDocument.SequenceNumber ||
                     schNumber != _currentDocument.ScheduleNumber ||
-                    boxNumber != _currentDocument.BoxNumber)
+                    boxNumber != _currentDocument.BoxNumber;
+                if (accNChange)
                 {
                     _currentDocument.SequenceNumber = seqNumber;
                     _currentDocument.ScheduleNumber = schNumber;
                     _currentDocument.BoxNumber = boxNumber;
-                    accNChange = true;
                 }
 
             }
@@ -1049,6 +1069,7 @@ namespace RegScan
 
             try
             {
+                // Update document. Flag set based on if there were any updates to the fields
                 _currentDocument.UpdateInsert(descChange || accNChange);
             }
             catch (ApplicationException ae)
