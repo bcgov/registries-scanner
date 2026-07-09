@@ -93,7 +93,6 @@
             this.btnImagePDF = new System.Windows.Forms.Button();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnPrevImage = new System.Windows.Forms.Button();
             this.lblCurImage = new System.Windows.Forms.Label();
             this.btnNextImage = new System.Windows.Forms.Button();
@@ -134,7 +133,6 @@
             this.panel1.SuspendLayout();
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -909,10 +907,10 @@
             this.panel1.Controls.Add(this.btnRotateImg);
             this.panel1.Controls.Add(this.btnImagePDF);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(341, 3);
+            this.panel1.Location = new System.Drawing.Point(295, 3);
             this.panel1.MaximumSize = new System.Drawing.Size(354, 43);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(323, 37);
+            this.panel1.Size = new System.Drawing.Size(346, 37);
             this.panel1.TabIndex = 60;
             // 
             // btnRotateImg
@@ -920,7 +918,7 @@
             this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
-            this.btnRotateImg.Location = new System.Drawing.Point(12, 3);
+            this.btnRotateImg.Location = new System.Drawing.Point(19, 3);
             this.btnRotateImg.Name = "btnRotateImg";
             this.btnRotateImg.Size = new System.Drawing.Size(136, 31);
             this.btnRotateImg.TabIndex = 5;
@@ -933,7 +931,7 @@
             this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
-            this.btnImagePDF.Location = new System.Drawing.Point(178, 3);
+            this.btnImagePDF.Location = new System.Drawing.Point(185, 3);
             this.btnImagePDF.Name = "btnImagePDF";
             this.btnImagePDF.Size = new System.Drawing.Size(136, 31);
             this.btnImagePDF.TabIndex = 6;
@@ -944,13 +942,13 @@
             // panelImageControl
             // 
             this.panelImageControl.ColumnCount = 7;
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.476152F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.01919F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.03557F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.03838F));
-            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.4769F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.panelImageControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
             this.panelImageControl.Controls.Add(this.panel1, 3, 0);
             this.panelImageControl.Controls.Add(this.tableLayoutPanel2, 5, 0);
             this.panelImageControl.Controls.Add(this.btnDeleteImage, 1, 0);
@@ -966,45 +964,36 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.76439F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.8496F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.693F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.693F));
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
+            this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 27.11864F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.71186F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.49153F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.71186F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.474576F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.49153F));
+            this.tableLayoutPanel2.Controls.Add(this.lblCurImage, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnPrevImage, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.lblDisplay, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblTotalImage, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblDisplayImgOf, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblTotalImage, 5, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnNextImage, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblDisplayImgOf, 4, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(755, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(703, 1);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(1);
-            this.tableLayoutPanel2.MaximumSize = new System.Drawing.Size(354, 43);
+            this.tableLayoutPanel2.MaximumSize = new System.Drawing.Size(400, 43);
             this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(300, 43);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(327, 43);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(400, 43);
             this.tableLayoutPanel2.TabIndex = 94;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.btnPrevImage);
-            this.flowLayoutPanel1.Controls.Add(this.lblCurImage);
-            this.flowLayoutPanel1.Controls.Add(this.btnNextImage);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(137, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(124, 43);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(124, 43);
-            this.flowLayoutPanel1.TabIndex = 60;
             // 
             // btnPrevImage
             // 
             this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
-            this.btnPrevImage.Location = new System.Drawing.Point(7, 3);
+            this.btnPrevImage.Location = new System.Drawing.Point(111, 3);
             this.btnPrevImage.Name = "btnPrevImage";
             this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
             this.btnPrevImage.TabIndex = 7;
@@ -1017,7 +1006,7 @@
             this.lblCurImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblCurImage.AutoSize = true;
             this.lblCurImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurImage.Location = new System.Drawing.Point(46, 11);
+            this.lblCurImage.Location = new System.Drawing.Point(179, 11);
             this.lblCurImage.Name = "lblCurImage";
             this.lblCurImage.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.lblCurImage.Size = new System.Drawing.Size(34, 20);
@@ -1030,7 +1019,7 @@
             this.btnNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNextImage.ForeColor = System.Drawing.Color.Black;
-            this.btnNextImage.Location = new System.Drawing.Point(86, 3);
+            this.btnNextImage.Location = new System.Drawing.Point(251, 3);
             this.btnNextImage.Name = "btnNextImage";
             this.btnNextImage.Size = new System.Drawing.Size(31, 37);
             this.btnNextImage.TabIndex = 97;
@@ -1043,7 +1032,7 @@
             this.lblDisplay.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblDisplay.AutoSize = true;
             this.lblDisplay.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplay.Location = new System.Drawing.Point(30, 10);
+            this.lblDisplay.Location = new System.Drawing.Point(5, 10);
             this.lblDisplay.Name = "lblDisplay";
             this.lblDisplay.Size = new System.Drawing.Size(100, 22);
             this.lblDisplay.TabIndex = 7;
@@ -1055,7 +1044,7 @@
             this.lblTotalImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTotalImage.AutoSize = true;
             this.lblTotalImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalImage.Location = new System.Drawing.Point(299, 11);
+            this.lblTotalImage.Location = new System.Drawing.Point(350, 11);
             this.lblTotalImage.Name = "lblTotalImage";
             this.lblTotalImage.Size = new System.Drawing.Size(18, 20);
             this.lblTotalImage.TabIndex = 96;
@@ -1067,7 +1056,7 @@
             this.lblDisplayImgOf.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblDisplayImgOf.AutoSize = true;
             this.lblDisplayImgOf.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplayImgOf.Location = new System.Drawing.Point(260, 10);
+            this.lblDisplayImgOf.Location = new System.Drawing.Point(288, 10);
             this.lblDisplayImgOf.Name = "lblDisplayImgOf";
             this.lblDisplayImgOf.Size = new System.Drawing.Size(26, 22);
             this.lblDisplayImgOf.TabIndex = 95;
@@ -1079,7 +1068,7 @@
             this.btnDeleteImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnDeleteImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDeleteImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.btnDeleteImage.Location = new System.Drawing.Point(101, 3);
+            this.btnDeleteImage.Location = new System.Drawing.Point(78, 3);
             this.btnDeleteImage.Name = "btnDeleteImage";
             this.btnDeleteImage.Size = new System.Drawing.Size(136, 37);
             this.btnDeleteImage.TabIndex = 4;
@@ -1168,8 +1157,6 @@
             this.panelImageControl.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -1244,7 +1231,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowPanelRecordClassification;
         private System.Windows.Forms.FlowLayoutPanel flowPanelDocumentNotes;
         private System.Windows.Forms.TableLayoutPanel panelRejectSaveScan;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.MaskedTextBox maskSeqNumber;
         private System.Windows.Forms.MaskedTextBox maskBoxNumber;
         private System.Windows.Forms.MaskedTextBox maskSchNumber;
