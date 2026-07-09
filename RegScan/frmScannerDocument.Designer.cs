@@ -87,7 +87,6 @@
             this.panelIndexer = new System.Windows.Forms.FlowLayoutPanel();
             this.lblIndexer = new System.Windows.Forms.Label();
             this.txtIndexer = new System.Windows.Forms.TextBox();
-            this.imageBox = new RegScan.ImageBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRotateImg = new System.Windows.Forms.Button();
             this.btnImagePDF = new System.Windows.Forms.Button();
@@ -101,6 +100,7 @@
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.imageBox = new RegScan.ImageBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -892,16 +892,6 @@
             this.txtIndexer.Size = new System.Drawing.Size(141, 29);
             this.txtIndexer.TabIndex = 86;
             // 
-            // imageBox
-            // 
-            this.imageBox.AutoScroll = true;
-            this.imageBox.AutoSize = false;
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(654, 880);
-            this.imageBox.TabIndex = 0;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnRotateImg);
@@ -1091,6 +1081,16 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 925);
             this.tableLayoutPanel1.TabIndex = 94;
+            // 
+            // imageBox
+            // 
+            this.imageBox.AutoScroll = true;
+            this.imageBox.AutoSize = false;
+            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(654, 880);
+            this.imageBox.TabIndex = 0;
             // 
             // frmScannerDocument
             // 

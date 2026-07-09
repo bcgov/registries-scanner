@@ -32,7 +32,7 @@ namespace RegScan
 
         public void Rotate()
         {
-            _image.RotateFlip(RotateFlipType.Rotate90FlipX);
+            _image.RotateFlip(RotateFlipType.Rotate90FlipNone);
         }
 
         public static PdfSharp.PageSize GetPageSize(double _Width, double _Height)
