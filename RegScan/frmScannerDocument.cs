@@ -10,6 +10,17 @@ namespace RegScan
 {
     public partial class frmScannerDocument : Form
     {
+        #region consts
+
+        /// <summary>
+        /// Const values. Set to match values in MDIMain Form exactly. If you update here please
+        /// ensure the paring values in frmMDIMain are updated. 
+        /// </summary>
+        const int _closeRequestRefresh = 1;
+        const int _closeAutoRefresh = 2;
+        const int _closeAndExit = 3;
+
+        #endregion
 
         #region Fields
 
@@ -17,6 +28,11 @@ namespace RegScan
         /// Current active document.
         /// </summary>
         DocumentObj _currentDocument = null;
+
+        /// <summary>
+        /// Used to control how the parent form will handle the closing of this form
+        /// </summary>
+        public static int CloseReason { get; set; } = 0;
 
         /// <summary>
         /// Default setting for scanning parameters.
@@ -93,12 +109,30 @@ namespace RegScan
         /// at the top of the form.
         /// </summary>
         public void SetSettingValues()
-        { 
-            useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
-            useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
+        {
+            if (_defaultSetting.CanUseDocumentFeeder)
+            {
+                useAdfCheckBox.Enabled = true;
+                useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
+            }
+            else 
+            {
+                useAdfCheckBox.Enabled = false;
+
+            }
+
+            if (_defaultSetting.CanUseDuplex)
+            {
+                useDuplexCheckBox.Enabled = true;
+                useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
+            }
+            else
+            {
+                useDuplexCheckBox.Enabled = false;
+            }
+
             useUICheckBox.Checked = _defaultSetting.ShowTwainUI;
             showProgressIndicatorUICheckBox.Checked = _defaultSetting.ShowProgressIndicatorUI;
-            ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
 
         #region Scanning Session
@@ -148,7 +182,6 @@ namespace RegScan
 
             // Close the form and dispose of it to allow garbage collection
             this.Close();
-            this.Dispose();
         }
 
         /// <summary>
@@ -331,7 +364,9 @@ namespace RegScan
                 if (cancelScan)
                 {
                     // Set current document back to null.
+                    CloseReason = _closeRequestRefresh;
                     CloseForm();
+                    return;
                 }
                 else
                 {
@@ -366,7 +401,21 @@ namespace RegScan
         {
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
-                return;
+            {
+                String msg = "No images scanned. Please ensure the document is loaded and " +
+                    "try again. Do you want to reload the scanning session?";
+                String caption = "Scanning Error";
+                DialogResult res; 
+                res = MessageBox.Show(msg, caption, MessageBoxButtons.YesNo, 
+                    MessageBoxIcon.Question);
+                if (res == DialogResult.Yes)
+                {
+                    ResetDocument();
+                    CloseReason = _closeAutoRefresh;
+                    CloseForm();
+                    return;
+                }
+            }
 
             // IF we have a new document process the first page
             if (_currentDocument == null)
@@ -391,8 +440,8 @@ namespace RegScan
         {
             // Show scanning options when processing scan is complete
             useUICheckBox.Enabled = true;
-            useAdfCheckBox.Enabled = true;
-            useDuplexCheckBox.Enabled = true;
+            useAdfCheckBox.Enabled = _defaultSetting.CanUseDocumentFeeder;
+            useDuplexCheckBox.Enabled = _defaultSetting.CanUseDuplex;
             useUICheckBox.Enabled = true;
             ckBoxLowResolution.Enabled = true;
             showProgressIndicatorUICheckBox.Enabled = true;
@@ -417,7 +466,9 @@ namespace RegScan
             this.progressBar.Height = 43;
             this.progressBar.Width = screenSize.Width / 2;
             // set progress bar location (centered)
-            this.progressBar.Location = new Point((screenSize.Width - progressBar.Width) / 2 , (screenSize.Height - progressBar.Height) / 2 );
+            this.progressBar.Location = new Point(
+                (screenSize.Width - progressBar.Width) / 2 ,
+                (screenSize.Height - progressBar.Height) / 2 );
             
             // Disable interaction with the form
             Enabled = false;
@@ -680,8 +731,10 @@ namespace RegScan
         {
             try
             {
-                device.ImageAcquiringProgress += new EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
-                device.ImageAcquired += new EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
+                device.ImageAcquiringProgress += new 
+                    EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
+                device.ImageAcquired += new 
+                    EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
                 device.ScanFailed += new EventHandler<ScanFailedEventArgs>(device_ScanFailed);
                 device.AsyncEvent += new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
                 device.ScanFinished += new EventHandler(device_ScanFinished);
@@ -702,7 +755,8 @@ namespace RegScan
         /// </summary>
         private void UnsubscribeFromDeviceEvents(Device device)
         {
-            device.ImageAcquiringProgress -= new EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
+            device.ImageAcquiringProgress -= new 
+                EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
             device.ImageAcquired -= new EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
             device.ScanFailed -= new EventHandler<ScanFailedEventArgs>(device_ScanFailed);
             device.AsyncEvent -= new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
@@ -872,19 +926,27 @@ namespace RegScan
             else
                 _currentDevice.Resolution = new Resolution(600, 600);
 
-            // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
-            // NOTE - There could be a test implemented here to check if the device supports
-            //     an ADF and if not, show a warning to the user that it can not be used.
-            _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
+            // Enable the automatic document feeder if the device supports that feature and
+            // the user has indicated that it should be used.
+            if (_defaultSetting.CanUseDocumentFeeder && useAdfCheckBox.Checked)
+            {
+                _currentDevice.DocumentFeeder.Enabled = true;
+                // If we are going to use the ADF ensure a document is loaded
+                // (if the device is able to detect it)
+                if (_currentDevice.DocumentFeeder.PaperDetectable && 
+                    !_currentDevice.DocumentFeeder.Loaded)
+                {
+                    MessageBox.Show("No Document loaded in Auto Feeder. Please load document " +
+                        "into auto feeder or flatbed and try again.\n\n", "Automatic Document" +
+                        " Feeder", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+            
             // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
-            // If the device does not support duplex scanning, then this will fail and be
-            // caught by the exception. 
-            // NOTE - currently the catch is not handling the scenario instead just buffing the
-            //    error. Logs/ warnings to user should be shown. There could also be a check
-            //    before attempting to set the value to determine support. The device currently
-            //    does not support this feature and the catch is always hit.
-            if (_currentDevice.DocumentFeeder.Enabled)
+            // If the device supports duplex scanning, and the user has indicated that it should
+            // be used attempt to enable it.
+            if (_currentDevice.DocumentFeeder.Enabled && _defaultSetting.CanUseDuplex)
             {
                 _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
             }
@@ -939,7 +1001,6 @@ namespace RegScan
 
             try
             {
-
                 // start image acquisition process
                 _currentDevice.Acquire();
             }
@@ -1093,7 +1154,9 @@ namespace RegScan
             // Reset the document and display.
             ResetDocument();
             hideProgressBar();
+            CloseReason = _closeAutoRefresh;
             CloseForm();
+            return;
         }
 
         /// <summary>
@@ -1105,7 +1168,9 @@ namespace RegScan
         {
             // Reset the document and clear the display.
             ResetDocument();
+            CloseReason = _closeAutoRefresh;
             CloseForm();
+            return;
         }
 
         /// <summary>
@@ -1116,11 +1181,11 @@ namespace RegScan
         private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             // If adf, then allow duplex.
-            if (useAdfCheckBox.Checked)
+            if (useAdfCheckBox.Checked && _defaultSetting.CanUseDuplex)
                 useDuplexCheckBox.Enabled = true;
             else
             {
-                // otherwise insure not checked or can be checked.
+                // otherwise ensure not checked or can be checked.
                 useDuplexCheckBox.Enabled = false;
                 useDuplexCheckBox.Checked = false;
             }
