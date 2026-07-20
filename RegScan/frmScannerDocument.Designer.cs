@@ -61,13 +61,6 @@
             this.panelDocType = new System.Windows.Forms.FlowLayoutPanel();
             this.lblDocumentType = new System.Windows.Forms.Label();
             this.txtDocumentType = new System.Windows.Forms.TextBox();
-            this.flowLayoutScanOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.panelScanningOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.useUICheckBox = new System.Windows.Forms.CheckBox();
-            this.ckBoxLowResolution = new System.Windows.Forms.CheckBox();
-            this.showProgressIndicatorUICheckBox = new System.Windows.Forms.CheckBox();
-            this.useAdfCheckBox = new System.Windows.Forms.CheckBox();
-            this.useDuplexCheckBox = new System.Windows.Forms.CheckBox();
             this.btnScanPage = new System.Windows.Forms.Button();
             this.flowPanelDocumentRecoed = new System.Windows.Forms.FlowLayoutPanel();
             this.lblDocRecord = new System.Windows.Forms.Label();
@@ -92,15 +85,24 @@
             this.btnImagePDF = new System.Windows.Forms.Button();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnPrevImage = new System.Windows.Forms.Button();
             this.lblCurImage = new System.Windows.Forms.Label();
-            this.btnNextImage = new System.Windows.Forms.Button();
+            this.btnPrevImage = new System.Windows.Forms.Button();
             this.lblDisplay = new System.Windows.Forms.Label();
             this.lblTotalImage = new System.Windows.Forms.Label();
+            this.btnNextImage = new System.Windows.Forms.Button();
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.testCheckBox = new System.Windows.Forms.CheckBox();
+            this.useDuplexCheckBox = new System.Windows.Forms.CheckBox();
+            this.useAdfCheckBox = new System.Windows.Forms.CheckBox();
+            this.showProgressIndicatorUICheckBox = new System.Windows.Forms.CheckBox();
+            this.ckBoxLowResolution = new System.Windows.Forms.CheckBox();
+            this.useUICheckBox = new System.Windows.Forms.CheckBox();
+            this.flowLayoutScanOptions = new System.Windows.Forms.FlowLayoutPanel();
+            this.scanSessionSplitContainer = new System.Windows.Forms.SplitContainer();
             this.imageBox = new RegScan.ImageBox();
+            this.panelScanningOptions = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -121,8 +123,6 @@
             this.flowLayoutPanel4.SuspendLayout();
             this.panelDocClass.SuspendLayout();
             this.panelDocType.SuspendLayout();
-            this.flowLayoutScanOptions.SuspendLayout();
-            this.panelScanningOptions.SuspendLayout();
             this.flowPanelDocumentRecoed.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.panelBarcode.SuspendLayout();
@@ -134,6 +134,12 @@
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutScanOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scanSessionSplitContainer)).BeginInit();
+            this.scanSessionSplitContainer.Panel1.SuspendLayout();
+            this.scanSessionSplitContainer.Panel2.SuspendLayout();
+            this.scanSessionSplitContainer.SuspendLayout();
+            this.panelScanningOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -565,106 +571,13 @@
             this.txtDocumentType.Size = new System.Drawing.Size(310, 29);
             this.txtDocumentType.TabIndex = 70;
             // 
-            // flowLayoutScanOptions
-            // 
-            this.flowLayoutScanOptions.Controls.Add(this.panelScanningOptions);
-            this.flowLayoutScanOptions.Controls.Add(this.btnScanPage);
-            this.flowLayoutScanOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutScanOptions.Location = new System.Drawing.Point(7, 7);
-            this.flowLayoutScanOptions.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutScanOptions.MaximumSize = new System.Drawing.Size(520, 162);
-            this.flowLayoutScanOptions.MinimumSize = new System.Drawing.Size(190, 106);
-            this.flowLayoutScanOptions.Name = "flowLayoutScanOptions";
-            this.flowLayoutScanOptions.Padding = new System.Windows.Forms.Padding(4, 4, 4, 0);
-            this.flowLayoutScanOptions.Size = new System.Drawing.Size(506, 120);
-            this.flowLayoutScanOptions.TabIndex = 120;
-            // 
-            // panelScanningOptions
-            // 
-            this.panelScanningOptions.Controls.Add(this.useUICheckBox);
-            this.panelScanningOptions.Controls.Add(this.ckBoxLowResolution);
-            this.panelScanningOptions.Controls.Add(this.showProgressIndicatorUICheckBox);
-            this.panelScanningOptions.Controls.Add(this.useAdfCheckBox);
-            this.panelScanningOptions.Controls.Add(this.useDuplexCheckBox);
-            this.panelScanningOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelScanningOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelScanningOptions.Location = new System.Drawing.Point(7, 7);
-            this.panelScanningOptions.MaximumSize = new System.Drawing.Size(322, 175);
-            this.panelScanningOptions.MinimumSize = new System.Drawing.Size(322, 98);
-            this.panelScanningOptions.Name = "panelScanningOptions";
-            this.panelScanningOptions.Padding = new System.Windows.Forms.Padding(8);
-            this.panelScanningOptions.Size = new System.Drawing.Size(322, 98);
-            this.panelScanningOptions.TabIndex = 6;
-            // 
-            // useUICheckBox
-            // 
-            this.useUICheckBox.AutoSize = true;
-            this.useUICheckBox.Checked = true;
-            this.useUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.useUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useUICheckBox.Location = new System.Drawing.Point(11, 11);
-            this.useUICheckBox.Name = "useUICheckBox";
-            this.useUICheckBox.Size = new System.Drawing.Size(115, 21);
-            this.useUICheckBox.TabIndex = 30;
-            this.useUICheckBox.Text = "Show Advanced";
-            this.useUICheckBox.UseVisualStyleBackColor = true;
-            // 
-            // ckBoxLowResolution
-            // 
-            this.ckBoxLowResolution.AutoSize = true;
-            this.ckBoxLowResolution.Checked = true;
-            this.ckBoxLowResolution.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBoxLowResolution.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckBoxLowResolution.Location = new System.Drawing.Point(11, 38);
-            this.ckBoxLowResolution.Name = "ckBoxLowResolution";
-            this.ckBoxLowResolution.Size = new System.Drawing.Size(110, 21);
-            this.ckBoxLowResolution.TabIndex = 31;
-            this.ckBoxLowResolution.Text = "Low Resolution";
-            this.ckBoxLowResolution.UseVisualStyleBackColor = true;
-            // 
-            // showProgressIndicatorUICheckBox
-            // 
-            this.showProgressIndicatorUICheckBox.AutoSize = true;
-            this.showProgressIndicatorUICheckBox.Checked = true;
-            this.showProgressIndicatorUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showProgressIndicatorUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showProgressIndicatorUICheckBox.Location = new System.Drawing.Point(11, 65);
-            this.showProgressIndicatorUICheckBox.Name = "showProgressIndicatorUICheckBox";
-            this.showProgressIndicatorUICheckBox.Size = new System.Drawing.Size(110, 21);
-            this.showProgressIndicatorUICheckBox.TabIndex = 33;
-            this.showProgressIndicatorUICheckBox.Text = "Show Progress";
-            this.showProgressIndicatorUICheckBox.UseVisualStyleBackColor = true;
-            // 
-            // useAdfCheckBox
-            // 
-            this.useAdfCheckBox.AutoSize = true;
-            this.useAdfCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useAdfCheckBox.Location = new System.Drawing.Point(132, 11);
-            this.useAdfCheckBox.Name = "useAdfCheckBox";
-            this.useAdfCheckBox.Size = new System.Drawing.Size(127, 38);
-            this.useAdfCheckBox.TabIndex = 29;
-            this.useAdfCheckBox.Text = "Use Automatic\r\nDocument Feeder";
-            this.useAdfCheckBox.UseVisualStyleBackColor = true;
-            this.useAdfCheckBox.CheckedChanged += new System.EventHandler(this.useAdfCheckBox_CheckedChanged);
-            // 
-            // useDuplexCheckBox
-            // 
-            this.useDuplexCheckBox.AutoSize = true;
-            this.useDuplexCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useDuplexCheckBox.Location = new System.Drawing.Point(132, 55);
-            this.useDuplexCheckBox.Name = "useDuplexCheckBox";
-            this.useDuplexCheckBox.Size = new System.Drawing.Size(116, 21);
-            this.useDuplexCheckBox.TabIndex = 34;
-            this.useDuplexCheckBox.Text = "Scan Both Sides";
-            this.useDuplexCheckBox.UseVisualStyleBackColor = true;
-            // 
             // btnScanPage
             // 
             this.btnScanPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnScanPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(33)))), ((int)(((byte)(66)))));
             this.btnScanPage.Font = new System.Drawing.Font("BC Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnScanPage.ForeColor = System.Drawing.Color.White;
-            this.btnScanPage.Location = new System.Drawing.Point(335, 53);
+            this.btnScanPage.Location = new System.Drawing.Point(32, 36);
             this.btnScanPage.MaximumSize = new System.Drawing.Size(153, 52);
             this.btnScanPage.MinimumSize = new System.Drawing.Size(153, 52);
             this.btnScanPage.Name = "btnScanPage";
@@ -978,19 +891,6 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(400, 43);
             this.tableLayoutPanel2.TabIndex = 94;
             // 
-            // btnPrevImage
-            // 
-            this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
-            this.btnPrevImage.Location = new System.Drawing.Point(111, 3);
-            this.btnPrevImage.Name = "btnPrevImage";
-            this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
-            this.btnPrevImage.TabIndex = 7;
-            this.btnPrevImage.Text = "<";
-            this.btnPrevImage.UseVisualStyleBackColor = true;
-            this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
-            // 
             // lblCurImage
             // 
             this.lblCurImage.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -1004,18 +904,18 @@
             this.lblCurImage.Text = "0";
             this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnNextImage
+            // btnPrevImage
             // 
-            this.btnNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNextImage.ForeColor = System.Drawing.Color.Black;
-            this.btnNextImage.Location = new System.Drawing.Point(251, 3);
-            this.btnNextImage.Name = "btnNextImage";
-            this.btnNextImage.Size = new System.Drawing.Size(31, 37);
-            this.btnNextImage.TabIndex = 97;
-            this.btnNextImage.Text = ">";
-            this.btnNextImage.UseVisualStyleBackColor = true;
-            this.btnNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
+            this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
+            this.btnPrevImage.Location = new System.Drawing.Point(111, 3);
+            this.btnPrevImage.Name = "btnPrevImage";
+            this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
+            this.btnPrevImage.TabIndex = 7;
+            this.btnPrevImage.Text = "<";
+            this.btnPrevImage.UseVisualStyleBackColor = true;
+            this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
             // 
             // lblDisplay
             // 
@@ -1040,6 +940,19 @@
             this.lblTotalImage.TabIndex = 96;
             this.lblTotalImage.Text = "0";
             this.lblTotalImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnNextImage
+            // 
+            this.btnNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNextImage.ForeColor = System.Drawing.Color.Black;
+            this.btnNextImage.Location = new System.Drawing.Point(251, 3);
+            this.btnNextImage.Name = "btnNextImage";
+            this.btnNextImage.Size = new System.Drawing.Size(31, 37);
+            this.btnNextImage.TabIndex = 97;
+            this.btnNextImage.Text = ">";
+            this.btnNextImage.UseVisualStyleBackColor = true;
+            this.btnNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
             // 
             // lblDisplayImgOf
             // 
@@ -1082,6 +995,114 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 925);
             this.tableLayoutPanel1.TabIndex = 94;
             // 
+            // testCheckBox
+            // 
+            this.testCheckBox.AutoSize = true;
+            this.testCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.testCheckBox.Location = new System.Drawing.Point(124, 74);
+            this.testCheckBox.Name = "testCheckBox";
+            this.testCheckBox.Size = new System.Drawing.Size(77, 21);
+            this.testCheckBox.TabIndex = 35;
+            this.testCheckBox.Text = "TESTING";
+            this.testCheckBox.UseVisualStyleBackColor = true;
+            this.testCheckBox.Visible = false;
+            // 
+            // useDuplexCheckBox
+            // 
+            this.useDuplexCheckBox.AutoSize = true;
+            this.useDuplexCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useDuplexCheckBox.Location = new System.Drawing.Point(124, 47);
+            this.useDuplexCheckBox.MaximumSize = new System.Drawing.Size(127, 38);
+            this.useDuplexCheckBox.Name = "useDuplexCheckBox";
+            this.useDuplexCheckBox.Size = new System.Drawing.Size(116, 21);
+            this.useDuplexCheckBox.TabIndex = 34;
+            this.useDuplexCheckBox.Text = "Scan Both Sides";
+            this.useDuplexCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // useAdfCheckBox
+            // 
+            this.useAdfCheckBox.AutoSize = true;
+            this.useAdfCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useAdfCheckBox.Location = new System.Drawing.Point(124, 3);
+            this.useAdfCheckBox.MinimumSize = new System.Drawing.Size(127, 38);
+            this.useAdfCheckBox.Name = "useAdfCheckBox";
+            this.useAdfCheckBox.Size = new System.Drawing.Size(127, 38);
+            this.useAdfCheckBox.TabIndex = 29;
+            this.useAdfCheckBox.Text = "Use Automatic\r\nDocument Feeder";
+            this.useAdfCheckBox.UseVisualStyleBackColor = true;
+            this.useAdfCheckBox.CheckedChanged += new System.EventHandler(this.useAdfCheckBox_CheckedChanged);
+            // 
+            // showProgressIndicatorUICheckBox
+            // 
+            this.showProgressIndicatorUICheckBox.AutoSize = true;
+            this.showProgressIndicatorUICheckBox.Checked = true;
+            this.showProgressIndicatorUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showProgressIndicatorUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showProgressIndicatorUICheckBox.Location = new System.Drawing.Point(3, 57);
+            this.showProgressIndicatorUICheckBox.Name = "showProgressIndicatorUICheckBox";
+            this.showProgressIndicatorUICheckBox.Size = new System.Drawing.Size(110, 21);
+            this.showProgressIndicatorUICheckBox.TabIndex = 33;
+            this.showProgressIndicatorUICheckBox.Text = "Show Progress";
+            this.showProgressIndicatorUICheckBox.UseVisualStyleBackColor = true;
+            // 
+            // ckBoxLowResolution
+            // 
+            this.ckBoxLowResolution.AutoSize = true;
+            this.ckBoxLowResolution.Checked = true;
+            this.ckBoxLowResolution.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckBoxLowResolution.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckBoxLowResolution.Location = new System.Drawing.Point(3, 30);
+            this.ckBoxLowResolution.Name = "ckBoxLowResolution";
+            this.ckBoxLowResolution.Size = new System.Drawing.Size(110, 21);
+            this.ckBoxLowResolution.TabIndex = 31;
+            this.ckBoxLowResolution.Text = "Low Resolution";
+            this.ckBoxLowResolution.UseVisualStyleBackColor = true;
+            // 
+            // useUICheckBox
+            // 
+            this.useUICheckBox.AutoSize = true;
+            this.useUICheckBox.Checked = true;
+            this.useUICheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.useUICheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useUICheckBox.Location = new System.Drawing.Point(3, 3);
+            this.useUICheckBox.Name = "useUICheckBox";
+            this.useUICheckBox.Size = new System.Drawing.Size(115, 21);
+            this.useUICheckBox.TabIndex = 30;
+            this.useUICheckBox.Text = "Show Advanced";
+            this.useUICheckBox.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutScanOptions
+            // 
+            this.flowLayoutScanOptions.Controls.Add(this.scanSessionSplitContainer);
+            this.flowLayoutScanOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutScanOptions.Location = new System.Drawing.Point(7, 7);
+            this.flowLayoutScanOptions.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutScanOptions.MaximumSize = new System.Drawing.Size(520, 162);
+            this.flowLayoutScanOptions.MinimumSize = new System.Drawing.Size(190, 106);
+            this.flowLayoutScanOptions.Name = "flowLayoutScanOptions";
+            this.flowLayoutScanOptions.Size = new System.Drawing.Size(506, 120);
+            this.flowLayoutScanOptions.TabIndex = 120;
+            // 
+            // scanSessionSplitContainer
+            // 
+            this.scanSessionSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scanSessionSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.scanSessionSplitContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.scanSessionSplitContainer.MinimumSize = new System.Drawing.Size(480, 115);
+            this.scanSessionSplitContainer.Name = "scanSessionSplitContainer";
+            // 
+            // scanSessionSplitContainer.Panel1
+            // 
+            this.scanSessionSplitContainer.Panel1.Controls.Add(this.panelScanningOptions);
+            this.scanSessionSplitContainer.Panel1MinSize = 40;
+            // 
+            // scanSessionSplitContainer.Panel2
+            // 
+            this.scanSessionSplitContainer.Panel2.Controls.Add(this.btnScanPage);
+            this.scanSessionSplitContainer.Size = new System.Drawing.Size(506, 115);
+            this.scanSessionSplitContainer.SplitterDistance = 300;
+            this.scanSessionSplitContainer.TabIndex = 0;
+            // 
             // imageBox
             // 
             this.imageBox.AutoScroll = true;
@@ -1091,6 +1112,21 @@
             this.imageBox.Name = "imageBox";
             this.imageBox.Size = new System.Drawing.Size(654, 880);
             this.imageBox.TabIndex = 0;
+            // 
+            // panelScanningOptions
+            // 
+            this.panelScanningOptions.Controls.Add(this.useUICheckBox);
+            this.panelScanningOptions.Controls.Add(this.ckBoxLowResolution);
+            this.panelScanningOptions.Controls.Add(this.showProgressIndicatorUICheckBox);
+            this.panelScanningOptions.Controls.Add(this.useAdfCheckBox);
+            this.panelScanningOptions.Controls.Add(this.useDuplexCheckBox);
+            this.panelScanningOptions.Controls.Add(this.testCheckBox);
+            this.panelScanningOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.panelScanningOptions.Location = new System.Drawing.Point(5, 6);
+            this.panelScanningOptions.Margin = new System.Windows.Forms.Padding(0);
+            this.panelScanningOptions.Name = "panelScanningOptions";
+            this.panelScanningOptions.Size = new System.Drawing.Size(295, 110);
+            this.panelScanningOptions.TabIndex = 36;
             // 
             // frmScannerDocument
             // 
@@ -1137,9 +1173,6 @@
             this.panelDocClass.PerformLayout();
             this.panelDocType.ResumeLayout(false);
             this.panelDocType.PerformLayout();
-            this.flowLayoutScanOptions.ResumeLayout(false);
-            this.panelScanningOptions.ResumeLayout(false);
-            this.panelScanningOptions.PerformLayout();
             this.flowPanelDocumentRecoed.ResumeLayout(false);
             this.flowPanelDocumentRecoed.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -1158,6 +1191,13 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutScanOptions.ResumeLayout(false);
+            this.scanSessionSplitContainer.Panel1.ResumeLayout(false);
+            this.scanSessionSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scanSessionSplitContainer)).EndInit();
+            this.scanSessionSplitContainer.ResumeLayout(false);
+            this.panelScanningOptions.ResumeLayout(false);
+            this.panelScanningOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1200,12 +1240,6 @@
         private System.Windows.Forms.TextBox txtBarCode;
         private System.Windows.Forms.Label lblDocRecord;
         private System.Windows.Forms.Button btnScanPage;
-        private System.Windows.Forms.FlowLayoutPanel panelScanningOptions;
-        private System.Windows.Forms.CheckBox useUICheckBox;
-        private System.Windows.Forms.CheckBox ckBoxLowResolution;
-        private System.Windows.Forms.CheckBox showProgressIndicatorUICheckBox;
-        private System.Windows.Forms.CheckBox useAdfCheckBox;
-        private System.Windows.Forms.CheckBox useDuplexCheckBox;
         private ImageBox imageBox;
         private System.Windows.Forms.TableLayoutPanel panelImageControl;
         private System.Windows.Forms.Label lblCurImage;
@@ -1220,7 +1254,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutScanOptions;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
@@ -1238,5 +1271,14 @@
         private System.Windows.Forms.Panel panelSch;
         private System.Windows.Forms.Panel panelBox;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutScanOptions;
+        private System.Windows.Forms.CheckBox useUICheckBox;
+        private System.Windows.Forms.CheckBox ckBoxLowResolution;
+        private System.Windows.Forms.CheckBox testCheckBox;
+        private System.Windows.Forms.CheckBox showProgressIndicatorUICheckBox;
+        private System.Windows.Forms.CheckBox useDuplexCheckBox;
+        private System.Windows.Forms.CheckBox useAdfCheckBox;
+        private System.Windows.Forms.SplitContainer scanSessionSplitContainer;
+        private System.Windows.Forms.FlowLayoutPanel panelScanningOptions;
     }
 }

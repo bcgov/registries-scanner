@@ -1,4 +1,6 @@
-﻿using PdfSharp.Pdf;
+﻿using AppConfiguration;
+using PdfSharp.Drawing.BarCodes;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -88,17 +90,20 @@ namespace RegScan
             SetSettingValues();
             useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
 
-            // Create a path to where debugging logs should be stored. 
-            string scannerDir = "c:\\scanner25";
+            // Create a path to where debugging logs should be stored.
             string scannerFile = "vstwain.log";
-            string scannerPath = String.Concat(scannerDir, "\\", scannerFile);
+            string scannerPath = String.Concat(ConfigKeys.LOGPATH, "\\", scannerFile);
 
-            UtilityObj.CreateFolder(scannerDir);
+            UtilityObj.CreateFolder(ConfigKeys.LOGPATH);
             UtilityObj.CreateFile(scannerPath);
 
             // Set up debugging for the TWAIN SDK
-            TwainEnvironment.EnableDebugging(scannerPath);
-            TwainEnvironment.DebugLevel = DebugLevel.Debug;
+            if ( !TwainEnvironment.IsDebuggingEnabled )
+            {
+                TwainEnvironment.EnableDebugging(scannerPath);
+                TwainEnvironment.DebugLevel = DebugLevel.Debug;
+            }
+            
 
             // create TWAIN device manager
             CreateTwainDeviceManager();
@@ -213,6 +218,17 @@ namespace RegScan
                 ImageObj.GetPageSize(image.Width, image.Height)));
         }
 
+        public bool GetUserInput(string msg, string title)
+        {
+            bool userAffirm = false;
+            // Ask the user if they would like to try again
+            DialogResult usrInput = MessageBox.Show(msg + System.Environment.NewLine + 
+                "Would you like to try again?", title, MessageBoxButtons.YesNo);
+            
+            userAffirm = usrInput == DialogResult.Yes ? true : false;
+            return userAffirm;
+        }
+
         /// <summary>
         /// Given a string attempt to retrieve an associated document record from DRS API.
         /// If the string is empty, or there was an issue ask the user to enter a barcode manually.
@@ -226,6 +242,7 @@ namespace RegScan
             DocumentObj doc = null;
             bool documentSet = false;
             bool checkBarcode = true;
+
             // Loop to get a document record for a given barcode
             while (checkBarcode)
             {
@@ -248,10 +265,9 @@ namespace RegScan
                     // This exception is thrown if the barcode is not passed into the controller
                     // correctly or if it is an empty string.
                     UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
-                    MessageBox.Show(ane.Message, "Unable to Process Request. Barcode can not be empty.");
                     // continue the process
                     doc = null;
-                    checkBarcode = false;
+                    checkBarcode = GetUserInput(ane.Message, "Empty Barcode");
                 }
                 catch (ArgumentException ae)
                 {
@@ -259,10 +275,10 @@ namespace RegScan
                     // expected format. This message box will display the number to the user
                     // and warn them to verify it.
                     UtilityObj.WriteLog(UtilityObj.error, ae.ToString());
-                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " +
-                        "verification as it will not be displayed in the application.");
+                    MessageBox.Show(ae.Message + "\nPlease copy the accession number listed" +
+                        "for verification as it will not be displayed in the application.", 
+                        "Unexpected Number Format");
                     // continue the process
-                    doc = null;
                     checkBarcode = false;
                 }
                 catch (Exception e)
@@ -271,20 +287,13 @@ namespace RegScan
                     // log the issue
                     UtilityObj.WriteLog(UtilityObj.error, msg +
                         System.Environment.NewLine + e.ToString());
+
                     // Ask the user if they would like to try again 
-                    if (MessageBox.Show(msg + System.Environment.NewLine +
-                        "Would you like to try again?", "Missing/ Not Found Barcode",
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        // start loop over with a request for a new barcode
-                        barCode = null;
-                    }
-                    else
-                    {
-                        // move on without a barcode
-                        doc = null;
-                        checkBarcode = false;
-                    }
+                    checkBarcode = GetUserInput(msg, "Missing/ Not Found Barcode");
+
+                    // start loop over with a request for a new barcode
+                    barCode = null;
+                    doc = null;
                 }
 
                 // If documents were found continue to next step
@@ -981,35 +990,48 @@ namespace RegScan
 
             _image0 = null;
             showProgressBar();
+            if (testCheckBox.Checked)
+            {
+                Bitmap image = UtilityObj.ReadFileAsImage(String.Concat(ConfigKeys.LOGPATH, "\\", "temp.bmp"));
+                ProcessScan(image);
+                // process the scanned images.
+                ProcessCompleted();
 
-            try
-            {
-                setUpScanner();
+                // Clear program bar.
+                hideProgressBar();
             }
-            catch (TwainDeviceCapabilityException)
+            else
             {
-                MessageBox.Show("Scanning device is not compatible with the request.",
-                    "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    setUpScanner();
+                }
+                catch (TwainDeviceCapabilityException)
+                {
+                    MessageBox.Show("Scanning device is not compatible with the request.",
+                        "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return;
-            }
-            catch (Exception ex2)
-            {
-                MessageBox.Show(ex2.Message);
-                return;
-            }
+                    return;
+                }
+                catch (Exception ex2)
+                {
+                    MessageBox.Show(ex2.Message);
+                    return;
+                }
 
-            try
-            {
-                // start image acquisition process
-                _currentDevice.Acquire();
+                try
+                {
+                    // start image acquisition process
+                    _currentDevice.Acquire();
+                }
+                catch (Vintasoft.Twain.TwainException ex)
+                {
+                    UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
+                    MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
-            catch (Vintasoft.Twain.TwainException ex)
-            {
-                UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
-                MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            
         }
 
         private void btnRotateImg_Click(object sender, EventArgs e)
