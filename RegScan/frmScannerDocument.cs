@@ -218,6 +218,13 @@ namespace RegScan
                 ImageObj.GetPageSize(image.Width, image.Height)));
         }
 
+        /// <summary>
+        /// Used to prompt the user with a message that they can reply "Yes" or "No" to. 
+        /// The response is parsed and returned as a bool reflecting how the user responded.
+        /// </summary>
+        /// <param name="msg">Message to display to the user inside the Message Box </param>
+        /// <param name="title">Title of the MessageBox</param>
+        /// <returns>True if the user indicates "Yes" else false. </returns>
         public bool GetUserInput(string msg, string title)
         {
             bool userAffirm = false;
