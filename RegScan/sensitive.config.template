@@ -17,4 +17,5 @@
 	<add key="TwainSDKUserName" value=""/>
 	<add key="TwainSDKEmail" value=""/>
 	<add key="TwainSDKKey" value=""/>
+	<add key="LogPath" value="c:\\scanner25"/>
 </appSettings>
