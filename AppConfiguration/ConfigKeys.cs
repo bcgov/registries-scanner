@@ -35,7 +35,7 @@ namespace AppConfiguration
 
         /// <summary>
         /// Load all configuration values from sensitive.config and store as class properties.
-        /// Any other project within the solution can referenec these values as required.
+        /// Any other project within the solution can reference these values as required.
         /// </summary>
         public ConfigKeys()
         {

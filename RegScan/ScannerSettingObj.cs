@@ -19,7 +19,7 @@ namespace RegScan
         private bool _canUseDocumentFeeder;
         private bool _canUseDuplex;
 
-        // Publically avaliable properties
+        // Publicly available properties
         public DeviceManager DeviceManager { get { return _deviceManager; } }
         public Device CurrentScanner { get { return _currentScanner; } }
 
