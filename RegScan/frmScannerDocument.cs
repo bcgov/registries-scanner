@@ -1,5 +1,4 @@
 ﻿using AppConfiguration;
-using PdfSharp.Drawing.BarCodes;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
@@ -458,7 +457,6 @@ namespace RegScan
             useUICheckBox.Enabled = true;
             useAdfCheckBox.Enabled = _defaultSetting.CanUseDocumentFeeder;
             useDuplexCheckBox.Enabled = _defaultSetting.CanUseDuplex;
-            useUICheckBox.Enabled = true;
             ckBoxLowResolution.Enabled = true;
             showProgressIndicatorUICheckBox.Enabled = true;
 
@@ -493,7 +491,6 @@ namespace RegScan
             useUICheckBox.Enabled = false;
             useAdfCheckBox.Enabled = false;
             useDuplexCheckBox.Enabled = false;
-            useUICheckBox.Enabled = false;
             ckBoxLowResolution.Enabled = false;
             showProgressIndicatorUICheckBox.Enabled = false;
 
