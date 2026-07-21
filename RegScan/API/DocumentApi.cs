@@ -81,7 +81,7 @@ namespace RegScan
             {
                 UtilityObj.WriteLog(UtilityObj.error, "Document is either null or empty. " + 
                         "Cannot hit search endpoint.");
-                throw new ArgumentNullException("Unable to process search without Barcode. Please try again.");
+                throw new ArgumentNullException("barcode.\n\nUnable to process search without Barcode.");
             }
 
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);

@@ -1,4 +1,5 @@
-﻿using PdfSharp.Pdf;
+﻿using AppConfiguration;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,6 +11,17 @@ namespace RegScan
 {
     public partial class frmScannerDocument : Form
     {
+        #region consts
+
+        /// <summary>
+        /// Const values. Set to match values in MDIMain Form exactly. If you update here please
+        /// ensure the paring values in frmMDIMain are updated. 
+        /// </summary>
+        const int _closeRequestRefresh = 1;
+        const int _closeAutoRefresh = 2;
+        const int _closeAndExit = 3;
+
+        #endregion
 
         #region Fields
 
@@ -17,6 +29,11 @@ namespace RegScan
         /// Current active document.
         /// </summary>
         DocumentObj _currentDocument = null;
+
+        /// <summary>
+        /// Used to control how the parent form will handle the closing of this form
+        /// </summary>
+        public static int CloseReason { get; set; } = 0;
 
         /// <summary>
         /// Default setting for scanning parameters.
@@ -63,6 +80,7 @@ namespace RegScan
         public frmScannerDocument()
         {
             InitializeComponent();
+            LoadControls();
 
             UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
 
@@ -71,17 +89,20 @@ namespace RegScan
             SetSettingValues();
             useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
 
-            // Create a path to where debugging logs should be stored. 
-            string scannerDir = "c:\\scanner25";
+            // Create a path to where debugging logs should be stored.
             string scannerFile = "vstwain.log";
-            string scannerPath = String.Concat(scannerDir, "\\", scannerFile);
+            string scannerPath = String.Concat(ConfigKeys.LOGPATH, "\\", scannerFile);
 
-            UtilityObj.CreateFolder(scannerDir);
+            UtilityObj.CreateFolder(ConfigKeys.LOGPATH);
             UtilityObj.CreateFile(scannerPath);
 
             // Set up debugging for the TWAIN SDK
-            TwainEnvironment.EnableDebugging(scannerPath);
-            TwainEnvironment.DebugLevel = DebugLevel.Debug;
+            if ( !TwainEnvironment.IsDebuggingEnabled )
+            {
+                TwainEnvironment.EnableDebugging(scannerPath);
+                TwainEnvironment.DebugLevel = DebugLevel.Debug;
+            }
+            
 
             // create TWAIN device manager
             CreateTwainDeviceManager();
@@ -92,12 +113,30 @@ namespace RegScan
         /// at the top of the form.
         /// </summary>
         public void SetSettingValues()
-        { 
-            useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
-            useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
+        {
+            if (_defaultSetting.CanUseDocumentFeeder)
+            {
+                useAdfCheckBox.Enabled = true;
+                useAdfCheckBox.Checked = _defaultSetting.UseDocumentFeeder;
+            }
+            else 
+            {
+                useAdfCheckBox.Enabled = false;
+
+            }
+
+            if (_defaultSetting.CanUseDuplex)
+            {
+                useDuplexCheckBox.Enabled = true;
+                useDuplexCheckBox.Checked = _defaultSetting.UseDuplex;
+            }
+            else
+            {
+                useDuplexCheckBox.Enabled = false;
+            }
+
             useUICheckBox.Checked = _defaultSetting.ShowTwainUI;
             showProgressIndicatorUICheckBox.Checked = _defaultSetting.ShowProgressIndicatorUI;
-            ckBoxLowResolution.Checked = _defaultSetting.BlackAndWhiteCheckBox;
         }
 
         #region Scanning Session
@@ -147,7 +186,6 @@ namespace RegScan
 
             // Close the form and dispose of it to allow garbage collection
             this.Close();
-            this.Dispose();
         }
 
         /// <summary>
@@ -180,6 +218,24 @@ namespace RegScan
         }
 
         /// <summary>
+        /// Used to prompt the user with a message that they can reply "Yes" or "No" to. 
+        /// The response is parsed and returned as a bool reflecting how the user responded.
+        /// </summary>
+        /// <param name="msg">Message to display to the user inside the Message Box </param>
+        /// <param name="title">Title of the MessageBox</param>
+        /// <returns>True if the user indicates "Yes" else false. </returns>
+        public bool GetUserInput(string msg, string title)
+        {
+            bool userAffirm = false;
+            // Ask the user if they would like to try again
+            DialogResult usrInput = MessageBox.Show(msg + System.Environment.NewLine + 
+                "Would you like to try again?", title, MessageBoxButtons.YesNo);
+            
+            userAffirm = usrInput == DialogResult.Yes ? true : false;
+            return userAffirm;
+        }
+
+        /// <summary>
         /// Given a string attempt to retrieve an associated document record from DRS API.
         /// If the string is empty, or there was an issue ask the user to enter a barcode manually.
         /// </summary>
@@ -192,6 +248,7 @@ namespace RegScan
             DocumentObj doc = null;
             bool documentSet = false;
             bool checkBarcode = true;
+
             // Loop to get a document record for a given barcode
             while (checkBarcode)
             {
@@ -214,10 +271,9 @@ namespace RegScan
                     // This exception is thrown if the barcode is not passed into the controller
                     // correctly or if it is an empty string.
                     UtilityObj.WriteLog(UtilityObj.error, ane.ToString());
-                    MessageBox.Show(ane.Message, "Unable to Process Request. Barcode can not be empty.");
                     // continue the process
                     doc = null;
-                    checkBarcode = false;
+                    checkBarcode = GetUserInput(ane.Message, "Empty Barcode");
                 }
                 catch (ArgumentException ae)
                 {
@@ -225,10 +281,10 @@ namespace RegScan
                     // expected format. This message box will display the number to the user
                     // and warn them to verify it.
                     UtilityObj.WriteLog(UtilityObj.error, ae.ToString());
-                    MessageBox.Show(ae.Message + "\nPlease copy the number listed for " +
-                        "verification as it will not be displayed in the application.");
+                    MessageBox.Show(ae.Message + "\nPlease copy the accession number listed" +
+                        "for verification as it will not be displayed in the application.", 
+                        "Unexpected Number Format");
                     // continue the process
-                    doc = null;
                     checkBarcode = false;
                 }
                 catch (Exception e)
@@ -237,20 +293,13 @@ namespace RegScan
                     // log the issue
                     UtilityObj.WriteLog(UtilityObj.error, msg +
                         System.Environment.NewLine + e.ToString());
+
                     // Ask the user if they would like to try again 
-                    if (MessageBox.Show(msg + System.Environment.NewLine +
-                        "Would you like to try again?", "Missing/ Not Found Barcode",
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        // start loop over with a request for a new barcode
-                        barCode = null;
-                    }
-                    else
-                    {
-                        // move on without a barcode
-                        doc = null;
-                        checkBarcode = false;
-                    }
+                    checkBarcode = GetUserInput(msg, "Missing/ Not Found Barcode");
+
+                    // start loop over with a request for a new barcode
+                    barCode = null;
+                    doc = null;
                 }
 
                 // If documents were found continue to next step
@@ -330,7 +379,9 @@ namespace RegScan
                 if (cancelScan)
                 {
                     // Set current document back to null.
+                    CloseReason = _closeRequestRefresh;
                     CloseForm();
+                    return;
                 }
                 else
                 {
@@ -365,7 +416,21 @@ namespace RegScan
         {
             // If there is no scanned image (user might have clicked the close button)
             if (_scanSessionFileList.Count == 0)
-                return;
+            {
+                String msg = "No images scanned. Please ensure the document is loaded and " +
+                    "try again. Do you want to reload the scanning session?";
+                String caption = "Scanning Error";
+                DialogResult res; 
+                res = MessageBox.Show(msg, caption, MessageBoxButtons.YesNo, 
+                    MessageBoxIcon.Question);
+                if (res == DialogResult.Yes)
+                {
+                    ResetDocument();
+                    CloseReason = _closeAutoRefresh;
+                    CloseForm();
+                    return;
+                }
+            }
 
             // IF we have a new document process the first page
             if (_currentDocument == null)
@@ -390,9 +455,8 @@ namespace RegScan
         {
             // Show scanning options when processing scan is complete
             useUICheckBox.Enabled = true;
-            useAdfCheckBox.Enabled = true;
-            useDuplexCheckBox.Enabled = true;
-            useUICheckBox.Enabled = true;
+            useAdfCheckBox.Enabled = _defaultSetting.CanUseDocumentFeeder;
+            useDuplexCheckBox.Enabled = _defaultSetting.CanUseDuplex;
             ckBoxLowResolution.Enabled = true;
             showProgressIndicatorUICheckBox.Enabled = true;
 
@@ -410,6 +474,16 @@ namespace RegScan
         /// </summary>
         private void showProgressBar()
         {
+            // Get the forms current size
+            var screenSize = this.ClientSize;
+            // set progress bar size (width based on screen size)
+            this.progressBar.Height = 43;
+            this.progressBar.Width = screenSize.Width / 2;
+            // set progress bar location (centered)
+            this.progressBar.Location = new Point(
+                (screenSize.Width - progressBar.Width) / 2 ,
+                (screenSize.Height - progressBar.Height) / 2 );
+            
             // Disable interaction with the form
             Enabled = false;
 
@@ -417,7 +491,6 @@ namespace RegScan
             useUICheckBox.Enabled = false;
             useAdfCheckBox.Enabled = false;
             useDuplexCheckBox.Enabled = false;
-            useUICheckBox.Enabled = false;
             ckBoxLowResolution.Enabled = false;
             showProgressIndicatorUICheckBox.Enabled = false;
 
@@ -629,6 +702,23 @@ namespace RegScan
             txtDocumentNotes.Enabled = true;
             txtDocumentNotes.Text = _currentDocument.Description;
         }
+        
+        /// <summary>
+        /// Add a progress bar to the form. If this is added through the UI it will be within
+        /// another control. We want it to stay infront of all controls. 
+        /// </summary>
+        protected void LoadControls()
+        {
+            // Create the progress bar
+            this.progressBar = new System.Windows.Forms.ProgressBar()
+            {
+                Name = "progressBar",
+                Visible = false
+            };
+            // add to form
+            this.Controls.Add(progressBar);
+        }
+
         #endregion
 
         #region Scanner Methods
@@ -654,8 +744,10 @@ namespace RegScan
         {
             try
             {
-                device.ImageAcquiringProgress += new EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
-                device.ImageAcquired += new EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
+                device.ImageAcquiringProgress += new 
+                    EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
+                device.ImageAcquired += new 
+                    EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
                 device.ScanFailed += new EventHandler<ScanFailedEventArgs>(device_ScanFailed);
                 device.AsyncEvent += new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
                 device.ScanFinished += new EventHandler(device_ScanFinished);
@@ -676,7 +768,8 @@ namespace RegScan
         /// </summary>
         private void UnsubscribeFromDeviceEvents(Device device)
         {
-            device.ImageAcquiringProgress -= new EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
+            device.ImageAcquiringProgress -= new 
+                EventHandler<ImageAcquiringProgressEventArgs>(device_ImageAcquiringProgress);
             device.ImageAcquired -= new EventHandler<ImageAcquiredEventArgs>(device_ImageAcquired);
             device.ScanFailed -= new EventHandler<ScanFailedEventArgs>(device_ScanFailed);
             device.AsyncEvent -= new EventHandler<DeviceAsyncEventArgs>(device_AsyncEvent);
@@ -846,19 +939,27 @@ namespace RegScan
             else
                 _currentDevice.Resolution = new Resolution(600, 600);
 
-            // Use the "Use Automatic Document Feeder" checkbox to set if the ADF if used.
-            // NOTE - There could be a test implemented here to check if the device supports
-            //     an ADF and if not, show a warning to the user that it can not be used.
-            _currentDevice.DocumentFeeder.Enabled = useAdfCheckBox.Checked;
-
+            // Enable the automatic document feeder if the device supports that feature and
+            // the user has indicated that it should be used.
+            if (_defaultSetting.CanUseDocumentFeeder && useAdfCheckBox.Checked)
+            {
+                _currentDevice.DocumentFeeder.Enabled = true;
+                // If we are going to use the ADF ensure a document is loaded
+                // (if the device is able to detect it)
+                if (_currentDevice.DocumentFeeder.PaperDetectable && 
+                    !_currentDevice.DocumentFeeder.Loaded)
+                {
+                    MessageBox.Show("No Document loaded in Auto Feeder. Please load document " +
+                        "into auto feeder or flatbed and try again.\n\n", "Automatic Document" +
+                        " Feeder", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+            
             // Duplex (double sided page scanning) is set by the "Use Duplex" checkbox.
-            // If the device does not support duplex scanning, then this will fail and be
-            // caught by the exception. 
-            // NOTE - currently the catch is not handling the scenario instead just buffing the
-            //    error. Logs/ warnings to user should be shown. There could also be a check
-            //    before attempting to set the value to determine support. The device currently
-            //    does not support this feature and the catch is always hit.
-            if (_currentDevice.DocumentFeeder.Enabled)
+            // If the device supports duplex scanning, and the user has indicated that it should
+            // be used attempt to enable it.
+            if (_currentDevice.DocumentFeeder.Enabled && _defaultSetting.CanUseDuplex)
             {
                 _currentDevice.DocumentFeeder.DuplexEnabled = useDuplexCheckBox.Checked;
             }
@@ -893,36 +994,48 @@ namespace RegScan
 
             _image0 = null;
             showProgressBar();
+            if (testCheckBox.Checked)
+            {
+                Bitmap image = UtilityObj.ReadFileAsImage(String.Concat(ConfigKeys.LOGPATH, "\\", "temp.bmp"));
+                ProcessScan(image);
+                // process the scanned images.
+                ProcessCompleted();
 
-            try
-            {
-                setUpScanner();
+                // Clear program bar.
+                hideProgressBar();
             }
-            catch (TwainDeviceCapabilityException)
+            else
             {
-                MessageBox.Show("Scanning device is not compatible with the request.",
-                    "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    setUpScanner();
+                }
+                catch (TwainDeviceCapabilityException)
+                {
+                    MessageBox.Show("Scanning device is not compatible with the request.",
+                        "TWAIN device error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return;
-            }
-            catch (Exception ex2)
-            {
-                MessageBox.Show(ex2.Message);
-                return;
-            }
+                    return;
+                }
+                catch (Exception ex2)
+                {
+                    MessageBox.Show(ex2.Message);
+                    return;
+                }
 
-            try
-            {
-
-                // start image acquisition process
-                _currentDevice.Acquire();
+                try
+                {
+                    // start image acquisition process
+                    _currentDevice.Acquire();
+                }
+                catch (Vintasoft.Twain.TwainException ex)
+                {
+                    UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
+                    MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
-            catch (Vintasoft.Twain.TwainException ex)
-            {
-                UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
-                MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            
         }
 
         private void btnRotateImg_Click(object sender, EventArgs e)
@@ -1004,19 +1117,20 @@ namespace RegScan
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
 
-            // Get the form fields we want to update
-            // If the description field changes we can use one endpoint
-            // If it isn't updated we have to use a different endpoint.
-            if (string.Equals(_currentDocument.Description ?? string.Empty, 
-                txtDocumentNotes.Text, StringComparison.Ordinal))
+            // Test description field for changes
+            // Ordinal comparison checks the numeric values of char objects between each string
+            // If _currentDocument.Description is null we will compare to an empty string.
+            descChange = !(string.Equals(_currentDocument.Description ?? string.Empty,
+                txtDocumentNotes.Text, StringComparison.Ordinal));
+            if (descChange)
             {
-                descChange = true;
                 _currentDocument.Description = txtDocumentNotes.Text;
             }
 
+            // Check Accession Number fields for updates
             try
             {
-                // If any of the fields are missing values
+                // If any of the fields are missing values -> throw an error
                 if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
                     string.IsNullOrEmpty(maskSchNumber.Text) ||
                     string.IsNullOrEmpty(maskBoxNumber.Text))
@@ -1027,14 +1141,14 @@ namespace RegScan
                 var boxNumber = Int32.Parse(maskBoxNumber.Text);
 
                 // we only need to update the values if there were changes made
-                if (seqNumber != _currentDocument.SequenceNumber ||
+                accNChange = seqNumber != _currentDocument.SequenceNumber ||
                     schNumber != _currentDocument.ScheduleNumber ||
-                    boxNumber != _currentDocument.BoxNumber)
+                    boxNumber != _currentDocument.BoxNumber;
+                if (accNChange)
                 {
                     _currentDocument.SequenceNumber = seqNumber;
                     _currentDocument.ScheduleNumber = schNumber;
                     _currentDocument.BoxNumber = boxNumber;
-                    accNChange = true;
                 }
 
             }
@@ -1049,6 +1163,7 @@ namespace RegScan
 
             try
             {
+                // Update document. Flag set based on if there were any updates to the fields
                 _currentDocument.UpdateInsert(descChange || accNChange);
             }
             catch (ApplicationException ae)
@@ -1065,7 +1180,9 @@ namespace RegScan
             // Reset the document and display.
             ResetDocument();
             hideProgressBar();
+            CloseReason = _closeAutoRefresh;
             CloseForm();
+            return;
         }
 
         /// <summary>
@@ -1077,7 +1194,9 @@ namespace RegScan
         {
             // Reset the document and clear the display.
             ResetDocument();
+            CloseReason = _closeAutoRefresh;
             CloseForm();
+            return;
         }
 
         /// <summary>
@@ -1088,11 +1207,11 @@ namespace RegScan
         private void useAdfCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             // If adf, then allow duplex.
-            if (useAdfCheckBox.Checked)
+            if (useAdfCheckBox.Checked && _defaultSetting.CanUseDuplex)
                 useDuplexCheckBox.Enabled = true;
             else
             {
-                // otherwise insure not checked or can be checked.
+                // otherwise ensure not checked or can be checked.
                 useDuplexCheckBox.Enabled = false;
                 useDuplexCheckBox.Checked = false;
             }

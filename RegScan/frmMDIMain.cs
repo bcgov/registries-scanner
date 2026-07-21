@@ -5,6 +5,8 @@ using Vintasoft.Twain;
 
 namespace RegScan
 {
+    
+
     /// <summary>
     /// frmMDIMain is the main window of the application. 
     /// This window controls 
@@ -17,7 +19,17 @@ namespace RegScan
     /// </remarks>
     public partial class frmMDIMain : Form
     {
+        #region consts
 
+        /// <summary>
+        /// Const values. Set to match values in frmScannerDocument Form exactly. If you update
+        /// here please ensure the paring values in frmScannerDocument are also updated. 
+        /// </summary>
+        const int _closeRequestRefresh = 1;
+        const int _closeAutoRefresh = 2;
+        const int _closeAndExit = 3;
+
+        #endregion
         #region Fields
 
         // The current child frmScannerDocument form 
@@ -50,25 +62,43 @@ namespace RegScan
         /// load a new session. -> The application will exit.
         /// </remarks>
         public void ChildFormClosing(object sender, FormClosingEventArgs e)
-        {
+        {   
             // Ask the user if they would like to start a new scanning session.
             // If they select no the main form will close and exit
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (sender.Equals(_scannerForm))
             {
-                string message = "Do you want to load a new scanning session?";
-                if (MessageBox.Show(message, "Restart Application",
-                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (frmScannerDocument.CloseReason != _closeAndExit)
                 {
-                    // start a new frmScannerDocument
-                    this.MDIMain_Load(this, EventArgs.Empty);
+                    bool refresh = frmScannerDocument.CloseReason == _closeAutoRefresh;
+
+                    // only request user input on a refresh if the form was closed unexpectedly.
+                    if (!refresh)
+                    {
+                        string msg = "Do you want to load a new scanning session?";
+                        refresh = MessageBox.Show(msg, "Restart Application",
+                            MessageBoxButtons.YesNo) == DialogResult.Yes; 
+                    } 
+                    // if autorefresh was set, or the user indicated they wanted to refresh
+                    if(refresh)
+                    {
+                        _scannerForm.FormClosing -= new FormClosingEventHandler(ChildFormClosing);
+                        frmScannerDocument temp = _scannerForm;
+                        temp.Hide();
+                        // start a new frmScannerDocument
+                        this.MDIMain_Load(this, EventArgs.Empty);
+                        temp.Close();
+                        return;
+                    }
                 }
                 else
                 {
                     this.Close();
                     this.Dispose();
+                    return;
                 }
             }
-
+            // If the form is closed for any other reason and not sent from the scanner form
+            // (frmScannerDocument) then it will not be caught and will just close.
         }
 
         /// <summary>

@@ -80,7 +80,7 @@ namespace RegScan
             else if (levelString == error)
             {
                 // Only write to the log file in the prod environment if we are logging an error
-                System.IO.File.AppendAllText(@"log.txt", msg);
+                System.IO.File.AppendAllText(String.Concat(ConfigKeys.LOGPATH, "\\", @"log.txt"), msg);
             }
         }
 
