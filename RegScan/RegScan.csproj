@@ -83,59 +83,59 @@
   <ItemGroup>
     <Compile Include="API\APIRequest.cs" />
     <Compile Include="API\DocumentApi.cs" />
-    <Compile Include="BarCodeObj.cs" />
-    <Compile Include="frmScannerDocument.cs">
+    <Compile Include="Utilities\BarCodeObj.cs" />
+    <Compile Include="UI\Forms\frmScannerDocument.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmScannerDocument.Designer.cs">
+    <Compile Include="UI\Forms\frmScannerDocument.Designer.cs">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
     </Compile>
     <Compile Include="DocumentObj.cs" />
-    <Compile Include="EnhanceImageObj.cs" />
-    <Compile Include="frmAbout.cs">
+    <Compile Include="Utilities\EnhanceImageObj.cs" />
+    <Compile Include="UI\Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAbout.Designer.cs">
+    <Compile Include="UI\Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmEnterBarCode.cs">
+    <Compile Include="UI\Forms\frmEnterBarCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmEnterBarCode.Designer.cs">
+    <Compile Include="UI\Forms\frmEnterBarCode.Designer.cs">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageBox\ImageBox.cs">
+    <Compile Include="UI\ImageBox\ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageBox\ImageBox.designer.cs" />
-    <Compile Include="ImageBox\ImageBoxGridDisplayMode.cs" />
-    <Compile Include="ImageBox\ImageBoxGridScale.cs" />
-    <Compile Include="ImageBox\ImageObj.cs" />
-    <Compile Include="frmMDIMain.cs">
+    <Compile Include="UI\ImageBox\ImageBox.designer.cs" />
+    <Compile Include="UI\ImageBox\ImageBoxGridDisplayMode.cs" />
+    <Compile Include="UI\ImageBox\ImageBoxGridScale.cs" />
+    <Compile Include="UI\ImageBox\ImageObj.cs" />
+    <Compile Include="UI\Forms\frmMDIMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMDIMain.Designer.cs">
+    <Compile Include="UI\Forms\frmMDIMain.Designer.cs">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="PDFObj.cs" />
+    <Compile Include="Utilities\PDFObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScannerSettingObj.cs" />
+    <Compile Include="Utilities\ScannerSettingObj.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="Utilities\UtilityObj.cs" />
-    <EmbeddedResource Include="frmScannerDocument.resx">
+    <EmbeddedResource Include="UI\Forms\frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAbout.resx">
+    <EmbeddedResource Include="UI\Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmEnterBarCode.resx">
+    <EmbeddedResource Include="UI\Forms\frmEnterBarCode.resx">
       <DependentUpon>frmEnterBarCode.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMDIMain.resx">
+    <EmbeddedResource Include="UI\Forms\frmMDIMain.resx">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
