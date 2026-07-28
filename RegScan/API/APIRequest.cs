@@ -116,10 +116,9 @@ namespace RegScan
             }
             
             var request = CreateRequest(endPoint, requestType);
-            // TRY -> addfile here
-            //request.AddFile(ParameterType.RequestBody, docBytes, <fileName>, "application/pdf");
-            request.AddHeader("Content-Type", "application/pdf");
             
+            request.AddHeader("Content-Type", "application/pdf");
+
             foreach (var keyValuePair in param)
             {
                 request.AddQueryParameter(keyValuePair.Key, keyValuePair.Value.ToString());
