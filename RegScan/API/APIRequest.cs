@@ -13,7 +13,7 @@ namespace RegScan
     public class APIRequest
     {
         // Only create one rest client to handle requests. This prevents hanging connections
-        // and pool exhaustiom
+        // and pool exhaustion
         private static RestClient _client;
         public static Method method;
 
@@ -116,7 +116,6 @@ namespace RegScan
             }
             
             var request = CreateRequest(endPoint, requestType);
-            
             request.AddHeader("Content-Type", "application/pdf");
 
             foreach (var keyValuePair in param)
