@@ -12,6 +12,9 @@ namespace RegScan
     /// </summary>
     public class APIRequest
     {
+        // Only create one rest client to handle requests. This prevents hanging connections
+        // and pool exhaustion
+        private static RestClient _client;
         public static Method method;
 
         public static void SetAPISettings()
@@ -19,10 +22,19 @@ namespace RegScan
             // Set security protocols
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            // Set options and create the Client
+            // the client factory will handle creating and managing clients with different options
+            // Check RestSharp documentation for more information
+            var options = new RestClientOptions(ConfigKeys.API_URL);
+            _client = new RestClient(options,
+                useClientFactory: true);
         }
-        private static RestRequest CreateRequest(Method reqType)
+
+        private static RestRequest CreateRequest(string subPath, Method reqType)
         {
-            var request = new RestRequest(reqType);
+            // create a request instance
+            var request = new RestRequest(subPath, reqType);
 
             request.AddHeader("Account-Id", ConfigKeys.ACCOUNT_ID);
             request.AddHeader("x-apikey", ConfigKeys.APIKEY);
@@ -39,16 +51,16 @@ namespace RegScan
         /// <returns>Response from API in string format.</returns>
         public static string MakeKeyRequest(string endPoint, Method requestType)
         {
-            if (requestType != Method.GET)
+            if (requestType != Method.Get)
             {
                 // If any other request type is used throw a new error
                 throw new Exception("Invalid request type for endpoint: " + endPoint + 
                                     ". Must use GET.");
             }
 
-            var request = CreateRequest(requestType);
+            var request = CreateRequest(endPoint, requestType);
 
-            return GetHttpResponseContent(request, endPoint);
+            return GetHttpResponseContent(request);
         }
 
         /// <summary>
@@ -62,23 +74,24 @@ namespace RegScan
         /// <returns>Response from API in string format.</returns>
         public static string MakeKeyRequest(object data, string endPoint, Method requestType)
         {
-            if (requestType != Method.POST && requestType != Method.PUT &&
-                requestType != Method.PATCH)
+            if (requestType != Method.Post && requestType != Method.Put &&
+                requestType != Method.Patch)
             {
                 // If any other request type is used throw a new error
                 throw new Exception("Invalid request type for endpoint: " + endPoint +
                                     ". Must use POST, PUT, or PATCH.");
             }
             
-            var request = CreateRequest(requestType);
+            var request = CreateRequest(endPoint, requestType);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data, new JsonSerializerSettings
-            {
+            { 
                 NullValueHandling = NullValueHandling.Ignore
             });
+            
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(json);
 
-            return GetHttpResponseContent(request, endPoint);
+            return GetHttpResponseContent(request);
         }
 
         /// <summary>
@@ -95,16 +108,16 @@ namespace RegScan
         public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, 
                                             string endPoint, Method requestType)
         {
-            if ( requestType != Method.PUT )
+            if ( requestType != Method.Put )
             {
                 // If any other request type is used throw a new error
                 throw new Exception("Invalid request type for endpoint: " + 
                     endPoint + ". Uploading documents must use PUT.");
             }
             
-            var request = CreateRequest(requestType);
+            var request = CreateRequest(endPoint, requestType);
             request.AddHeader("Content-Type", "application/pdf");
-            
+
             foreach (var keyValuePair in param)
             {
                 request.AddQueryParameter(keyValuePair.Key, keyValuePair.Value.ToString());
@@ -112,7 +125,7 @@ namespace RegScan
 
             request.AddParameter("application/pdf", docBytes, ParameterType.RequestBody);
 
-            return GetHttpResponseContent(request, endPoint);
+            return GetHttpResponseContent(request);
         }
 
         /// <summary>
@@ -127,10 +140,10 @@ namespace RegScan
         /// <exception cref="Exception">
         ///     Thrown if the result of the request has a bad status or was not completed
         /// </exception>
-        private static string GetHttpResponseContent(RestRequest request, string endPoint)
+        private static string GetHttpResponseContent(RestRequest request)
         {
-            var client = new RestClient(ConfigKeys.API_URL + endPoint);
-            var response = client.Execute(request);
+            //var client = new RestClient(ConfigKeys.API_URL + endPoint);
+            var response = _client.Execute(request);
 
             // If the request was not successful (completed with a good status)
             // throw a new error. 

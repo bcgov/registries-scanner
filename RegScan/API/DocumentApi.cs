@@ -33,7 +33,7 @@ namespace RegScan
             //     - verification & checking that the data should be changed
 
             string endpoint = "/doc/api/v1/documents/" + docServId;
-            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.PATCH);
+            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.Patch);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace RegScan
             }
             string endpoint = "/doc/api/v1/documents/" + docServiceId;
 
-            return APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.PUT);
+            return APIRequest.MakeKeyRequest(pdfBytes, param, endpoint, RestSharp.Method.Put);
 
         }
         #endregion
@@ -84,7 +84,7 @@ namespace RegScan
                 throw new ArgumentNullException("barcode.\n\nUnable to process search without Barcode.");
             }
 
-            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace RegScan
 
             endpoint += string.Join("&", queryStrings);
 
-            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.GET);
+            return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
         }
 
         #endregion
