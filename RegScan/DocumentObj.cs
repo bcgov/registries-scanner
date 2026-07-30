@@ -47,7 +47,7 @@ namespace RegScan
         // Consumer Filing Date Time. The datetime of the consumer application registration/filing
         private DateTime _consumerFilingDate;
         public string ConsumerFilingDateString { 
-            get { return _consumerFilingDate.ToString("MMMM dd, yyyy"); } }
+            get { return _consumerFilingDate.ToString("MMM dd, yyyy"); } }
 
         // Document URL. Only set after saving current document or if the document record has a
         // version of the document already uploaded.

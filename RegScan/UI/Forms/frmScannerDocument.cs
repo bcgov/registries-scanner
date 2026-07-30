@@ -610,16 +610,9 @@ namespace RegScan
             txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
             txtPagesInDocument.Text = "";
-            maskSeqNumber.Text = "";
-            txtFilingDate.Text = "";
-            maskSchNumber.Text = "";
-            maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
 
-            // Disable Accession Number fields and notes
-            maskSeqNumber.Enabled = false;
-            maskSchNumber.Enabled = false;
-            maskBoxNumber.Enabled = false;
+            // Disable notes
             txtDocumentNotes.Enabled = false;
 
             // Delete any temporary FileNames.
@@ -689,14 +682,6 @@ namespace RegScan
             txtDocumentClass.Text = _currentDocument.DocumentClass;
             txtDocumentType.Text = string.Concat(
                 _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
-
-            // Accession Number
-            maskSeqNumber.Enabled = true;
-            maskSchNumber.Enabled = true;
-            maskBoxNumber.Enabled = true;
-            maskSeqNumber.Text = _currentDocument.SequenceNumberString;
-            maskSchNumber.Text = _currentDocument.ScheduleNumberString;
-            maskBoxNumber.Text = _currentDocument.BoxNumberString;
 
             // Document Notes / Description
             txtDocumentNotes.Enabled = true;
@@ -1127,39 +1112,8 @@ namespace RegScan
                 _currentDocument.Description = txtDocumentNotes.Text;
             }
 
-            // Check Accession Number fields for updates
-            try
-            {
-                // If any of the fields are missing values -> throw an error
-                if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
-                    string.IsNullOrEmpty(maskSchNumber.Text) ||
-                    string.IsNullOrEmpty(maskBoxNumber.Text))
-                    throw new FormatException();
-                // or if there is an error trying to parse them as ints
-                var seqNumber = Int32.Parse(maskSeqNumber.Text);
-                var schNumber = Int32.Parse(maskSchNumber.Text);
-                var boxNumber = Int32.Parse(maskBoxNumber.Text);
-
-                // we only need to update the values if there were changes made
-                accNChange = seqNumber != _currentDocument.SequenceNumber ||
-                    schNumber != _currentDocument.ScheduleNumber ||
-                    boxNumber != _currentDocument.BoxNumber;
-                if (accNChange)
-                {
-                    _currentDocument.SequenceNumber = seqNumber;
-                    _currentDocument.ScheduleNumber = schNumber;
-                    _currentDocument.BoxNumber = boxNumber;
-                }
-
-            }
-            // Catch the formatting error
-            catch (FormatException ex)
-            {
-                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
-                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
-                hideProgressBar();
-                return;
-            }
+            // TODO: Check Accession Number fields for updates
+            
 
             try
             {
