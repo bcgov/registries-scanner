@@ -90,6 +90,12 @@
     <Compile Include="UI\Forms\frmScannerDocument.Designer.cs">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Forms\frmBoxManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxManagement.Designer.cs">
+      <DependentUpon>frmBoxManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="DocumentObj.cs" />
     <Compile Include="Utilities\EnhanceImageObj.cs" />
     <Compile Include="UI\Forms\frmAbout.cs">
@@ -126,6 +132,10 @@
     <Compile Include="Utilities\UtilityObj.cs" />
     <EmbeddedResource Include="UI\Forms\frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\frmBoxManagement.resx">
+      <DependentUpon>frmBoxManagement.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmAbout.resx">
