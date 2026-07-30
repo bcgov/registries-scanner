@@ -34,6 +34,7 @@ namespace RegScan
 
         // The current child frmScannerDocument form 
         frmScannerDocument _scannerForm = null;
+        frmBoxManagement _boxForm = null;
 
         #endregion
 
@@ -85,7 +86,7 @@ namespace RegScan
                         frmScannerDocument temp = _scannerForm;
                         temp.Hide();
                         // start a new frmScannerDocument
-                        this.MDIMain_Load(this, EventArgs.Empty);
+                        LoadScanningForm(this, EventArgs.Empty);
                         temp.Close();
                         return;
                     }
@@ -102,19 +103,54 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Handles creating a new child form. If the form closes automatically catch it and 
-        /// process with ChildFormClosing(). 
+        /// Handles creating a new scanning child form. If the form closes automatically catch it
+        /// and process with ChildFormClosing(). 
+        /// </summary>
+        /// <param name="sender">Any control that launches a new child form</param>
+        /// <param name="e">Any even that launches a new child form</param>
+        public void LoadScanningForm(object sender, EventArgs e)
+        {
+            _scannerForm = new frmScannerDocument();
+            //_scannerForm.MdiParent = this;
+            _scannerForm.TopLevel = false;
+            _scannerForm.FormBorderStyle = FormBorderStyle.None;
+            _scannerForm.Dock = DockStyle.Fill;
+            this.Controls.Add(_scannerForm);
+            
+            // Catch and handle child form closing
+            //_scannerForm.FormClosing += new FormClosingEventHandler(ChildFormClosing);
+            _scannerForm.Show();
+        }
+
+        /// <summary>
+        /// Handles creating a new box child form.
+        /// </summary>
+        /// <param name="sender">Any control that launches a new child form</param>
+        /// <param name="e">Any even that launches a new child form</param>
+        public void LoadBoxForm(object sender, EventArgs e)
+        {
+            _boxForm = new frmBoxManagement();
+            _boxForm.TopLevel = false;
+            _boxForm.FormBorderStyle = FormBorderStyle.None;
+            _boxForm.Dock = DockStyle.Top;
+            this.Controls.Add(_boxForm);
+            _boxForm.Show();
+        }
+
+        /// <summary>
+        /// Handles creating child forms.
         /// </summary>
         /// <param name="sender">Any control that launches a new child form</param>
         /// <param name="e">Any even that launches a new child form</param>
         public void MDIMain_Load(object sender, EventArgs e)
         {
-            _scannerForm = new frmScannerDocument();
-            _scannerForm.MdiParent = this;
-            _scannerForm.WindowState = FormWindowState.Maximized;
-            // Catch and handle child form closing
-            _scannerForm.FormClosing += new FormClosingEventHandler(ChildFormClosing);
-            _scannerForm.Show();
+            // Init child forms
+            LoadBoxForm(sender, e);
+            LoadScanningForm(sender, e);
+
+            this.menuStrip.BringToFront();
+            _boxForm.BringToFront();
+            _scannerForm.BringToFront();
         }
 
         #region Menu Item Event Handlers
@@ -187,5 +223,6 @@ namespace RegScan
         }
 
         #endregion
+
     }
 }
