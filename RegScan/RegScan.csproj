@@ -82,7 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIRequest.cs" />
+    <Compile Include="API\BoxAPI.cs" />
     <Compile Include="API\DocumentApi.cs" />
+    <Compile Include="DocumentStorage\AccessionNumberObj.cs" />
+    <Compile Include="DocumentStorage\BoxObj.cs" />
+    <Compile Include="DocumentStorage\SequenceScheduleObj.cs" />
     <Compile Include="Utilities\BarCodeObj.cs" />
     <Compile Include="UI\Forms\frmScannerDocument.cs">
       <SubType>Form</SubType>
