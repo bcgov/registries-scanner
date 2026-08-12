@@ -30,10 +30,11 @@ namespace RegScan
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoxManagement));
             this.CurrentBoxLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanelOpened = new System.Windows.Forms.FlowLayoutPanel();
             this.BoxOpenDateLabel = new System.Windows.Forms.Label();
-            this.BoxOpenedDateMaskText = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxOpenedDate = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanelSequence = new System.Windows.Forms.FlowLayoutPanel();
             this.SequenceLabel = new System.Windows.Forms.Label();
@@ -46,25 +47,26 @@ namespace RegScan
             this.maskedTextBoxBoxNumber = new System.Windows.Forms.MaskedTextBox();
             this.flowLayoutPanelClosed = new System.Windows.Forms.FlowLayoutPanel();
             this.BoxCloseDateLabel = new System.Windows.Forms.Label();
-            this.BoxClosedDateMaskText = new System.Windows.Forms.MaskedTextBox();
+            this.btnCloseBox = new System.Windows.Forms.Button();
+            this.textBoxClosedDate = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxAccessionNumber = new System.Windows.Forms.GroupBox();
             this.groupBoxDates = new System.Windows.Forms.GroupBox();
-            this.btnCloseBox = new System.Windows.Forms.Button();
             this.btnOpenBox = new System.Windows.Forms.Button();
             this.groupBoxPageCount = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelTotalPages = new System.Windows.Forms.FlowLayoutPanel();
             this.BoxTotalPagesLabel = new System.Windows.Forms.Label();
-            this.maskedTextBoxTotalPages = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxPageCount = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBoxBatchID = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelCurrentBatchID = new System.Windows.Forms.FlowLayoutPanel();
-            this.maskedTextBoxCurrentBatchID = new System.Windows.Forms.MaskedTextBox();
-            this.btnIncBatchID = new System.Windows.Forms.Button();
+            this.editBatchID = new System.Windows.Forms.Label();
+            this.textBoxBatchID = new System.Windows.Forms.TextBox();
             this.flowLayoutPanelBoxMaintButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanelBoxMaintinence = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnChangeBox = new System.Windows.Forms.Button();
             this.flowLayoutPanelOpened.SuspendLayout();
             this.flowLayoutPanelSequence.SuspendLayout();
             this.flowLayoutPanelSchedule.SuspendLayout();
@@ -84,6 +86,7 @@ namespace RegScan
             // 
             this.CurrentBoxLabel.AutoSize = true;
             this.CurrentBoxLabel.Font = new System.Drawing.Font("BC Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrentBoxLabel.ForeColor = System.Drawing.Color.White;
             this.CurrentBoxLabel.Location = new System.Drawing.Point(11, 11);
             this.CurrentBoxLabel.Margin = new System.Windows.Forms.Padding(2);
             this.CurrentBoxLabel.Name = "CurrentBoxLabel";
@@ -95,7 +98,7 @@ namespace RegScan
             // 
             this.flowLayoutPanelOpened.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelOpened.Controls.Add(this.BoxOpenDateLabel);
-            this.flowLayoutPanelOpened.Controls.Add(this.BoxOpenedDateMaskText);
+            this.flowLayoutPanelOpened.Controls.Add(this.textBoxOpenedDate);
             this.flowLayoutPanelOpened.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelOpened.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanelOpened.MinimumSize = new System.Drawing.Size(155, 79);
@@ -115,21 +118,17 @@ namespace RegScan
             this.BoxOpenDateLabel.TabIndex = 99;
             this.BoxOpenDateLabel.Text = "Open";
             // 
-            // BoxOpenedDateMaskText
+            // textBoxOpenedDate
             // 
-            this.BoxOpenedDateMaskText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(236)))), ((int)(((byte)(233)))));
-            this.BoxOpenedDateMaskText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.BoxOpenedDateMaskText.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BoxOpenedDateMaskText.Location = new System.Drawing.Point(8, 34);
-            this.BoxOpenedDateMaskText.Margin = new System.Windows.Forms.Padding(4);
-            this.BoxOpenedDateMaskText.Mask = "00";
-            this.BoxOpenedDateMaskText.MinimumSize = new System.Drawing.Size(141, 29);
-            this.BoxOpenedDateMaskText.Name = "BoxOpenedDateMaskText";
-            this.BoxOpenedDateMaskText.PromptChar = ' ';
-            this.BoxOpenedDateMaskText.ResetOnSpace = false;
-            this.BoxOpenedDateMaskText.Size = new System.Drawing.Size(141, 29);
-            this.BoxOpenedDateMaskText.TabIndex = 98;
-            this.BoxOpenedDateMaskText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBoxOpenedDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.textBoxOpenedDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxOpenedDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxOpenedDate.Location = new System.Drawing.Point(7, 33);
+            this.textBoxOpenedDate.MinimumSize = new System.Drawing.Size(133, 29);
+            this.textBoxOpenedDate.Name = "textBoxOpenedDate";
+            this.textBoxOpenedDate.Size = new System.Drawing.Size(141, 29);
+            this.textBoxOpenedDate.TabIndex = 100;
+            this.textBoxOpenedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // flowLayoutPanel4
             // 
@@ -271,7 +270,8 @@ namespace RegScan
             // 
             this.flowLayoutPanelClosed.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelClosed.Controls.Add(this.BoxCloseDateLabel);
-            this.flowLayoutPanelClosed.Controls.Add(this.BoxClosedDateMaskText);
+            this.flowLayoutPanelClosed.Controls.Add(this.btnCloseBox);
+            this.flowLayoutPanelClosed.Controls.Add(this.textBoxClosedDate);
             this.flowLayoutPanelClosed.Location = new System.Drawing.Point(170, 29);
             this.flowLayoutPanelClosed.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanelClosed.MinimumSize = new System.Drawing.Size(155, 79);
@@ -291,21 +291,31 @@ namespace RegScan
             this.BoxCloseDateLabel.TabIndex = 99;
             this.BoxCloseDateLabel.Text = "Close";
             // 
-            // BoxClosedDateMaskText
+            // btnCloseBox
             // 
-            this.BoxClosedDateMaskText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(236)))), ((int)(((byte)(233)))));
-            this.BoxClosedDateMaskText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.BoxClosedDateMaskText.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BoxClosedDateMaskText.Location = new System.Drawing.Point(8, 34);
-            this.BoxClosedDateMaskText.Margin = new System.Windows.Forms.Padding(4);
-            this.BoxClosedDateMaskText.Mask = "00";
-            this.BoxClosedDateMaskText.MinimumSize = new System.Drawing.Size(141, 29);
-            this.BoxClosedDateMaskText.Name = "BoxClosedDateMaskText";
-            this.BoxClosedDateMaskText.PromptChar = ' ';
-            this.BoxClosedDateMaskText.ResetOnSpace = false;
-            this.BoxClosedDateMaskText.Size = new System.Drawing.Size(141, 29);
-            this.BoxClosedDateMaskText.TabIndex = 98;
-            this.BoxClosedDateMaskText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnCloseBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCloseBox.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCloseBox.ForeColor = System.Drawing.Color.Black;
+            this.btnCloseBox.Location = new System.Drawing.Point(7, 33);
+            this.btnCloseBox.MinimumSize = new System.Drawing.Size(133, 29);
+            this.btnCloseBox.Name = "btnCloseBox";
+            this.btnCloseBox.Size = new System.Drawing.Size(141, 29);
+            this.btnCloseBox.TabIndex = 113;
+            this.btnCloseBox.Text = "Close Box";
+            this.btnCloseBox.UseVisualStyleBackColor = true;
+            this.btnCloseBox.Visible = false;
+            // 
+            // textBoxClosedDate
+            // 
+            this.textBoxClosedDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.textBoxClosedDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxClosedDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxClosedDate.Location = new System.Drawing.Point(7, 68);
+            this.textBoxClosedDate.MinimumSize = new System.Drawing.Size(133, 29);
+            this.textBoxClosedDate.Name = "textBoxClosedDate";
+            this.textBoxClosedDate.Size = new System.Drawing.Size(141, 29);
+            this.textBoxClosedDate.TabIndex = 101;
+            this.textBoxClosedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // flowLayoutPanel10
             // 
@@ -363,22 +373,10 @@ namespace RegScan
             this.groupBoxDates.TabStop = false;
             this.groupBoxDates.Text = "Dates";
             // 
-            // btnCloseBox
-            // 
-            this.btnCloseBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCloseBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCloseBox.ForeColor = System.Drawing.Color.Black;
-            this.btnCloseBox.Location = new System.Drawing.Point(3, 40);
-            this.btnCloseBox.Name = "btnCloseBox";
-            this.btnCloseBox.Size = new System.Drawing.Size(136, 31);
-            this.btnCloseBox.TabIndex = 113;
-            this.btnCloseBox.Text = "Close Box";
-            this.btnCloseBox.UseVisualStyleBackColor = true;
-            // 
             // btnOpenBox
             // 
             this.btnOpenBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnOpenBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenBox.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnOpenBox.ForeColor = System.Drawing.Color.Black;
             this.btnOpenBox.Location = new System.Drawing.Point(3, 3);
             this.btnOpenBox.Name = "btnOpenBox";
@@ -404,7 +402,7 @@ namespace RegScan
             // 
             this.flowLayoutPanelTotalPages.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelTotalPages.Controls.Add(this.BoxTotalPagesLabel);
-            this.flowLayoutPanelTotalPages.Controls.Add(this.maskedTextBoxTotalPages);
+            this.flowLayoutPanelTotalPages.Controls.Add(this.textBoxPageCount);
             this.flowLayoutPanelTotalPages.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelTotalPages.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanelTotalPages.MaximumSize = new System.Drawing.Size(155, 79);
@@ -425,22 +423,16 @@ namespace RegScan
             this.BoxTotalPagesLabel.TabIndex = 99;
             this.BoxTotalPagesLabel.Text = "Total";
             // 
-            // maskedTextBoxTotalPages
+            // textBoxPageCount
             // 
-            this.maskedTextBoxTotalPages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(236)))), ((int)(((byte)(233)))));
-            this.maskedTextBoxTotalPages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.maskedTextBoxTotalPages.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBoxTotalPages.Location = new System.Drawing.Point(8, 34);
-            this.maskedTextBoxTotalPages.Margin = new System.Windows.Forms.Padding(4);
-            this.maskedTextBoxTotalPages.Mask = "00";
-            this.maskedTextBoxTotalPages.MaximumSize = new System.Drawing.Size(141, 29);
-            this.maskedTextBoxTotalPages.MinimumSize = new System.Drawing.Size(95, 29);
-            this.maskedTextBoxTotalPages.Name = "maskedTextBoxTotalPages";
-            this.maskedTextBoxTotalPages.PromptChar = ' ';
-            this.maskedTextBoxTotalPages.ResetOnSpace = false;
-            this.maskedTextBoxTotalPages.Size = new System.Drawing.Size(95, 29);
-            this.maskedTextBoxTotalPages.TabIndex = 98;
-            this.maskedTextBoxTotalPages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBoxPageCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.textBoxPageCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxPageCount.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxPageCount.Location = new System.Drawing.Point(7, 33);
+            this.textBoxPageCount.MinimumSize = new System.Drawing.Size(95, 29);
+            this.textBoxPageCount.Name = "textBoxPageCount";
+            this.textBoxPageCount.Size = new System.Drawing.Size(95, 29);
+            this.textBoxPageCount.TabIndex = 101;
             // 
             // label2
             // 
@@ -470,7 +462,8 @@ namespace RegScan
             // 
             this.flowLayoutPanelCurrentBatchID.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelCurrentBatchID.Controls.Add(this.label2);
-            this.flowLayoutPanelCurrentBatchID.Controls.Add(this.maskedTextBoxCurrentBatchID);
+            this.flowLayoutPanelCurrentBatchID.Controls.Add(this.editBatchID);
+            this.flowLayoutPanelCurrentBatchID.Controls.Add(this.textBoxBatchID);
             this.flowLayoutPanelCurrentBatchID.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelCurrentBatchID.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanelCurrentBatchID.MaximumSize = new System.Drawing.Size(155, 79);
@@ -480,40 +473,28 @@ namespace RegScan
             this.flowLayoutPanelCurrentBatchID.Size = new System.Drawing.Size(115, 79);
             this.flowLayoutPanelCurrentBatchID.TabIndex = 102;
             // 
-            // maskedTextBoxCurrentBatchID
+            // editBatchID
             // 
-            this.maskedTextBoxCurrentBatchID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(236)))), ((int)(((byte)(233)))));
-            this.maskedTextBoxCurrentBatchID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.maskedTextBoxCurrentBatchID.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBoxCurrentBatchID.Location = new System.Drawing.Point(8, 34);
-            this.maskedTextBoxCurrentBatchID.Margin = new System.Windows.Forms.Padding(4);
-            this.maskedTextBoxCurrentBatchID.Mask = "00";
-            this.maskedTextBoxCurrentBatchID.MaximumSize = new System.Drawing.Size(141, 29);
-            this.maskedTextBoxCurrentBatchID.MinimumSize = new System.Drawing.Size(95, 29);
-            this.maskedTextBoxCurrentBatchID.Name = "maskedTextBoxCurrentBatchID";
-            this.maskedTextBoxCurrentBatchID.PromptChar = ' ';
-            this.maskedTextBoxCurrentBatchID.ResetOnSpace = false;
-            this.maskedTextBoxCurrentBatchID.Size = new System.Drawing.Size(95, 29);
-            this.maskedTextBoxCurrentBatchID.TabIndex = 98;
-            this.maskedTextBoxCurrentBatchID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.editBatchID.Image = ((System.Drawing.Image)(resources.GetObject("editBatchID.Image")));
+            this.editBatchID.Location = new System.Drawing.Point(74, 4);
+            this.editBatchID.Name = "editBatchID";
+            this.editBatchID.Size = new System.Drawing.Size(26, 26);
+            this.editBatchID.TabIndex = 102;
             // 
-            // btnIncBatchID
+            // textBoxBatchID
             // 
-            this.btnIncBatchID.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnIncBatchID.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIncBatchID.ForeColor = System.Drawing.Color.Black;
-            this.btnIncBatchID.Location = new System.Drawing.Point(3, 77);
-            this.btnIncBatchID.Name = "btnIncBatchID";
-            this.btnIncBatchID.Size = new System.Drawing.Size(136, 31);
-            this.btnIncBatchID.TabIndex = 115;
-            this.btnIncBatchID.Text = "Next Batch ID";
-            this.btnIncBatchID.UseVisualStyleBackColor = true;
+            this.textBoxBatchID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxBatchID.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxBatchID.Location = new System.Drawing.Point(7, 33);
+            this.textBoxBatchID.MinimumSize = new System.Drawing.Size(95, 29);
+            this.textBoxBatchID.Name = "textBoxBatchID";
+            this.textBoxBatchID.Size = new System.Drawing.Size(95, 29);
+            this.textBoxBatchID.TabIndex = 101;
             // 
             // flowLayoutPanelBoxMaintButtons
             // 
             this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnOpenBox);
-            this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnCloseBox);
-            this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnIncBatchID);
+            this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnChangeBox);
             this.flowLayoutPanelBoxMaintButtons.Location = new System.Drawing.Point(998, 3);
             this.flowLayoutPanelBoxMaintButtons.Name = "flowLayoutPanelBoxMaintButtons";
             this.flowLayoutPanelBoxMaintButtons.Size = new System.Drawing.Size(144, 115);
@@ -521,7 +502,7 @@ namespace RegScan
             // 
             // flowLayoutPanelBoxMaintinence
             // 
-            this.flowLayoutPanelBoxMaintinence.BackColor = System.Drawing.Color.White;
+            this.flowLayoutPanelBoxMaintinence.BackColor = System.Drawing.Color.Transparent;
             this.flowLayoutPanelBoxMaintinence.Controls.Add(this.groupBoxAccessionNumber);
             this.flowLayoutPanelBoxMaintinence.Controls.Add(this.groupBoxDates);
             this.flowLayoutPanelBoxMaintinence.Controls.Add(this.groupBoxPageCount);
@@ -536,9 +517,21 @@ namespace RegScan
             this.flowLayoutPanelBoxMaintinence.Size = new System.Drawing.Size(1151, 122);
             this.flowLayoutPanelBoxMaintinence.TabIndex = 117;
             // 
+            // btnChangeBox
+            // 
+            this.btnChangeBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnChangeBox.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChangeBox.ForeColor = System.Drawing.Color.Black;
+            this.btnChangeBox.Location = new System.Drawing.Point(3, 40);
+            this.btnChangeBox.Name = "btnChangeBox";
+            this.btnChangeBox.Size = new System.Drawing.Size(136, 31);
+            this.btnChangeBox.TabIndex = 115;
+            this.btnChangeBox.Text = "Change Box";
+            this.btnChangeBox.UseVisualStyleBackColor = true;
+            // 
             // frmBoxManagement
             // 
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
             this.ClientSize = new System.Drawing.Size(1249, 190);
             this.Controls.Add(this.flowLayoutPanelBoxMaintinence);
             this.Controls.Add(this.CurrentBoxLabel);
@@ -575,9 +568,9 @@ namespace RegScan
 
         #endregion
 
+        private Label CurrentBoxLabel;
         private FlowLayoutPanel flowLayoutPanelOpened;
         private Label BoxOpenDateLabel;
-        private MaskedTextBox BoxOpenedDateMaskText;
         private FlowLayoutPanel flowLayoutPanel4;
         private FlowLayoutPanel flowLayoutPanelSequence;
         private Label SequenceLabel;
@@ -588,7 +581,6 @@ namespace RegScan
         private Label boxNumberLabel;
         private FlowLayoutPanel flowLayoutPanelClosed;
         private Label BoxCloseDateLabel;
-        private MaskedTextBox BoxClosedDateMaskText;
         private FlowLayoutPanel flowLayoutPanel10;
         private FlowLayoutPanel flowLayoutPanel11;
         private FlowLayoutPanel flowLayoutPanel12;
@@ -598,16 +590,19 @@ namespace RegScan
         private GroupBox groupBoxBatchID;
         private FlowLayoutPanel flowLayoutPanelTotalPages;
         private Label label2;
-        private MaskedTextBox maskedTextBoxTotalPages;
         private FlowLayoutPanel flowLayoutPanelCurrentBatchID;
-        private Label BoxTotalPagesLabel;
-        private MaskedTextBox maskedTextBoxCurrentBatchID;
         private Button btnCloseBox;
         private Button btnOpenBox;
-        private Button btnIncBatchID;
         private MaskedTextBox maskedTextBoxScheduleNumber;
         private MaskedTextBox maskedTextBoxBoxNumber;
         private FlowLayoutPanel flowLayoutPanelBoxMaintButtons;
         private FlowLayoutPanel flowLayoutPanelBoxMaintinence;
+        private TextBox textBoxOpenedDate;
+        private Label BoxTotalPagesLabel;
+        private TextBox textBoxClosedDate;
+        private TextBox textBoxPageCount;
+        private TextBox textBoxBatchID;
+        private Label editBatchID;
+        private Button btnChangeBox;
     }
 }

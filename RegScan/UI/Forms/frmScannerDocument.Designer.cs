@@ -28,10 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmScannerDocument));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBoxNotes = new System.Windows.Forms.GroupBox();
+            this.txtDocumentNotes = new System.Windows.Forms.TextBox();
             this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancelScan = new System.Windows.Forms.Button();
+            this.groupBoxRecordClassification = new System.Windows.Forms.GroupBox();
+            this.panelDocType = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblDocumentType = new System.Windows.Forms.Label();
+            this.txtDocumentType = new System.Windows.Forms.TextBox();
+            this.panelDocClass = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblDocumentClass = new System.Windows.Forms.Label();
+            this.txtDocumentClass = new System.Windows.Forms.TextBox();
             this.groupBoxScanningOptions = new System.Windows.Forms.GroupBox();
             this.btnScanPage = new System.Windows.Forms.Button();
             this.panelScanningOptions = new System.Windows.Forms.FlowLayoutPanel();
@@ -42,18 +52,9 @@
             this.useDuplexCheckBox = new System.Windows.Forms.CheckBox();
             this.testCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBoxDocumentRecord = new System.Windows.Forms.GroupBox();
-            this.groupBoxNotes = new System.Windows.Forms.GroupBox();
-            this.txtDocumentNotes = new System.Windows.Forms.TextBox();
             this.panelIndexer = new System.Windows.Forms.FlowLayoutPanel();
             this.lblIndexer = new System.Windows.Forms.Label();
             this.txtIndexer = new System.Windows.Forms.TextBox();
-            this.groupBoxRecordClassification = new System.Windows.Forms.GroupBox();
-            this.panelDocType = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblDocumentType = new System.Windows.Forms.Label();
-            this.txtDocumentType = new System.Windows.Forms.TextBox();
-            this.panelDocClass = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblDocumentClass = new System.Windows.Forms.Label();
-            this.txtDocumentClass = new System.Windows.Forms.TextBox();
             this.panelFilingDate = new System.Windows.Forms.FlowLayoutPanel();
             this.lblFilingDate = new System.Windows.Forms.Label();
             this.txtFilingDate = new System.Windows.Forms.TextBox();
@@ -84,15 +85,15 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.panelRejectSaveScan.SuspendLayout();
-            this.groupBoxScanningOptions.SuspendLayout();
-            this.panelScanningOptions.SuspendLayout();
-            this.groupBoxDocumentRecord.SuspendLayout();
             this.groupBoxNotes.SuspendLayout();
-            this.panelIndexer.SuspendLayout();
+            this.panelRejectSaveScan.SuspendLayout();
             this.groupBoxRecordClassification.SuspendLayout();
             this.panelDocType.SuspendLayout();
             this.panelDocClass.SuspendLayout();
+            this.groupBoxScanningOptions.SuspendLayout();
+            this.panelScanningOptions.SuspendLayout();
+            this.groupBoxDocumentRecord.SuspendLayout();
+            this.panelIndexer.SuspendLayout();
             this.panelFilingDate.SuspendLayout();
             this.panelPages.SuspendLayout();
             this.panelLegalEntity.SuspendLayout();
@@ -114,16 +115,43 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxNotes);
             this.splitContainer1.Panel1.Controls.Add(this.panelRejectSaveScan);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxRecordClassification);
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxScanningOptions);
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxDocumentRecord);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.imageBox);
-            this.splitContainer1.Size = new System.Drawing.Size(1186, 888);
+            this.splitContainer1.Size = new System.Drawing.Size(1178, 880);
             this.splitContainer1.SplitterDistance = 442;
             this.splitContainer1.TabIndex = 67;
+            // 
+            // groupBoxNotes
+            // 
+            this.groupBoxNotes.Controls.Add(this.txtDocumentNotes);
+            this.groupBoxNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxNotes.Location = new System.Drawing.Point(9, 672);
+            this.groupBoxNotes.Name = "groupBoxNotes";
+            this.groupBoxNotes.Size = new System.Drawing.Size(421, 144);
+            this.groupBoxNotes.TabIndex = 0;
+            this.groupBoxNotes.TabStop = false;
+            this.groupBoxNotes.Text = "Document Notes";
+            // 
+            // txtDocumentNotes
+            // 
+            this.txtDocumentNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDocumentNotes.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtDocumentNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentNotes.Location = new System.Drawing.Point(8, 28);
+            this.txtDocumentNotes.MaximumSize = new System.Drawing.Size(514, 142);
+            this.txtDocumentNotes.MinimumSize = new System.Drawing.Size(167, 79);
+            this.txtDocumentNotes.Multiline = true;
+            this.txtDocumentNotes.Name = "txtDocumentNotes";
+            this.txtDocumentNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtDocumentNotes.Size = new System.Drawing.Size(385, 102);
+            this.txtDocumentNotes.TabIndex = 104;
             // 
             // panelRejectSaveScan
             // 
@@ -133,7 +161,7 @@
             this.panelRejectSaveScan.Controls.Add(this.btnSave, 1, 0);
             this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 0, 0);
             this.panelRejectSaveScan.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelRejectSaveScan.Location = new System.Drawing.Point(0, 838);
+            this.panelRejectSaveScan.Location = new System.Drawing.Point(0, 830);
             this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(2);
             this.panelRejectSaveScan.Name = "panelRejectSaveScan";
             this.panelRejectSaveScan.RowCount = 1;
@@ -145,7 +173,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.Color.Green;
             this.btnSave.Location = new System.Drawing.Point(263, 5);
             this.btnSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
@@ -160,7 +188,7 @@
             // 
             this.btnCancelScan.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnCancelScan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.btnCancelScan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancelScan.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelScan.ForeColor = System.Drawing.Color.White;
             this.btnCancelScan.Location = new System.Drawing.Point(42, 5);
             this.btnCancelScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
@@ -170,6 +198,91 @@
             this.btnCancelScan.Text = "Reject Scan";
             this.btnCancelScan.UseVisualStyleBackColor = false;
             this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
+            // 
+            // groupBoxRecordClassification
+            // 
+            this.groupBoxRecordClassification.Controls.Add(this.panelDocType);
+            this.groupBoxRecordClassification.Controls.Add(this.panelDocClass);
+            this.groupBoxRecordClassification.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxRecordClassification.Location = new System.Drawing.Point(9, 460);
+            this.groupBoxRecordClassification.Name = "groupBoxRecordClassification";
+            this.groupBoxRecordClassification.Size = new System.Drawing.Size(418, 206);
+            this.groupBoxRecordClassification.TabIndex = 2;
+            this.groupBoxRecordClassification.TabStop = false;
+            this.groupBoxRecordClassification.Text = "Record Classification";
+            // 
+            // panelDocType
+            // 
+            this.panelDocType.Controls.Add(this.lblDocumentType);
+            this.panelDocType.Controls.Add(this.txtDocumentType);
+            this.panelDocType.Location = new System.Drawing.Point(11, 118);
+            this.panelDocType.Margin = new System.Windows.Forms.Padding(2);
+            this.panelDocType.MinimumSize = new System.Drawing.Size(155, 79);
+            this.panelDocType.Name = "panelDocType";
+            this.panelDocType.Padding = new System.Windows.Forms.Padding(4);
+            this.panelDocType.Size = new System.Drawing.Size(324, 79);
+            this.panelDocType.TabIndex = 113;
+            // 
+            // lblDocumentType
+            // 
+            this.lblDocumentType.AutoSize = true;
+            this.lblDocumentType.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocumentType.Location = new System.Drawing.Point(7, 4);
+            this.lblDocumentType.Name = "lblDocumentType";
+            this.lblDocumentType.Size = new System.Drawing.Size(116, 20);
+            this.lblDocumentType.TabIndex = 69;
+            this.lblDocumentType.Text = "Document Type";
+            // 
+            // txtDocumentType
+            // 
+            this.txtDocumentType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtDocumentType.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDocumentType.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentType.Location = new System.Drawing.Point(7, 27);
+            this.txtDocumentType.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtDocumentType.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtDocumentType.Name = "txtDocumentType";
+            this.txtDocumentType.ReadOnly = true;
+            this.txtDocumentType.Size = new System.Drawing.Size(310, 29);
+            this.txtDocumentType.TabIndex = 70;
+            this.txtDocumentType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // panelDocClass
+            // 
+            this.panelDocClass.Controls.Add(this.lblDocumentClass);
+            this.panelDocClass.Controls.Add(this.txtDocumentClass);
+            this.panelDocClass.Location = new System.Drawing.Point(11, 33);
+            this.panelDocClass.Margin = new System.Windows.Forms.Padding(4);
+            this.panelDocClass.MaximumSize = new System.Drawing.Size(167, 79);
+            this.panelDocClass.MinimumSize = new System.Drawing.Size(155, 79);
+            this.panelDocClass.Name = "panelDocClass";
+            this.panelDocClass.Padding = new System.Windows.Forms.Padding(4);
+            this.panelDocClass.Size = new System.Drawing.Size(155, 79);
+            this.panelDocClass.TabIndex = 109;
+            // 
+            // lblDocumentClass
+            // 
+            this.lblDocumentClass.AutoSize = true;
+            this.lblDocumentClass.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDocumentClass.Location = new System.Drawing.Point(7, 4);
+            this.lblDocumentClass.Name = "lblDocumentClass";
+            this.lblDocumentClass.Size = new System.Drawing.Size(82, 20);
+            this.lblDocumentClass.TabIndex = 68;
+            this.lblDocumentClass.Text = "Entity Type";
+            // 
+            // txtDocumentClass
+            // 
+            this.txtDocumentClass.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtDocumentClass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDocumentClass.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumentClass.Location = new System.Drawing.Point(7, 27);
+            this.txtDocumentClass.MaximumSize = new System.Drawing.Size(310, 29);
+            this.txtDocumentClass.MinimumSize = new System.Drawing.Size(141, 29);
+            this.txtDocumentClass.Name = "txtDocumentClass";
+            this.txtDocumentClass.ReadOnly = true;
+            this.txtDocumentClass.Size = new System.Drawing.Size(141, 29);
+            this.txtDocumentClass.TabIndex = 65;
+            this.txtDocumentClass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBoxScanningOptions
             // 
@@ -294,45 +407,18 @@
             // 
             // groupBoxDocumentRecord
             // 
-            this.groupBoxDocumentRecord.Controls.Add(this.groupBoxNotes);
             this.groupBoxDocumentRecord.Controls.Add(this.panelIndexer);
-            this.groupBoxDocumentRecord.Controls.Add(this.groupBoxRecordClassification);
             this.groupBoxDocumentRecord.Controls.Add(this.panelFilingDate);
             this.groupBoxDocumentRecord.Controls.Add(this.panelPages);
             this.groupBoxDocumentRecord.Controls.Add(this.panelLegalEntity);
             this.groupBoxDocumentRecord.Controls.Add(this.panelBarcode);
             this.groupBoxDocumentRecord.Font = new System.Drawing.Font("BC Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxDocumentRecord.Location = new System.Drawing.Point(6, 182);
+            this.groupBoxDocumentRecord.Location = new System.Drawing.Point(9, 160);
             this.groupBoxDocumentRecord.Name = "groupBoxDocumentRecord";
-            this.groupBoxDocumentRecord.Size = new System.Drawing.Size(436, 651);
+            this.groupBoxDocumentRecord.Size = new System.Drawing.Size(418, 294);
             this.groupBoxDocumentRecord.TabIndex = 1;
             this.groupBoxDocumentRecord.TabStop = false;
             this.groupBoxDocumentRecord.Text = "Document Record";
-            // 
-            // groupBoxNotes
-            // 
-            this.groupBoxNotes.Controls.Add(this.txtDocumentNotes);
-            this.groupBoxNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxNotes.Location = new System.Drawing.Point(3, 501);
-            this.groupBoxNotes.Name = "groupBoxNotes";
-            this.groupBoxNotes.Size = new System.Drawing.Size(421, 144);
-            this.groupBoxNotes.TabIndex = 0;
-            this.groupBoxNotes.TabStop = false;
-            this.groupBoxNotes.Text = "Document Notes";
-            // 
-            // txtDocumentNotes
-            // 
-            this.txtDocumentNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDocumentNotes.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtDocumentNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentNotes.Location = new System.Drawing.Point(8, 28);
-            this.txtDocumentNotes.MaximumSize = new System.Drawing.Size(514, 142);
-            this.txtDocumentNotes.MinimumSize = new System.Drawing.Size(167, 79);
-            this.txtDocumentNotes.Multiline = true;
-            this.txtDocumentNotes.Name = "txtDocumentNotes";
-            this.txtDocumentNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDocumentNotes.Size = new System.Drawing.Size(385, 102);
-            this.txtDocumentNotes.TabIndex = 104;
             // 
             // panelIndexer
             // 
@@ -369,91 +455,6 @@
             this.txtIndexer.Size = new System.Drawing.Size(141, 29);
             this.txtIndexer.TabIndex = 86;
             this.txtIndexer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // groupBoxRecordClassification
-            // 
-            this.groupBoxRecordClassification.Controls.Add(this.panelDocType);
-            this.groupBoxRecordClassification.Controls.Add(this.panelDocClass);
-            this.groupBoxRecordClassification.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxRecordClassification.Location = new System.Drawing.Point(6, 289);
-            this.groupBoxRecordClassification.Name = "groupBoxRecordClassification";
-            this.groupBoxRecordClassification.Size = new System.Drawing.Size(418, 206);
-            this.groupBoxRecordClassification.TabIndex = 2;
-            this.groupBoxRecordClassification.TabStop = false;
-            this.groupBoxRecordClassification.Text = "Record Classification";
-            // 
-            // panelDocType
-            // 
-            this.panelDocType.Controls.Add(this.lblDocumentType);
-            this.panelDocType.Controls.Add(this.txtDocumentType);
-            this.panelDocType.Location = new System.Drawing.Point(11, 118);
-            this.panelDocType.Margin = new System.Windows.Forms.Padding(2);
-            this.panelDocType.MinimumSize = new System.Drawing.Size(155, 79);
-            this.panelDocType.Name = "panelDocType";
-            this.panelDocType.Padding = new System.Windows.Forms.Padding(4);
-            this.panelDocType.Size = new System.Drawing.Size(324, 79);
-            this.panelDocType.TabIndex = 113;
-            // 
-            // lblDocumentType
-            // 
-            this.lblDocumentType.AutoSize = true;
-            this.lblDocumentType.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentType.Location = new System.Drawing.Point(7, 4);
-            this.lblDocumentType.Name = "lblDocumentType";
-            this.lblDocumentType.Size = new System.Drawing.Size(116, 20);
-            this.lblDocumentType.TabIndex = 69;
-            this.lblDocumentType.Text = "Document Type";
-            // 
-            // txtDocumentType
-            // 
-            this.txtDocumentType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
-            this.txtDocumentType.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDocumentType.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentType.Location = new System.Drawing.Point(7, 27);
-            this.txtDocumentType.MaximumSize = new System.Drawing.Size(310, 29);
-            this.txtDocumentType.MinimumSize = new System.Drawing.Size(141, 29);
-            this.txtDocumentType.Name = "txtDocumentType";
-            this.txtDocumentType.ReadOnly = true;
-            this.txtDocumentType.Size = new System.Drawing.Size(310, 29);
-            this.txtDocumentType.TabIndex = 70;
-            this.txtDocumentType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // panelDocClass
-            // 
-            this.panelDocClass.Controls.Add(this.lblDocumentClass);
-            this.panelDocClass.Controls.Add(this.txtDocumentClass);
-            this.panelDocClass.Location = new System.Drawing.Point(11, 33);
-            this.panelDocClass.Margin = new System.Windows.Forms.Padding(4);
-            this.panelDocClass.MaximumSize = new System.Drawing.Size(167, 79);
-            this.panelDocClass.MinimumSize = new System.Drawing.Size(155, 79);
-            this.panelDocClass.Name = "panelDocClass";
-            this.panelDocClass.Padding = new System.Windows.Forms.Padding(4);
-            this.panelDocClass.Size = new System.Drawing.Size(155, 79);
-            this.panelDocClass.TabIndex = 109;
-            // 
-            // lblDocumentClass
-            // 
-            this.lblDocumentClass.AutoSize = true;
-            this.lblDocumentClass.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDocumentClass.Location = new System.Drawing.Point(7, 4);
-            this.lblDocumentClass.Name = "lblDocumentClass";
-            this.lblDocumentClass.Size = new System.Drawing.Size(82, 20);
-            this.lblDocumentClass.TabIndex = 68;
-            this.lblDocumentClass.Text = "Entity Type";
-            // 
-            // txtDocumentClass
-            // 
-            this.txtDocumentClass.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
-            this.txtDocumentClass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDocumentClass.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumentClass.Location = new System.Drawing.Point(7, 27);
-            this.txtDocumentClass.MaximumSize = new System.Drawing.Size(310, 29);
-            this.txtDocumentClass.MinimumSize = new System.Drawing.Size(141, 29);
-            this.txtDocumentClass.Name = "txtDocumentClass";
-            this.txtDocumentClass.ReadOnly = true;
-            this.txtDocumentClass.Size = new System.Drawing.Size(141, 29);
-            this.txtDocumentClass.TabIndex = 65;
-            this.txtDocumentClass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panelFilingDate
             // 
@@ -606,7 +607,7 @@
             this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.imageBox.Location = new System.Drawing.Point(0, 0);
             this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(740, 888);
+            this.imageBox.Size = new System.Drawing.Size(732, 880);
             this.imageBox.TabIndex = 0;
             // 
             // panel1
@@ -614,18 +615,18 @@
             this.panel1.Controls.Add(this.btnRotateImg);
             this.panel1.Controls.Add(this.btnImagePDF);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(298, 3);
+            this.panel1.Location = new System.Drawing.Point(295, 3);
             this.panel1.MaximumSize = new System.Drawing.Size(354, 43);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(349, 37);
+            this.panel1.Size = new System.Drawing.Size(346, 37);
             this.panel1.TabIndex = 60;
             // 
             // btnRotateImg
             // 
             this.btnRotateImg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.btnRotateImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRotateImg.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRotateImg.ForeColor = System.Drawing.Color.Black;
-            this.btnRotateImg.Location = new System.Drawing.Point(20, 3);
+            this.btnRotateImg.Location = new System.Drawing.Point(19, 3);
             this.btnRotateImg.Name = "btnRotateImg";
             this.btnRotateImg.Size = new System.Drawing.Size(136, 31);
             this.btnRotateImg.TabIndex = 5;
@@ -636,9 +637,9 @@
             // btnImagePDF
             // 
             this.btnImagePDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.btnImagePDF.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImagePDF.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImagePDF.ForeColor = System.Drawing.Color.Black;
-            this.btnImagePDF.Location = new System.Drawing.Point(186, 3);
+            this.btnImagePDF.Location = new System.Drawing.Point(185, 3);
             this.btnImagePDF.Name = "btnImagePDF";
             this.btnImagePDF.Size = new System.Drawing.Size(136, 31);
             this.btnImagePDF.TabIndex = 6;
@@ -660,13 +661,13 @@
             this.panelImageControl.Controls.Add(this.tableLayoutPanel2, 5, 0);
             this.panelImageControl.Controls.Add(this.btnDeleteImage, 1, 0);
             this.panelImageControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImageControl.Location = new System.Drawing.Point(1, 889);
+            this.panelImageControl.Location = new System.Drawing.Point(1, 881);
             this.panelImageControl.Margin = new System.Windows.Forms.Padding(1);
             this.panelImageControl.MinimumSize = new System.Drawing.Size(708, 43);
             this.panelImageControl.Name = "panelImageControl";
             this.panelImageControl.RowCount = 1;
             this.panelImageControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.panelImageControl.Size = new System.Drawing.Size(1184, 43);
+            this.panelImageControl.Size = new System.Drawing.Size(1176, 43);
             this.panelImageControl.TabIndex = 93;
             // 
             // tableLayoutPanel2
@@ -685,7 +686,7 @@
             this.tableLayoutPanel2.Controls.Add(this.btnNextImage, 3, 0);
             this.tableLayoutPanel2.Controls.Add(this.lblDisplayImgOf, 4, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(710, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(703, 1);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(1);
             this.tableLayoutPanel2.MaximumSize = new System.Drawing.Size(400, 43);
             this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(300, 43);
@@ -713,11 +714,11 @@
             this.btnPrevImage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnPrevImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrevImage.ForeColor = System.Drawing.Color.Black;
+            this.btnPrevImage.Image = ((System.Drawing.Image)(resources.GetObject("btnPrevImage.Image")));
             this.btnPrevImage.Location = new System.Drawing.Point(111, 3);
             this.btnPrevImage.Name = "btnPrevImage";
             this.btnPrevImage.Size = new System.Drawing.Size(33, 37);
             this.btnPrevImage.TabIndex = 7;
-            this.btnPrevImage.Text = "<";
             this.btnPrevImage.UseVisualStyleBackColor = true;
             this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
             // 
@@ -750,11 +751,11 @@
             this.btnNextImage.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnNextImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNextImage.ForeColor = System.Drawing.Color.Black;
+            this.btnNextImage.Image = ((System.Drawing.Image)(resources.GetObject("btnNextImage.Image")));
             this.btnNextImage.Location = new System.Drawing.Point(251, 3);
             this.btnNextImage.Name = "btnNextImage";
             this.btnNextImage.Size = new System.Drawing.Size(31, 37);
             this.btnNextImage.TabIndex = 97;
-            this.btnNextImage.Text = ">";
             this.btnNextImage.UseVisualStyleBackColor = true;
             this.btnNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
             // 
@@ -773,9 +774,9 @@
             // btnDeleteImage
             // 
             this.btnDeleteImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.btnDeleteImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDeleteImage.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDeleteImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.btnDeleteImage.Location = new System.Drawing.Point(79, 3);
+            this.btnDeleteImage.Location = new System.Drawing.Point(78, 3);
             this.btnDeleteImage.Name = "btnDeleteImage";
             this.btnDeleteImage.Size = new System.Drawing.Size(136, 37);
             this.btnDeleteImage.TabIndex = 4;
@@ -785,24 +786,26 @@
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.panelImageControl, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 4);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 8);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1186, 933);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1178, 925);
             this.tableLayoutPanel1.TabIndex = 94;
             // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
             this.ClientSize = new System.Drawing.Size(1194, 941);
             this.ControlBox = false;
             this.Controls.Add(this.tableLayoutPanel1);
@@ -811,7 +814,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1194, 941);
             this.Name = "frmScannerDocument";
-            this.Padding = new System.Windows.Forms.Padding(4);
+            this.Padding = new System.Windows.Forms.Padding(8);
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Document Scanner";
             this.Activated += new System.EventHandler(this.frmScanDocument_Activated);
@@ -819,20 +822,20 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.panelRejectSaveScan.ResumeLayout(false);
-            this.groupBoxScanningOptions.ResumeLayout(false);
-            this.panelScanningOptions.ResumeLayout(false);
-            this.panelScanningOptions.PerformLayout();
-            this.groupBoxDocumentRecord.ResumeLayout(false);
             this.groupBoxNotes.ResumeLayout(false);
             this.groupBoxNotes.PerformLayout();
-            this.panelIndexer.ResumeLayout(false);
-            this.panelIndexer.PerformLayout();
+            this.panelRejectSaveScan.ResumeLayout(false);
             this.groupBoxRecordClassification.ResumeLayout(false);
             this.panelDocType.ResumeLayout(false);
             this.panelDocType.PerformLayout();
             this.panelDocClass.ResumeLayout(false);
             this.panelDocClass.PerformLayout();
+            this.groupBoxScanningOptions.ResumeLayout(false);
+            this.panelScanningOptions.ResumeLayout(false);
+            this.panelScanningOptions.PerformLayout();
+            this.groupBoxDocumentRecord.ResumeLayout(false);
+            this.panelIndexer.ResumeLayout(false);
+            this.panelIndexer.PerformLayout();
             this.panelFilingDate.ResumeLayout(false);
             this.panelFilingDate.PerformLayout();
             this.panelPages.ResumeLayout(false);
