@@ -10,13 +10,11 @@ namespace RegScan
     /// <summary>
     /// Modal dialog that lets the user locate and select a single <see cref="BoxObj"/>
     /// from an existing collection of boxes.
-    /// <para>
     /// The dialog presents one drop-down per box field (status, opened date, sequence,
-    /// schedule and box number). The drop-downs act as cascading facets: each one only
+    /// and schedule number). The drop-downs act as cascading facets: each one only
     /// offers the values that are still available given the selections already made in
     /// the other drop-downs. A grid below the facets lists every box that matches the
     /// current selection; the user chooses a box from that grid.
-    /// </para>
     /// The dialog does not own or copy the source collection; it keeps a single
     /// read-only working list to avoid duplicate storage.
     /// </summary>
@@ -29,7 +27,7 @@ namespace RegScan
 
         /// <summary>
         /// When <c>true</c>, facet <c>SelectedIndexChanged</c> events are ignored. Used
-        /// while the facet lists are being rebuilt to prevent re-entrant refreshes.
+        /// while the facet lists are being rebuilt to prevent non necessary refreshes.taylor.friesen@gov.bc.ca
         /// </summary>
         private bool _suppressFacetEvents;
 
@@ -64,7 +62,7 @@ namespace RegScan
             // removing any null entries
             _allBoxes = boxes.Where(b => b != null).ToList();
 
-            // Build the datagrid and set columns
+            // Build the datagrid columns
             BuildDataGrid();
             dataGridBoxes.DoubleClick += Grid_DoubleClick;
 
@@ -90,6 +88,7 @@ namespace RegScan
         /// </summary>
         private void BuildDataGrid()
         {
+            // ensure that onlny the columns below are set. 
             dataGridBoxes.AutoGenerateColumns = false;
 
             // Add the colum headers and their linked data source
@@ -101,7 +100,8 @@ namespace RegScan
             this.dataGridBoxes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Opened",
-                DataPropertyName = nameof(BoxObj.OpenedDateString)
+                DataPropertyName = nameof(BoxObj.OpenedDateString), 
+
             });
             this.dataGridBoxes.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -183,7 +183,8 @@ namespace RegScan
                 // repopulate the filtering lists based off of available options contained box list
                 PopulateFacet(comboStatus, GetMatches(comboStatus).Select(b => b.Status));
                 PopulateFacet(comboOpenedDate, 
-                    GetMatches(comboOpenedDate).Select(b => b.OpenedDateString));
+                    GetMatches(comboOpenedDate).OrderByDescending(b => b.OpenedDate).
+                    Select(b => b.OpenedDateString), sort: false);
                 PopulateFacet(comboSequence, 
                     GetMatches(comboSequence).Select(b => b.SequenceNumber.ToString()));
                 PopulateFacet(comboSchedule, 
@@ -199,15 +200,19 @@ namespace RegScan
         /// Fills a facet combo with "(Any)" followed by the distinct, sorted set of
         /// <paramref name="values"/>, keeping the prior selection when still present.
         /// </summary>
-        private static void PopulateFacet(ComboBox combo, IEnumerable<string> values)
+        private static void PopulateFacet(
+            ComboBox combo, IEnumerable<string> values, bool sort = true)
         {
             string previous = SelectedValue(combo);
 
             List<string> options = values
                 .Where(v => !string.IsNullOrEmpty(v))
                 .Distinct()
-                .OrderBy(v => v, StringComparer.OrdinalIgnoreCase)
                 .ToList();
+
+            if (sort)
+                options = options.OrderBy(v => v, StringComparer.OrdinalIgnoreCase).ToList();
+
             options.Insert(0, AnyValue);
 
             combo.DataSource = options;
