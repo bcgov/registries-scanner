@@ -1,9 +1,5 @@
-﻿using PdfSharp.Drawing.BarCodes;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegScan
 {
@@ -14,6 +10,22 @@ namespace RegScan
             string endpoint = "/doc/api/v1/scanning/boxes";
 
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
+        }
+
+        public static int GetBatchID(string accessionNumber)
+        {
+            int batchID = 0;
+            string endpoint = String.Concat("/doc/api/v1/scanning/batchid/", accessionNumber);
+
+            var payload = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
+
+            if (!string.IsNullOrEmpty(payload))
+            {
+                var obj = (JObject)JToken.Parse(payload);
+                if (obj.ContainsKey("batchId"))
+                    batchID = obj["batchId"].Value<int>();
+            }
+            return batchID;
         }
     }
 }
