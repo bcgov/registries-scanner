@@ -324,6 +324,10 @@ namespace RegScan
                     "No Box Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.None; // keep the dialog open
             }
+            else
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

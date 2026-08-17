@@ -181,6 +181,7 @@ namespace RegScan
             // frmBoxSelect
             // 
             this.ClientSize = new System.Drawing.Size(754, 485);
+            this.AcceptButton = this.btnOk;
             this.Controls.Add(this.lblSch);
             this.Controls.Add(this.lblSeq);
             this.Controls.Add(this.lblOpened);
