@@ -83,15 +83,15 @@ namespace RegScan
         #region UI construction helpers
 
         /// <summary>
-        /// Defines the column headers and sets their approperate
+        /// Defines the column headers and sets their appropriate
         /// data source to be shown in the results grid.
         /// </summary>
         private void BuildDataGrid()
         {
-            // ensure that onlny the columns below are set. 
+            // ensure that only the columns below are set. 
             dataGridBoxes.AutoGenerateColumns = false;
 
-            // Add the colum headers and their linked data source
+            // Add the column headers and their linked data source
             this.dataGridBoxes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Status",

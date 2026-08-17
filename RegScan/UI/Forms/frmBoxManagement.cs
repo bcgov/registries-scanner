@@ -14,7 +14,7 @@ namespace RegScan
         private int _batchID;
 
         /// <summary>
-        /// Get and display information about the applicaiton to the user in a new form.
+        /// Get and display information about the application to the user in a new form.
         /// </summary>
         public frmBoxManagement()
         {
@@ -64,7 +64,7 @@ namespace RegScan
             textBoxPageCount.Text = _currentBox.PageCount.ToString();
             textBoxBatchID.Text = _batchID.ToString();
 
-            // If the bloxes is closed show the closed date. If the box is not yet closed show
+            // If the boxes is closed show the closed date. If the box is not yet closed show
             // the button to close the box.
             if (!_currentBox.IsClosed)
             {
