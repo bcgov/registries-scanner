@@ -49,13 +49,15 @@ namespace RegScan.UI
     public const string FontFamilyLight = "BC Sans Light, Segoe UI";
 
     /// <summary>Body / default text.</summary>
-    public static readonly Font FontBody = new Font(FontFamily, 10F, FontStyle.Regular);
+    public static readonly Font FontSmall = new Font(FontFamily, 10, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font FontBody = new Font(FontFamily, 11, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font FontBodySmall = new Font(FontFamilyLight, 11, FontStyle.Regular, GraphicsUnit.Point);
 
-    /// <summary>Standard heading levels</summary>
-    public static readonly Font H1 = new Font(FontFamily, 14F, FontStyle.Bold);
-    public static readonly Font H2 = new Font(FontFamily, 12F, FontStyle.Bold);
-    public static readonly Font H3 = new Font(FontFamily, 12F, FontStyle.Regular);
-    public static readonly Font H4 = new Font(FontFamilyLight, 12F, FontStyle.Regular);
+        /// <summary>Standard heading levels</summary>
+        public static readonly Font H1 = new Font(FontFamily, 14, FontStyle.Bold, GraphicsUnit.Point);
+    public static readonly Font H2 = new Font(FontFamily, 12, FontStyle.Bold, GraphicsUnit.Point);
+    public static readonly Font H3 = new Font(FontFamily, 12, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font H4 = new Font(FontFamilyLight, 12, FontStyle.Regular, GraphicsUnit.Point);
 
     /// <summary>Button label.</summary>
     public static readonly Font FontButton = new Font(FontFamily, 10F, FontStyle.Bold);
