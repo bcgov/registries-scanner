@@ -126,6 +126,7 @@ namespace RegScan
             this.textBoxOpenedDate.Location = new System.Drawing.Point(7, 33);
             this.textBoxOpenedDate.MinimumSize = new System.Drawing.Size(133, 29);
             this.textBoxOpenedDate.Name = "textBoxOpenedDate";
+            this.textBoxOpenedDate.ReadOnly = true;
             this.textBoxOpenedDate.Size = new System.Drawing.Size(141, 29);
             this.textBoxOpenedDate.TabIndex = 100;
             this.textBoxOpenedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -431,8 +432,10 @@ namespace RegScan
             this.textBoxPageCount.Location = new System.Drawing.Point(7, 33);
             this.textBoxPageCount.MinimumSize = new System.Drawing.Size(95, 29);
             this.textBoxPageCount.Name = "textBoxPageCount";
+            this.textBoxPageCount.ReadOnly = true;
             this.textBoxPageCount.Size = new System.Drawing.Size(95, 29);
             this.textBoxPageCount.TabIndex = 101;
+            this.textBoxPageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2
             // 
@@ -480,16 +483,20 @@ namespace RegScan
             this.editBatchID.Name = "editBatchID";
             this.editBatchID.Size = new System.Drawing.Size(26, 26);
             this.editBatchID.TabIndex = 102;
+            this.editBatchID.Click += new System.EventHandler(this.editBatchID_Click);
             // 
             // textBoxBatchID
             // 
+            this.textBoxBatchID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.textBoxBatchID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBatchID.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxBatchID.Location = new System.Drawing.Point(7, 33);
             this.textBoxBatchID.MinimumSize = new System.Drawing.Size(95, 29);
             this.textBoxBatchID.Name = "textBoxBatchID";
+            this.textBoxBatchID.ReadOnly = true;
             this.textBoxBatchID.Size = new System.Drawing.Size(95, 29);
             this.textBoxBatchID.TabIndex = 101;
+            this.textBoxBatchID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnChangeBox
             // 

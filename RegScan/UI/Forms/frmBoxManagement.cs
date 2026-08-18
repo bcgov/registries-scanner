@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RegScan.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,6 +123,17 @@ namespace RegScan
         private void RefreshBatchId()
         {
             _batchID = BoxAPI.GetBatchID(_currentBox.AccessionNumber);
+        }
+
+        private void editBatchID_Click(object sender, EventArgs e)
+        {
+            int batchID = frmEnterText.ManualBatchID();
+            
+            if (batchID != _batchID)
+            {
+                textBoxBatchID.Text = batchID.ToString();
+                _batchID = batchID;
+            }
         }
     }
 

@@ -21,6 +21,14 @@ namespace RegScan
             textLabel.Text = labelText;
         }
 
+        private void ClearForm()
+        {
+            // clear any values set
+            _enteredInt = new int();
+            _textString = "";
+            txtBox.Text = "";
+        }
+
         /// <summary>
         /// Handles making a request to the user to manually enter a barcode and returns the entered value.
         /// </summary>
@@ -80,26 +88,30 @@ namespace RegScan
         /// <param name="e">User selecting Okay button</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtBox.Text))
+            bool resetForm = false;
+            // Check if the entered value is empty or null
+            if (!string.IsNullOrEmpty(txtBox.Text) )
             {
                 _textString = txtBox.Text;
-                // Check if the entered value is a number. This may need to be updated if this form
-                // is ever used to capture non numeric strings
-                if (ValidateInt())
-                {
-                    this.Close();
-                }
-                else
-                {
-                    // clear any values set
-                    _enteredInt = -1;
-                    _textString = "";
-                    txtBox.Text = "";
-                    return;
-
-                }
-                
             }
+            else
+            {
+                ClearForm();
+                // show message to user on why nothing is happening
+                var msg = "Please enter a numeric value or select cancel.";
+                MessageBox.Show(msg, "Value Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            // Check if the entered value can be convereted to an int.
+            // This may need to be updated if this form is ever used to capture non numeric strings
+            if (ValidateInt())
+                this.Close();
+            else
+                ClearForm();
+            
+                
         }
 
         /// <summary>
