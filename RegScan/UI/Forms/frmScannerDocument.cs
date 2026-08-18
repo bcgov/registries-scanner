@@ -256,7 +256,7 @@ namespace RegScan
                 {
                     // Ask if a barcode should be entered manually.
                     string message = "Do you want to manually enter a barcode?";
-                    barCode = frmEnterBarCode.ManualBarcode(message);
+                    barCode = frmEnterText.ManualBarcode(message);
                 }
                 // Call to DRS API for existing document records for this barcode.
                 // There may be more than one document (known as versions)

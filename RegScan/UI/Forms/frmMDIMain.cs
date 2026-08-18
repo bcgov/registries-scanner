@@ -186,7 +186,7 @@ namespace RegScan
 
         /// <summary>
         /// Handles the Find menu item being selected. 
-        /// The frmEnterBarCode form will return a barcode string from the user, which then can be
+        /// The frmEnterText form will return a barcode string from the user, which then can be
         /// used to search for a document record. If one is found the record information will be
         /// displayed in the frmScannerDocument form. 
         /// If there is an error finding the document show an error message to the user.
@@ -201,7 +201,7 @@ namespace RegScan
                 MDIMain_Load(this, EventArgs.Empty);
             }
             string message = "Please manually enter a barcode.";
-            var barCode = frmEnterBarCode.ManualBarcode(message);
+            var barCode = frmEnterText.ManualBarcode(message);
             var gotDoc = _scannerForm.GetBarcode(barCode);
             if (!gotDoc)
             {
