@@ -90,9 +90,9 @@
     <Compile Include="UI\Forms\frmBoxSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-	  <Compile Include="UI\Forms\frmBoxSelect.Designer.cs">
-		  <DependentUpon>frmBoxSelect.cs</DependentUpon>
-	  </Compile>
+    <Compile Include="UI\Forms\frmBoxSelect.Designer.cs">
+      <DependentUpon>frmBoxSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\BarCodeObj.cs" />
     <Compile Include="UI\Forms\frmScannerDocument.cs">
       <SubType>Form</SubType>
@@ -114,11 +114,11 @@
     <Compile Include="UI\Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Forms\frmEnterBarCode.cs">
+    <Compile Include="UI\Forms\frmEnterText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Forms\frmEnterBarCode.Designer.cs">
-      <DependentUpon>frmEnterBarCode.cs</DependentUpon>
+    <Compile Include="UI\Forms\frmEnterText.Designer.cs">
+      <DependentUpon>frmEnterText.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ImageBox\ImageBox.cs">
       <SubType>Component</SubType>
@@ -142,7 +142,7 @@
     <Compile Include="Utilities\UtilityObj.cs" />
     <EmbeddedResource Include="UI\Forms\frmBoxSelect.resx">
       <DependentUpon>frmBoxSelect.cs</DependentUpon>
-		<SubType>Designer</SubType>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
@@ -156,8 +156,8 @@
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Forms\frmEnterBarCode.resx">
-      <DependentUpon>frmEnterBarCode.cs</DependentUpon>
+    <EmbeddedResource Include="UI\Forms\frmEnterText.resx">
+      <DependentUpon>frmEnterText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmMDIMain.resx">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
@@ -203,6 +203,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ScanningDashboard.ico" />
+    <Content Include="UI\Icons\error.ico" />
+    <Content Include="UI\Icons\eventlogError.ico" />
+    <Content Include="UI\Icons\eventlogInfo.ico" />
+    <Content Include="UI\Icons\eventlogWarn.ico" />
+    <Content Include="UI\Icons\filedownload.ico" />
+    <Content Include="UI\Icons\Find_5650.ico" />
+    <Content Include="UI\Icons\GotoNextRow_289.ico" />
+    <Content Include="UI\Icons\MovePrevious_7195.ico" />
+    <Content Include="UI\Icons\PencilTool_206.ico" />
+    <Content Include="UI\Icons\Save_6530.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
