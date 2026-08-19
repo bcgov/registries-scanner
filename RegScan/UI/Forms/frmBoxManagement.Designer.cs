@@ -305,6 +305,7 @@ namespace RegScan
             this.btnCloseBox.Text = "Close Box";
             this.btnCloseBox.UseVisualStyleBackColor = true;
             this.btnCloseBox.Visible = false;
+            this.btnCloseBox.Click += new System.EventHandler(this.btnCloseBox_Click);
             // 
             // textBoxClosedDate
             // 

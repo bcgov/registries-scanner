@@ -1,9 +1,6 @@
-﻿using RegScan.UI;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace RegScan
@@ -45,7 +42,7 @@ namespace RegScan
             // If there are no open boxes default to the highest BoxID
             _currentBox = _boxes.Cast<BoxObj>()
                 .OrderByDescending(b => !b.IsClosed)  // open boxes first
-                .ThenByDescending(b => b.BoxId)                    // then highest BoxId
+                .ThenByDescending(b => b.BoxId)       // then highest BoxId
                 .FirstOrDefault();
 
             // Get the highest batchID for the most recent box
@@ -118,11 +115,14 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Recalculates the batch identifier for the current box.
+        /// Recalculates the batch for the current box by querying the DRS API.
+        /// Because the result is the max BatchID for a given box we can set the _maxBatchID
         /// </summary>
         private void RefreshBatchId()
         {
-            _batchID = BoxAPI.GetBatchID(_currentBox.AccessionNumber);
+            var ret = BoxAPI.GetBatchID(_currentBox.AccessionNumber);
+            _batchID = ret;
+            _currentBox.MaxBatchID = ret;
         }
 
         private void editBatchID_Click(object sender, EventArgs e)
@@ -133,6 +133,70 @@ namespace RegScan
             {
                 textBoxBatchID.Text = batchID.ToString();
                 _batchID = batchID;
+            }
+        }
+
+        private void btnCloseBox_Click(object sender, EventArgs e)
+        {
+            bool wasClosed = _currentBox.IsClosed;
+            string msg;
+            string title;
+            MessageBoxIcon icon;
+
+            // if the box is already closed we dont need to update it
+            if (wasClosed)
+            {
+                msg = "Current box is closed. Would you like to switch to a different box?";
+                title = "Box Closed";
+                icon = MessageBoxIcon.Information;
+            }
+            // Show the current box info to the user to confirm
+            else
+            {
+                _currentBox.ClosedDate = DateTime.Now;
+                msg = "Please confirm the following:\n\n" + _currentBox.InfoString;
+                title = "Closing Box";
+                icon = MessageBoxIcon.Warning;
+            }
+            
+            var result = MessageBox.Show(msg, title, MessageBoxButtons.OKCancel, icon);
+
+            // if the user cancels ensure the box is closed. No further action is required
+            if (result == DialogResult.Cancel)
+            { 
+                _currentBox.ReopenBox();
+                return;
+            }
+            // if the box was already closed and the user wants to switch boxes start that process
+            else if (wasClosed && result == DialogResult.OK)
+            {
+                btnChangeBox.Select();
+                btnChangeBox_Click(sender, e);
+                return;
+            }
+            // if the box was not closed and the user confirmed the information close it
+            else if (!wasClosed && result == DialogResult.OK)
+            {
+                try
+                {
+                    var ret = BoxAPI.UpdateBox(_currentBox);
+                    // Update the box in the list of boxes
+                    _currentBox.UpdateBoxInList(_boxes);
+                    // Update form contents
+                    UpdateFields();
+                    
+                    // Inform user
+                    MessageBox.Show("Box has closed successfully!", "Box Closed",
+                        MessageBoxButtons.OK);
+                }
+                catch (Exception err)
+                {
+                    _currentBox.ReopenBox();
+                    var errStr = "Hit unexpected issue while attempting to close box. " +
+                        "Please review the following error message.\n" + err.Message;
+                    MessageBox.Show(errStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    UtilityObj.WriteLog(UtilityObj.error, err.ToString());
+                }
             }
         }
     }

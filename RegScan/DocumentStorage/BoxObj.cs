@@ -12,6 +12,7 @@ namespace RegScan
         public DateTime DEFAULTDATE = new DateTime(1900, 1, 2);
         private int _boxID;
         private int _boxNumber;
+        private int _maxBatchID;
         private DateTimeOffset _openedDate;
         private DateTimeOffset _closedDate;
         private bool _closedSet = false;
@@ -80,6 +81,33 @@ namespace RegScan
                     _scheduleNumber.ToString(), "-", _boxNumber.ToString());
             }
         }
+        /// <summary>
+        ///  The max batchID is used to determine if a box should be updated or not
+        /// </summary>
+        public int MaxBatchID { get { return _maxBatchID; } set { _maxBatchID = value; } }
+
+        public string InfoString
+        {
+            get
+            {
+                return string.Concat("\tAccession Number:\t" + this.AccessionNumberDashes + "\n" +
+                    "\tOpened on:\t\t" + this.OpenedDateString + "\t\n" +
+                    "\tClosed on:\t\t" + this.ClosedDateString + "\t\n" +
+                    "\tTotal number of pages:\t" + this.PageCount.ToString());
+
+            }
+        }
+        
+        /// <summary>
+        /// Used to undo any information set while trying to close the box. This should only
+        /// be used in the case that a box was attempted to be closed but encountered an error.
+        /// </summary>
+        public void ReopenBox()
+        {
+            _closedDate = DEFAULTDATE;
+            _closedSet = false;
+            _closed = false;
+        }
 
         /// <summary>
         /// Sets the closed status for the box. This is based off the boxes _closedDate
@@ -94,6 +122,16 @@ namespace RegScan
         {
             _closed = (_closedDate != null && _closedDate > DEFAULTDATE);
             _closedSet = true;
+        }
+
+        public void UpdateBoxInList(ICollection<BoxObj> boxes)
+        {
+            // Get a reference to the box in the list
+            BoxObj boxInList = boxes.FirstOrDefault(x => x.BoxId == this.BoxId);
+            if (boxInList != null)
+            {
+                boxInList = this;
+            }
         }
 
 

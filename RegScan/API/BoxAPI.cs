@@ -27,5 +27,12 @@ namespace RegScan
             }
             return batchID;
         }
+
+        public static string UpdateBox(BoxObj box)
+        {
+            string endpoint = "/doc/api/v1/scanning/boxes";
+
+            return APIRequest.MakeKeyRequest(box, endpoint, RestSharp.Method.Patch);
+        }
     }
 }
