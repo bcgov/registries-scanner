@@ -87,6 +87,12 @@
     <Compile Include="DocumentStorage\AccessionNumberObj.cs" />
     <Compile Include="DocumentStorage\BoxObj.cs" />
     <Compile Include="DocumentStorage\SequenceScheduleObj.cs" />
+    <Compile Include="UI\Forms\frmBoxCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxCreate.Designer.cs">
+      <DependentUpon>frmBoxCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Forms\frmBoxSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     <Compile Include="Security.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="Utilities\UtilityObj.cs" />
+    <EmbeddedResource Include="UI\Forms\frmBoxCreate.resx">
+      <DependentUpon>frmBoxCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmBoxSelect.resx">
       <DependentUpon>frmBoxSelect.cs</DependentUpon>
       <SubType>Designer</SubType>

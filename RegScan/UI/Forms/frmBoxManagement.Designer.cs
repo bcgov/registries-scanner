@@ -386,6 +386,7 @@ namespace RegScan
             this.btnOpenBox.TabIndex = 114;
             this.btnOpenBox.Text = "Open Box";
             this.btnOpenBox.UseVisualStyleBackColor = true;
+            this.btnOpenBox.Click += new System.EventHandler(this.btnOpenBox_Click);
             // 
             // groupBoxPageCount
             // 

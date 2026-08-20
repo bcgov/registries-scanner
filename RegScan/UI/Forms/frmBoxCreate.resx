@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblHeading.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblHeading.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 14.25pt, style=Bold</value>
+  </data>
+  <data name="lblHeading.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 12</value>
+  </data>
+  <data name="lblHeading.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 26</value>
+  </data>
+  <data name="lblHeading.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblHeading.Text" xml:space="preserve">
+    <value>Create a New Box</value>
+  </data>
+  <data name="&gt;&gt;lblHeading.Name" xml:space="preserve">
+    <value>lblHeading</value>
+  </data>
+  <data name="&gt;&gt;lblHeading.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblHeading.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblHeading.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="boxNumberLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="boxNumberLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans Light, 11.25pt</value>
+  </data>
+  <data name="boxNumberLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 4</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="boxNumberLabel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 3, 0, 3</value>
+  </data>
+  <data name="boxNumberLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 26</value>
+  </data>
+  <data name="boxNumberLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="boxNumberLabel.Text" xml:space="preserve">
+    <value>Box Number</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Name" xml:space="preserve">
+    <value>boxNumberLabel</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 34</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Mask" xml:space="preserve">
+    <value>0000</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>141, 29</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>74, 29</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.PromptChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 29</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.Text" xml:space="preserve">
+    <value>0000</value>
+  </data>
+  <data name="maskedTextBoxBoxNumber.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>255, 29</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 71</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 71</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Name" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ScheduleLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ScheduleLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans Light, 11.25pt</value>
+  </data>
+  <data name="ScheduleLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 4</value>
+  </data>
+  <data name="ScheduleLabel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 3, 0, 3</value>
+  </data>
+  <data name="ScheduleLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 26</value>
+  </data>
+  <data name="ScheduleLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="ScheduleLabel.Text" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.Name" xml:space="preserve">
+    <value>ScheduleLabel</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 34</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Mask" xml:space="preserve">
+    <value>0000</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>141, 29</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>74, 29</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.PromptChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 29</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.Text" xml:space="preserve">
+    <value>0000</value>
+  </data>
+  <data name="maskedTextBoxScheduleNumber.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxScheduleNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>131, 29</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 71</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 71</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Name" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="SequenceLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="SequenceLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans Light, 11.25pt</value>
+  </data>
+  <data name="SequenceLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 4</value>
+  </data>
+  <data name="SequenceLabel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 3, 0, 3</value>
+  </data>
+  <data name="SequenceLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 26</value>
+  </data>
+  <data name="SequenceLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="SequenceLabel.Text" xml:space="preserve">
+    <value>Sequence</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.Name" xml:space="preserve">
+    <value>SequenceLabel</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 34</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Mask" xml:space="preserve">
+    <value>00</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>141, 29</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>74, 29</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.PromptChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 29</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.Text" xml:space="preserve">
+    <value>00</value>
+  </data>
+  <data name="maskedTextBoxSequenceNumber.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxSequenceNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 29</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelSequence.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 71</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 71</value>
+  </data>
+  <data name="flowLayoutPanelSequence.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Name" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt, style=Bold</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 50</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>377, 109</value>
+  </data>
+  <data name="groupBoxAccessionNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Text" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Name" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="BoxOpenDateLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="BoxOpenDateLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans Light, 11.25pt</value>
+  </data>
+  <data name="BoxOpenDateLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 4</value>
+  </data>
+  <data name="BoxOpenDateLabel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 3, 0, 3</value>
+  </data>
+  <data name="BoxOpenDateLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 26</value>
+  </data>
+  <data name="BoxOpenDateLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="BoxOpenDateLabel.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="&gt;&gt;BoxOpenDateLabel.Name" xml:space="preserve">
+    <value>BoxOpenDateLabel</value>
+  </data>
+  <data name="&gt;&gt;BoxOpenDateLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoxOpenDateLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelOpened</value>
+  </data>
+  <data name="&gt;&gt;BoxOpenDateLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="textBoxOpenedDate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt</value>
+  </data>
+  <data name="textBoxOpenedDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 33</value>
+  </data>
+  <data name="textBoxOpenedDate.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>133, 29</value>
+  </data>
+  <data name="textBoxOpenedDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>141, 29</value>
+  </data>
+  <data name="textBoxOpenedDate.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="textBoxOpenedDate.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;textBoxOpenedDate.Name" xml:space="preserve">
+    <value>textBoxOpenedDate</value>
+  </data>
+  <data name="&gt;&gt;textBoxOpenedDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBoxOpenedDate.Parent" xml:space="preserve">
+    <value>flowLayoutPanelOpened</value>
+  </data>
+  <data name="&gt;&gt;textBoxOpenedDate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelOpened.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 29</value>
+  </data>
+  <data name="flowLayoutPanelOpened.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelOpened.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>155, 71</value>
+  </data>
+  <data name="flowLayoutPanelOpened.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelOpened.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 71</value>
+  </data>
+  <data name="flowLayoutPanelOpened.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelOpened.Name" xml:space="preserve">
+    <value>flowLayoutPanelOpened</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelOpened.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelOpened.Parent" xml:space="preserve">
+    <value>groupBoxDates</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelOpened.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="groupBoxDates.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt, style=Bold</value>
+  </data>
+  <data name="groupBoxDates.Location" type="System.Drawing.Point, System.Drawing">
+    <value>395, 50</value>
+  </data>
+  <data name="groupBoxDates.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 109</value>
+  </data>
+  <data name="groupBoxDates.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="groupBoxDates.Text" xml:space="preserve">
+    <value>Dates</value>
+  </data>
+  <data name="&gt;&gt;groupBoxDates.Name" xml:space="preserve">
+    <value>groupBoxDates</value>
+  </data>
+  <data name="&gt;&gt;groupBoxDates.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxDates.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBoxDates.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnCreate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 11.25pt</value>
+  </data>
+  <data name="btnCreate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>468, 175</value>
+  </data>
+  <data name="btnCreate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 34</value>
+  </data>
+  <data name="btnCreate.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnCreate.Text" xml:space="preserve">
+    <value>Create Box</value>
+  </data>
+  <data name="&gt;&gt;btnCreate.Name" xml:space="preserve">
+    <value>btnCreate</value>
+  </data>
+  <data name="&gt;&gt;btnCreate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCreate.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnCreate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnCancel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 11.25pt</value>
+  </data>
+  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>357, 175</value>
+  </data>
+  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 34</value>
+  </data>
+  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
+    <value>btnCancel</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>585, 221</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterParent</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Create New Box</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>frmBoxCreate</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

@@ -201,6 +201,34 @@ namespace RegScan
                 }
             }
         }
+
+        /// <summary>
+        /// Launches the "Create New Box" workflow. A new <see cref="BoxObj"/> is seeded with the
+        /// default values of the current box, presented to the user for review and editing, and
+        /// created through the DRS API. On success the newly created box becomes the current box.
+        /// </summary>
+        /// <param name="sender">The open/create box button.</param>
+        /// <param name="e">Event data.</param>
+        private void btnOpenBox_Click(object sender, EventArgs e)
+        {
+            // Use the current box as the source of default values for the new box.
+            BoxObj defaults = _currentBox ?? new BoxObj();
+
+            using (var dialog = new frmBoxCreate(defaults))
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return; // user cancelled or creation failed; leave state unchanged.
+
+                BoxObj created = dialog.CreatedBox;
+                if (created == null)
+                    return; // no valid box was created; preserve existing state.
+
+                // Adopt the newly created box as the current box and refresh the form.
+                _currentBox = created;
+                RefreshBatchId();
+                UpdateFields();
+            }
+        }
     }
 
 }
