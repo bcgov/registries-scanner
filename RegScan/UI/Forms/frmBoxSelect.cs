@@ -23,8 +23,6 @@ namespace RegScan
         /// <summary>The special combo entry that represents "no filter for this field".</summary>
         private const string AnyValue = "(Any)";
 
-        private readonly List<BoxObj> _allBoxes;
-
         /// <summary>
         /// When <c>true</c>, facet <c>SelectedIndexChanged</c> events are ignored. Used
         /// while the facet lists are being rebuilt to prevent non necessary refreshes.taylor.friesen@gov.bc.ca
@@ -49,18 +47,13 @@ namespace RegScan
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="boxes"/> is empty.
         /// </exception>
-        public frmBoxSelect(ICollection<BoxObj> boxes, BoxObj currentBox)
+        public frmBoxSelect(BoxObj currentBox)
         {
-            if (boxes == null)
-                throw new ArgumentNullException(nameof(boxes));
-            if (boxes.Count == 0)
-                throw new ArgumentException("There are no boxes available to select.", nameof(boxes));
+            if (BoxObj.Boxes == null || BoxObj.Boxes.Count == 0)
+                throw new ArgumentException("There are no boxes available to select.",
+                    nameof(BoxObj.Boxes));
 
             InitializeComponent();
-
-            // Given the collection of boxes in the parameters transfrom into a list for this form
-            // removing any null entries
-            _allBoxes = boxes.Where(b => b != null).ToList();
 
             // Build the datagrid columns
             BuildDataGrid();
@@ -135,7 +128,7 @@ namespace RegScan
         /// </param>
         private IEnumerable<BoxObj> GetMatches(ComboBox excluded)
         {
-            IEnumerable<BoxObj> query = _allBoxes;
+            IEnumerable<BoxObj> query = BoxObj.Boxes;
 
             if (excluded != comboStatus)
             {
@@ -341,8 +334,17 @@ namespace RegScan
             SelectedBox = null;
             this.Close();
         }
+        
+        private void btnRefreshList_Click(object sender, EventArgs e)
+        {
+            // get new results from the DRS API
+            BoxObj.RefreshBoxList();
+            // Update facets and the grid to match the new list
+            RefreshFacets();
+            RefreshGrid();
+        }
+        
         #endregion
 
-        
     }
 }

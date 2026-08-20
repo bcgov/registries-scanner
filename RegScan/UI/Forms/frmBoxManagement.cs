@@ -8,7 +8,6 @@ namespace RegScan
     partial class frmBoxManagement : Form
     {
         private BoxObj _currentBox;
-        private ICollection<BoxObj> _boxes;
         private int _batchID;
 
         /// <summary>
@@ -18,36 +17,38 @@ namespace RegScan
         {
             // Load UI components
             InitializeComponent();
-            // Pull latest box information from API
-            SetBoxes();
+            
+            try
+            {
+                // Set the list of boxes 
+                BoxObj.RefreshBoxList();
+                // From the box list set _current box to be the most recently opened box
+                _currentBox = GetMostRecentBox();
+            }
+            catch (TypeAccessException err)
+            {
+                string msg = "Unable to get list of boxes from API. " +
+                    "See more information below:\n " + err.Message;
+                string title = "Error Setting Box List";
+                MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UtilityObj.WriteLog(UtilityObj.error, err.ToString());
+            }
+            
+            // Get the highest Batch ID for the current box
+            RefreshBatchId();
             // Update the fields of the form
             UpdateFields();
         }
 
-        public void SetBoxes()
+        public BoxObj GetMostRecentBox()
         {
-            // empty datetime fields will default to this date
-            var defaultTime = new DateTime(1900, 1, 2);
-
-            string boxList = BoxAPI.GetAllBoxes();
-            if (string.IsNullOrEmpty(boxList))
-            {
-                throw new TypeAccessException("API returned null or empty string.");
-            }
-
-            // update the JSON payload to an iterable list
-            _boxes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BoxObj>>(boxList);
-
             // Get the box that is has the highest BoxID and is open
             // If there are no open boxes default to the highest BoxID
-            _currentBox = _boxes.Cast<BoxObj>()
+            return BoxObj.Boxes.Cast<BoxObj>()
                 .OrderByDescending(b => !b.IsClosed)  // open boxes first
                 .ThenByDescending(b => b.BoxId)       // then highest BoxId
                 .FirstOrDefault();
-
-            // Get the highest batchID for the most recent box
-            RefreshBatchId();
-        } 
+        }
 
         public void UpdateFields()
         {
@@ -92,14 +93,14 @@ namespace RegScan
         private void btnChangeBox_Click(object sender, EventArgs e)
         {
             // Guard against an empty or unpopulated collection.
-            if (_boxes == null || _boxes.Count == 0)
+            if (BoxObj.Boxes == null || BoxObj.Boxes.Count == 0)
             {
                 MessageBox.Show(this, "There are no boxes available to select.",
                     "Change Box", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            using (var dialog = new frmBoxSelect(_boxes, _currentBox))
+            using (var dialog = new frmBoxSelect(_currentBox))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
                     return; // user cancelled; leave the current box unchanged.
@@ -179,9 +180,10 @@ namespace RegScan
             {
                 try
                 {
+                    // Update the box record in DRS API
                     var ret = BoxAPI.UpdateBox(_currentBox);
                     // Update the box in the list of boxes
-                    _currentBox.UpdateBoxInList(_boxes);
+                    BoxObj.UpdateBoxInList(_currentBox);
                     // Update form contents
                     UpdateFields();
                     

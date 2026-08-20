@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegScan
 {
@@ -20,6 +18,10 @@ namespace RegScan
         private int _pageCount;
         private int _sequenceNumber;
         private int _scheduleNumber;
+
+        private static ICollection<BoxObj> _boxes;
+
+        public static ICollection<BoxObj> Boxes { get { return _boxes; } }
 
         [JsonProperty("boxId")]
         public int BoxId { get { return _boxID; } set { _boxID = value; } }
@@ -109,6 +111,20 @@ namespace RegScan
             _closed = false;
         }
 
+        public static void RefreshBoxList()
+        {
+            string boxList = BoxAPI.GetAllBoxes();
+
+            if (string.IsNullOrEmpty(boxList))
+            {
+                throw new TypeAccessException("API returned null or empty string.");
+            }
+
+            // update the JSON payload to an iterable list and set as _boxes
+            _boxes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BoxObj>>(boxList);
+
+        }
+
         /// <summary>
         /// Sets the closed status for the box. This is based off the boxes _closedDate
         /// </summary>
@@ -124,13 +140,13 @@ namespace RegScan
             _closedSet = true;
         }
 
-        public void UpdateBoxInList(ICollection<BoxObj> boxes)
+        public static void UpdateBoxInList(BoxObj updatedBox)
         {
             // Get a reference to the box in the list
-            BoxObj boxInList = boxes.FirstOrDefault(x => x.BoxId == this.BoxId);
+            BoxObj boxInList = _boxes.FirstOrDefault(x => x.BoxId == updatedBox.BoxId);
             if (boxInList != null)
             {
-                boxInList = this;
+                boxInList = updatedBox;
             }
         }
 

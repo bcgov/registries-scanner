@@ -11,9 +11,9 @@ namespace RegScan
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridBoxes = new System.Windows.Forms.DataGridView();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -28,6 +28,7 @@ namespace RegScan
             this.groupBoxSequence = new System.Windows.Forms.GroupBox();
             this.groupBoxSchedule = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnRefreshList = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridBoxes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.boxObjBindingSource)).BeginInit();
             this.groupBoxStatus.SuspendLayout();
@@ -41,33 +42,33 @@ namespace RegScan
             // 
             this.dataGridBoxes.AllowUserToAddRows = false;
             this.dataGridBoxes.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(81)))), ((int)(((byte)(137)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            this.dataGridBoxes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(81)))), ((int)(((byte)(137)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.dataGridBoxes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridBoxes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridBoxes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridBoxes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridBoxes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(81)))), ((int)(((byte)(137)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridBoxes.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(81)))), ((int)(((byte)(137)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridBoxes.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridBoxes.Location = new System.Drawing.Point(12, 80);
             this.dataGridBoxes.MultiSelect = false;
             this.dataGridBoxes.Name = "dataGridBoxes";
@@ -83,12 +84,11 @@ namespace RegScan
             // 
             this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReset.BackColor = System.Drawing.Color.White;
-            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReset.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.Location = new System.Drawing.Point(678, 34);
+            this.btnReset.Location = new System.Drawing.Point(677, 23);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(105, 34);
-            this.btnReset.TabIndex = 1;
+            this.btnReset.TabIndex = 5;
             this.btnReset.Text = "Reset Filters";
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
@@ -100,7 +100,7 @@ namespace RegScan
             this.btnCancel.Location = new System.Drawing.Point(567, 447);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(105, 34);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -108,13 +108,15 @@ namespace RegScan
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
             this.btnOk.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOk.ForeColor = System.Drawing.Color.White;
             this.btnOk.Location = new System.Drawing.Point(678, 447);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(105, 34);
-            this.btnOk.TabIndex = 3;
+            this.btnOk.TabIndex = 8;
             this.btnOk.Text = "OK";
-            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.UseVisualStyleBackColor = false;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // comboStatus
@@ -125,7 +127,7 @@ namespace RegScan
             this.comboStatus.Location = new System.Drawing.Point(6, 22);
             this.comboStatus.Name = "comboStatus";
             this.comboStatus.Size = new System.Drawing.Size(152, 28);
-            this.comboStatus.TabIndex = 4;
+            this.comboStatus.TabIndex = 1;
             // 
             // comboOpenedDate
             // 
@@ -135,7 +137,7 @@ namespace RegScan
             this.comboOpenedDate.Location = new System.Drawing.Point(6, 22);
             this.comboOpenedDate.Name = "comboOpenedDate";
             this.comboOpenedDate.Size = new System.Drawing.Size(152, 28);
-            this.comboOpenedDate.TabIndex = 5;
+            this.comboOpenedDate.TabIndex = 2;
             // 
             // comboSequence
             // 
@@ -145,7 +147,7 @@ namespace RegScan
             this.comboSequence.Location = new System.Drawing.Point(6, 22);
             this.comboSequence.Name = "comboSequence";
             this.comboSequence.Size = new System.Drawing.Size(152, 28);
-            this.comboSequence.TabIndex = 6;
+            this.comboSequence.TabIndex = 3;
             // 
             // comboSchedule
             // 
@@ -155,7 +157,7 @@ namespace RegScan
             this.comboSchedule.Location = new System.Drawing.Point(6, 22);
             this.comboSchedule.Name = "comboSchedule";
             this.comboSchedule.Size = new System.Drawing.Size(152, 28);
-            this.comboSchedule.TabIndex = 7;
+            this.comboSchedule.TabIndex = 4;
             // 
             // boxObjBindingSource
             // 
@@ -170,7 +172,7 @@ namespace RegScan
             this.groupBoxStatus.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxStatus.Name = "groupBoxStatus";
             this.groupBoxStatus.Size = new System.Drawing.Size(164, 56);
-            this.groupBoxStatus.TabIndex = 13;
+            this.groupBoxStatus.TabIndex = 0;
             this.groupBoxStatus.TabStop = false;
             this.groupBoxStatus.Text = "Status";
             // 
@@ -183,7 +185,7 @@ namespace RegScan
             this.groupBoxOpened.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxOpened.Name = "groupBoxOpened";
             this.groupBoxOpened.Size = new System.Drawing.Size(164, 56);
-            this.groupBoxOpened.TabIndex = 14;
+            this.groupBoxOpened.TabIndex = 0;
             this.groupBoxOpened.TabStop = false;
             this.groupBoxOpened.Text = "Opened";
             // 
@@ -196,7 +198,7 @@ namespace RegScan
             this.groupBoxSequence.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxSequence.Name = "groupBoxSequence";
             this.groupBoxSequence.Size = new System.Drawing.Size(164, 56);
-            this.groupBoxSequence.TabIndex = 15;
+            this.groupBoxSequence.TabIndex = 0;
             this.groupBoxSequence.TabStop = false;
             this.groupBoxSequence.Text = "Sequence";
             // 
@@ -209,7 +211,7 @@ namespace RegScan
             this.groupBoxSchedule.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxSchedule.Name = "groupBoxSchedule";
             this.groupBoxSchedule.Size = new System.Drawing.Size(164, 56);
-            this.groupBoxSchedule.TabIndex = 16;
+            this.groupBoxSchedule.TabIndex = 0;
             this.groupBoxSchedule.TabStop = false;
             this.groupBoxSchedule.Text = "Schedule";
             // 
@@ -222,12 +224,25 @@ namespace RegScan
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(660, 62);
-            this.flowLayoutPanel1.TabIndex = 17;
+            this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // btnRefreshList
+            // 
+            this.btnRefreshList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRefreshList.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefreshList.Location = new System.Drawing.Point(12, 447);
+            this.btnRefreshList.Name = "btnRefreshList";
+            this.btnRefreshList.Size = new System.Drawing.Size(105, 34);
+            this.btnRefreshList.TabIndex = 6;
+            this.btnRefreshList.Text = "Refresh List";
+            this.btnRefreshList.UseVisualStyleBackColor = true;
+            this.btnRefreshList.Click += new System.EventHandler(this.btnRefreshList_Click);
             // 
             // frmBoxSelect
             // 
             this.AcceptButton = this.btnOk;
             this.ClientSize = new System.Drawing.Size(795, 493);
+            this.Controls.Add(this.btnRefreshList);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
@@ -264,5 +279,6 @@ namespace RegScan
         private System.Windows.Forms.GroupBox groupBoxSequence;
         private System.Windows.Forms.GroupBox groupBoxSchedule;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button btnRefreshList;
     }
 }
