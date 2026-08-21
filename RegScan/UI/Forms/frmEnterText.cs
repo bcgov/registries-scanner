@@ -4,8 +4,8 @@ using System.Windows.Forms;
 namespace RegScan
 {
     /// <summary>
-    /// A form used to prompt a user to enter a new barcode string manually.
-    /// If the user cancles or the 
+    /// A form used to prompt a user to enter a string manually.
+    /// If the user cancels the form ensure no value is stored. 
     /// </summary>
     public partial class frmEnterText : Form
     {
@@ -21,6 +21,9 @@ namespace RegScan
             textLabel.Text = labelText;
         }
 
+        /// <summary>
+        /// Reset all form fields
+        /// </summary>
         private void ClearForm()
         {
             // clear any values set
@@ -63,6 +66,11 @@ namespace RegScan
             return frm.EnteredInt;
         }
 
+        /// <summary>
+        /// Attempt to parse the user input to an int. If there are errors show the warning
+        /// to the user.
+        /// </summary>
+        /// <returns></returns>
         private bool ValidateInt()
         {
             bool isInt = false;
