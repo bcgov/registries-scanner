@@ -79,7 +79,7 @@ namespace RegScan
                         refresh = MessageBox.Show(msg, "Restart Application",
                             MessageBoxButtons.YesNo) == DialogResult.Yes; 
                     } 
-                    // if autorefresh was set, or the user indicated they wanted to refresh
+                    // if auto refresh was set, or the user indicated they wanted to refresh
                     if(refresh)
                     {
                         _scannerForm.FormClosing -= new FormClosingEventHandler(ChildFormClosing);

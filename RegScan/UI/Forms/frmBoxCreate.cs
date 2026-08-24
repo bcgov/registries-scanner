@@ -7,11 +7,9 @@ namespace RegScan
     /// <summary>
     /// Modal dialog that lets the user create a brand new <see cref="BoxObj"/>.
     /// The dialog is seeded with the default values of the box currently selected in
-    /// <see cref="frmBoxManagement"/> so the user has a sensible starting point. All accession
-    /// number fields (sequence, schedule, and box number) are presented for review and can be
-    /// edited before the box is submitted to the DRS API through <see cref="BoxAPI.CreateBox"/>.
-    /// The title bar and heading make it clear that a new box is being created rather than an
-    /// existing box being edited.
+    /// <see cref="frmBoxManagement"/>. All object fields are confirmed by the user, then validated
+    /// internally before a request to create a new box is sent to the API through 
+    /// <see cref="BoxAPI.CreateBox"/>.
     /// </summary>
     partial class frmBoxCreate : Form
     {
@@ -45,6 +43,7 @@ namespace RegScan
 
             // Seed the editable fields with the supplied default values so the user can review
             // and adjust them before creating the box.
+            // TODO - add event handlers to the fields to validate and update background colour on change
             maskedTextBoxSequenceNumber.Text = _newBox.AccessionNumber.SequenceString.Trim();
             maskedTextBoxScheduleNumber.Text = _newBox.AccessionNumber.ScheduleString.Trim();
             maskedTextBoxBoxNumber.Text = _newBox.AccessionNumber.BoxNumber.ToString().Trim();
@@ -67,12 +66,22 @@ namespace RegScan
         {
             var errors = new List<string>();
 
-            if (!TryParseField(maskedTextBoxSequenceNumber.Text, "Sequence", out sequence))
+            //TODO - update background colour of fields based on if they are acceptable
+            if (!TryParseField(maskedTextBoxSequenceNumber.Text, out sequence))
+            {
                 errors.Add("Sequence number must be a numeric value greater than zero.");
-            if (!TryParseField(maskedTextBoxScheduleNumber.Text, "Schedule", out schedule))
+            }
+                
+            if (!TryParseField(maskedTextBoxScheduleNumber.Text, out schedule))
+            {
                 errors.Add("Schedule number must be a numeric value greater than zero.");
-            if (!TryParseField(maskedTextBoxBoxNumber.Text, "Box Number", out boxNumber))
+            }
+                
+            if (!TryParseField(maskedTextBoxBoxNumber.Text, out boxNumber))
+            {
                 errors.Add("Box number must be a numeric value greater than zero.");
+            }
+                
 
             if (errors.Count > 0)
             {
@@ -92,13 +101,12 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Attempts to parse a masked text box value into a non-zero integer.
+        /// Attempts to parse a text value into a non-zero integer.
         /// </summary>
         /// <param name="text">The raw text entered by the user.</param>
-        /// <param name="fieldName">The friendly field name used for logging.</param>
         /// <param name="value">The parsed value when successful; otherwise zero.</param>
         /// <returns><c>true</c> when the text is a non-zero integer; otherwise <c>false</c>.</returns>
-        private static bool TryParseField(string text, string fieldName, out int value)
+        private static bool TryParseField(string text, out int value)
         {
             string trimmed = (text ?? string.Empty).Trim();
 
@@ -113,9 +121,11 @@ namespace RegScan
         /// <param name="e">Event data.</param>
         private void btnCreate_Click(object sender, EventArgs e)
         {
+            // If the fields are unable to be parsed into ints keep the dialog open 
+            // so the user can try again
             if (!TryValidateFields(out int sequence, out int schedule, out int boxNumber))
             {
-                DialogResult = DialogResult.None; // keep the dialog open
+                DialogResult = DialogResult.None;
                 return;
             }
 
@@ -125,12 +135,14 @@ namespace RegScan
                 "Create New Box", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (confirm != DialogResult.OK)
             {
+                // if the request is not confirmed keep th  dialog open
                 DialogResult = DialogResult.None;
                 return;
             }
 
             try
             {
+                // Put a request into the DRS API to create a new box record.
                 string response = BoxAPI.CreateBox(_newBox);
 
                 if (string.IsNullOrEmpty(response))
@@ -145,6 +157,7 @@ namespace RegScan
 
                 CreatedBox = createdBox;
 
+                //Inform the user of the success 
                 MessageBox.Show(this, "Box created successfully!", "Box Created",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -153,13 +166,13 @@ namespace RegScan
             }
             catch (Exception err)
             {
+                //if an error was caught show the warning to the user. Keep the dialog open
                 CreatedBox = null;
                 string msg = "There was an error creating the box. Please try again, or contact " +
                     "support if the problem persists.\n\n" + err.Message;
                 MessageBox.Show(this, msg, "Unable to Create Box", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 UtilityObj.WriteLog(UtilityObj.error, err.ToString());
-                DialogResult = DialogResult.None; // keep the dialog open for another attempt
             }
         }
 

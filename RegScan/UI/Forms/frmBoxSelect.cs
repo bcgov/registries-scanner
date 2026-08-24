@@ -25,7 +25,7 @@ namespace RegScan
 
         /// <summary>
         /// When <c>true</c>, facet <c>SelectedIndexChanged</c> events are ignored. Used
-        /// while the facet lists are being rebuilt to prevent non necessary refreshes.taylor.friesen@gov.bc.ca
+        /// while the facet lists are being rebuilt to prevent non necessary refreshes.
         /// </summary>
         private bool _suppressFacetEvents;
 
@@ -210,6 +210,8 @@ namespace RegScan
 
             combo.DataSource = options;
 
+            // Preselect the previously selected item if it was set. 
+            // If not use the first index in the list.
             int index = previous != null ? options.IndexOf(previous) : 0;
             combo.SelectedIndex = index >= 0 ? index : 0;
         }
@@ -244,7 +246,8 @@ namespace RegScan
         /// <summary>Gets the box bound to the grid's current row, or <c>null</c>.</summary>
         private BoxObj CurrentGridSelection()
         {
-            return dataGridBoxes.CurrentRow != null ? dataGridBoxes.CurrentRow.DataBoundItem as BoxObj : null;
+            return dataGridBoxes.CurrentRow != null ? 
+                dataGridBoxes.CurrentRow.DataBoundItem as BoxObj : null;
         }
 
         /// <summary>Selects the grid row at <paramref name="index"/> when valid.</summary>
@@ -276,6 +279,8 @@ namespace RegScan
         #region Event handlers
 
         /// <summary>Re-applies the facets and refreshes the grid on any facet change.</summary>
+        /// <param name="sender"> An update to a selected filter facet</param>
+        /// <param name="e">Event Data</param>
         private void Facet_Changed(object sender, EventArgs e)
         {
             if (_suppressFacetEvents)
@@ -286,6 +291,8 @@ namespace RegScan
         }
 
         /// <summary>Clears every facet back to "(Any)".</summary>
+        /// <param name="sender">Reset Fields Button</param>
+        /// <param name="e">Event Data</param>
         private void btnReset_Click(object sender, EventArgs e)
         {
             _suppressFacetEvents = true;
@@ -306,13 +313,20 @@ namespace RegScan
         }
 
         /// <summary>Treats a double-click on a grid row as confirming the selection.</summary>
+        /// <param name="sender"> Double clicking a row in the data grid</param>
+        /// <param name="e">Event Data</param>
         private void Grid_DoubleClick(object sender, EventArgs e)
         {
             if (CurrentGridSelection() != null)
                 btnOk.PerformClick();
         }
 
-        /// <summary>Validates the current selection before closing the dialog.</summary>
+        /// <summary>
+        /// Validates the current selection before closing the dialog.
+        /// If no box is selected show a warning to the user. 
+        /// </summary>
+        /// /// <param name="sender">OK Button</param>
+        /// <param name="e">Event Data</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
             SelectedBox = CurrentGridSelection();
@@ -328,6 +342,12 @@ namespace RegScan
             }
         }
 
+        /// <summary>
+        /// Handle the event that the user selects the Cancel button. Ensure the box will not
+        /// change on the main form. 
+        /// </summary>
+        /// <param name="sender">Cancel Button</param>
+        /// <param name="e">Event Data</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             // Ensure that the box does not change and close the form
@@ -335,6 +355,11 @@ namespace RegScan
             this.Close();
         }
         
+        /// <summary>
+        /// Handle the event where a user selects the refresh list button. 
+        /// </summary>
+        /// <param name="sender">Refresh List Button</param>
+        /// <param name="e">Event Data</param>
         private void btnRefreshList_Click(object sender, EventArgs e)
         {
             // get new results from the DRS API

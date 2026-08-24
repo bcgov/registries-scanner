@@ -128,6 +128,11 @@ namespace RegScan
             _closed = false;
         }
 
+        /// <summary>
+        /// Used to request the list of all box records stored in the DRS API. The result is
+        /// then used to populate the static class parameter _boxes.
+        /// </summary>
+        /// <exception cref="TypeAccessException">Thrown when the response is null or empty </exception>
         public static void RefreshBoxList()
         {
             string boxList = BoxAPI.GetAllBoxes();
@@ -157,6 +162,10 @@ namespace RegScan
             _closedSet = true;
         }
 
+        /// <summary>
+        /// Find a particular box in the list and update the fields to match. 
+        /// </summary>
+        /// <param name="updatedBox">BoxObject with updated parameters</param>
         public static void UpdateBoxInList(BoxObj updatedBox)
         {
             // Get a reference to the box in the list
@@ -175,7 +184,7 @@ namespace RegScan
         /// </summary>
         /// <remarks>
         /// The new box is deliberately left without a <see cref="BoxId"/> (it is assigned by the
-        /// API on creation) and is initialised as an open box with a zero page count and an
+        /// API on creation) and is initialized as an open box with a zero page count and an
         /// opened date of the current day.
         /// </remarks>
         /// <param name="source">The box whose default values should be used as a starting point.</param>

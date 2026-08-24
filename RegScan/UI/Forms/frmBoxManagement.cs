@@ -11,7 +11,7 @@ namespace RegScan
         private int _batchID;
 
         /// <summary>
-        /// Get and display information about the application to the user in a new form.
+        /// Get and display information about the current working box to the user
         /// </summary>
         public frmBoxManagement()
         {
@@ -20,9 +20,9 @@ namespace RegScan
             
             try
             {
-                // Set the list of boxes 
+                // Set the list of boxes when the application opens
                 BoxObj.RefreshBoxList();
-                // From the box list set _current box to be the most recently opened box
+                // From the box list set _currentBox to be the most recently opened box
                 _currentBox = GetMostRecentBox();
                 
                 // Get the highest Batch ID for the current box
@@ -41,16 +41,23 @@ namespace RegScan
             
         }
 
+        /// <summary>
+        /// Get the box that is has the highest BoxID and is open.
+        /// If there are no open boxes default to the highest BoxID
+        /// </summary>
+        /// <returns>The BoxObj that is currently open and most recently opened</returns>
         public BoxObj GetMostRecentBox()
         {
-            // Get the box that is has the highest BoxID and is open
-            // If there are no open boxes default to the highest BoxID
+            // Order by open boxes first, then by BoxIDs 
             return BoxObj.Boxes.Cast<BoxObj>()
-                .OrderByDescending(b => !b.IsClosed)  // open boxes first
-                .ThenByDescending(b => b.BoxId)       // then highest BoxId
+                .OrderByDescending(b => !b.IsClosed) 
+                .ThenByDescending(b => b.BoxId) 
                 .FirstOrDefault();
         }
 
+        /// <summary>
+        /// Update the Text Box fields to match the current boxes fields. 
+        /// </summary>
         public void UpdateFields()
         {
             // TODO - add check for if _currentBox is null,
@@ -64,7 +71,7 @@ namespace RegScan
             textBoxPageCount.Text = _currentBox.PageCount.ToString();
             textBoxBatchID.Text = _batchID.ToString();
 
-            // If the boxes is closed show the closed date. If the box is not yet closed show
+            // If the box is closed show the closed date. If the box is not yet closed show
             // the button to close the box.
             if (!_currentBox.IsClosed)
             {
@@ -99,7 +106,7 @@ namespace RegScan
         /// </summary>
         private void btnChangeBox_Click(object sender, EventArgs e)
         {
-            // Guard against an empty or unpopulated collection.
+            // Warn user about an empty or unpopulated collection.
             if (BoxObj.Boxes == null || BoxObj.Boxes.Count == 0)
             {
                 MessageBox.Show(this, "There are no boxes available to select.",
@@ -107,6 +114,7 @@ namespace RegScan
                 return;
             }
 
+            // Open a new form to allow the user to select a different box 
             using (var dialog = new frmBoxSelect(_currentBox))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
@@ -124,7 +132,7 @@ namespace RegScan
 
         /// <summary>
         /// Recalculates the batch for the current box by querying the DRS API.
-        /// Because the result is the max BatchID for a given box we can set the _maxBatchID
+        /// The result is the max BatchID for a given box
         /// </summary>
         private void RefreshBatchId()
         {
@@ -133,10 +141,16 @@ namespace RegScan
             _currentBox.MaxBatchID = ret;
         }
 
+        /// <summary>
+        /// If the user wants to update the batch ID open a dialog to capture their input
+        /// </summary>
+        /// <param name="sender">User action selection of the edit icon</param>
+        /// <param name="e">Event Data</param>
         private void editBatchID_Click(object sender, EventArgs e)
         {
             int batchID = frmEnterText.ManualBatchID();
             
+            // if the batch ID has been changed update the form field and var
             if (batchID != _batchID)
             {
                 textBoxBatchID.Text = batchID.ToString();
@@ -144,16 +158,25 @@ namespace RegScan
             }
         }
 
+        /// <summary>
+        /// Handle the flow of a user closing a box. Confirm and validate fields before putting a
+        /// request into DRS API.
+        /// </summary>
+        /// <param name="sender">Close Box Button</param>
+        /// <param name="e">Event Data</param>
         private void btnCloseBox_Click(object sender, EventArgs e)
         {
+            // Capture if the box was closed before updating fields
             bool wasClosed = _currentBox.IsClosed;
             string msg;
             string title;
             MessageBoxIcon icon;
 
-            // if the box is already closed we dont need to update it
+            // If the box is already closed we don't need to update it - but check if the user
+            // would like to open a different box
             if (wasClosed)
             {
+                // set dialog fields
                 msg = "Current box is closed. Would you like to switch to a different box?";
                 title = "Box Closed";
                 icon = MessageBoxIcon.Information;
@@ -161,12 +184,14 @@ namespace RegScan
             // Show the current box info to the user to confirm
             else
             {
+                // set the dialog fields
                 _currentBox.ClosedDate = DateTime.Now;
                 msg = "Please confirm the following:\n\n" + _currentBox.InfoString;
                 title = "Closing Box";
                 icon = MessageBoxIcon.Warning;
             }
             
+            // Show the dialog to the user. The form data will be based on above checks
             var result = MessageBox.Show(msg, title, MessageBoxButtons.OKCancel, icon);
 
             // if the user cancels ensure the box is closed. No further action is required
@@ -198,6 +223,7 @@ namespace RegScan
                     MessageBox.Show("Box has closed successfully!", "Box Closed",
                         MessageBoxButtons.OK);
                 }
+                // If an error was caught show to user and 'reopen' the box. 
                 catch (Exception err)
                 {
                     _currentBox.ReopenBox();

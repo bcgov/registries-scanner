@@ -3,8 +3,16 @@ using System;
 
 namespace RegScan
 {
+    /// <summary>
+    /// This static class is used as the bridge between the application and the DRS API.
+    /// Using pre-defined HTML request functions within APIRequest.cs.
+    /// </summary>
     public class BoxAPI
     {
+        /// <summary>
+        /// Get and return a string of all the box records from DRS API
+        /// </summary>
+        /// <returns>String HTML response containing a list of BoxObjs</returns>
         public static string GetAllBoxes()
         {
             string endpoint = "/doc/api/v1/scanning/boxes";
@@ -12,6 +20,14 @@ namespace RegScan
             return APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
         }
 
+        /// <summary>
+        /// Given a string Accession Number put a request to the DRS API to get the highest
+        /// possible BatchID. 
+        /// </summary>
+        /// <param name="accessionNumber">
+        /// A string version of the accession number associated with a particular box
+        /// </param>
+        /// <returns>The current highest BatchID for the box</returns>
         public static int GetBatchID(string accessionNumber)
         {
             int batchID = 0;
@@ -28,6 +44,12 @@ namespace RegScan
             return batchID;
         }
 
+        /// <summary>
+        /// Used to modify a box record stored within the DRS API. This will have to be used
+        /// when a box is closed to add the closed date. 
+        /// </summary>
+        /// <param name="box">BoxObj to be updated</param>
+        /// <returns>HTTP response in string format</returns>
         public static string UpdateBox(BoxObj box)
         {
             string endpoint = "/doc/api/v1/scanning/boxes";
@@ -35,6 +57,11 @@ namespace RegScan
             return APIRequest.MakeKeyRequest(box, endpoint, RestSharp.Method.Patch);
         }
 
+        /// <summary>
+        /// Used to add a new box record to the DRS API. 
+        /// </summary>
+        /// <param name="box">The box Obj to add</param>
+        /// <returns>HTTP response in string format</returns>
         public static string CreateBox(BoxObj box)
         {
             string endpoint = "/doc/api/v1/scanning/boxes";
