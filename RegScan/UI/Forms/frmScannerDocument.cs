@@ -399,7 +399,9 @@ namespace RegScan
 
                 // If there is a discrepency between the current working box and the
                 // accession number for this document show the user a warning.
-                if (!CompareAccessionNumbers())
+                if (!AccessionNumberObj.CompareAccessionObsj(
+                    _currentDocument.AccessionNumber, 
+                    frmBoxManagement.SelectedBox.AccessionNumber))
                 {
                     string msg = "The current working box does not match the accession number " +
                         "for this document record.\nPlease verify the current working box and " +
@@ -437,7 +439,8 @@ namespace RegScan
             // If we got a value for the Accession Number check 
             if (_currentDocument.AccSet)
             {
-                accNumberMatch = AccessionNumberObj.CompareAccessionObsj(_currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber);
+                accNumberMatch = AccessionNumberObj.CompareAccessionObsj(
+                    _currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber);
             }
             // If we didnt get a value for the Accession Number return true (nothing to compare)
             else
@@ -1111,13 +1114,15 @@ namespace RegScan
             if (_currentDocument == null)
                 return;
 
-            if (!CompareAccessionNumbers())
+            if (!AccessionNumberObj.CompareAccessionObsj(
+                _currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber))
             {
-                string msg = "Current working box does not match Document Record Accession Number. ";
-                var usr_rsp = MessageBox.Show(msg, "Accession Number Mismatch",
-                    MessageBoxButtons.YesNo);
-                if (usr_rsp == System.Windows.Forms.DialogResult.No)
-                    return;
+                string msg = "Current working box does not match Document Record Accession " +
+                    "Number.\nPlease change the current working box or update the record " +
+                    "in DRS";
+                MessageBox.Show(msg, "Accession Number Mismatch",
+                    MessageBoxButtons.OK);
+                return;
             }
 
             if (_currentDocument.PageCount != _scannedImageList.Count)
@@ -1162,9 +1167,6 @@ namespace RegScan
             {
                 _currentDocument.Description = txtDocumentNotes.Text;
             }
-
-            // TODO: Check Accession Number fields for updates
-            
 
             try
             {

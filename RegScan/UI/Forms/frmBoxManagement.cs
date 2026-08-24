@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls.WebParts;
 using System.Windows.Forms;
 
 namespace RegScan
@@ -8,7 +9,9 @@ namespace RegScan
     partial class frmBoxManagement : Form
     {
         private static BoxObj _currentBox;
-        private int _batchID;
+        private static int _batchID;
+
+        public static int BatchID {  get {  return _batchID; } }
 
         /// <summary>
         /// Get and display information about the current working box to the user

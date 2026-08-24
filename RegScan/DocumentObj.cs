@@ -304,6 +304,9 @@ namespace RegScan
 
             // Build the scanning information model
             DocumentModel.ScanningInformation scanInfo = new DocumentModel.ScanningInformation();
+
+            // Current box information
+            BoxObj current = frmBoxManagement.SelectedBox;
             
             // Currently these are the only fields we want to update from the scanning application
             scanInfo.consumerDocumentId = _barCode.ToString();
