@@ -95,6 +95,12 @@ namespace RegScan
         }
 
         [JsonIgnore]
+        public string AccessionNumberTextDashes
+        {
+            get { return AccessionNumber != null ? AccessionNumber.TextDashes : string.Empty; }
+        }
+
+        [JsonIgnore]
         public AccessionNumberObj AccessionNumber
         {
             get { 
