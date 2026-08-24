@@ -129,13 +129,13 @@
     <value>12, 12</value>
   </data>
   <data name="lblHeading.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 26</value>
+    <value>166, 26</value>
   </data>
   <data name="lblHeading.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="lblHeading.Text" xml:space="preserve">
-    <value>Create a New Box</value>
+    <value>Open a New Box</value>
   </data>
   <data name="&gt;&gt;lblHeading.Name" xml:space="preserve">
     <value>lblHeading</value>
@@ -149,6 +149,124 @@
   <data name="&gt;&gt;lblHeading.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Name" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Name" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Name" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelSequence.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Font" type="System.Drawing.Font, System.Drawing">
+    <value>BC Sans, 12pt, style=Bold</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 50</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>377, 109</value>
+  </data>
+  <data name="groupBoxAccessionNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="groupBoxAccessionNumber.Text" xml:space="preserve">
+    <value>Accession Number</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Name" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBoxAccessionNumber.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Name" xml:space="preserve">
+    <value>boxNumberLabel</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;boxNumberLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxBoxNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>255, 29</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="flowLayoutPanelBoxNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 71</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 71</value>
+  </data>
+  <data name="flowLayoutPanelBoxNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Name" xml:space="preserve">
+    <value>flowLayoutPanelBoxNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Parent" xml:space="preserve">
+    <value>groupBoxAccessionNumber</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanelBoxNumber.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="boxNumberLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -158,7 +276,6 @@
   <data name="boxNumberLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 4</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="boxNumberLabel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 3, 0, 3</value>
   </data>
@@ -228,35 +345,59 @@
   <data name="&gt;&gt;maskedTextBoxBoxNumber.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>255, 29</value>
+  <data name="&gt;&gt;ScheduleLabel.Name" xml:space="preserve">
+    <value>ScheduleLabel</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="&gt;&gt;ScheduleLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;ScheduleLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxScheduleNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxScheduleNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>131, 29</value>
+  </data>
+  <data name="flowLayoutPanelSchedule.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.MinimumSize" type="System.Drawing.Size, System.Drawing">
+  <data name="flowLayoutPanelSchedule.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>100, 71</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="flowLayoutPanelSchedule.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="flowLayoutPanelSchedule.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 71</value>
   </data>
-  <data name="flowLayoutPanelBoxNumber.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="flowLayoutPanelSchedule.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Name" xml:space="preserve">
-    <value>flowLayoutPanelBoxNumber</value>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Name" xml:space="preserve">
+    <value>flowLayoutPanelSchedule</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Type" xml:space="preserve">
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Type" xml:space="preserve">
     <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelBoxNumber.Parent" xml:space="preserve">
+  <data name="&gt;&gt;flowLayoutPanelSchedule.Parent" xml:space="preserve">
     <value>groupBoxAccessionNumber</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelBoxNumber.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;flowLayoutPanelSchedule.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="ScheduleLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -336,35 +477,59 @@
   <data name="&gt;&gt;maskedTextBoxScheduleNumber.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="flowLayoutPanelSchedule.Location" type="System.Drawing.Point, System.Drawing">
-    <value>131, 29</value>
+  <data name="&gt;&gt;SequenceLabel.Name" xml:space="preserve">
+    <value>SequenceLabel</value>
   </data>
-  <data name="flowLayoutPanelSchedule.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="&gt;&gt;SequenceLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;SequenceLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Name" xml:space="preserve">
+    <value>maskedTextBoxSequenceNumber</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MaskedTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.Parent" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
+  </data>
+  <data name="&gt;&gt;maskedTextBoxSequenceNumber.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 29</value>
+  </data>
+  <data name="flowLayoutPanelSequence.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
-  <data name="flowLayoutPanelSchedule.MinimumSize" type="System.Drawing.Size, System.Drawing">
+  <data name="flowLayoutPanelSequence.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>100, 71</value>
   </data>
-  <data name="flowLayoutPanelSchedule.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="flowLayoutPanelSequence.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
-  <data name="flowLayoutPanelSchedule.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="flowLayoutPanelSequence.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 71</value>
   </data>
-  <data name="flowLayoutPanelSchedule.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="flowLayoutPanelSequence.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelSchedule.Name" xml:space="preserve">
-    <value>flowLayoutPanelSchedule</value>
+  <data name="&gt;&gt;flowLayoutPanelSequence.Name" xml:space="preserve">
+    <value>flowLayoutPanelSequence</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelSchedule.Type" xml:space="preserve">
+  <data name="&gt;&gt;flowLayoutPanelSequence.Type" xml:space="preserve">
     <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelSchedule.Parent" xml:space="preserve">
+  <data name="&gt;&gt;flowLayoutPanelSequence.Parent" xml:space="preserve">
     <value>groupBoxAccessionNumber</value>
   </data>
-  <data name="&gt;&gt;flowLayoutPanelSchedule.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;flowLayoutPanelSequence.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="SequenceLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -444,63 +609,6 @@
   <data name="&gt;&gt;maskedTextBoxSequenceNumber.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="flowLayoutPanelSequence.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 29</value>
-  </data>
-  <data name="flowLayoutPanelSequence.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="flowLayoutPanelSequence.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>100, 71</value>
-  </data>
-  <data name="flowLayoutPanelSequence.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="flowLayoutPanelSequence.Size" type="System.Drawing.Size, System.Drawing">
-    <value>115, 71</value>
-  </data>
-  <data name="flowLayoutPanelSequence.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;flowLayoutPanelSequence.Name" xml:space="preserve">
-    <value>flowLayoutPanelSequence</value>
-  </data>
-  <data name="&gt;&gt;flowLayoutPanelSequence.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;flowLayoutPanelSequence.Parent" xml:space="preserve">
-    <value>groupBoxAccessionNumber</value>
-  </data>
-  <data name="&gt;&gt;flowLayoutPanelSequence.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="groupBoxAccessionNumber.Font" type="System.Drawing.Font, System.Drawing">
-    <value>BC Sans, 12pt, style=Bold</value>
-  </data>
-  <data name="groupBoxAccessionNumber.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 50</value>
-  </data>
-  <data name="groupBoxAccessionNumber.Size" type="System.Drawing.Size, System.Drawing">
-    <value>377, 109</value>
-  </data>
-  <data name="groupBoxAccessionNumber.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="groupBoxAccessionNumber.Text" xml:space="preserve">
-    <value>Accession Number</value>
-  </data>
-  <data name="&gt;&gt;groupBoxAccessionNumber.Name" xml:space="preserve">
-    <value>groupBoxAccessionNumber</value>
-  </data>
-  <data name="&gt;&gt;groupBoxAccessionNumber.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;groupBoxAccessionNumber.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;groupBoxAccessionNumber.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="BoxOpenDateLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -514,13 +622,13 @@
     <value>0, 3, 0, 3</value>
   </data>
   <data name="BoxOpenDateLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 26</value>
+    <value>83, 26</value>
   </data>
   <data name="BoxOpenDateLabel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="BoxOpenDateLabel.Text" xml:space="preserve">
-    <value>Open</value>
+    <value>Open Date</value>
   </data>
   <data name="&gt;&gt;BoxOpenDateLabel.Name" xml:space="preserve">
     <value>BoxOpenDateLabel</value>
@@ -606,9 +714,6 @@
   <data name="groupBoxDates.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="groupBoxDates.Text" xml:space="preserve">
-    <value>Dates</value>
-  </data>
   <data name="&gt;&gt;groupBoxDates.Name" xml:space="preserve">
     <value>groupBoxDates</value>
   </data>
@@ -634,7 +739,7 @@
     <value>3</value>
   </data>
   <data name="btnCreate.Text" xml:space="preserve">
-    <value>Create Box</value>
+    <value>Open Box</value>
   </data>
   <data name="&gt;&gt;btnCreate.Name" xml:space="preserve">
     <value>btnCreate</value>
@@ -685,10 +790,10 @@
     <value>CenterParent</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Create New Box</value>
+    <value>Open Box</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmBoxCreate</value>
+    <value>frmBoxOpen</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

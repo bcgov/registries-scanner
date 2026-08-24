@@ -250,7 +250,7 @@ namespace RegScan
             // Use the current box as the source of default values for the new box.
             BoxObj defaults = _currentBox ?? new BoxObj();
 
-            using (var dialog = new frmBoxCreate(defaults))
+            using (var dialog = new frmBoxOpen(defaults))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
                     return; // user cancelled or creation failed; leave state unchanged.

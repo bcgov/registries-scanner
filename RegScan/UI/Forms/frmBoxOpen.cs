@@ -11,7 +11,7 @@ namespace RegScan
     /// internally before a request to create a new box is sent to the API through 
     /// <see cref="BoxAPI.CreateBox"/>.
     /// </summary>
-    partial class frmBoxCreate : Form
+    partial class frmBoxOpen : Form
     {
         private BoxObj _newBox;
         
@@ -19,10 +19,10 @@ namespace RegScan
         /// Gets the box that was successfully created, or <c>null</c> when the user cancelled
         /// or creation failed.
         /// </summary>
-        public BoxObj CreatedBox { get; private set; }
+        public BoxObj NewBox { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="frmBoxCreate"/> class.
+        /// Initializes a new instance of the <see cref="frmBoxOpen"/> class.
         /// </summary>
         /// <param name="defaults">
         /// The box whose default values are used to seed the new box. This is typically the
@@ -31,7 +31,7 @@ namespace RegScan
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="defaults"/> is <c>null</c>.
         /// </exception>
-        public frmBoxCreate(BoxObj defaults)
+        public frmBoxOpen(BoxObj defaults)
         {
             if (defaults == null)
                 throw new ArgumentNullException(nameof(defaults));
@@ -155,7 +155,7 @@ namespace RegScan
                 // Keep the in-memory list in sync so the new box is immediately available.
                 BoxObj.AddBoxToList(createdBox);
 
-                CreatedBox = createdBox;
+                NewBox = createdBox;
 
                 //Inform the user of the success 
                 MessageBox.Show(this, "Box created successfully!", "Box Created",
@@ -167,7 +167,7 @@ namespace RegScan
             catch (Exception err)
             {
                 //if an error was caught show the warning to the user. Keep the dialog open
-                CreatedBox = null;
+                NewBox = null;
                 string msg = "There was an error creating the box. Please try again, or contact " +
                     "support if the problem persists.\n\n" + err.Message;
                 MessageBox.Show(this, msg, "Unable to Create Box", MessageBoxButtons.OK,
@@ -183,7 +183,7 @@ namespace RegScan
         /// <param name="e">Event data.</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            CreatedBox = null;
+            NewBox = null;
             DialogResult = DialogResult.Cancel;
             Close();
         }

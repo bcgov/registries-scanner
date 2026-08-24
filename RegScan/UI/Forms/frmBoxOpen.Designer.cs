@@ -1,6 +1,6 @@
 namespace RegScan
 {
-    partial class frmBoxCreate
+    partial class frmBoxOpen
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace RegScan
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoxCreate));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoxOpen));
             this.lblHeading = new System.Windows.Forms.Label();
             this.groupBoxAccessionNumber = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelBoxNumber = new System.Windows.Forms.FlowLayoutPanel();
@@ -179,7 +179,7 @@ namespace RegScan
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // frmBoxCreate
+            // frmBoxOpen
             // 
             this.AcceptButton = this.btnCreate;
             this.BackColor = System.Drawing.Color.White;
@@ -193,7 +193,7 @@ namespace RegScan
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmBoxCreate";
+            this.Name = "frmBoxOpen";
             this.groupBoxAccessionNumber.ResumeLayout(false);
             this.flowLayoutPanelBoxNumber.ResumeLayout(false);
             this.flowLayoutPanelBoxNumber.PerformLayout();
