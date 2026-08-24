@@ -703,6 +703,7 @@
             // 
             this.lblCurImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblCurImage.AutoSize = true;
+            this.lblCurImage.BackColor = System.Drawing.Color.Transparent;
             this.lblCurImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCurImage.Location = new System.Drawing.Point(179, 11);
             this.lblCurImage.Name = "lblCurImage";

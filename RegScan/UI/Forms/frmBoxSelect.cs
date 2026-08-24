@@ -104,7 +104,7 @@ namespace RegScan
             this.dataGridBoxes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Accession Number",
-                DataPropertyName = nameof(BoxObj.AccessionNumberDashes)
+                DataPropertyName = nameof(BoxObj.AccessionNumber.TextDashes)
             });
             this.dataGridBoxes.Columns.Add(new DataGridViewTextBoxColumn
             {

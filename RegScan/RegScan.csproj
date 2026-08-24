@@ -86,7 +86,6 @@
     <Compile Include="API\DocumentApi.cs" />
     <Compile Include="DocumentStorage\AccessionNumberObj.cs" />
     <Compile Include="DocumentStorage\BoxObj.cs" />
-    <Compile Include="DocumentStorage\SequenceScheduleObj.cs" />
     <Compile Include="UI\Forms\frmBoxCreate.cs">
       <SubType>Form</SubType>
     </Compile>

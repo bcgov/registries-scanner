@@ -45,9 +45,9 @@ namespace RegScan
 
             // Seed the editable fields with the supplied default values so the user can review
             // and adjust them before creating the box.
-            maskedTextBoxSequenceNumber.Text = _newBox.SequenceString.Trim();
-            maskedTextBoxScheduleNumber.Text = _newBox.ScheduleString.Trim();
-            maskedTextBoxBoxNumber.Text = _newBox.BoxNumber.ToString().Trim();
+            maskedTextBoxSequenceNumber.Text = _newBox.AccessionNumber.SequenceString.Trim();
+            maskedTextBoxScheduleNumber.Text = _newBox.AccessionNumber.ScheduleString.Trim();
+            maskedTextBoxBoxNumber.Text = _newBox.AccessionNumber.BoxNumber.ToString().Trim();
 
             // The opened date cannot be edited.
             textBoxOpenedDate.Text = _newBox.OpenedDateString;

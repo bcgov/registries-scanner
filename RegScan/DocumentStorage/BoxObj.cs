@@ -19,6 +19,8 @@ namespace RegScan
         private int _sequenceNumber;
         private int _scheduleNumber;
 
+        private AccessionNumberObj _accessionNumber;
+
         private static ICollection<BoxObj> _boxes;
 
         [JsonIgnore]
@@ -69,30 +71,9 @@ namespace RegScan
         public int ScheduleNumber { 
             get { return _scheduleNumber; } set { _scheduleNumber = value; }
         }
-        [JsonIgnore]
-        public string ScheduleString { get { return _scheduleNumber.ToString(); } }
         [JsonProperty("sequenceNumber")]
         public int SequenceNumber { 
             get { return _sequenceNumber; } set { _sequenceNumber = value; }
-        }
-        [JsonIgnore]
-        public string SequenceString { get { return _sequenceNumber.ToString(); } }
-        [JsonIgnore]
-        public string AccessionNumber
-        {
-            get { 
-                return String.Concat(
-                    _sequenceNumber.ToString(), _scheduleNumber.ToString(), _boxNumber.ToString());
-            }
-        }
-        [JsonIgnore]
-        public string AccessionNumberDashes
-        {
-            get
-            {
-                return String.Concat(_sequenceNumber.ToString(), "-", 
-                    _scheduleNumber.ToString(), "-", _boxNumber.ToString());
-            }
         }
         /// <summary>
         ///  The max batchID is used to determine if a box should be updated or not
@@ -105,12 +86,35 @@ namespace RegScan
         {
             get
             {
-                return string.Concat("\tAccession Number:\t" + this.AccessionNumberDashes + "\n" +
-                    "\tOpened on:\t\t" + this.OpenedDateString + "\t\n" +
+                return string.Concat("\tAccession Number:\t" + this.AccessionNumber.TextDashes +
+                    "\n\tOpened on:\t\t" + this.OpenedDateString + "\t\n" +
                     "\tClosed on:\t\t" + this.ClosedDateString + "\t\n" +
                     "\tTotal number of pages:\t" + this.PageCount.ToString());
 
             }
+        }
+
+        [JsonIgnore]
+        public AccessionNumberObj AccessionNumber
+        {
+            get { 
+                if (_accessionNumber == null)
+                {
+                    _accessionNumber = new AccessionNumberObj(
+                        _sequenceNumber, _scheduleNumber, _boxNumber);
+                }
+                return _accessionNumber;
+            }
+            set { 
+                _accessionNumber = new AccessionNumberObj(
+                    _sequenceNumber, _scheduleNumber, _boxNumber);
+            }
+        }
+
+        public BoxObj()
+        {
+            // Ensure the Accession Number is set when the box is created
+            //AccessionNumber = new AccessionNumberObj(_sequenceNumber, _scheduleNumber, _boxNumber);
         }
         
         /// <summary>

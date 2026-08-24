@@ -81,26 +81,15 @@ namespace RegScan
 
         // Document Class is listed here again. It will be the same as the Document Class above.
 
+        // Used to catch if the Accession Number has been set for a particular document record
+        private bool _accSet = false;
+        public bool AccSet { get { return _accSet; } }
+
         // Accession Number Values. 
-        private int _sequenceNumber;
-        private int _scheduleNumber;
-        private int _boxNumber;
-        public string SequenceNumberString { 
-            get { return _sequenceNumber.ToString().PadLeft(2, '0'); } }
-        public string ScheduleNumberString {
-            get { return _scheduleNumber.ToString().PadLeft(4, '0'); } }
-        public string BoxNumberString {
-            get { return _boxNumber.ToString().PadLeft(4, '0'); } }
-        public int SequenceNumber {
-            get { return _sequenceNumber; } set { _sequenceNumber = value; } }
-        public int ScheduleNumber {
-            get { return _scheduleNumber; } set { _scheduleNumber = value; } }
-        public int BoxNumber {
-            get { return _boxNumber; } set { _boxNumber = value; } }
-        public string AccessionNumberString { 
-            get { return string.Concat(_sequenceNumber.ToString().PadLeft(2, '0'), 
-                                       _scheduleNumber.ToString().PadLeft(4, '0'), 
-                                       _boxNumber.ToString().PadLeft(4, '0')); } }
+        private AccessionNumberObj _accNumber; 
+
+        public AccessionNumberObj AccessionNumber { 
+            get { return _accNumber; } set { _accNumber = value; } }
 
         // batch number -> not used in this app
 
@@ -319,7 +308,7 @@ namespace RegScan
             // Currently these are the only fields we want to update from the scanning application
             scanInfo.consumerDocumentId = _barCode.ToString();
             scanInfo.scanDateTime = _scannedDate.ToString("yyyy-MM-dd");
-            scanInfo.accessionNumber = AccessionNumberString;
+            scanInfo.accessionNumber = AccessionNumber.Text;
             scanInfo.author = _scannerIDIR;
             scanInfo.batchId = null;
             scanInfo.pageCount = _pageCount;
@@ -327,51 +316,6 @@ namespace RegScan
 
             model.description = _description;
             model.scanningInformation = scanInfo;
-        }
-
-        /// <summary>
-        /// Uses a regex string will match and group digits based on their placement. Because the
-        /// API returns a string value we we have to assume that it may not be well formatted. 
-        /// If accNumb does not match the regex pattern there will be issues. See more about the
-        /// Regex pattern used in the "<remarks>" section
-        /// </summary>
-        /// <param name="docObj">Object to add the Accession Number values to</param>
-        /// <param name="accNumb">String to be parsed for individual numbers</param>
-        /// <remarks>
-        /// The Regex pattern @"^(\d{0,2}).?(\d{4}).?(\d{4})$" can be read as:
-        ///   @ verbatim text string. Wont interoperate 'escape' characters
-        ///   ^ matches the start of the string (limits time and effort from 'greedy' algorithm)
-        ///   (\d{0,2}) Group 1 matches 0 to 2 digits
-        ///   .? matches 0 or 1 of any character
-        ///   (\d{4}) Group 2 matches exactly 4 characters
-        ///   (\d{4}) Group 3 matches exactly 4 characters
-        ///   $ matches the end of the string
-        /// So the following strings will match and result in the following groups:
-        ///   "11-2222-3333" -> group 1 = "11", group 2 = "2222", group 3 = "3333"
-        ///   "11 2222 3333" -> group 1 = "11", group 2 = "2222", group 3 = "3333"
-        ///   "1122223333"   -> group 1 = "11", group 2 = "2222", group 3 = "3333"
-        ///   "122223333"    -> group 1 = "1",  group 2 = "2222", group 3 = "3333"
-        /// </remarks>
-        static public bool SetAccessionNumbers(DocumentObj docObj, string accNumb)
-        {
-            bool success = false;
-            if (accNumb.Length >= 8)
-            {
-                string pattern = @"^(\d{0,2}).?(\d{4}).?(\d{4})$";
-
-                var match = System.Text.RegularExpressions.Regex.Match(accNumb, pattern);
-
-                // If the input matched our pattern we can parse the groups
-                if (match.Success)
-                {
-                    docObj._sequenceNumber = int.Parse(match.Groups[1].Value);
-                    docObj._scheduleNumber = int.Parse(match.Groups[2].Value);
-                    docObj._boxNumber = int.Parse(match.Groups[3].Value);
-                    success = true;
-                }
-            }
-            return success;
-            
         }
         
         /// <summary>
@@ -466,10 +410,12 @@ namespace RegScan
                 if (scanInfo.ContainsKey("scanDateTime"))
                     { docObj._scannedDate = (DateTime)scanInfo["scanDateTime"];}        
                 
-                // Try processing the Accession Number last, this is the area tha may have issues.
+                // Try processing the Accession Number last, this is the area that may have issues.
                 if (scanInfo.ContainsKey("accessionNumber")) {
                     string inAccNumber = (string)scanInfo["accessionNumber"];
-                    SetAccessionNumbers(docObj, inAccNumber);
+                    // set Accession Number and flag 
+                    docObj.AccessionNumber = new AccessionNumberObj(inAccNumber);
+                    docObj._accSet = true;
                 }
             }
         }

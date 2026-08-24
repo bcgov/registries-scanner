@@ -7,7 +7,7 @@ namespace RegScan
 {
     partial class frmBoxManagement : Form
     {
-        private BoxObj _currentBox;
+        private static BoxObj _currentBox;
         private int _batchID;
 
         /// <summary>
@@ -24,6 +24,11 @@ namespace RegScan
                 BoxObj.RefreshBoxList();
                 // From the box list set _current box to be the most recently opened box
                 _currentBox = GetMostRecentBox();
+                
+                // Get the highest Batch ID for the current box
+                RefreshBatchId();
+                // Update the fields of the form
+                UpdateFields();
             }
             catch (TypeAccessException err)
             {
@@ -34,10 +39,6 @@ namespace RegScan
                 UtilityObj.WriteLog(UtilityObj.error, err.ToString());
             }
             
-            // Get the highest Batch ID for the current box
-            RefreshBatchId();
-            // Update the fields of the form
-            UpdateFields();
         }
 
         public BoxObj GetMostRecentBox()
@@ -75,13 +76,19 @@ namespace RegScan
                 textBoxClosedDate.Visible = true;
                 btnCloseBox.Visible = false;
             }
+
+            // Check if there is a Current Document set
+            if ( frmScannerDocument.CurrentDocuement != null)
+            {
+                // Check if the 
+            }
         }
 
         /// <summary>
         /// Gets the box currently selected in this form. Downstream document scanning
         /// and indexing processes can read this value to associate work with a box.
         /// </summary>
-        public BoxObj SelectedBox
+        public static BoxObj SelectedBox
         {
             get { return _currentBox; }
         }
@@ -121,7 +128,7 @@ namespace RegScan
         /// </summary>
         private void RefreshBatchId()
         {
-            var ret = BoxAPI.GetBatchID(_currentBox.AccessionNumber);
+            var ret = BoxAPI.GetBatchID(_currentBox.AccessionNumber.Text);
             _batchID = ret;
             _currentBox.MaxBatchID = ret;
         }

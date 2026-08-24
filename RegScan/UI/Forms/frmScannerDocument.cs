@@ -28,7 +28,7 @@ namespace RegScan
         /// <summary>
         /// Current active document.
         /// </summary>
-        DocumentObj _currentDocument = null;
+        private static DocumentObj _currentDocument = null;
 
         /// <summary>
         /// Used to control how the parent form will handle the closing of this form
@@ -75,6 +75,8 @@ namespace RegScan
         /// Current device.
         /// </summary>
         Device _currentDevice;
+
+        public static DocumentObj CurrentDocuement { get { return _currentDocument; } }
 
         #endregion
         public frmScannerDocument()
@@ -263,6 +265,7 @@ namespace RegScan
                 try
                 {
                     List<DocumentObj> resp = DocumentObj.Find(barCode);
+                    // if there is more than one document record select the first
                     if (resp.Count >= 1)
                         doc = resp[0];
                 }
@@ -393,6 +396,19 @@ namespace RegScan
                     btnRotateImg.Enabled = true;
                     btnImagePDF.Enabled = true;
                 }
+
+                // If there is a discrepency between the current working box and the
+                // accession number for this document show the user a warning.
+                if (!CompareAccessionNumbers())
+                {
+                    string msg = "The current working box does not match the accession number " +
+                        "for this document record.\nPlease verify the current working box and " +
+                        "Document Record information.\nDocument Record: " + 
+                        _currentDocument.AccessionNumber.TextDashes + "\nCurrent Box: " + 
+                        frmBoxManagement.SelectedBox.AccessionNumber.TextDashes;
+                    string title = "Mismatched Accession Numbers";
+                    MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
 
             // NOTE Create a new record for the scanned image logic could be added here
@@ -406,6 +422,28 @@ namespace RegScan
                     imageBox.Image = null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares the current working box Accession Number to the values returned by DRS API.
+        /// </summary>
+        /// <returns>
+        /// True if the numbers match, or if the API returned nothing for the Accession Number
+        /// </returns>
+        public bool CompareAccessionNumbers()
+        {
+            bool accNumberMatch = false;
+
+            // If we got a value for the Accession Number check 
+            if (_currentDocument.AccSet)
+            {
+                accNumberMatch = AccessionNumberObj.CompareAccessionObsj(_currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber);
+            }
+            // If we didnt get a value for the Accession Number return true (nothing to compare)
+            else
+                accNumberMatch = true;
+
+            return accNumberMatch;
         }
 
         /// <summary>
@@ -671,6 +709,10 @@ namespace RegScan
         /// </summary>
         protected void SetForm()
         {
+            // TODO - add check for Accession number comparison here.
+            // If there is an accession number for the docuemnt record that DOESN'T match the
+            // accession number for the current working box show a warning to the user
+
             // Document Record Details
             txtBarCode.Text = _currentDocument.BarCode;
             txtLegalEntityKey.Text = _currentDocument.LegalEntityKey;
@@ -1068,6 +1110,15 @@ namespace RegScan
             // Validation
             if (_currentDocument == null)
                 return;
+
+            if (!CompareAccessionNumbers())
+            {
+                string msg = "Current working box does not match Document Record Accession Number. ";
+                var usr_rsp = MessageBox.Show(msg, "Accession Number Mismatch",
+                    MessageBoxButtons.YesNo);
+                if (usr_rsp == System.Windows.Forms.DialogResult.No)
+                    return;
+            }
 
             if (_currentDocument.PageCount != _scannedImageList.Count)
             {
