@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using RegScan.DocumentStorage;
 
 namespace RegScan
 {
@@ -36,20 +38,72 @@ namespace RegScan
             if (defaults == null)
                 throw new ArgumentNullException(nameof(defaults));
 
+            // Try to refresh the Schedule list when the form opens
+            Schedules.RefreshList();
+
             InitializeComponent();
 
             // Create a new box from the default values - applying standard updates
             _newBox = BoxObj.CreateFromDefaults(defaults);
 
-            // Seed the editable fields with the supplied default values so the user can review
-            // and adjust them before creating the box.
-            // TODO - add event handlers to the fields to validate and update background colour on change
-            maskedTextBoxSequenceNumber.Text = _newBox.AccessionNumber.SequenceString.Trim();
-            maskedTextBoxScheduleNumber.Text = _newBox.AccessionNumber.ScheduleString.Trim();
+            
+            // load all available values for Sequence and Schedule numbers
+            RefreshComboBoxes();
+
+            // Pre select based on the default value
+            Schedules newBoxSech = new Schedules(_newBox.AccessionNumber);
+            comboBoxSeqSch.SelectedItem = newBoxSech.PrettyText;
+
+            // Add Event Handlers for updating the combo box selection change
+            comboBoxSeqSch.SelectedIndexChanged += SelectionChanged;
+
+            // Seed the editable Box Number field with the supplied default value
             maskedTextBoxBoxNumber.Text = _newBox.AccessionNumber.BoxNumber.ToString().Trim();
 
             // The opened date cannot be edited.
             textBoxOpenedDate.Text = _newBox.OpenedDateString;
+        }
+
+        private void RefreshComboBoxes()
+        {
+            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
+        }
+
+        private static void PopulateComboBox(
+            ComboBox combo, IEnumerable<string> values, bool sort = true)
+        {
+            string previous = combo.SelectedItem as string;
+
+            List<string> options = values
+                .Where(v => !string.IsNullOrEmpty(v))
+                .Distinct()
+                .ToList();
+
+            if (sort)
+                options = options.OrderBy(v => v, StringComparer.OrdinalIgnoreCase).ToList();
+
+            combo.DataSource = options;
+
+            // Preselect the previously selected item if it was set. 
+            // If not use the first index in the list.
+            int index = previous != null ? options.IndexOf(previous) : 0;
+            combo.SelectedIndex = index >= 0 ? index : 0;
+        }
+
+        private IEnumerable<Schedules> RefineList(ComboBox excluded)
+        {
+            IEnumerable<Schedules> refinedList = Schedules.ScheduleList;
+
+            if (excluded != comboBoxSeqSch)
+            {
+                // Get the current selected item
+                string prev = comboBoxSeqSch.SelectedItem as string;
+                // 
+                if (!string.IsNullOrEmpty(prev))
+                    refinedList = refinedList.Where(b => b.PrettyText == prev);
+            }
+
+            return refinedList;
         }
 
         /// <summary>
@@ -62,21 +116,22 @@ namespace RegScan
         /// <c>true</c> when every field contains a valid, non-zero numeric value; otherwise
         /// <c>false</c>.
         /// </returns>
-        private bool TryValidateFields(out int sequence, out int schedule, out int boxNumber)
+        private bool TryValidateFields()
         {
+            Schedules newSch = null;
+            int boxNumber;
             var errors = new List<string>();
 
             //TODO - update background colour of fields based on if they are acceptable
-            if (!TryParseField(maskedTextBoxSequenceNumber.Text, out sequence))
+            try
             {
-                errors.Add("Sequence number must be a numeric value greater than zero.");
+                newSch = new Schedules(comboBoxSeqSch.Text);
             }
-                
-            if (!TryParseField(maskedTextBoxScheduleNumber.Text, out schedule))
+            catch
             {
-                errors.Add("Schedule number must be a numeric value greater than zero.");
+                errors.Add("Error selecting Sequence and Schedule numbers.");
             }
-                
+
             if (!TryParseField(maskedTextBoxBoxNumber.Text, out boxNumber))
             {
                 errors.Add("Box number must be a numeric value greater than zero.");
@@ -93,9 +148,10 @@ namespace RegScan
             }
 
             // Update the new box to match the entered values
-            _newBox.SequenceNumber = sequence;
-            _newBox.ScheduleNumber = schedule;
+            _newBox.SequenceNumber = newSch.Sequence;
+            _newBox.ScheduleNumber = newSch.Schedule;
             _newBox.BoxNumber = boxNumber;
+            
 
             return true;
         }
@@ -113,6 +169,14 @@ namespace RegScan
             return int.TryParse(trimmed, out value) && value > 0;
         }
 
+        /// <summary>Re-applies the ComboBoxes on any comboBox selection.</summary>
+        /// <param name="sender"> An update to a selected filter facet</param>
+        /// <param name="e">Event Data</param>
+        private void SelectionChanged(object sender, EventArgs e)
+        {
+            RefreshComboBoxes();
+        }
+
         /// <summary>
         /// Validates the entered values, submits the new box to the DRS API, and closes the
         /// dialog on success.
@@ -123,7 +187,7 @@ namespace RegScan
         {
             // If the fields are unable to be parsed into ints keep the dialog open 
             // so the user can try again
-            if (!TryValidateFields(out int sequence, out int schedule, out int boxNumber))
+            if (!TryValidateFields())
             {
                 DialogResult = DialogResult.None;
                 return;

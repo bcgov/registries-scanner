@@ -29,42 +29,27 @@ namespace RegScan
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoxOpen));
-            this.lblHeading = new System.Windows.Forms.Label();
             this.groupBoxAccessionNumber = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelBoxNumber = new System.Windows.Forms.FlowLayoutPanel();
             this.boxNumberLabel = new System.Windows.Forms.Label();
             this.maskedTextBoxBoxNumber = new System.Windows.Forms.MaskedTextBox();
-            this.flowLayoutPanelSchedule = new System.Windows.Forms.FlowLayoutPanel();
-            this.ScheduleLabel = new System.Windows.Forms.Label();
-            this.maskedTextBoxScheduleNumber = new System.Windows.Forms.MaskedTextBox();
             this.flowLayoutPanelSequence = new System.Windows.Forms.FlowLayoutPanel();
             this.SequenceLabel = new System.Windows.Forms.Label();
-            this.maskedTextBoxSequenceNumber = new System.Windows.Forms.MaskedTextBox();
+            this.comboBoxSeqSch = new System.Windows.Forms.ComboBox();
             this.groupBoxDates = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanelOpened = new System.Windows.Forms.FlowLayoutPanel();
-            this.BoxOpenDateLabel = new System.Windows.Forms.Label();
             this.textBoxOpenedDate = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBoxAccessionNumber.SuspendLayout();
             this.flowLayoutPanelBoxNumber.SuspendLayout();
-            this.flowLayoutPanelSchedule.SuspendLayout();
             this.flowLayoutPanelSequence.SuspendLayout();
             this.groupBoxDates.SuspendLayout();
-            this.flowLayoutPanelOpened.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblHeading
-            // 
-            resources.ApplyResources(this.lblHeading, "lblHeading");
-            this.lblHeading.ForeColor = System.Drawing.Color.Black;
-            this.lblHeading.Name = "lblHeading";
             // 
             // groupBoxAccessionNumber
             // 
             this.groupBoxAccessionNumber.BackColor = System.Drawing.Color.Transparent;
             this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelBoxNumber);
-            this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelSchedule);
             this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelSequence);
             resources.ApplyResources(this.groupBoxAccessionNumber, "groupBoxAccessionNumber");
             this.groupBoxAccessionNumber.Name = "groupBoxAccessionNumber";
@@ -85,38 +70,17 @@ namespace RegScan
             // 
             // maskedTextBoxBoxNumber
             // 
-            this.maskedTextBoxBoxNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.maskedTextBoxBoxNumber.BackColor = System.Drawing.Color.White;
             this.maskedTextBoxBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             resources.ApplyResources(this.maskedTextBoxBoxNumber, "maskedTextBoxBoxNumber");
             this.maskedTextBoxBoxNumber.Name = "maskedTextBoxBoxNumber";
             this.maskedTextBoxBoxNumber.ResetOnSpace = false;
             // 
-            // flowLayoutPanelSchedule
-            // 
-            this.flowLayoutPanelSchedule.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanelSchedule.Controls.Add(this.ScheduleLabel);
-            this.flowLayoutPanelSchedule.Controls.Add(this.maskedTextBoxScheduleNumber);
-            resources.ApplyResources(this.flowLayoutPanelSchedule, "flowLayoutPanelSchedule");
-            this.flowLayoutPanelSchedule.Name = "flowLayoutPanelSchedule";
-            // 
-            // ScheduleLabel
-            // 
-            resources.ApplyResources(this.ScheduleLabel, "ScheduleLabel");
-            this.ScheduleLabel.Name = "ScheduleLabel";
-            // 
-            // maskedTextBoxScheduleNumber
-            // 
-            this.maskedTextBoxScheduleNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
-            this.maskedTextBoxScheduleNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.maskedTextBoxScheduleNumber, "maskedTextBoxScheduleNumber");
-            this.maskedTextBoxScheduleNumber.Name = "maskedTextBoxScheduleNumber";
-            this.maskedTextBoxScheduleNumber.ResetOnSpace = false;
-            // 
             // flowLayoutPanelSequence
             // 
             this.flowLayoutPanelSequence.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelSequence.Controls.Add(this.SequenceLabel);
-            this.flowLayoutPanelSequence.Controls.Add(this.maskedTextBoxSequenceNumber);
+            this.flowLayoutPanelSequence.Controls.Add(this.comboBoxSeqSch);
             resources.ApplyResources(this.flowLayoutPanelSequence, "flowLayoutPanelSequence");
             this.flowLayoutPanelSequence.Name = "flowLayoutPanelSequence";
             // 
@@ -125,34 +89,19 @@ namespace RegScan
             resources.ApplyResources(this.SequenceLabel, "SequenceLabel");
             this.SequenceLabel.Name = "SequenceLabel";
             // 
-            // maskedTextBoxSequenceNumber
+            // comboBoxSeqSch
             // 
-            this.maskedTextBoxSequenceNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
-            this.maskedTextBoxSequenceNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.maskedTextBoxSequenceNumber, "maskedTextBoxSequenceNumber");
-            this.maskedTextBoxSequenceNumber.Name = "maskedTextBoxSequenceNumber";
-            this.maskedTextBoxSequenceNumber.ResetOnSpace = false;
+            resources.ApplyResources(this.comboBoxSeqSch, "comboBoxSeqSch");
+            this.comboBoxSeqSch.FormattingEnabled = true;
+            this.comboBoxSeqSch.Name = "comboBoxSeqSch";
             // 
             // groupBoxDates
             // 
             this.groupBoxDates.BackColor = System.Drawing.Color.Transparent;
-            this.groupBoxDates.Controls.Add(this.flowLayoutPanelOpened);
+            this.groupBoxDates.Controls.Add(this.textBoxOpenedDate);
             resources.ApplyResources(this.groupBoxDates, "groupBoxDates");
             this.groupBoxDates.Name = "groupBoxDates";
             this.groupBoxDates.TabStop = false;
-            // 
-            // flowLayoutPanelOpened
-            // 
-            this.flowLayoutPanelOpened.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanelOpened.Controls.Add(this.BoxOpenDateLabel);
-            this.flowLayoutPanelOpened.Controls.Add(this.textBoxOpenedDate);
-            resources.ApplyResources(this.flowLayoutPanelOpened, "flowLayoutPanelOpened");
-            this.flowLayoutPanelOpened.Name = "flowLayoutPanelOpened";
-            // 
-            // BoxOpenDateLabel
-            // 
-            resources.ApplyResources(this.BoxOpenDateLabel, "BoxOpenDateLabel");
-            this.BoxOpenDateLabel.Name = "BoxOpenDateLabel";
             // 
             // textBoxOpenedDate
             // 
@@ -189,7 +138,6 @@ namespace RegScan
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.groupBoxDates);
             this.Controls.Add(this.groupBoxAccessionNumber);
-            this.Controls.Add(this.lblHeading);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -197,36 +145,25 @@ namespace RegScan
             this.groupBoxAccessionNumber.ResumeLayout(false);
             this.flowLayoutPanelBoxNumber.ResumeLayout(false);
             this.flowLayoutPanelBoxNumber.PerformLayout();
-            this.flowLayoutPanelSchedule.ResumeLayout(false);
-            this.flowLayoutPanelSchedule.PerformLayout();
             this.flowLayoutPanelSequence.ResumeLayout(false);
             this.flowLayoutPanelSequence.PerformLayout();
             this.groupBoxDates.ResumeLayout(false);
-            this.flowLayoutPanelOpened.ResumeLayout(false);
-            this.flowLayoutPanelOpened.PerformLayout();
+            this.groupBoxDates.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label lblHeading;
         private System.Windows.Forms.GroupBox groupBoxAccessionNumber;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBoxNumber;
         private System.Windows.Forms.Label boxNumberLabel;
         private System.Windows.Forms.MaskedTextBox maskedTextBoxBoxNumber;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelSchedule;
-        private System.Windows.Forms.Label ScheduleLabel;
-        private System.Windows.Forms.MaskedTextBox maskedTextBoxScheduleNumber;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelSequence;
         private System.Windows.Forms.Label SequenceLabel;
-        private System.Windows.Forms.MaskedTextBox maskedTextBoxSequenceNumber;
         private System.Windows.Forms.GroupBox groupBoxDates;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelOpened;
-        private System.Windows.Forms.Label BoxOpenDateLabel;
         private System.Windows.Forms.TextBox textBoxOpenedDate;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.ComboBox comboBoxSeqSch;
     }
 }

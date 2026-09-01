@@ -96,7 +96,6 @@ namespace RegScan
         /// <param name="e">User selecting Okay button</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
-            bool resetForm = false;
             // Check if the entered value is empty or null
             if (!string.IsNullOrEmpty(txtBox.Text) )
             {
