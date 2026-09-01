@@ -54,7 +54,10 @@ namespace RegScan
         {
             string endpoint = "/doc/api/v1/scanning/boxes";
 
-            return APIRequest.MakeKeyRequest(box, endpoint, RestSharp.Method.Patch);
+            // transform the boxObj to the scanningBox Schema
+            CreateBoxModel newBox = new CreateBoxModel(box);
+
+            return APIRequest.MakeKeyRequest(newBox, endpoint, RestSharp.Method.Patch);
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace RegScan
     }
 
     /// <summary>
-    /// Used to create the POST request for boxes with the DRS API. The matching schema is:
+    /// Used to create requests for boxes with the DRS API. The matching schema is:
     /// {
     ///   "boxNumber": <int>,
     ///   "openedDate": <str>,
@@ -82,11 +85,14 @@ namespace RegScan
     ///   "scheduleNumber": <int>,
     ///   "sequenceNumber": <int>
     ///   }
+    ///   BoxIDs are only used after the box is created. Close dates are only set on close.
     /// </summary>
     public class CreateBoxModel
     {
+        public int? boxId;
         public int boxNumber;
         public DateTimeOffset openedDate;
+        public DateTimeOffset? closedDate;
         public int pageCount;
         public int sequenceNumber;
         public int scheduleNumber;
@@ -102,6 +108,12 @@ namespace RegScan
             pageCount = inBox.PageCount;
             sequenceNumber = inBox.SequenceNumber;
             scheduleNumber = inBox.ScheduleNumber;
+
+            if (inBox.IsClosed)
+                closedDate = inBox.ClosedDate;
+            // The default for unset ints is 0
+            if (inBox.BoxId != 0)
+                boxId = inBox.BoxId;
         }
     }
 }
