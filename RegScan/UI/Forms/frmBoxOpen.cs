@@ -48,7 +48,7 @@ namespace RegScan
 
             
             // load all available values for Sequence and Schedule numbers
-            RefreshComboBoxes();
+            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
 
             // Pre select based on the default value
             Schedules newBoxSech = new Schedules(_newBox.AccessionNumber);
@@ -64,11 +64,13 @@ namespace RegScan
             textBoxOpenedDate.Text = _newBox.OpenedDateString;
         }
 
-        private void RefreshComboBoxes()
-        {
-            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
-        }
-
+        /// <summary>
+        /// Given a comboBox list all the objects within the enumerable values. If sort is applied
+        /// (or not provided) sort the list by string comparison. 
+        /// </summary>
+        /// <param name="combo">ComboBox to be populated</param>
+        /// <param name="values">Values supplied for the comboBox</param>
+        /// <param name="sort">default True. Sort values by string comparison</param>
         private static void PopulateComboBox(
             ComboBox combo, IEnumerable<string> values, bool sort = true)
         {
@@ -169,12 +171,14 @@ namespace RegScan
             return int.TryParse(trimmed, out value) && value > 0;
         }
 
-        /// <summary>Re-applies the ComboBoxes on any comboBox selection.</summary>
+        /// <summary>
+        /// Re-applies the ComboBoxes on any comboBox selection.
+        /// </summary>
         /// <param name="sender"> An update to a selected filter facet</param>
         /// <param name="e">Event Data</param>
         private void SelectionChanged(object sender, EventArgs e)
         {
-            RefreshComboBoxes();
+            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
         }
 
         /// <summary>

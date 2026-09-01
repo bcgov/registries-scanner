@@ -216,7 +216,9 @@ namespace RegScan
             combo.SelectedIndex = index >= 0 ? index : 0;
         }
 
-        /// <summary>Rebinds the results grid to the boxes matching all facets.</summary>
+        /// <summary>
+        /// Rebinds the results grid to the boxes matching all facets.
+        /// </summary>
         private void RefreshGrid()
         {
             List<BoxObj> matches = GetMatches(null)
@@ -232,7 +234,9 @@ namespace RegScan
                 SelectGridRow(0);
         }
 
-        /// <summary>Returns the selected facet value, or <c>null</c> for "(Any)".</summary>
+        /// <summary>
+        /// Returns the selected facet value, or <c>null</c> for "(Any)".
+        /// </summary>
         private static string SelectedValue(ComboBox combo)
         {
             string value = combo.SelectedItem as string;
@@ -243,14 +247,18 @@ namespace RegScan
 
         #region Selection helpers
 
-        /// <summary>Gets the box bound to the grid's current row, or <c>null</c>.</summary>
+        /// <summary>
+        /// Gets the box bound to the grid's current row, or <c>null</c>.
+        /// </summary>
         private BoxObj CurrentGridSelection()
         {
             return dataGridBoxes.CurrentRow != null ? 
                 dataGridBoxes.CurrentRow.DataBoundItem as BoxObj : null;
         }
 
-        /// <summary>Selects the grid row at <paramref name="index"/> when valid.</summary>
+        /// <summary>
+        /// Selects the grid row at <paramref name="index"/> when valid.
+        /// </summary>
         private void SelectGridRow(int index)
         {
             if (index < 0 || index >= dataGridBoxes.Rows.Count)
@@ -260,7 +268,9 @@ namespace RegScan
             dataGridBoxes.CurrentCell = dataGridBoxes.Rows[index].Cells[0];
         }
 
-        /// <summary>Highlights the supplied box in the grid when it is present.</summary>
+        /// <summary>
+        /// Highlights the supplied box in the grid when it is present.
+        /// </summary>
         private void PreSelect(BoxObj currentBox)
         {
             if (currentBox == null)
@@ -278,7 +288,9 @@ namespace RegScan
 
         #region Event handlers
 
-        /// <summary>Re-applies the facets and refreshes the grid on any facet change.</summary>
+        /// <summary>
+        /// Re-applies the facets and refreshes the grid on any facet change.
+        /// </summary>
         /// <param name="sender"> An update to a selected filter facet</param>
         /// <param name="e">Event Data</param>
         private void Facet_Changed(object sender, EventArgs e)
@@ -290,7 +302,9 @@ namespace RegScan
             RefreshGrid();
         }
 
-        /// <summary>Clears every facet back to "(Any)".</summary>
+        /// <summary>
+        /// Clears every facet back to "(Any)".
+        /// </summary>
         /// <param name="sender">Reset Fields Button</param>
         /// <param name="e">Event Data</param>
         private void btnReset_Click(object sender, EventArgs e)
@@ -312,7 +326,9 @@ namespace RegScan
             RefreshGrid();
         }
 
-        /// <summary>Treats a double-click on a grid row as confirming the selection.</summary>
+        /// <summary>
+        /// Treats a double-click on a grid row as confirming the selection.
+        /// </summary>
         /// <param name="sender"> Double clicking a row in the data grid</param>
         /// <param name="e">Event Data</param>
         private void Grid_DoubleClick(object sender, EventArgs e)

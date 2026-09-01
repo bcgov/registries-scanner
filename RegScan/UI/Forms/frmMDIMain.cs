@@ -32,7 +32,7 @@ namespace RegScan
         #endregion
         #region Fields
 
-        // The current child frmScannerDocument form 
+        // The current child frmScannerDocument and frmBoxManagement forms 
         static frmScannerDocument _scannerForm = null;
         static frmBoxManagement _boxForm = null;
 

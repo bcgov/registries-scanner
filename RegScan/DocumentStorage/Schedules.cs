@@ -29,16 +29,31 @@ namespace RegScan.DocumentStorage
         [JsonIgnore]
         public static List<Schedules> ScheduleList { get { return _scheduleList; } }
 
+        /// <summary>
+        /// Empty constructor. Used by Newtonsoft.JSON package for serializing and deserializing
+        /// text to structs.
+        /// </summary>
         public Schedules()
         {
         }
 
+        /// <summary>
+        /// Constructor from AccessionNumberObj. Break the sequence and schedule number out. 
+        /// </summary>
+        /// <param name="accNumb">Given accessionNumberObj</param>
         public Schedules(AccessionNumberObj accNumb)
         {
             _sequenceNumber = accNumb.Sequence;
             _scheduleNumber = accNumb.Schedule;
         }
 
+        /// <summary>
+        /// Constructor from a string. If the string matches the structure 
+        ///    <EE>.<CCCC>
+        /// where EE can be a 1 to 2 digits and CCCC can be 1 to 4 digits. The separator <.>
+        /// can be any single character or not existent (0 to 1 characters). 
+        /// </summary>
+        /// <param name="seqSchText">String schedule value</param>
         public Schedules(string seqSchText)
         {
             if (seqSchText.Length >= 7)
@@ -56,6 +71,13 @@ namespace RegScan.DocumentStorage
             }
         }
 
+        /// <summary>
+        /// Request the list of schedule values from DRS API. Update static field to match
+        /// the new data.
+        /// </summary>
+        /// <exception cref="TypeAccessException">
+        /// Thrown if the string returned from the API is null or empty
+        /// </exception>
         public static void RefreshList()
         {
             string newSchedules = ScheduleAPI.GetSchedules();

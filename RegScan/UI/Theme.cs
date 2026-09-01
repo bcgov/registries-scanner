@@ -98,7 +98,7 @@ namespace RegScan.UI
         /// MUST be const -> static readonly will not work in switch-case statements
         /// </summary>
 
-        // 1 = small, 2 = medium, 3 = large, 4 = xtra large.
+        // 1 = small, 2 = medium, 3 = large, 4 = extra large.
         public const byte SM = 1;
         public const byte MD = 2;
         public const byte LG = 3;
@@ -121,7 +121,7 @@ namespace RegScan.UI
     /// <remarks>
     /// 1.  Use caution when updating these values. They are referenced for various elements above
     /// changes may have wider affects than anticipated. 
-    /// 2.  Using colour variable from this class directly in a form element is discourcged. This
+    /// 2.  Using colour variable from this class directly in a form element is discouraged. This
     /// will reduce the risks of the first remark.
     /// 3.  Always check if a colour already exists in this class before adding.
     /// </remarks>

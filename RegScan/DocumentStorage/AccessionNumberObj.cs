@@ -79,6 +79,13 @@ namespace RegScan
             }
         }
 
+        /// <summary>
+        /// Given two accession number objects return true if all fields are identical, false
+        /// if any one field differs. 
+        /// </summary>
+        /// <param name="a">The AccessionNumberObj to compare</param>
+        /// <param name="b">The AccessionNumberObj to compare against</param>
+        /// <returns>True if all fields are identical, false otherwise</returns>
         public static bool CompareAccessionObsj(AccessionNumberObj a, AccessionNumberObj b)
         {
             bool match = a._sequenceNumber == b._sequenceNumber &&

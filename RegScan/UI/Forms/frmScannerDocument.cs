@@ -696,12 +696,22 @@ namespace RegScan
         }
 
         
+        /// <summary>
+        /// Given a background colour update all accession number fields to that colour
+        /// </summary>
+        /// <param name="updatedBackground">colour value for background</param>
         public void SetBackgroundAccFields(Color updatedBackground)
         {
             maskedTextBoxSequenceNumber.BackColor = updatedBackground;
             maskedTextBoxScheduleNumber.BackColor = updatedBackground;
             maskedTextBoxBoxNumber.BackColor = updatedBackground;
         }
+        
+        /// <summary>
+        /// Set the document fields for accession numbers based on the document record
+        /// If these values differ from the current working box inform the user and change the
+        /// background of the fields.
+        /// </summary>
         protected void SetDocumentAccessionForm()
         {
             if (_currentDocument.AccSet)
@@ -711,7 +721,7 @@ namespace RegScan
                 maskedTextBoxBoxNumber.Text = _currentDocument.AccessionNumber.BoxString;
 
                 // Check if the Accession Number matches the current box
-                // If there is a discrepency between the current working box and the
+                // If there is a discrepancy between the current working box and the
                 // accession number for this document show the user a warning.
                 if (!AccessionNumberObj.CompareAccessionObsj(
                     _currentDocument.AccessionNumber,
@@ -769,7 +779,7 @@ namespace RegScan
         
         /// <summary>
         /// Add a progress bar to the form. If this is added through the UI it will be within
-        /// another control. We want it to stay infront of all controls. 
+        /// another control. We want it to stay in front of all controls. 
         /// </summary>
         protected void LoadControls()
         {
@@ -787,6 +797,9 @@ namespace RegScan
 
         #region Scanner Methods
 
+        /// <summary>
+        /// If there is not a current device manager create one.
+        /// </summary>
         public void CreateTwainDeviceManager()
         {
             try
@@ -1253,8 +1266,8 @@ namespace RegScan
         /// <summary>
         /// Fires when this forms becomes active.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Opening form event</param>
+        /// <param name="e">Event Data</param>
         private void frmScanDocument_Activated(object sender, EventArgs e)
         {
             // Form is maximized.
@@ -1267,6 +1280,12 @@ namespace RegScan
             btnScanPage.Focus();
         }
 
+        /// <summary>
+        /// Invoked when the user selects "delete image" button. Confirm and remove the image
+        /// currently displayed. Once finished show the image that came before the deleted image.
+        /// </summary>
+        /// <param name="sender">Delete Image Button</param>
+        /// <param name="e">Event data</param>
         private void btnDeleteImage_Click(object sender, EventArgs e)
         {
             // Confirm this image is to be deleted.
