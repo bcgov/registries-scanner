@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls.WebParts;
 using System.Windows.Forms;
 
 namespace RegScan
 {
-    partial class frmBoxManagement : Form
+    public partial class frmBoxManagement : Form
     {
         private static BoxObj _currentBox;
         private static int _batchID;
@@ -41,6 +39,45 @@ namespace RegScan
                 MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 UtilityObj.WriteLog(UtilityObj.error, err.ToString());
             }
+            
+        }
+
+        /// <summary>
+        /// Gets the box currently selected in this form. Downstream document scanning
+        /// and indexing processes can read this value to associate work with a box.
+        /// </summary>
+        public static BoxObj SelectedBox
+        {
+            get { return _currentBox; }
+        }
+
+        /// <summary>
+        /// Used if there are updates to the box record (page count, close date) that
+        /// need to be captured by DRS API.
+        /// </summary>
+        /// <exception cref="ApplicationException">
+        /// If an error is hit while attempting to update the box record - clean and rethrow
+        /// </exception>
+        public void UpdateCurrentBox()
+        {
+            try
+            {
+                BoxAPI.UpdateBox(_currentBox);
+            }
+            catch (Exception e)
+            {
+                string msg = "Unable to update box record. Current data for \n" +
+                                SelectedBox.InfoString + "\nmay be inaccurate.";
+                UtilityObj.WriteLog(UtilityObj.error,
+                    "Scanned document Image failed PATCH to update box record.\n" +
+                    e.ToString());
+                throw new ApplicationException(msg);
+            }
+
+            // After the box is updated ensure the fields and record match
+            UpdateFields();
+            BoxObj.UpdateBoxInList(_currentBox);
+
             
         }
 
@@ -87,20 +124,30 @@ namespace RegScan
                 btnCloseBox.Visible = false;
             }
 
-            // Check if there is a Current Document set
-            if ( frmScannerDocument.CurrentDocuement != null)
-            {
-                // Check if the 
-            }
-        }
+            DocumentObj current = frmScannerDocument.CurrentDocument;
 
-        /// <summary>
-        /// Gets the box currently selected in this form. Downstream document scanning
-        /// and indexing processes can read this value to associate work with a box.
-        /// </summary>
-        public static BoxObj SelectedBox
-        {
-            get { return _currentBox; }
+            // Check if there is a Current Document set with an accession number
+            if ( current != null && current.AccSet)
+            {
+                // Check if the Accession number matches the current document if not warn the user
+                if(!AccessionNumberObj.CompareAccessionObsj(
+                    current.AccessionNumber, _currentBox.AccessionNumber))
+                {
+                    string msg = "The Accession Number of the selected box does not match " +
+                        "the current document. The document can not be saved to this box. " + 
+                        "\nPlease check the Accession Numbers.\n" + 
+                        "\nCurrent Box: " + current.AccessionNumber.TextDashes + 
+                        "\nCurrent Document: " + _currentBox.AccessionNumber.TextDashes;
+                    MessageBox.Show(msg, "Accession Number Mismatch", MessageBoxButtons.OK);
+                    frmMDIMain.ScannerForm.SetBackgroundAccFields(Theme.WarningBackgroundLight);
+                }
+                else
+                {
+                    // ensure all fields are their normal background
+                    frmMDIMain.ScannerForm.SetBackgroundAccFields(Theme.Disabled);
+                }
+            }
+            
         }
 
         /// <summary>
@@ -216,7 +263,7 @@ namespace RegScan
                 try
                 {
                     // Update the box record in DRS API
-                    var ret = BoxAPI.UpdateBox(_currentBox);
+                    UpdateCurrentBox();
                     // Update the box in the list of boxes
                     BoxObj.UpdateBoxInList(_currentBox);
                     // Update form contents
@@ -255,7 +302,7 @@ namespace RegScan
                 if (dialog.ShowDialog(this) != DialogResult.OK)
                     return; // user cancelled or creation failed; leave state unchanged.
 
-                BoxObj created = dialog.CreatedBox;
+                BoxObj created = dialog.NewBox;
                 if (created == null)
                     return; // no valid box was created; preserve existing state.
 

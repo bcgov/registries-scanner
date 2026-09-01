@@ -81,9 +81,11 @@ namespace RegScan
 
         public static bool CompareAccessionObsj(AccessionNumberObj a, AccessionNumberObj b)
         {
-            return a._sequenceNumber == b._sequenceNumber &&
+            bool match = a._sequenceNumber == b._sequenceNumber &&
                 a._scheduleNumber == b._scheduleNumber &&
                 a._boxNumber == b._boxNumber;
+
+            return match;
         }
 
     }
