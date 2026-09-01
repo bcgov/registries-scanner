@@ -30,6 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmScannerDocument));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBoxAccessionNumber = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanelBoxNumber = new System.Windows.Forms.FlowLayoutPanel();
+            this.boxNumberLabel = new System.Windows.Forms.Label();
+            this.maskedTextBoxBoxNumber = new System.Windows.Forms.MaskedTextBox();
+            this.flowLayoutPanelSchedule = new System.Windows.Forms.FlowLayoutPanel();
+            this.ScheduleLabel = new System.Windows.Forms.Label();
+            this.maskedTextBoxScheduleNumber = new System.Windows.Forms.MaskedTextBox();
+            this.flowLayoutPanelSequence = new System.Windows.Forms.FlowLayoutPanel();
+            this.SequenceLabel = new System.Windows.Forms.Label();
+            this.maskedTextBoxSequenceNumber = new System.Windows.Forms.MaskedTextBox();
             this.groupBoxNotes = new System.Windows.Forms.GroupBox();
             this.txtDocumentNotes = new System.Windows.Forms.TextBox();
             this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
@@ -67,7 +77,6 @@
             this.panelBarcode = new System.Windows.Forms.FlowLayoutPanel();
             this.lblBarcode = new System.Windows.Forms.Label();
             this.txtBarCode = new System.Windows.Forms.TextBox();
-            this.imageBox = new RegScan.ImageBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRotateImg = new System.Windows.Forms.Button();
             this.btnImagePDF = new System.Windows.Forms.Button();
@@ -81,10 +90,15 @@
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
             this.btnDeleteImage = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.imageBox = new RegScan.ImageBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBoxAccessionNumber.SuspendLayout();
+            this.flowLayoutPanelBoxNumber.SuspendLayout();
+            this.flowLayoutPanelSchedule.SuspendLayout();
+            this.flowLayoutPanelSequence.SuspendLayout();
             this.groupBoxNotes.SuspendLayout();
             this.panelRejectSaveScan.SuspendLayout();
             this.groupBoxRecordClassification.SuspendLayout();
@@ -116,6 +130,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Transparent;
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxAccessionNumber);
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxNotes);
             this.splitContainer1.Panel1.Controls.Add(this.panelRejectSaveScan);
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxRecordClassification);
@@ -125,15 +140,156 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.imageBox);
-            this.splitContainer1.Size = new System.Drawing.Size(1190, 751);
+            this.splitContainer1.Size = new System.Drawing.Size(1190, 861);
             this.splitContainer1.SplitterDistance = 442;
             this.splitContainer1.TabIndex = 67;
+            // 
+            // groupBoxAccessionNumber
+            // 
+            this.groupBoxAccessionNumber.BackColor = System.Drawing.Color.Transparent;
+            this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelBoxNumber);
+            this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelSchedule);
+            this.groupBoxAccessionNumber.Controls.Add(this.flowLayoutPanelSequence);
+            this.groupBoxAccessionNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxAccessionNumber.Location = new System.Drawing.Point(6, 551);
+            this.groupBoxAccessionNumber.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBoxAccessionNumber.Name = "groupBoxAccessionNumber";
+            this.groupBoxAccessionNumber.Size = new System.Drawing.Size(418, 109);
+            this.groupBoxAccessionNumber.TabIndex = 110;
+            this.groupBoxAccessionNumber.TabStop = false;
+            this.groupBoxAccessionNumber.Text = "Accession Number";
+            // 
+            // flowLayoutPanelBoxNumber
+            // 
+            this.flowLayoutPanelBoxNumber.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanelBoxNumber.Controls.Add(this.boxNumberLabel);
+            this.flowLayoutPanelBoxNumber.Controls.Add(this.maskedTextBoxBoxNumber);
+            this.flowLayoutPanelBoxNumber.Location = new System.Drawing.Point(283, 29);
+            this.flowLayoutPanelBoxNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelBoxNumber.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelBoxNumber.Name = "flowLayoutPanelBoxNumber";
+            this.flowLayoutPanelBoxNumber.Padding = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelBoxNumber.Size = new System.Drawing.Size(130, 71);
+            this.flowLayoutPanelBoxNumber.TabIndex = 102;
+            // 
+            // boxNumberLabel
+            // 
+            this.boxNumberLabel.AutoSize = true;
+            this.boxNumberLabel.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boxNumberLabel.Location = new System.Drawing.Point(7, 4);
+            this.boxNumberLabel.Name = "boxNumberLabel";
+            this.boxNumberLabel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.boxNumberLabel.Size = new System.Drawing.Size(95, 26);
+            this.boxNumberLabel.TabIndex = 99;
+            this.boxNumberLabel.Text = "Box Number";
+            // 
+            // maskedTextBoxBoxNumber
+            // 
+            this.maskedTextBoxBoxNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.maskedTextBoxBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.maskedTextBoxBoxNumber.Enabled = false;
+            this.maskedTextBoxBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskedTextBoxBoxNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxBoxNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.maskedTextBoxBoxNumber.Mask = "0000";
+            this.maskedTextBoxBoxNumber.MaximumSize = new System.Drawing.Size(141, 29);
+            this.maskedTextBoxBoxNumber.MinimumSize = new System.Drawing.Size(74, 29);
+            this.maskedTextBoxBoxNumber.Name = "maskedTextBoxBoxNumber";
+            this.maskedTextBoxBoxNumber.PromptChar = ' ';
+            this.maskedTextBoxBoxNumber.ResetOnSpace = false;
+            this.maskedTextBoxBoxNumber.Size = new System.Drawing.Size(112, 29);
+            this.maskedTextBoxBoxNumber.TabIndex = 113;
+            this.maskedTextBoxBoxNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // flowLayoutPanelSchedule
+            // 
+            this.flowLayoutPanelSchedule.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanelSchedule.Controls.Add(this.ScheduleLabel);
+            this.flowLayoutPanelSchedule.Controls.Add(this.maskedTextBoxScheduleNumber);
+            this.flowLayoutPanelSchedule.Location = new System.Drawing.Point(145, 29);
+            this.flowLayoutPanelSchedule.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelSchedule.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelSchedule.Name = "flowLayoutPanelSchedule";
+            this.flowLayoutPanelSchedule.Padding = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelSchedule.Size = new System.Drawing.Size(130, 71);
+            this.flowLayoutPanelSchedule.TabIndex = 101;
+            // 
+            // ScheduleLabel
+            // 
+            this.ScheduleLabel.AutoSize = true;
+            this.ScheduleLabel.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScheduleLabel.Location = new System.Drawing.Point(7, 4);
+            this.ScheduleLabel.Name = "ScheduleLabel";
+            this.ScheduleLabel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ScheduleLabel.Size = new System.Drawing.Size(70, 26);
+            this.ScheduleLabel.TabIndex = 99;
+            this.ScheduleLabel.Text = "Schedule";
+            // 
+            // maskedTextBoxScheduleNumber
+            // 
+            this.maskedTextBoxScheduleNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.maskedTextBoxScheduleNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.maskedTextBoxScheduleNumber.Enabled = false;
+            this.maskedTextBoxScheduleNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskedTextBoxScheduleNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxScheduleNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.maskedTextBoxScheduleNumber.Mask = "0000";
+            this.maskedTextBoxScheduleNumber.MaximumSize = new System.Drawing.Size(141, 29);
+            this.maskedTextBoxScheduleNumber.MinimumSize = new System.Drawing.Size(74, 29);
+            this.maskedTextBoxScheduleNumber.Name = "maskedTextBoxScheduleNumber";
+            this.maskedTextBoxScheduleNumber.PromptChar = ' ';
+            this.maskedTextBoxScheduleNumber.ResetOnSpace = false;
+            this.maskedTextBoxScheduleNumber.Size = new System.Drawing.Size(112, 29);
+            this.maskedTextBoxScheduleNumber.TabIndex = 100;
+            this.maskedTextBoxScheduleNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // flowLayoutPanelSequence
+            // 
+            this.flowLayoutPanelSequence.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanelSequence.Controls.Add(this.SequenceLabel);
+            this.flowLayoutPanelSequence.Controls.Add(this.maskedTextBoxSequenceNumber);
+            this.flowLayoutPanelSequence.Location = new System.Drawing.Point(7, 29);
+            this.flowLayoutPanelSequence.Margin = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelSequence.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelSequence.Name = "flowLayoutPanelSequence";
+            this.flowLayoutPanelSequence.Padding = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanelSequence.Size = new System.Drawing.Size(130, 71);
+            this.flowLayoutPanelSequence.TabIndex = 101;
+            // 
+            // SequenceLabel
+            // 
+            this.SequenceLabel.AutoSize = true;
+            this.SequenceLabel.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SequenceLabel.Location = new System.Drawing.Point(7, 4);
+            this.SequenceLabel.Name = "SequenceLabel";
+            this.SequenceLabel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.SequenceLabel.Size = new System.Drawing.Size(75, 26);
+            this.SequenceLabel.TabIndex = 99;
+            this.SequenceLabel.Text = "Sequence";
+            // 
+            // maskedTextBoxSequenceNumber
+            // 
+            this.maskedTextBoxSequenceNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.maskedTextBoxSequenceNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.maskedTextBoxSequenceNumber.Enabled = false;
+            this.maskedTextBoxSequenceNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.maskedTextBoxSequenceNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxSequenceNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.maskedTextBoxSequenceNumber.Mask = "00";
+            this.maskedTextBoxSequenceNumber.MaximumSize = new System.Drawing.Size(141, 29);
+            this.maskedTextBoxSequenceNumber.MinimumSize = new System.Drawing.Size(74, 29);
+            this.maskedTextBoxSequenceNumber.Name = "maskedTextBoxSequenceNumber";
+            this.maskedTextBoxSequenceNumber.PromptChar = ' ';
+            this.maskedTextBoxSequenceNumber.ResetOnSpace = false;
+            this.maskedTextBoxSequenceNumber.Size = new System.Drawing.Size(112, 29);
+            this.maskedTextBoxSequenceNumber.TabIndex = 98;
+            this.maskedTextBoxSequenceNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBoxNotes
             // 
             this.groupBoxNotes.Controls.Add(this.txtDocumentNotes);
             this.groupBoxNotes.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxNotes.Location = new System.Drawing.Point(6, 549);
+            this.groupBoxNotes.Location = new System.Drawing.Point(6, 664);
             this.groupBoxNotes.Margin = new System.Windows.Forms.Padding(1);
             this.groupBoxNotes.Name = "groupBoxNotes";
             this.groupBoxNotes.Size = new System.Drawing.Size(418, 144);
@@ -163,7 +319,7 @@
             this.panelRejectSaveScan.Controls.Add(this.btnSave, 1, 0);
             this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 0, 0);
             this.panelRejectSaveScan.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelRejectSaveScan.Location = new System.Drawing.Point(0, 701);
+            this.panelRejectSaveScan.Location = new System.Drawing.Point(0, 811);
             this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(2);
             this.panelRejectSaveScan.Name = "panelRejectSaveScan";
             this.panelRejectSaveScan.RowCount = 1;
@@ -291,6 +447,7 @@
             // 
             this.groupBoxScanningOptions.Controls.Add(this.btnScanPage);
             this.groupBoxScanningOptions.Controls.Add(this.panelScanningOptions);
+            this.groupBoxScanningOptions.Controls.Add(this.testCheckBox);
             this.groupBoxScanningOptions.Font = new System.Drawing.Font("BC Sans", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxScanningOptions.Location = new System.Drawing.Point(0, 0);
             this.groupBoxScanningOptions.Margin = new System.Windows.Forms.Padding(1);
@@ -323,7 +480,6 @@
             this.panelScanningOptions.Controls.Add(this.showProgressIndicatorUICheckBox);
             this.panelScanningOptions.Controls.Add(this.useAdfCheckBox);
             this.panelScanningOptions.Controls.Add(this.useDuplexCheckBox);
-            this.panelScanningOptions.Controls.Add(this.testCheckBox);
             this.panelScanningOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.panelScanningOptions.Location = new System.Drawing.Point(6, 29);
             this.panelScanningOptions.Margin = new System.Windows.Forms.Padding(0);
@@ -399,13 +555,12 @@
             // 
             this.testCheckBox.AutoSize = true;
             this.testCheckBox.Font = new System.Drawing.Font("BC Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.testCheckBox.Location = new System.Drawing.Point(257, 3);
+            this.testCheckBox.Location = new System.Drawing.Point(300, 18);
             this.testCheckBox.Name = "testCheckBox";
             this.testCheckBox.Size = new System.Drawing.Size(77, 21);
             this.testCheckBox.TabIndex = 35;
             this.testCheckBox.Text = "TESTING";
             this.testCheckBox.UseVisualStyleBackColor = true;
-            this.testCheckBox.Visible = false;
             // 
             // groupBoxDocumentRecord
             // 
@@ -603,16 +758,6 @@
             this.txtBarCode.TabIndex = 67;
             this.txtBarCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // imageBox
-            // 
-            this.imageBox.AutoScroll = true;
-            this.imageBox.AutoSize = false;
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(744, 751);
-            this.imageBox.TabIndex = 0;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnRotateImg);
@@ -664,7 +809,7 @@
             this.panelImageControl.Controls.Add(this.tableLayoutPanel2, 5, 0);
             this.panelImageControl.Controls.Add(this.btnDeleteImage, 1, 0);
             this.panelImageControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImageControl.Location = new System.Drawing.Point(1, 752);
+            this.panelImageControl.Location = new System.Drawing.Point(1, 862);
             this.panelImageControl.Margin = new System.Windows.Forms.Padding(1);
             this.panelImageControl.MinimumSize = new System.Drawing.Size(708, 43);
             this.panelImageControl.Name = "panelImageControl";
@@ -802,21 +947,31 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1190, 796);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1190, 906);
             this.tableLayoutPanel1.TabIndex = 94;
+            // 
+            // imageBox
+            // 
+            this.imageBox.AutoScroll = true;
+            this.imageBox.AutoSize = false;
+            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(744, 861);
+            this.imageBox.TabIndex = 0;
             // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(249)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(1194, 800);
+            this.ClientSize = new System.Drawing.Size(1194, 910);
             this.ControlBox = false;
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1194, 800);
+            this.MinimumSize = new System.Drawing.Size(1194, 910);
             this.Name = "frmScannerDocument";
             this.Padding = new System.Windows.Forms.Padding(2);
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -826,6 +981,13 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBoxAccessionNumber.ResumeLayout(false);
+            this.flowLayoutPanelBoxNumber.ResumeLayout(false);
+            this.flowLayoutPanelBoxNumber.PerformLayout();
+            this.flowLayoutPanelSchedule.ResumeLayout(false);
+            this.flowLayoutPanelSchedule.PerformLayout();
+            this.flowLayoutPanelSequence.ResumeLayout(false);
+            this.flowLayoutPanelSequence.PerformLayout();
             this.groupBoxNotes.ResumeLayout(false);
             this.groupBoxNotes.PerformLayout();
             this.panelRejectSaveScan.ResumeLayout(false);
@@ -835,6 +997,7 @@
             this.panelDocClass.ResumeLayout(false);
             this.panelDocClass.PerformLayout();
             this.groupBoxScanningOptions.ResumeLayout(false);
+            this.groupBoxScanningOptions.PerformLayout();
             this.panelScanningOptions.ResumeLayout(false);
             this.panelScanningOptions.PerformLayout();
             this.groupBoxDocumentRecord.ResumeLayout(false);
@@ -912,5 +1075,15 @@
         private System.Windows.Forms.CheckBox testCheckBox;
         private System.Windows.Forms.GroupBox groupBoxRecordClassification;
         private System.Windows.Forms.GroupBox groupBoxNotes;
+        private System.Windows.Forms.GroupBox groupBoxAccessionNumber;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBoxNumber;
+        private System.Windows.Forms.Label boxNumberLabel;
+        private System.Windows.Forms.MaskedTextBox maskedTextBoxBoxNumber;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelSchedule;
+        private System.Windows.Forms.Label ScheduleLabel;
+        private System.Windows.Forms.MaskedTextBox maskedTextBoxScheduleNumber;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelSequence;
+        private System.Windows.Forms.Label SequenceLabel;
+        private System.Windows.Forms.MaskedTextBox maskedTextBoxSequenceNumber;
     }
 }

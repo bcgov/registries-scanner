@@ -35,6 +35,7 @@ namespace RegScan.UI
     public static readonly Color DangerHover = BaseColourTokens.DangerLight;
     public static readonly Color SuccessBackground = BaseColourTokens.Success;
     public static readonly Color WarningBackground = BaseColourTokens.Warning;
+    public static readonly Color WarningBackgroundLight = BaseColourTokens.WarningLight;
     public static readonly Color InfoBackground = BaseColourTokens.Blue90;
     public static readonly Color Disabled = BaseColourTokens.Grey10;
     public static readonly Color FocusOutline = BaseColourTokens.Gold;
@@ -152,5 +153,6 @@ namespace RegScan.UI
         public static readonly Color DangerLight = ColorTranslator.FromHtml("#A2312D");
         public static readonly Color Success = ColorTranslator.FromHtml("#42814A");
         public static readonly Color Warning = ColorTranslator.FromHtml("#F8BB47");
+        public static readonly Color WarningLight = ColorTranslator.FromHtml("#FEF1D8");
     }
 }
