@@ -33,8 +33,11 @@ namespace RegScan
         #region Fields
 
         // The current child frmScannerDocument form 
-        frmScannerDocument _scannerForm = null;
-        frmBoxManagement _boxForm = null;
+        static frmScannerDocument _scannerForm = null;
+        static frmBoxManagement _boxForm = null;
+
+        public static frmScannerDocument ScannerForm { get { return _scannerForm; } }
+        public static frmBoxManagement BoxForm {  get { return _boxForm; } }
 
         #endregion
 
@@ -87,7 +90,10 @@ namespace RegScan
                         temp.Hide();
                         // start a new frmScannerDocument
                         LoadScanningForm(this, EventArgs.Empty);
+                        _scannerForm.BringToFront();
                         temp.Close();
+                        MessageBox.Show("Session refreshed.\t\t\nPlease continue.", 
+                            "Application Ready", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
                 }
@@ -118,7 +124,7 @@ namespace RegScan
             this.Controls.Add(_scannerForm);
             
             // Catch and handle child form closing
-            //_scannerForm.FormClosing += new FormClosingEventHandler(ChildFormClosing);
+            _scannerForm.FormClosing += new FormClosingEventHandler(ChildFormClosing);
             _scannerForm.Show();
         }
 
@@ -200,9 +206,7 @@ namespace RegScan
             {
                 MDIMain_Load(this, EventArgs.Empty);
             }
-            string message = "Please manually enter a barcode.";
-            var barCode = frmEnterText.ManualBarcode(message);
-            var gotDoc = _scannerForm.GetBarcode(barCode);
+            var gotDoc = _scannerForm.GetBarcode("");
             if (!gotDoc)
             {
                 MessageBox.Show("Unable to get a document record for the entered barcode.");

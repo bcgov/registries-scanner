@@ -134,6 +134,7 @@ namespace RegScan
         /// <param name="fileName">Name to use for the document in DRS API</param>
         private void UploadImage(string fileName)
         {
+            int pdfPageCount = _pdfDocument.PageCount;
             byte[] pdfBytes = PDFObj.ConvertPdfToByteArray(_pdfDocument);
 
             try
@@ -150,6 +151,10 @@ namespace RegScan
                     "Scanned document Image failed PUT of scanned image." + e.ToString());
                 throw new ApplicationException(msg);
             }
+
+            // If the scanned image was uploaded correctly
+            // we need to update the page count of the current working box
+            frmBoxManagement.SelectedBox.PageCount += pdfPageCount;
         }
 
         /// <summary>
@@ -188,12 +193,7 @@ namespace RegScan
         ///        application does not have the ability to create a new document record through
         ///        DRS API. This functionality could be added in the future.
         /// </summary>
-        /// <param name="updateRecordFlag">
-        /// Determines if the application will update the record and upload image. If this is true
-        /// the scanning app shows a warning. This is because at this time the scanning application
-        /// is not intended to create new records. 
-        /// </param>
-        public void UpdateInsert(bool updateRecordFlag)
+        public void UpdateInsert()
         {
 
             if (_updateRecord)
@@ -205,11 +205,12 @@ namespace RegScan
 
                 UploadImage(apiDocModel.consumerFilename);
 
-                // Only update the record if there was a change made to one of the fields
-                if (updateRecordFlag)
-                {
-                    UpdateDocumentRecord(apiDocModel);
-                }
+                // Update Box record in DRS to reflect updated pagecount
+                frmMDIMain.BoxForm.UpdateCurrentBox();
+
+                // update the record - only sending in updated fields and BatchID
+                UpdateDocumentRecord(apiDocModel);
+
             }
             // The scanning application should never create a new record through the DRS API.
             else
@@ -311,11 +312,12 @@ namespace RegScan
             // Currently these are the only fields we want to update from the scanning application
             scanInfo.consumerDocumentId = _barCode.ToString();
             scanInfo.scanDateTime = _scannedDate.ToString("yyyy-MM-dd");
-            scanInfo.accessionNumber = AccessionNumber.Text;
             scanInfo.author = _scannerIDIR;
-            scanInfo.batchId = null;
             scanInfo.pageCount = _pageCount;
             scanInfo.documentClass = _documentClass;
+
+            // Set the Batch ID based off of the Box form
+            scanInfo.batchId = frmBoxManagement.BatchID.ToString();
 
             model.description = _description;
             model.scanningInformation = scanInfo;
