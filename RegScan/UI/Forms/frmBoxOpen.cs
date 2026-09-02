@@ -45,17 +45,13 @@ namespace RegScan
 
             // Create a new box from the default values - applying standard updates
             _newBox = BoxObj.CreateFromDefaults(defaults);
-
             
             // load all available values for Sequence and Schedule numbers
-            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
+            PopulateComboBox(comboBoxSeqSch);
 
             // Pre select based on the default value
             Schedules newBoxSech = new Schedules(_newBox.AccessionNumber);
             comboBoxSeqSch.SelectedItem = newBoxSech.PrettyText;
-
-            // Add Event Handlers for updating the combo box selection change
-            comboBoxSeqSch.SelectedIndexChanged += SelectionChanged;
 
             // Seed the editable Box Number field with the supplied default value
             maskedTextBoxBoxNumber.Text = _newBox.AccessionNumber.BoxNumber.ToString().Trim();
@@ -72,11 +68,11 @@ namespace RegScan
         /// <param name="values">Values supplied for the comboBox</param>
         /// <param name="sort">default True. Sort values by string comparison</param>
         private static void PopulateComboBox(
-            ComboBox combo, IEnumerable<string> values, bool sort = true)
+            ComboBox combo, bool sort = true)
         {
-            string previous = combo.SelectedItem as string;
+            IEnumerable<string> scheduleList = Schedules.ScheduleList.Select(b => b.PrettyText);
 
-            List<string> options = values
+            List<string> options = scheduleList
                 .Where(v => !string.IsNullOrEmpty(v))
                 .Distinct()
                 .ToList();
@@ -86,26 +82,6 @@ namespace RegScan
 
             combo.DataSource = options;
 
-            // Preselect the previously selected item if it was set. 
-            // If not use the first index in the list.
-            int index = previous != null ? options.IndexOf(previous) : 0;
-            combo.SelectedIndex = index >= 0 ? index : 0;
-        }
-
-        private IEnumerable<Schedules> RefineList(ComboBox excluded)
-        {
-            IEnumerable<Schedules> refinedList = Schedules.ScheduleList;
-
-            if (excluded != comboBoxSeqSch)
-            {
-                // Get the current selected item
-                string prev = comboBoxSeqSch.SelectedItem as string;
-                // 
-                if (!string.IsNullOrEmpty(prev))
-                    refinedList = refinedList.Where(b => b.PrettyText == prev);
-            }
-
-            return refinedList;
         }
 
         /// <summary>
@@ -138,7 +114,16 @@ namespace RegScan
             {
                 errors.Add("Box number must be a numeric value greater than zero.");
             }
-                
+
+            // Get a list of all boxes that have the same accession number
+            //List<BoxObj> previousBox = BoxObj.Boxes.Where(
+            //    b => b.AccessionNumber == _newBox.AccessionNumber).ToList();
+            //if (previousBox.Count > 0)
+            //{
+            //    errors.Add("Box with Accession Number " +
+            //        _newBox.AccessionNumberTextDashes +
+            //        " already exists.");
+            //}
 
             if (errors.Count > 0)
             {
@@ -172,16 +157,6 @@ namespace RegScan
         }
 
         /// <summary>
-        /// Re-applies the ComboBoxes on any comboBox selection.
-        /// </summary>
-        /// <param name="sender"> An update to a selected filter facet</param>
-        /// <param name="e">Event Data</param>
-        private void SelectionChanged(object sender, EventArgs e)
-        {
-            PopulateComboBox(comboBoxSeqSch, RefineList(comboBoxSeqSch).Select(b => b.PrettyText));
-        }
-
-        /// <summary>
         /// Validates the entered values, submits the new box to the DRS API, and closes the
         /// dialog on success.
         /// </summary>
@@ -203,7 +178,7 @@ namespace RegScan
                 "Create New Box", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (confirm != DialogResult.OK)
             {
-                // if the request is not confirmed keep th  dialog open
+                // if the request is not confirmed keep the  dialog open
                 DialogResult = DialogResult.None;
                 return;
             }

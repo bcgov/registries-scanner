@@ -97,23 +97,19 @@ namespace RegScan
         [JsonIgnore]
         public string AccessionNumberTextDashes
         {
-            get { return AccessionNumber != null ? AccessionNumber.TextDashes : string.Empty; }
+            get {
+                return AccessionNumber != null ? AccessionNumber.TextDashes : string.Empty; }
         }
 
         [JsonIgnore]
         public AccessionNumberObj AccessionNumber
         {
             get { 
-                if (_accessionNumber == null)
-                {
-                    _accessionNumber = new AccessionNumberObj(
-                        _sequenceNumber, _scheduleNumber, _boxNumber);
-                }
+                UpdateAccessionNumber();
                 return _accessionNumber;
             }
-            set { 
-                _accessionNumber = new AccessionNumberObj(
-                    _sequenceNumber, _scheduleNumber, _boxNumber);
+            set {
+                UpdateAccessionNumber();
             }
         }
 
@@ -121,6 +117,15 @@ namespace RegScan
         {
             // Ensure the Accession Number is set when the box is created
             //AccessionNumber = new AccessionNumberObj(_sequenceNumber, _scheduleNumber, _boxNumber);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateAccessionNumber()
+        {
+            _accessionNumber = new AccessionNumberObj(
+                _sequenceNumber, _scheduleNumber, _boxNumber);
         }
         
         /// <summary>

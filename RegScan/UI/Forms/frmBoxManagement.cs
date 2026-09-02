@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RegScan.UI;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 

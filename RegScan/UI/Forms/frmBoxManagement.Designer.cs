@@ -101,10 +101,10 @@ namespace RegScan
             this.flowLayoutPanelOpened.Controls.Add(this.textBoxOpenedDate);
             this.flowLayoutPanelOpened.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelOpened.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelOpened.MinimumSize = new System.Drawing.Size(155, 71);
+            this.flowLayoutPanelOpened.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelOpened.Name = "flowLayoutPanelOpened";
             this.flowLayoutPanelOpened.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelOpened.Size = new System.Drawing.Size(155, 71);
+            this.flowLayoutPanelOpened.Size = new System.Drawing.Size(214, 43);
             this.flowLayoutPanelOpened.TabIndex = 101;
             // 
             // BoxOpenDateLabel
@@ -123,7 +123,7 @@ namespace RegScan
             this.textBoxOpenedDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.textBoxOpenedDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxOpenedDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxOpenedDate.Location = new System.Drawing.Point(7, 33);
+            this.textBoxOpenedDate.Location = new System.Drawing.Point(60, 7);
             this.textBoxOpenedDate.MinimumSize = new System.Drawing.Size(133, 29);
             this.textBoxOpenedDate.Name = "textBoxOpenedDate";
             this.textBoxOpenedDate.ReadOnly = true;
@@ -135,7 +135,7 @@ namespace RegScan
             // 
             this.flowLayoutPanel4.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanel4.ForeColor = System.Drawing.Color.Black;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 118);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(1474, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.flowLayoutPanel4.Size = new System.Drawing.Size(0, 0);
@@ -148,10 +148,10 @@ namespace RegScan
             this.flowLayoutPanelSequence.Controls.Add(this.maskedTextBoxSequenceNumber);
             this.flowLayoutPanelSequence.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelSequence.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelSequence.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelSequence.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelSequence.Name = "flowLayoutPanelSequence";
             this.flowLayoutPanelSequence.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelSequence.Size = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelSequence.Size = new System.Drawing.Size(200, 44);
             this.flowLayoutPanelSequence.TabIndex = 101;
             // 
             // SequenceLabel
@@ -170,7 +170,7 @@ namespace RegScan
             this.maskedTextBoxSequenceNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.maskedTextBoxSequenceNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.maskedTextBoxSequenceNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBoxSequenceNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxSequenceNumber.Location = new System.Drawing.Point(89, 8);
             this.maskedTextBoxSequenceNumber.Margin = new System.Windows.Forms.Padding(4);
             this.maskedTextBoxSequenceNumber.Mask = "00";
             this.maskedTextBoxSequenceNumber.MaximumSize = new System.Drawing.Size(141, 29);
@@ -188,12 +188,12 @@ namespace RegScan
             this.flowLayoutPanelSchedule.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelSchedule.Controls.Add(this.ScheduleLabel);
             this.flowLayoutPanelSchedule.Controls.Add(this.maskedTextBoxScheduleNumber);
-            this.flowLayoutPanelSchedule.Location = new System.Drawing.Point(131, 29);
+            this.flowLayoutPanelSchedule.Location = new System.Drawing.Point(215, 29);
             this.flowLayoutPanelSchedule.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelSchedule.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelSchedule.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelSchedule.Name = "flowLayoutPanelSchedule";
             this.flowLayoutPanelSchedule.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelSchedule.Size = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelSchedule.Size = new System.Drawing.Size(193, 44);
             this.flowLayoutPanelSchedule.TabIndex = 101;
             // 
             // ScheduleLabel
@@ -212,7 +212,7 @@ namespace RegScan
             this.maskedTextBoxScheduleNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.maskedTextBoxScheduleNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.maskedTextBoxScheduleNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBoxScheduleNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxScheduleNumber.Location = new System.Drawing.Point(84, 8);
             this.maskedTextBoxScheduleNumber.Margin = new System.Windows.Forms.Padding(4);
             this.maskedTextBoxScheduleNumber.Mask = "0000";
             this.maskedTextBoxScheduleNumber.MaximumSize = new System.Drawing.Size(141, 29);
@@ -230,31 +230,31 @@ namespace RegScan
             this.flowLayoutPanelBoxNumber.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelBoxNumber.Controls.Add(this.boxNumberLabel);
             this.flowLayoutPanelBoxNumber.Controls.Add(this.maskedTextBoxBoxNumber);
-            this.flowLayoutPanelBoxNumber.Location = new System.Drawing.Point(255, 29);
+            this.flowLayoutPanelBoxNumber.Location = new System.Drawing.Point(416, 29);
             this.flowLayoutPanelBoxNumber.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelBoxNumber.MinimumSize = new System.Drawing.Size(100, 71);
+            this.flowLayoutPanelBoxNumber.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelBoxNumber.Name = "flowLayoutPanelBoxNumber";
             this.flowLayoutPanelBoxNumber.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelBoxNumber.Size = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelBoxNumber.Size = new System.Drawing.Size(183, 44);
             this.flowLayoutPanelBoxNumber.TabIndex = 102;
             // 
             // boxNumberLabel
             // 
             this.boxNumberLabel.AutoSize = true;
             this.boxNumberLabel.Font = new System.Drawing.Font("BC Sans Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boxNumberLabel.Location = new System.Drawing.Point(7, 4);
+            this.boxNumberLabel.Location = new System.Drawing.Point(4, 4);
+            this.boxNumberLabel.Margin = new System.Windows.Forms.Padding(0);
             this.boxNumberLabel.Name = "boxNumberLabel";
-            this.boxNumberLabel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.boxNumberLabel.Size = new System.Drawing.Size(95, 26);
+            this.boxNumberLabel.Size = new System.Drawing.Size(65, 40);
             this.boxNumberLabel.TabIndex = 99;
-            this.boxNumberLabel.Text = "Box Number";
+            this.boxNumberLabel.Text = "Box\r\nNumber";
             // 
             // maskedTextBoxBoxNumber
             // 
             this.maskedTextBoxBoxNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.maskedTextBoxBoxNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.maskedTextBoxBoxNumber.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBoxBoxNumber.Location = new System.Drawing.Point(8, 34);
+            this.maskedTextBoxBoxNumber.Location = new System.Drawing.Point(73, 8);
             this.maskedTextBoxBoxNumber.Margin = new System.Windows.Forms.Padding(4);
             this.maskedTextBoxBoxNumber.Mask = "0000";
             this.maskedTextBoxBoxNumber.MaximumSize = new System.Drawing.Size(141, 29);
@@ -273,12 +273,12 @@ namespace RegScan
             this.flowLayoutPanelClosed.Controls.Add(this.BoxCloseDateLabel);
             this.flowLayoutPanelClosed.Controls.Add(this.btnCloseBox);
             this.flowLayoutPanelClosed.Controls.Add(this.textBoxClosedDate);
-            this.flowLayoutPanelClosed.Location = new System.Drawing.Point(170, 29);
+            this.flowLayoutPanelClosed.Location = new System.Drawing.Point(229, 29);
             this.flowLayoutPanelClosed.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelClosed.MinimumSize = new System.Drawing.Size(155, 71);
+            this.flowLayoutPanelClosed.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelClosed.Name = "flowLayoutPanelClosed";
             this.flowLayoutPanelClosed.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelClosed.Size = new System.Drawing.Size(155, 71);
+            this.flowLayoutPanelClosed.Size = new System.Drawing.Size(214, 43);
             this.flowLayoutPanelClosed.TabIndex = 102;
             // 
             // BoxCloseDateLabel
@@ -297,7 +297,7 @@ namespace RegScan
             this.btnCloseBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnCloseBox.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCloseBox.ForeColor = System.Drawing.Color.Black;
-            this.btnCloseBox.Location = new System.Drawing.Point(7, 33);
+            this.btnCloseBox.Location = new System.Drawing.Point(58, 7);
             this.btnCloseBox.MinimumSize = new System.Drawing.Size(133, 29);
             this.btnCloseBox.Name = "btnCloseBox";
             this.btnCloseBox.Size = new System.Drawing.Size(141, 29);
@@ -312,7 +312,7 @@ namespace RegScan
             this.textBoxClosedDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.textBoxClosedDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxClosedDate.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxClosedDate.Location = new System.Drawing.Point(7, 68);
+            this.textBoxClosedDate.Location = new System.Drawing.Point(7, 42);
             this.textBoxClosedDate.MinimumSize = new System.Drawing.Size(133, 29);
             this.textBoxClosedDate.Name = "textBoxClosedDate";
             this.textBoxClosedDate.Size = new System.Drawing.Size(141, 29);
@@ -322,7 +322,7 @@ namespace RegScan
             // flowLayoutPanel10
             // 
             this.flowLayoutPanel10.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanel10.Location = new System.Drawing.Point(9, 118);
+            this.flowLayoutPanel10.Location = new System.Drawing.Point(1480, 3);
             this.flowLayoutPanel10.Name = "flowLayoutPanel10";
             this.flowLayoutPanel10.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.flowLayoutPanel10.Size = new System.Drawing.Size(0, 0);
@@ -331,7 +331,7 @@ namespace RegScan
             // flowLayoutPanel11
             // 
             this.flowLayoutPanel11.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanel11.Location = new System.Drawing.Point(15, 118);
+            this.flowLayoutPanel11.Location = new System.Drawing.Point(1636, 3);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
             this.flowLayoutPanel11.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.flowLayoutPanel11.Size = new System.Drawing.Size(0, 0);
@@ -340,7 +340,7 @@ namespace RegScan
             // flowLayoutPanel12
             // 
             this.flowLayoutPanel12.BackColor = System.Drawing.Color.White;
-            this.flowLayoutPanel12.Location = new System.Drawing.Point(974, 3);
+            this.flowLayoutPanel12.Location = new System.Drawing.Point(1239, 3);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
             this.flowLayoutPanel12.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.flowLayoutPanel12.Size = new System.Drawing.Size(0, 0);
@@ -356,7 +356,7 @@ namespace RegScan
             this.groupBoxAccessionNumber.Location = new System.Drawing.Point(0, 3);
             this.groupBoxAccessionNumber.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.groupBoxAccessionNumber.Name = "groupBoxAccessionNumber";
-            this.groupBoxAccessionNumber.Size = new System.Drawing.Size(377, 109);
+            this.groupBoxAccessionNumber.Size = new System.Drawing.Size(607, 83);
             this.groupBoxAccessionNumber.TabIndex = 109;
             this.groupBoxAccessionNumber.TabStop = false;
             this.groupBoxAccessionNumber.Text = "Accession Number";
@@ -367,10 +367,10 @@ namespace RegScan
             this.groupBoxDates.Controls.Add(this.flowLayoutPanelClosed);
             this.groupBoxDates.Controls.Add(this.flowLayoutPanelOpened);
             this.groupBoxDates.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxDates.Location = new System.Drawing.Point(377, 3);
+            this.groupBoxDates.Location = new System.Drawing.Point(607, 3);
             this.groupBoxDates.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.groupBoxDates.Name = "groupBoxDates";
-            this.groupBoxDates.Size = new System.Drawing.Size(332, 109);
+            this.groupBoxDates.Size = new System.Drawing.Size(451, 83);
             this.groupBoxDates.TabIndex = 110;
             this.groupBoxDates.TabStop = false;
             this.groupBoxDates.Text = "Dates";
@@ -393,10 +393,10 @@ namespace RegScan
             this.groupBoxPageCount.BackColor = System.Drawing.Color.Transparent;
             this.groupBoxPageCount.Controls.Add(this.flowLayoutPanelTotalPages);
             this.groupBoxPageCount.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxPageCount.Location = new System.Drawing.Point(709, 3);
+            this.groupBoxPageCount.Location = new System.Drawing.Point(1058, 3);
             this.groupBoxPageCount.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.groupBoxPageCount.Name = "groupBoxPageCount";
-            this.groupBoxPageCount.Size = new System.Drawing.Size(131, 109);
+            this.groupBoxPageCount.Size = new System.Drawing.Size(178, 83);
             this.groupBoxPageCount.TabIndex = 111;
             this.groupBoxPageCount.TabStop = false;
             this.groupBoxPageCount.Text = "Page Count";
@@ -408,11 +408,11 @@ namespace RegScan
             this.flowLayoutPanelTotalPages.Controls.Add(this.textBoxPageCount);
             this.flowLayoutPanelTotalPages.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelTotalPages.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelTotalPages.MaximumSize = new System.Drawing.Size(155, 71);
-            this.flowLayoutPanelTotalPages.MinimumSize = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelTotalPages.MaximumSize = new System.Drawing.Size(208, 79);
+            this.flowLayoutPanelTotalPages.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelTotalPages.Name = "flowLayoutPanelTotalPages";
             this.flowLayoutPanelTotalPages.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelTotalPages.Size = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelTotalPages.Size = new System.Drawing.Size(164, 43);
             this.flowLayoutPanelTotalPages.TabIndex = 113;
             // 
             // BoxTotalPagesLabel
@@ -431,7 +431,7 @@ namespace RegScan
             this.textBoxPageCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.textBoxPageCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxPageCount.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxPageCount.Location = new System.Drawing.Point(7, 33);
+            this.textBoxPageCount.Location = new System.Drawing.Point(54, 7);
             this.textBoxPageCount.MinimumSize = new System.Drawing.Size(95, 29);
             this.textBoxPageCount.Name = "textBoxPageCount";
             this.textBoxPageCount.ReadOnly = true;
@@ -455,10 +455,10 @@ namespace RegScan
             this.groupBoxBatchID.BackColor = System.Drawing.Color.Transparent;
             this.groupBoxBatchID.Controls.Add(this.flowLayoutPanelCurrentBatchID);
             this.groupBoxBatchID.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxBatchID.Location = new System.Drawing.Point(840, 3);
+            this.groupBoxBatchID.Location = new System.Drawing.Point(1242, 3);
             this.groupBoxBatchID.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.groupBoxBatchID.Name = "groupBoxBatchID";
-            this.groupBoxBatchID.Size = new System.Drawing.Size(131, 109);
+            this.groupBoxBatchID.Size = new System.Drawing.Size(229, 83);
             this.groupBoxBatchID.TabIndex = 112;
             this.groupBoxBatchID.TabStop = false;
             this.groupBoxBatchID.Text = "Batch ID";
@@ -467,21 +467,21 @@ namespace RegScan
             // 
             this.flowLayoutPanelCurrentBatchID.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanelCurrentBatchID.Controls.Add(this.label2);
-            this.flowLayoutPanelCurrentBatchID.Controls.Add(this.editBatchID);
             this.flowLayoutPanelCurrentBatchID.Controls.Add(this.textBoxBatchID);
+            this.flowLayoutPanelCurrentBatchID.Controls.Add(this.editBatchID);
             this.flowLayoutPanelCurrentBatchID.Location = new System.Drawing.Point(7, 29);
             this.flowLayoutPanelCurrentBatchID.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelCurrentBatchID.MaximumSize = new System.Drawing.Size(155, 79);
-            this.flowLayoutPanelCurrentBatchID.MinimumSize = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelCurrentBatchID.MaximumSize = new System.Drawing.Size(208, 79);
+            this.flowLayoutPanelCurrentBatchID.MinimumSize = new System.Drawing.Size(115, 43);
             this.flowLayoutPanelCurrentBatchID.Name = "flowLayoutPanelCurrentBatchID";
             this.flowLayoutPanelCurrentBatchID.Padding = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanelCurrentBatchID.Size = new System.Drawing.Size(115, 71);
+            this.flowLayoutPanelCurrentBatchID.Size = new System.Drawing.Size(208, 43);
             this.flowLayoutPanelCurrentBatchID.TabIndex = 102;
             // 
             // editBatchID
             // 
             this.editBatchID.Image = ((System.Drawing.Image)(resources.GetObject("editBatchID.Image")));
-            this.editBatchID.Location = new System.Drawing.Point(74, 4);
+            this.editBatchID.Location = new System.Drawing.Point(175, 4);
             this.editBatchID.Name = "editBatchID";
             this.editBatchID.Size = new System.Drawing.Size(26, 26);
             this.editBatchID.TabIndex = 102;
@@ -492,7 +492,7 @@ namespace RegScan
             this.textBoxBatchID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
             this.textBoxBatchID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBatchID.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBatchID.Location = new System.Drawing.Point(7, 33);
+            this.textBoxBatchID.Location = new System.Drawing.Point(74, 7);
             this.textBoxBatchID.MinimumSize = new System.Drawing.Size(95, 29);
             this.textBoxBatchID.Name = "textBoxBatchID";
             this.textBoxBatchID.ReadOnly = true;
@@ -519,25 +519,26 @@ namespace RegScan
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.groupBoxAccessionNumber);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.groupBoxDates);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.groupBoxPageCount);
-            this.flowLayoutPanelBoxMaintenance.Controls.Add(this.groupBoxBatchID);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.flowLayoutPanel12);
+            this.flowLayoutPanelBoxMaintenance.Controls.Add(this.groupBoxBatchID);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.flowLayoutPanel4);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.flowLayoutPanel10);
+            this.flowLayoutPanelBoxMaintenance.Controls.Add(this.flowLayoutPanelBoxMaintButtons);
             this.flowLayoutPanelBoxMaintenance.Controls.Add(this.flowLayoutPanel11);
             this.flowLayoutPanelBoxMaintenance.Location = new System.Drawing.Point(192, 11);
             this.flowLayoutPanelBoxMaintenance.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanelBoxMaintenance.Name = "flowLayoutPanelBoxMaintenance";
-            this.flowLayoutPanelBoxMaintenance.Size = new System.Drawing.Size(982, 116);
+            this.flowLayoutPanelBoxMaintenance.Size = new System.Drawing.Size(1646, 93);
             this.flowLayoutPanelBoxMaintenance.TabIndex = 117;
             // 
             // flowLayoutPanelBoxMaintButtons
             // 
             this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnOpenBox);
             this.flowLayoutPanelBoxMaintButtons.Controls.Add(this.btnChangeBox);
-            this.flowLayoutPanelBoxMaintButtons.Location = new System.Drawing.Point(16, 43);
-            this.flowLayoutPanelBoxMaintButtons.Margin = new System.Windows.Forms.Padding(2);
+            this.flowLayoutPanelBoxMaintButtons.Location = new System.Drawing.Point(1487, 4);
+            this.flowLayoutPanelBoxMaintButtons.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanelBoxMaintButtons.Name = "flowLayoutPanelBoxMaintButtons";
-            this.flowLayoutPanelBoxMaintButtons.Size = new System.Drawing.Size(142, 84);
+            this.flowLayoutPanelBoxMaintButtons.Size = new System.Drawing.Size(142, 82);
             this.flowLayoutPanelBoxMaintButtons.TabIndex = 116;
             // 
             // lblBoxMaintenance
@@ -553,15 +554,14 @@ namespace RegScan
             // frmBoxManagement
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(249)))), ((int)(((byte)(248)))));
-            this.ClientSize = new System.Drawing.Size(1194, 135);
+            this.ClientSize = new System.Drawing.Size(1849, 110);
             this.Controls.Add(this.lblBoxMaintenance);
             this.Controls.Add(this.flowLayoutPanelBoxMaintenance);
             this.Controls.Add(this.CurrentBoxLabel);
-            this.Controls.Add(this.flowLayoutPanelBoxMaintButtons);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1194, 135);
+            this.MinimumSize = new System.Drawing.Size(1194, 110);
             this.Name = "frmBoxManagement";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.flowLayoutPanelOpened.ResumeLayout(false);
