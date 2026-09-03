@@ -140,12 +140,12 @@ namespace RegScan
                         "\nCurrent Box: " + current.AccessionNumber.TextDashes + 
                         "\nCurrent Document: " + _currentBox.AccessionNumber.TextDashes;
                     MessageBox.Show(msg, "Accession Number Mismatch", MessageBoxButtons.OK);
-                    frmMDIMain.ScannerForm.SetBackgroundAccFields(Theme.WarningBackgroundLight);
+                    frmMDIMain.ScannerForm.AccessionNumberMatch(false);
                 }
                 else
                 {
                     // ensure all fields are their normal background
-                    frmMDIMain.ScannerForm.SetBackgroundAccFields(Theme.Disabled);
+                    frmMDIMain.ScannerForm.AccessionNumberMatch(true);
                 }
             }
             

@@ -640,7 +640,7 @@ namespace RegScan
             maskedTextBoxBoxNumber.Text = "";
 
             // ensure back colours are reset
-            SetBackgroundAccFields(Theme.Disabled);
+            AccessionNumberMatch(true);
 
             // Disable notes
             txtDocumentNotes.Enabled = false;
@@ -697,14 +697,43 @@ namespace RegScan
 
         
         /// <summary>
-        /// Given a background colour update all accession number fields to that colour
+        /// Update all accession number panels and labels to visually indicate if the
+        /// Accession Numbers matched or not. 
         /// </summary>
-        /// <param name="updatedBackground">colour value for background</param>
-        public void SetBackgroundAccFields(Color updatedBackground)
+        /// <param name="match">Flag indicating if the numbers matched or not</param>
+        public void AccessionNumberMatch(bool match)
         {
-            maskedTextBoxSequenceNumber.BackColor = updatedBackground;
-            maskedTextBoxScheduleNumber.BackColor = updatedBackground;
-            maskedTextBoxBoxNumber.BackColor = updatedBackground;
+            Color background;
+            Color fontColour;
+            Font font;
+
+            // If the Accession Numbers did not match highlight in danger colours
+            if (!match)
+            {
+                background = Theme.DangerBackground;
+                fontColour = Theme.TextInverse;
+                font = Theme.H3;
+            }
+            // If the numbers matched use the default values
+            else
+            {
+                background = Theme.BackgroundSecondary;
+                fontColour = Theme.TextPrimary;
+                font = Theme.H4;
+            }
+
+            // Update panel and labels to use the formatting as set above
+            flowLayoutPanelSequence.BackColor = background;
+            lblSequence.ForeColor = fontColour;
+            lblSequence.Font = font;
+
+            flowLayoutPanelSchedule.BackColor = background;
+            lblSchedule.ForeColor = fontColour;
+            lblSchedule.Font = font;
+
+            flowLayoutPanelBoxNumber.BackColor = background;
+            lblBboxNumber.ForeColor = fontColour;
+            lblBboxNumber.Font = font;
         }
         
         /// <summary>
@@ -728,7 +757,7 @@ namespace RegScan
                     frmBoxManagement.SelectedBox.AccessionNumber))
                 {
                     // Set the background of the fields for this form
-                    SetBackgroundAccFields(Theme.WarningBackgroundLight);
+                    AccessionNumberMatch(false);
 
                     // Warn the user
                     string msg = "The current working box does not match the accession number " +
@@ -766,8 +795,8 @@ namespace RegScan
 
             // Record Classification
             txtDocumentClass.Text = _currentDocument.DocumentClass;
-            txtDocumentType.Text = string.Concat(
-                _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
+            txtDocumentType.Text = _currentDocument.DocumentType;
+            txtDocTypeDescription.Text = _currentDocument.DocTypeDesc;
 
             // Set Accession number values 
             SetDocumentAccessionForm();

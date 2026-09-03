@@ -6,7 +6,7 @@ namespace RegScan.UI
     {
     // --------- Colour: surface ---------
     public static readonly Color BackgroundPrimary = BaseColourTokens.White;
-    public static readonly Color BackgroundSecondary = BaseColourTokens.Grey100;
+    public static readonly Color BackgroundSecondary = BaseColourTokens.WhiteGray;
     public static readonly Color BackgroundInverse = BaseColourTokens.BCBlue;
     public static readonly Color None = BaseColourTokens.Transparent;
 
@@ -133,6 +133,7 @@ namespace RegScan.UI
         public static readonly Color Transparent = ColorTranslator.FromHtml("#ffffff00");
 
         // Grey
+        public static readonly Color WhiteGray = ColorTranslator.FromHtml("#FAF9F8");
         public static readonly Color Grey10 = ColorTranslator.FromHtml("#EDEBE9");
         public static readonly Color Grey70 = ColorTranslator.FromHtml("#9F9D9C");
         public static readonly Color Grey100 = ColorTranslator.FromHtml("#353433");
