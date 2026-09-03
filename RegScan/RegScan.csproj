@@ -25,9 +25,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -53,6 +54,36 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>ScanningDashboard.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>15D6DFE509335A7F38BB2929876EE254D3A8A900</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>RegScan_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Cyotek.GhostScript">
@@ -82,13 +113,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIRequest.cs" />
+    <Compile Include="API\BoxAPI.cs" />
+    <Compile Include="API\ScheduleAPI.cs" />
     <Compile Include="API\DocumentApi.cs" />
+    <Compile Include="DocumentStorage\AccessionNumberObj.cs" />
+    <Compile Include="DocumentStorage\BoxObj.cs" />
+    <Compile Include="DocumentStorage\Schedules.cs" />
+    <Compile Include="UI\Forms\frmBoxOpen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxOpen.Designer.cs">
+      <DependentUpon>frmBoxOpen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxSelect.Designer.cs">
+      <DependentUpon>frmBoxSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\BarCodeObj.cs" />
     <Compile Include="UI\Forms\frmScannerDocument.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Forms\frmScannerDocument.Designer.cs">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\frmBoxManagement.Designer.cs">
+      <DependentUpon>frmBoxManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="DocumentObj.cs" />
     <Compile Include="Utilities\EnhanceImageObj.cs" />
@@ -98,11 +152,11 @@
     <Compile Include="UI\Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Forms\frmEnterBarCode.cs">
+    <Compile Include="UI\Forms\frmEnterText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Forms\frmEnterBarCode.Designer.cs">
-      <DependentUpon>frmEnterBarCode.cs</DependentUpon>
+    <Compile Include="UI\Forms\frmEnterText.Designer.cs">
+      <DependentUpon>frmEnterText.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ImageBox\ImageBox.cs">
       <SubType>Component</SubType>
@@ -124,16 +178,27 @@
     <Compile Include="Security.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="Utilities\UtilityObj.cs" />
+    <EmbeddedResource Include="UI\Forms\frmBoxOpen.resx">
+      <DependentUpon>frmBoxOpen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\frmBoxSelect.resx">
+      <DependentUpon>frmBoxSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmScannerDocument.resx">
       <DependentUpon>frmScannerDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\frmBoxManagement.resx">
+      <DependentUpon>frmBoxManagement.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Forms\frmEnterBarCode.resx">
-      <DependentUpon>frmEnterBarCode.cs</DependentUpon>
+    <EmbeddedResource Include="UI\Forms\frmEnterText.resx">
+      <DependentUpon>frmEnterText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\frmMDIMain.resx">
       <DependentUpon>frmMDIMain.cs</DependentUpon>
@@ -157,6 +222,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="RegScan_TemporaryKey.pfx" />
     <None Include="Sensitive.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -179,6 +245,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ScanningDashboard.ico" />
+    <Content Include="UI\Icons\error.ico" />
+    <Content Include="UI\Icons\eventlogError.ico" />
+    <Content Include="UI\Icons\eventlogInfo.ico" />
+    <Content Include="UI\Icons\eventlogWarn.ico" />
+    <Content Include="UI\Icons\filedownload.ico" />
+    <Content Include="UI\Icons\Find_5650.ico" />
+    <Content Include="UI\Icons\GotoNextRow_289.ico" />
+    <Content Include="UI\Icons\MovePrevious_7195.ico" />
+    <Content Include="UI\Icons\PencilTool_206.ico" />
+    <Content Include="UI\Icons\Save_6530.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -203,17 +279,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GhostScriptSharp">
-      <Version>1.3.1.4</Version>
-    </PackageReference>
-    <PackageReference Include="JSON">
-      <Version>1.0.1</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="odp.net.managed">
-      <Version>121.1.2</Version>
     </PackageReference>
     <PackageReference Include="PDFsharp-GDI">
       <Version>6.2.4</Version>

@@ -6,7 +6,7 @@ namespace RegScan.UI
     {
     // --------- Colour: surface ---------
     public static readonly Color BackgroundPrimary = BaseColourTokens.White;
-    public static readonly Color BackgroundSecondary = BaseColourTokens.Grey100;
+    public static readonly Color BackgroundSecondary = BaseColourTokens.WhiteGray;
     public static readonly Color BackgroundInverse = BaseColourTokens.BCBlue;
     public static readonly Color None = BaseColourTokens.Transparent;
 
@@ -35,6 +35,7 @@ namespace RegScan.UI
     public static readonly Color DangerHover = BaseColourTokens.DangerLight;
     public static readonly Color SuccessBackground = BaseColourTokens.Success;
     public static readonly Color WarningBackground = BaseColourTokens.Warning;
+    public static readonly Color WarningBackgroundLight = BaseColourTokens.WarningLight;
     public static readonly Color InfoBackground = BaseColourTokens.Blue90;
     public static readonly Color Disabled = BaseColourTokens.Grey10;
     public static readonly Color FocusOutline = BaseColourTokens.Gold;
@@ -49,13 +50,15 @@ namespace RegScan.UI
     public const string FontFamilyLight = "BC Sans Light, Segoe UI";
 
     /// <summary>Body / default text.</summary>
-    public static readonly Font FontBody = new Font(FontFamily, 10F, FontStyle.Regular);
+    public static readonly Font FontSmall = new Font(FontFamily, 10, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font FontBody = new Font(FontFamily, 11, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font FontBodySmall = new Font(FontFamilyLight, 11, FontStyle.Regular, GraphicsUnit.Point);
 
-    /// <summary>Standard heading levels</summary>
-    public static readonly Font H1 = new Font(FontFamily, 14F, FontStyle.Bold);
-    public static readonly Font H2 = new Font(FontFamily, 12F, FontStyle.Bold);
-    public static readonly Font H3 = new Font(FontFamily, 12F, FontStyle.Regular);
-    public static readonly Font H4 = new Font(FontFamilyLight, 12F, FontStyle.Regular);
+        /// <summary>Standard heading levels</summary>
+        public static readonly Font H1 = new Font(FontFamily, 14, FontStyle.Bold, GraphicsUnit.Point);
+    public static readonly Font H2 = new Font(FontFamily, 12, FontStyle.Bold, GraphicsUnit.Point);
+    public static readonly Font H3 = new Font(FontFamily, 12, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font H4 = new Font(FontFamilyLight, 12, FontStyle.Regular, GraphicsUnit.Point);
 
     /// <summary>Button label.</summary>
     public static readonly Font FontButton = new Font(FontFamily, 10F, FontStyle.Bold);
@@ -95,7 +98,7 @@ namespace RegScan.UI
         /// MUST be const -> static readonly will not work in switch-case statements
         /// </summary>
 
-        // 1 = small, 2 = medium, 3 = large, 4 = xtra large.
+        // 1 = small, 2 = medium, 3 = large, 4 = extra large.
         public const byte SM = 1;
         public const byte MD = 2;
         public const byte LG = 3;
@@ -118,7 +121,7 @@ namespace RegScan.UI
     /// <remarks>
     /// 1.  Use caution when updating these values. They are referenced for various elements above
     /// changes may have wider affects than anticipated. 
-    /// 2.  Using colour variable from this class directly in a form element is discourcged. This
+    /// 2.  Using colour variable from this class directly in a form element is discouraged. This
     /// will reduce the risks of the first remark.
     /// 3.  Always check if a colour already exists in this class before adding.
     /// </remarks>
@@ -130,6 +133,7 @@ namespace RegScan.UI
         public static readonly Color Transparent = ColorTranslator.FromHtml("#ffffff00");
 
         // Grey
+        public static readonly Color WhiteGray = ColorTranslator.FromHtml("#FAF9F8");
         public static readonly Color Grey10 = ColorTranslator.FromHtml("#EDEBE9");
         public static readonly Color Grey70 = ColorTranslator.FromHtml("#9F9D9C");
         public static readonly Color Grey100 = ColorTranslator.FromHtml("#353433");
@@ -150,5 +154,6 @@ namespace RegScan.UI
         public static readonly Color DangerLight = ColorTranslator.FromHtml("#A2312D");
         public static readonly Color Success = ColorTranslator.FromHtml("#42814A");
         public static readonly Color Warning = ColorTranslator.FromHtml("#F8BB47");
+        public static readonly Color WarningLight = ColorTranslator.FromHtml("#FEF1D8");
     }
 }
