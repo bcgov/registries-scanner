@@ -24,13 +24,11 @@ namespace RegScan
             {
                 // Set the list of boxes when the application opens
                 BoxObj.RefreshBoxList();
-                // From the box list set _currentBox to be the most recently opened box
-                _currentBox = GetMostRecentBox();
+
+
+                // After the constructor runs Load current working box
+                this.Load += new System.EventHandler(this.BoxManagement_Load);
                 
-                // Get the highest Batch ID for the current box
-                RefreshBatchId();
-                // Update the fields of the form
-                UpdateFields();
             }
             catch (TypeAccessException err)
             {
@@ -41,6 +39,34 @@ namespace RegScan
                 UtilityObj.WriteLog(UtilityObj.error, err.ToString());
             }
             
+        }
+
+        public void BoxManagement_Load(object sender, EventArgs e)
+        {
+            // Set the current working box
+            VerifyCurrentBox();
+
+            // Get the highest Batch ID for the current box
+            RefreshBatchId();
+            // Update the fields of the form
+            UpdateFields();
+        }
+
+        public void VerifyCurrentBox()
+        {
+            // From the box list set _currentBox to be the most recently opened box
+            _currentBox = GetMostRecentBox();
+
+            // Allow user to confirm or select a different box
+            string msg = "The box most recently opened is: \n\n" + _currentBox.InfoString +
+                "\n\nWould you like to use this as the current working box?";
+            string title = "Verify Current Working Box";
+            var resp = MessageBox.Show(msg, title, MessageBoxButtons.YesNo);
+            
+            if (resp == DialogResult.No)
+            {
+                btnChangeBox.PerformClick();
+            }
         }
 
         /// <summary>
