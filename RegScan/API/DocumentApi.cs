@@ -120,7 +120,7 @@ namespace RegScan
         public string consumerDocumentId;
         public string consumerIdentifier;
         public string consumerFilename;
-        public string consumerFilingDate;
+        public string consumerFilingDateTime;
         public string description;
         public string documentType;
         public string documentClass;

@@ -1,5 +1,6 @@
 ﻿using AppConfiguration;
 using PdfSharp.Pdf;
+using RegScan.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,7 +29,7 @@ namespace RegScan
         /// <summary>
         /// Current active document.
         /// </summary>
-        DocumentObj _currentDocument = null;
+        private static DocumentObj _currentDocument = null;
 
         /// <summary>
         /// Used to control how the parent form will handle the closing of this form
@@ -75,6 +76,8 @@ namespace RegScan
         /// Current device.
         /// </summary>
         Device _currentDevice;
+
+        public static DocumentObj CurrentDocument { get { return _currentDocument; } }
 
         #endregion
         public frmScannerDocument()
@@ -256,13 +259,14 @@ namespace RegScan
                 {
                     // Ask if a barcode should be entered manually.
                     string message = "Do you want to manually enter a barcode?";
-                    barCode = frmEnterBarCode.ManualBarcode(message);
+                    barCode = frmEnterText.ManualBarcode(message);
                 }
                 // Call to DRS API for existing document records for this barcode.
                 // There may be more than one document (known as versions)
                 try
                 {
                     List<DocumentObj> resp = DocumentObj.Find(barCode);
+                    // if there is more than one document record select the first
                     if (resp.Count >= 1)
                         doc = resp[0];
                 }
@@ -358,9 +362,9 @@ namespace RegScan
                 if (! string.IsNullOrEmpty(_currentDocument.DocumentURL))
                 {
                     // Ask if this is a new version.
-                    if (MessageBox.Show("Document with barcode " + barCode +
-                        " has already been scanned. Do you want to create a new version?",
-                        "Document Already Scanned", MessageBoxButtons.YesNo,
+                    string msg = "Document with barcode " + barCode + " has already been" +
+                        " scanned.\nDo you want to replace the previous version?";
+                    if (MessageBox.Show(msg, "Document Already Scanned", MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         // If a new version, then update the version number
@@ -428,6 +432,11 @@ namespace RegScan
                     ResetDocument();
                     CloseReason = _closeAutoRefresh;
                     CloseForm();
+                    return;
+                }
+                else
+                {
+                    ResetDocument();
                     return;
                 }
             }
@@ -564,6 +573,21 @@ namespace RegScan
             lblCurImage.Text = (_currentImageIndex + 1).ToString();
             lblTotalImage.Text = totalScanned.ToString();
 
+            // Check the total number of pages against the expected number
+            if (_currentDocument != null)
+            {
+                if (totalScanned > _currentDocument.PageCount)
+                {
+                    lblTotalImage.BackColor = Theme.WarningBackground;
+                    txtPagesInDocument.BackColor = Theme.WarningBackgroundLight;
+                }
+                else
+                {
+                    lblTotalImage.BackColor = Color.Transparent;
+                    txtPagesInDocument.BackColor = Theme.Disabled;
+                }
+            }
+
             // Disable/ enable buttons based on the current image index
             // Fist page - can't delete, no previous image, only go to next image if there is one
             if (_currentImageIndex == 0)
@@ -610,16 +634,15 @@ namespace RegScan
             txtDocumentClass.Text = "";
             txtDocumentType.Text = "";
             txtPagesInDocument.Text = "";
-            maskSeqNumber.Text = "";
-            txtFilingDate.Text = "";
-            maskSchNumber.Text = "";
-            maskBoxNumber.Text = "";
             txtDocumentNotes.Text = "";
+            maskedTextBoxSequenceNumber.Text = "";
+            maskedTextBoxScheduleNumber.Text = "";
+            maskedTextBoxBoxNumber.Text = "";
 
-            // Disable Accession Number fields and notes
-            maskSeqNumber.Enabled = false;
-            maskSchNumber.Enabled = false;
-            maskBoxNumber.Enabled = false;
+            // ensure back colours are reset
+            AccessionNumberMatch(true);
+
+            // Disable notes
             txtDocumentNotes.Enabled = false;
 
             // Delete any temporary FileNames.
@@ -672,6 +695,91 @@ namespace RegScan
             imageBox.SizeToFit = false;
         }
 
+        
+        /// <summary>
+        /// Update all accession number panels and labels to visually indicate if the
+        /// Accession Numbers matched or not. 
+        /// </summary>
+        /// <param name="match">Flag indicating if the numbers matched or not</param>
+        public void AccessionNumberMatch(bool match)
+        {
+            Color background;
+            Color fontColour;
+            Font font;
+
+            // If the Accession Numbers did not match highlight in danger colours
+            if (!match)
+            {
+                background = Theme.DangerBackground;
+                fontColour = Theme.TextInverse;
+                font = Theme.H3;
+            }
+            // If the numbers matched use the default values
+            else
+            {
+                background = Theme.BackgroundSecondary;
+                fontColour = Theme.TextPrimary;
+                font = Theme.H4;
+            }
+
+            // Update panel and labels to use the formatting as set above
+            flowLayoutPanelSequence.BackColor = background;
+            lblSequence.ForeColor = fontColour;
+            lblSequence.Font = font;
+
+            flowLayoutPanelSchedule.BackColor = background;
+            lblSchedule.ForeColor = fontColour;
+            lblSchedule.Font = font;
+
+            flowLayoutPanelBoxNumber.BackColor = background;
+            lblBboxNumber.ForeColor = fontColour;
+            lblBboxNumber.Font = font;
+        }
+        
+        /// <summary>
+        /// Set the document fields for accession numbers based on the document record
+        /// If these values differ from the current working box inform the user and change the
+        /// background of the fields.
+        /// </summary>
+        protected void SetDocumentAccessionForm()
+        {
+            if (_currentDocument.AccSet)
+            {
+                maskedTextBoxSequenceNumber.Text = _currentDocument.AccessionNumber.SequenceString;
+                maskedTextBoxScheduleNumber.Text = _currentDocument.AccessionNumber.ScheduleString;
+                maskedTextBoxBoxNumber.Text = _currentDocument.AccessionNumber.BoxString;
+
+                // Check if the Accession Number matches the current box
+                // If there is a discrepancy between the current working box and the
+                // accession number for this document show the user a warning.
+                if (!AccessionNumberObj.CompareAccessionObsj(
+                    _currentDocument.AccessionNumber,
+                    frmBoxManagement.SelectedBox.AccessionNumber))
+                {
+                    // Set the background of the fields for this form
+                    AccessionNumberMatch(false);
+
+                    // Warn the user
+                    string msg = "The current working box does not match the accession number " +
+                        "for this document record.\nPlease verify the current working box and " +
+                        "Document Record information.\nDocument Record: " +
+                        _currentDocument.AccessionNumber.TextDashes + "\nCurrent Box: " +
+                        frmBoxManagement.SelectedBox.AccessionNumber.TextDashes;
+                    string title = "Mismatched Accession Numbers";
+                    MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            // if it was not set show not available string to users
+            else
+            {
+                string notAva = "N/A";
+                maskedTextBoxSequenceNumber.Text = notAva;
+                maskedTextBoxScheduleNumber.Text = notAva;
+                maskedTextBoxBoxNumber.Text = notAva;
+            }
+            
+        }
+
         /// <summary>
         /// Called if a record is found for the scanned document.
         /// Form fields will be populated with the document's properties.
@@ -687,16 +795,11 @@ namespace RegScan
 
             // Record Classification
             txtDocumentClass.Text = _currentDocument.DocumentClass;
-            txtDocumentType.Text = string.Concat(
-                _currentDocument.DocumentType, " -> ", _currentDocument.DocTypeDesc);
+            txtDocumentType.Text = _currentDocument.DocumentType;
+            txtDocTypeDescription.Text = _currentDocument.DocTypeDesc;
 
-            // Accession Number
-            maskSeqNumber.Enabled = true;
-            maskSchNumber.Enabled = true;
-            maskBoxNumber.Enabled = true;
-            maskSeqNumber.Text = _currentDocument.SequenceNumberString;
-            maskSchNumber.Text = _currentDocument.ScheduleNumberString;
-            maskBoxNumber.Text = _currentDocument.BoxNumberString;
+            // Set Accession number values 
+            SetDocumentAccessionForm();
 
             // Document Notes / Description
             txtDocumentNotes.Enabled = true;
@@ -705,7 +808,7 @@ namespace RegScan
         
         /// <summary>
         /// Add a progress bar to the form. If this is added through the UI it will be within
-        /// another control. We want it to stay infront of all controls. 
+        /// another control. We want it to stay in front of all controls. 
         /// </summary>
         protected void LoadControls()
         {
@@ -723,6 +826,9 @@ namespace RegScan
 
         #region Scanner Methods
 
+        /// <summary>
+        /// If there is not a current device manager create one.
+        /// </summary>
         public void CreateTwainDeviceManager()
         {
             try
@@ -1076,21 +1182,34 @@ namespace RegScan
         /// <param name="e"> Events from user </param>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            bool descChange = false;
-            bool accNChange = false;
+            bool hitErr = false;
+            string er = "While attempting to save the document the following issue(s) were hit:\n";
             PdfDocument pdf = null;
 
             // Validation
             if (_currentDocument == null)
                 return;
 
+            if (!AccessionNumberObj.CompareAccessionObsj(
+                _currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber))
+            {
+                hitErr = true;
+                er += "\nCurrent working box does not match Document Record Accession " +
+                    "Number.\n    Please change the current working box or update the record " +
+                    "in DRS\n";
+            }
+
             if (_currentDocument.PageCount != _scannedImageList.Count)
             {
-                var usr_rsp = MessageBox.Show("Number of pages scanned does not match the " +
-                    "expected number of pages. Do you still wish to save?", "Page Mismatch",
-                    MessageBoxButtons.YesNo);
-                if (usr_rsp == System.Windows.Forms.DialogResult.No)
-                    return;
+                hitErr = true;
+                er += "\nNumber of pages scanned does not match the expected number of pages.\n";
+            }
+
+            if (hitErr)
+            {
+                er += "\n\nPlease resolve the issue(s) listed above before attempting to save.";
+                MessageBox.Show(er, "Save Errors", MessageBoxButtons.OK);
+                return;
             }
 
             // Show progress bar and disable form elements 
@@ -1117,54 +1236,10 @@ namespace RegScan
             _currentDocument.ScannerId = Environment.UserName;
             _currentDocument.ScannedDate = DateTime.Now;
 
-            // Test description field for changes
-            // Ordinal comparison checks the numeric values of char objects between each string
-            // If _currentDocument.Description is null we will compare to an empty string.
-            descChange = !(string.Equals(_currentDocument.Description ?? string.Empty,
-                txtDocumentNotes.Text, StringComparison.Ordinal));
-            if (descChange)
-            {
-                _currentDocument.Description = txtDocumentNotes.Text;
-            }
-
-            // Check Accession Number fields for updates
-            try
-            {
-                // If any of the fields are missing values -> throw an error
-                if (string.IsNullOrEmpty(maskSeqNumber.Text) ||
-                    string.IsNullOrEmpty(maskSchNumber.Text) ||
-                    string.IsNullOrEmpty(maskBoxNumber.Text))
-                    throw new FormatException();
-                // or if there is an error trying to parse them as ints
-                var seqNumber = Int32.Parse(maskSeqNumber.Text);
-                var schNumber = Int32.Parse(maskSchNumber.Text);
-                var boxNumber = Int32.Parse(maskBoxNumber.Text);
-
-                // we only need to update the values if there were changes made
-                accNChange = seqNumber != _currentDocument.SequenceNumber ||
-                    schNumber != _currentDocument.ScheduleNumber ||
-                    boxNumber != _currentDocument.BoxNumber;
-                if (accNChange)
-                {
-                    _currentDocument.SequenceNumber = seqNumber;
-                    _currentDocument.ScheduleNumber = schNumber;
-                    _currentDocument.BoxNumber = boxNumber;
-                }
-
-            }
-            // Catch the formatting error
-            catch (FormatException ex)
-            {
-                MessageBox.Show("Unable to parse one of the form fields. Please verify all fields and try again.", "Unable to Update");
-                UtilityObj.WriteLog(UtilityObj.error, "Couldn't process form fields to int.\n" + ex.ToString());
-                hideProgressBar();
-                return;
-            }
-
             try
             {
                 // Update document. Flag set based on if there were any updates to the fields
-                _currentDocument.UpdateInsert(descChange || accNChange);
+                _currentDocument.UpdateInsert();
             }
             catch (ApplicationException ae)
             {
@@ -1220,8 +1295,8 @@ namespace RegScan
         /// <summary>
         /// Fires when this forms becomes active.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Opening form event</param>
+        /// <param name="e">Event Data</param>
         private void frmScanDocument_Activated(object sender, EventArgs e)
         {
             // Form is maximized.
@@ -1234,6 +1309,12 @@ namespace RegScan
             btnScanPage.Focus();
         }
 
+        /// <summary>
+        /// Invoked when the user selects "delete image" button. Confirm and remove the image
+        /// currently displayed. Once finished show the image that came before the deleted image.
+        /// </summary>
+        /// <param name="sender">Delete Image Button</param>
+        /// <param name="e">Event data</param>
         private void btnDeleteImage_Click(object sender, EventArgs e)
         {
             // Confirm this image is to be deleted.

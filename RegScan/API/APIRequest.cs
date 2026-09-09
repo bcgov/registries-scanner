@@ -31,6 +31,12 @@ namespace RegScan
                 useClientFactory: true);
         }
 
+        /// <summary>
+        /// Adds standard headers to every API call made. 
+        /// </summary>
+        /// <param name="subPath">Path to add to the end of ConfigKeys.API_URL</param>
+        /// <param name="reqType">HTTP Request type</param>
+        /// <returns>Base request</returns>
         private static RestRequest CreateRequest(string subPath, Method reqType)
         {
             // create a request instance
@@ -44,6 +50,7 @@ namespace RegScan
 
         /// <summary>
         /// Method to build a request to send to the DRS API.
+        /// This method does not send a body or query parameters.
         /// The endpoint is appended to the API URL from the environment variables
         /// </summary>
         /// <param name="endPoint">Where the request is sent. Appended to API URL</param>
