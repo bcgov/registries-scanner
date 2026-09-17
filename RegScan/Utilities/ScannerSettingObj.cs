@@ -1,12 +1,14 @@
 ﻿
+using System;
+using System.Windows.Forms;
 using Vintasoft.Twain;
 
 namespace RegScan
 {
-    public class ScannerSettingObj
+    public class ScannerConnectionObj
     {
 
-        private DeviceManager _deviceManager;
+        private static DeviceManager _deviceManager;
         private Device _currentScanner;
 
         // Default values for scanner settings.
@@ -20,7 +22,7 @@ namespace RegScan
         private bool _canUseDuplex;
 
         // Publicly available properties
-        public DeviceManager DeviceManager { get { return _deviceManager; } }
+        public static DeviceManager DeviceManager { get { return _deviceManager; } }
         public Device CurrentScanner { get { return _currentScanner; } }
 
         public bool UseDocumentFeeder { get { return _canUseDocumentFeeder && _defaultUseDocumentFeeder; } }
@@ -35,21 +37,29 @@ namespace RegScan
         public bool CanUseDocumentFeeder { get { return _canUseDocumentFeeder; } }
         public bool CanUseDuplex { get { return _canUseDuplex; } }
 
-        public ScannerSettingObj()
+        public ScannerConnectionObj(Form currentForm)
         {
             // On init get the default devices capabilities
-            CheckDeviceCapabilities();
+            CheckDeviceCapabilities(currentForm);
+        }
+
+        public static DeviceManager GetDeviceManager(Form currentForm)
+        {
+            OpenDeviceManager(currentForm);
+
+            // return the device manager
+            return _deviceManager;
         }
 
         /// <summary>
         /// If not already created, create and open a connection to a device manager.
         /// </summary>
-        public void OpenDeviceManager()
+        public static void OpenDeviceManager(Form currentForm)
         {
             // ensure we have a device manager and it is running
             if (_deviceManager == null)
             {
-                _deviceManager = new DeviceManager(CountryCode.Canada, LanguageType.EnglishCanadian);
+                _deviceManager = new DeviceManager(currentForm, CountryCode.Canada, LanguageType.EnglishCanadian);
             }
             if (_deviceManager.State != DeviceManagerState.Opened)
             {
@@ -75,9 +85,22 @@ namespace RegScan
         /// </summary>
         public void OpenScanner()
         {
-            // get the default device and open it
-            _currentScanner = _deviceManager.DefaultDevice;
-            _currentScanner.Open();
+            try
+            {
+                if (_deviceManager == null || _deviceManager.Devices.Count == 0)
+                    throw new InvalidOperationException("No scanning devices are available.");
+
+                // get the default device and open it
+                _currentScanner = _deviceManager.DefaultDevice
+                    ?? throw new InvalidOperationException("No default scanner configured.");
+                _currentScanner.Open();
+            }
+            catch (Exception e)
+            {
+                // this should maybe catch the weird error and give us more information
+                UtilityObj.WriteLog(UtilityObj.error, e.ToString());
+            }
+            
         }
 
         /// <summary>
@@ -110,10 +133,10 @@ namespace RegScan
         /// <summary>
         /// Get and Set CanUse properties based on the default devices list of capabilities.
         /// </summary>
-        public void CheckDeviceCapabilities()
+        public void CheckDeviceCapabilities(Form form)
         {
             // Ensure the device manager is open
-            OpenDeviceManager();
+            OpenDeviceManager(form);
             // get the default device and open it
             OpenScanner();
 
@@ -123,12 +146,6 @@ namespace RegScan
             // Set the device capabilities based on the collection from the device 
             _canUseDocumentFeeder = CheckADF(deviceCapabilities);
             _canUseDuplex = CheckDuplex(deviceCapabilities);
-
-            // Close connection to scanner and manager
-            _currentScanner.Close();
-            _currentScanner = null;
-            CloseDeviceManager();
-            _deviceManager = null;
         }
     }
 }
