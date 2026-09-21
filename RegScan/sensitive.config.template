@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <appSettings>
-	<add key="PORT" value="" />
-	<add key="ENV" value="" />
 	<add key="AUTH_TIMEOUT" value="" />
-	<add key="USERNAME" value="" />
-	<add key="PASSWORD" value="" />
-	<add key="HOST" value="" />
-	<add key="SID" value="" />
 	<add key="AUTH_SVC_URL" value="" />
 	<add key="CLIENT_ID" value="" />
 	<add key="CLIENT_ACCOUNT" value="" />
