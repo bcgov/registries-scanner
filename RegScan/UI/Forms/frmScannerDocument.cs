@@ -39,7 +39,7 @@ namespace RegScan
         /// <summary>
         /// Default setting for scanning parameters.
         /// </summary>
-        private ScannerSettingObj _defaultSetting;
+        private ScannerConnectionObj _defaultSetting;
 
         /// <summary>
         /// List of all scanned images for the current document.
@@ -70,7 +70,7 @@ namespace RegScan
         /// <summary>
         /// TWAIN device manager.
         /// </summary>
-        DeviceManager _deviceManager = null;
+        //DeviceManager _deviceManager = null;
 
         /// <summary>
         /// Current device.
@@ -85,30 +85,7 @@ namespace RegScan
             InitializeComponent();
             LoadControls();
 
-            UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
-
-            // Set scanner defaults.
-            _defaultSetting = new ScannerSettingObj();
-            SetSettingValues();
-            useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
-
-            // Create a path to where debugging logs should be stored.
-            string scannerFile = "vstwain.log";
-            string scannerPath = String.Concat(ConfigKeys.LOGPATH, "\\", scannerFile);
-
-            UtilityObj.CreateFolder(ConfigKeys.LOGPATH);
-            UtilityObj.CreateFile(scannerPath);
-
-            // Set up debugging for the TWAIN SDK
-            if ( !TwainEnvironment.IsDebuggingEnabled )
-            {
-                TwainEnvironment.EnableDebugging(scannerPath);
-                TwainEnvironment.DebugLevel = DebugLevel.Debug;
-            }
             
-
-            // create TWAIN device manager
-            CreateTwainDeviceManager();
         }
 
         /// <summary>
@@ -176,13 +153,6 @@ namespace RegScan
                 
                 if (_currentDevice.State != DeviceState.Closed)
                     _currentDevice.Close();
-            }
-
-            // Close the device manager
-            if (_deviceManager.State != DeviceManagerState.Closed)
-            {
-                _deviceManager.Close();
-                _deviceManager.Dispose();
             }
 
             UpdateImageDisplay();
@@ -569,7 +539,7 @@ namespace RegScan
                 SetImage(image);
             }
 
-            //Update current and total page labels in the status label
+            // Update current and total page labels in the status label
             lblCurImage.Text = (_currentImageIndex + 1).ToString();
             lblTotalImage.Text = totalScanned.ToString();
 
@@ -578,13 +548,21 @@ namespace RegScan
             {
                 if (totalScanned > _currentDocument.PageCount)
                 {
-                    lblTotalImage.BackColor = Theme.WarningBackground;
-                    txtPagesInDocument.BackColor = Theme.WarningBackgroundLight;
+                    lblTotalImage.BackColor = Theme.DangerBackground;
+                    lblTotalImage.ForeColor = Theme.TextInverse;
+                    lblTotalImage.Font = Theme.H3;
+                    panelPages.BackColor = Theme.DangerBackground;
+                    lblTotalPages.ForeColor = Theme.TextInverse;
+                    lblTotalPages.Font = Theme.H3;
                 }
                 else
                 {
-                    lblTotalImage.BackColor = Color.Transparent;
-                    txtPagesInDocument.BackColor = Theme.Disabled;
+                    lblTotalImage.BackColor = Theme.BackgroundSecondary;
+                    lblTotalImage.ForeColor = Theme.TextPrimary;
+                    lblTotalImage.Font = Theme.H4;
+                    panelPages.BackColor = Theme.BackgroundSecondary;
+                    lblTotalPages.ForeColor = Theme.TextPrimary;
+                    lblTotalPages.Font = Theme.H4;
                 }
             }
 
@@ -827,23 +805,6 @@ namespace RegScan
         #region Scanner Methods
 
         /// <summary>
-        /// If there is not a current device manager create one.
-        /// </summary>
-        public void CreateTwainDeviceManager()
-        {
-            try
-            {
-                if (_deviceManager != null)
-                    _deviceManager.Close();
-                _deviceManager = new DeviceManager(this, CountryCode.Canada, LanguageType.EnglishCanadian);
-                //Set the twain DSM path to the local folder if using 64 bit
-                //_deviceManager.TwainDllPath = Directory.GetCurrentDirectory() + "\\TWAINDSM.dll";
-            }
-            // TODO - Make this catch do something.
-            catch { }
-        }
-
-        /// <summary>
         /// Subscribe to the device events.
         /// </summary>
         private void SubscribeToDeviceEvents(Device device)
@@ -999,15 +960,15 @@ namespace RegScan
         private void setUpScanner()
         {
             // Open device manager, if not open.
-            if (_deviceManager.State == DeviceManagerState.Closed)
-                _deviceManager.Open();
+            if (ScannerConnectionObj.DeviceManager.State != DeviceManagerState.Opened)
+                ScannerConnectionObj.DeviceManager.Open();
 
             if (_currentDevice != null)
                 // unsubscribe from the device events
                 UnsubscribeFromDeviceEvents(_currentDevice);
 
             // Get and set the current device
-            Device device = _deviceManager.DefaultDevice;
+            Device device = ScannerConnectionObj.CurrentScanner;
             _currentDevice = device;
 
             // subscribe to the device events
@@ -1022,8 +983,11 @@ namespace RegScan
 
             try
             {
-                // open the device
-                _currentDevice.Open();
+                if (_currentDevice.State != DeviceState.Opened)
+                {
+                    // open the device
+                    _currentDevice.Open();
+                }
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
@@ -1115,6 +1079,9 @@ namespace RegScan
                 try
                 {
                     setUpScanner();
+                    
+                    // start image acquisition process
+                    _currentDevice.Acquire();
                 }
                 catch (TwainDeviceCapabilityException)
                 {
@@ -1123,23 +1090,18 @@ namespace RegScan
 
                     return;
                 }
-                catch (Exception ex2)
-                {
-                    MessageBox.Show(ex2.Message);
-                    return;
-                }
-
-                try
-                {
-                    // start image acquisition process
-                    _currentDevice.Acquire();
-                }
                 catch (Vintasoft.Twain.TwainException ex)
                 {
                     UtilityObj.WriteLog(UtilityObj.error, "Image acquisition error: " + ex);
                     MessageBox.Show(ex.Message, "TWAIN device", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+                catch (Exception ex2)
+                {
+                    MessageBox.Show(ex2.Message);
+                    return;
+                }
+                
             }
             
         }
@@ -1292,6 +1254,7 @@ namespace RegScan
             }
         }
 
+
         /// <summary>
         /// Fires when this forms becomes active.
         /// </summary>
@@ -1301,6 +1264,41 @@ namespace RegScan
         {
             // Form is maximized.
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        /// <summary>
+        /// Fires when this forms first loads.
+        /// </summary>
+        /// <param name="sender">Opening form event</param>
+        /// <param name="e">Event Data</param>
+        private void frmScanDocument_Load(object sender, EventArgs e)
+        {
+            // Create a path to where debugging logs should be stored.
+            string scannerFile = "vstwain.log";
+            string scannerPath = String.Concat(ConfigKeys.LOGPATH, "\\", scannerFile);
+
+            UtilityObj.CreateFolder(ConfigKeys.LOGPATH);
+            UtilityObj.CreateFile(scannerPath);
+
+            UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
+
+            // Set up debugging for the TWAIN SDK
+            if (!TwainEnvironment.IsDebuggingEnabled)
+            {
+                TwainEnvironment.EnableDebugging(scannerPath);
+                TwainEnvironment.DebugLevel = DebugLevel.Debug;
+            }
+
+            // Set scanner defaults once
+            if (_defaultSetting == null)
+            {
+                _defaultSetting = new ScannerConnectionObj(this);
+                SetSettingValues();
+                useAdfCheckBox_CheckedChanged(new object(), new EventArgs());
+            }
+            
+            // create TWAIN device manager
+            //CreateTwainDeviceManager();
 
             // Reset the form to default state
             ResetDocument();
