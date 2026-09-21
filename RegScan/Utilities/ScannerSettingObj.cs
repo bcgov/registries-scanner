@@ -9,7 +9,7 @@ namespace RegScan
     {
 
         private static DeviceManager _deviceManager;
-        private Device _currentScanner;
+        private static Device _currentScanner;
 
         // Default values for scanner settings.
         private const bool _defaultUseDocumentFeeder = false;
@@ -23,7 +23,7 @@ namespace RegScan
 
         // Publicly available properties
         public static DeviceManager DeviceManager { get { return _deviceManager; } }
-        public Device CurrentScanner { get { return _currentScanner; } }
+        public static Device CurrentScanner { get { return _currentScanner; } }
 
         public bool UseDocumentFeeder { get { return _canUseDocumentFeeder && _defaultUseDocumentFeeder; } }
         public bool UseDuplex { get { return _canUseDuplex && _defaultUseDuplex; } }

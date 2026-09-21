@@ -968,7 +968,7 @@ namespace RegScan
                 UnsubscribeFromDeviceEvents(_currentDevice);
 
             // Get and set the current device
-            Device device = ScannerConnectionObj.DeviceManager.DefaultDevice;
+            Device device = ScannerConnectionObj.CurrentScanner;
             _currentDevice = device;
 
             // subscribe to the device events
@@ -983,8 +983,11 @@ namespace RegScan
 
             try
             {
-                // open the device
-                _currentDevice.Open();
+                if (_currentDevice.State != DeviceState.Opened)
+                {
+                    // open the device
+                    _currentDevice.Open();
+                }
             }
             catch (Vintasoft.Twain.TwainException ex)
             {
@@ -1287,7 +1290,7 @@ namespace RegScan
             }
 
             // Set scanner defaults once
-            if (_defaultSetting != null)
+            if (_defaultSetting == null)
             {
                 _defaultSetting = new ScannerConnectionObj(this);
                 SetSettingValues();
