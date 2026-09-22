@@ -15,12 +15,7 @@ namespace AppConfiguration
     /// </remarks>
     public class ConfigKeys
     {
-        public static string PORT{ get; set; } = string.Empty;
         public static string ENV { get; set; } = string.Empty;
-        public static string USERNAME { get; set; } = string.Empty;
-        public static string PASSWORD { get; set; } = string.Empty;
-        public static string HOST { get; set; } = string.Empty;
-        public static string SID { get; set; } = string.Empty;
         public static string AUTH_TIMEOUT { get; set; } = string.Empty;
         public static string AUTH_SVC_URL { get; set; } = string.Empty;
         public static string CLIENT_ID { get; set; } = string.Empty;    
@@ -47,11 +42,6 @@ namespace AppConfiguration
             CLIENT_ACCOUNT = ConfigurationManager.AppSettings[nameof(ConfigKeys.CLIENT_ACCOUNT)];
             API_URL = ConfigurationManager.AppSettings[nameof(ConfigKeys.API_URL)];
 
-            USERNAME = ConfigurationManager.AppSettings[nameof(ConfigKeys.USERNAME)];
-            PASSWORD = ConfigurationManager.AppSettings[nameof(ConfigKeys.PASSWORD)];
-            HOST = ConfigurationManager.AppSettings[nameof(ConfigKeys.HOST)];
-            PORT = ConfigurationManager.AppSettings[nameof(ConfigKeys.PORT)];
-            SID = ConfigurationManager.AppSettings[nameof(ConfigKeys.SID)];
             ENV = ConfigurationManager.AppSettings[nameof(ConfigKeys.ENV)];
 
             TWAINSDKUSERNAME = ConfigurationManager.AppSettings[nameof(ConfigKeys.TWAINSDKUSERNAME)];
