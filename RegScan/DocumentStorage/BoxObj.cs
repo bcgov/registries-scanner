@@ -120,7 +120,8 @@ namespace RegScan
         }
 
         /// <summary>
-        /// 
+        /// Using the information of the current BoxObj create an Accession Number and 
+        /// store it as a local variable
         /// </summary>
         private void UpdateAccessionNumber()
         {

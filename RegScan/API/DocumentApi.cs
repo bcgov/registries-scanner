@@ -26,7 +26,7 @@ namespace RegScan
         /// <param name="docServId">
         ///     The unique identifier of an existing document service document
         /// </param>
-        /// <returns></returns>
+        /// <returns> String data representing the body of the returned request </returns>
         public static string UpdateDocumentRecord(DocumentModel data, string docServId)
         {
             // TODO - update how we pass information back to the API 

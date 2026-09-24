@@ -109,9 +109,11 @@ namespace RegScan
         /// <param name="docBytes">Document image to be uploaded to DRS API</param>
         /// <param name="param">Key (String) Value (object) pairs of query parameters</param>
         /// <param name="endPoint">Where the request is sent. Appended to API UR</param>
-        /// <param name="requestType">HTTP request type (GET, PATCH, PUT)</param>
+        /// <param name="requestType">HTTP request type (must be PUT for this method)</param>
         /// <returns>Response from API in string format.</returns>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">
+        /// Throws an Exception if any method other than a PUT is used
+        /// </exception>
         public static string MakeKeyRequest(byte[] docBytes, Dictionary<string, object> param, 
                                             string endPoint, Method requestType)
         {
