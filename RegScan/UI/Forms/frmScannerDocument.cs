@@ -26,6 +26,8 @@ namespace RegScan
 
         #region Fields
 
+        string _tempImgPath;
+
         /// <summary>
         /// Current active document.
         /// </summary>
@@ -85,7 +87,8 @@ namespace RegScan
             InitializeComponent();
             LoadControls();
 
-            UtilityObj.CreateFolder(Path.GetTempPath() + "Images");
+            _tempImgPath = Path.GetTempPath() + "Images";
+            UtilityObj.CreateFolder(_tempImgPath);
 
             // Set scanner defaults.
             _defaultSetting = new ScannerSettingObj();
@@ -157,7 +160,7 @@ namespace RegScan
         public void CloseForm()
         {
             // Clean up the temp folder for storing scanned images.
-            UtilityObj.DeleteFolder(String.Concat(Path.GetTempPath(), "Images"));
+            UtilityObj.DeleteFolder(_tempImgPath);
 
             if (TwainEnvironment.IsDebuggingEnabled)
             {
@@ -1093,9 +1096,9 @@ namespace RegScan
             // past sessions are cleared.
             if (_currentDocument == null)
             {
-                UtilityObj.DeleteFolder("Images");
+                UtilityObj.DeleteFolder(_tempImgPath);
                 _scanSessionFileList.Clear();
-                UtilityObj.CreateFolder("Images");
+                UtilityObj.CreateFolder(_tempImgPath);
             }
 
             _image0 = null;
