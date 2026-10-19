@@ -1187,13 +1187,22 @@ namespace RegScan
         {
             bool hitErr = false;
             string er = "While attempting to save the document the following issue(s) were hit:\n";
+            bool hitWarn = false;
+            string warn = "Please confirm the following:";
             PdfDocument pdf = null;
 
-            // Validation
+            // Validation - if there is no document to save we shouldnt continue
             if (_currentDocument == null)
                 return;
 
-            if (!AccessionNumberObj.CompareAccessionObsj(
+            if (_currentDocument.AccessionNumber == null)
+            {
+                // If we didnt get a value for the accession number from the API warn the user
+                hitWarn = true;
+                warn += "\n\n - No Accession Number found from Document Record Service. \n    " +
+                    "Please double check the current working box before submitting.";
+            }
+            else if (!AccessionNumberObj.CompareAccessionObsj(
                 _currentDocument.AccessionNumber, frmBoxManagement.SelectedBox.AccessionNumber))
             {
                 hitErr = true;
@@ -1204,15 +1213,25 @@ namespace RegScan
 
             if (_currentDocument.PageCount != _scannedImageList.Count)
             {
-                hitErr = true;
-                er += "\nNumber of pages scanned does not match the expected number of pages.\n";
+                hitWarn = true;
+                warn += "\n\n - Number of pages scanned does not match the expected number of pages.\n";
             }
 
+            // Notify users if errors were hit
             if (hitErr)
             {
                 er += "\n\nPlease resolve the issue(s) listed above before attempting to save.";
                 MessageBox.Show(er, "Save Errors", MessageBoxButtons.OK);
                 return;
+            }
+            // Notify user if warnings were hit - let them choose if they procede or not
+            if (hitWarn)
+            {
+                warn += "\n\nIf the above is correct please select \"Okay\" to continue saving." +
+                    "\nSelect \"Cancel\" to abort saving process. ";
+                DialogResult res = MessageBox.Show(warn, "Warning", MessageBoxButtons.OKCancel);
+                if (res == DialogResult.Cancel)
+                    return;
             }
 
             // Show progress bar and disable form elements 

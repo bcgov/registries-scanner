@@ -77,6 +77,7 @@ namespace RegScan
         {
             // get the default device and open it
             _currentScanner = _deviceManager.DefaultDevice;
+            
             _currentScanner.Open();
         }
 

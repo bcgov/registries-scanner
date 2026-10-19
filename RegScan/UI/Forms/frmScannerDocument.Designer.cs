@@ -669,7 +669,7 @@
             // 
             // txtPagesInDocument
             // 
-            this.txtPagesInDocument.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(235)))), ((int)(((byte)(233)))));
+            this.txtPagesInDocument.BackColor = System.Drawing.Color.White;
             this.txtPagesInDocument.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPagesInDocument.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPagesInDocument.Location = new System.Drawing.Point(5, 25);
