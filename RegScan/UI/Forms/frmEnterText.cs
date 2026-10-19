@@ -19,6 +19,8 @@ namespace RegScan
         {
             InitializeComponent();
             textLabel.Text = labelText;
+            txtBox.Text = "";
+            txtBox.Select();
         }
 
         /// <summary>
