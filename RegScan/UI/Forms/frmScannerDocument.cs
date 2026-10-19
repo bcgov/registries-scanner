@@ -157,7 +157,7 @@ namespace RegScan
         public void CloseForm()
         {
             // Clean up the temp folder for storing scanned images.
-            UtilityObj.DeleteFolder("Images");
+            UtilityObj.DeleteFolder(String.Concat(Path.GetTempPath(), "Images"));
 
             if (TwainEnvironment.IsDebuggingEnabled)
             {
@@ -209,7 +209,7 @@ namespace RegScan
 
             string fileNumber = fileCount > 0 ? 
                 fileCount.ToString() : "";
-            string fileName = "Images\\Bitmap_image" + fileNumber + ".bmp";
+            string fileName = String.Concat(Path.GetTempPath(), "Images\\Bitmap_image", fileNumber, ".bmp");
             UtilityObj.SaveImageAsFile(fileName, image);
 
             // Save the created filename to a list of scanned files for this session.
@@ -1099,7 +1099,7 @@ namespace RegScan
             }
 
             _image0 = null;
-            showProgressBar();
+            //showProgressBar();
             if (testCheckBox.Checked)
             {
                 Bitmap image = UtilityObj.ReadFileAsImage(String.Concat(ConfigKeys.LOGPATH, "\\", "temp.bmp"));
@@ -1108,7 +1108,7 @@ namespace RegScan
                 ProcessCompleted();
 
                 // Clear program bar.
-                hideProgressBar();
+                //hideProgressBar();
             }
             else
             {
