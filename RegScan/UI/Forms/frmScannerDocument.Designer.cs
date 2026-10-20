@@ -1019,6 +1019,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Document Scanner";
             this.Activated += new System.EventHandler(this.frmScanDocument_Activated);
+            this.Load += new System.EventHandler(this.frmScanDocument_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

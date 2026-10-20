@@ -157,6 +157,9 @@ namespace RegScan
             this.menuStrip.BringToFront();
             _boxForm.BringToFront();
             _scannerForm.BringToFront();
+
+            // Load the device manager
+            ScannerConnectionObj.OpenDeviceManager(this);
         }
 
         #region Menu Item Event Handlers
@@ -171,22 +174,22 @@ namespace RegScan
             try
             {
                 // Create a device manager and display the built in selection dialog
-                DeviceManager deviceManager = new DeviceManager();
-                
-                deviceManager.Open();
+                DeviceManager deviceManager = ScannerConnectionObj.GetDeviceManager(this);
+
+                if ( deviceManager.State != DeviceManagerState.Opened)
+                {
+                    deviceManager.Open();
+                }
                 deviceManager.ShowDefaultDeviceSelectionDialog();
 
-                // Close our device manger and ask scanning form to create a new one
-                // for its use to pick up on the new selected scanner.
-                deviceManager.Close();
-                _scannerForm.CreateTwainDeviceManager();
             }
             catch (Exception err)
             {
-                string msg = "TWAIN Device unable to reset.";
+                string msg = "The following error occured while trying to update the device.\n\n" +
+                    err.Message + "\n\nIf the error persists please try closing and reopening the applicaiton.";
                 UtilityObj.WriteLog(UtilityObj.error, msg + Environment.NewLine +
                     err.ToString());
-                MessageBox.Show(err.Message + msg + " Close and open scanning application");
+                MessageBox.Show(msg + err.Message + "\n\n  Close and open scanning application");
             }
         }
 
