@@ -71,6 +71,9 @@ namespace RegScan
 
         // Scanning Information
 
+        // Used to determine if the document record has existing scanning information
+        private bool _scanningInformationSet = false;
+
         // consumer Document ID is also listed within the ScanningInformation object. This should
         // be the same as the Barcode above.
 
@@ -164,17 +167,27 @@ namespace RegScan
         /// <exception cref="ApplicationException">
         /// Thrown if an error is hit while trying to send the updated information to DRS API
         /// </exception>
-        private void UpdateDocumentRecord(DocumentModel apiDocModel)
+        private void UpdateDocumentRecord(DocumentModel apiDocModel, bool existingRecord)
         { 
             try
             {
-                // update the document record
-                string updateResp = DocumentApi.UpdateDocumentRecord(
-                    apiDocModel, _documentServiceId);
+                if (existingRecord)
+                { 
+                    // update the document record
+                    string updateResp = DocumentApi.UpdateDocumentRecord(
+                        apiDocModel, _documentClass, _documentServiceId);
+                }
+                else
+                {
+                    // update the document record
+                    string updateResp = DocumentApi.CreateDocumentRecord(
+                        apiDocModel, _documentClass, _documentServiceId);
+                }
+                
             }
             catch (Exception e)
             {
-                string msg = "Unable to update document record." +
+                string msg = "Unable to update document record. " +
                                 "Current data for " + BarCode + " may be inaccurate.";
                 UtilityObj.WriteLog(UtilityObj.error,
                     "Scanned document Image failed PATCH to update document record.\n" +
@@ -209,7 +222,7 @@ namespace RegScan
                 frmMDIMain.BoxForm.UpdateCurrentBox();
 
                 // update the record - only sending in updated fields and BatchID
-                UpdateDocumentRecord(apiDocModel);
+                UpdateDocumentRecord(apiDocModel, _scanningInformationSet);
 
             }
             // The scanning application should never create a new record through the DRS API.
@@ -313,11 +326,15 @@ namespace RegScan
             scanInfo.consumerDocumentId = _barCode.ToString();
             scanInfo.scanDateTime = _scannedDate.ToString("yyyy-MM-dd");
             scanInfo.author = _scannerIDIR;
-            scanInfo.pageCount = _pageCount;
             scanInfo.documentClass = _documentClass;
 
             // Set the Batch ID based off of the Box form
             scanInfo.batchId = frmBoxManagement.BatchID.ToString();
+
+            // set the page count based on the total number of pages scanned in the pdf document
+            scanInfo.pageCount = _pdfDocument.PageCount;
+            // set the accession number based off of the current box
+            scanInfo.accessionNumber = current.AccessionNumber.Text;
 
             model.description = _description;
             model.scanningInformation = scanInfo;
@@ -422,6 +439,8 @@ namespace RegScan
                     docObj.AccessionNumber = new AccessionNumberObj(inAccNumber);
                     docObj._accSet = true;
                 }
+
+                docObj._scanningInformationSet = true;
             }
         }
 

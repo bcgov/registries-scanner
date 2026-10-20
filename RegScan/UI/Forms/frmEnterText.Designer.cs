@@ -93,7 +93,7 @@
             this.txtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtBox.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBox.Location = new System.Drawing.Point(21, 5);
-            this.txtBox.Mask = "00000000";
+            this.txtBox.Mask = "99999990";
             this.txtBox.Name = "txtBox";
             this.txtBox.PromptChar = ' ';
             this.txtBox.Size = new System.Drawing.Size(186, 21);

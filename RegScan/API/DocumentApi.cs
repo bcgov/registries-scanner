@@ -23,17 +23,39 @@ namespace RegScan
         /// updated and included in the response.
         /// </summary>
         /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
+        /// <param name="documentClass">
+        ///     The document class of the document to be updated
+        /// </param>
         /// <param name="docServId">
         ///     The unique identifier of an existing document service document
         /// </param>
         /// <returns></returns>
-        public static string UpdateDocumentRecord(DocumentModel data, string docServId)
+        public static string UpdateDocumentRecord(DocumentModel data, string documentClass, string docServId)
+        {
+            string endpoint = String.Concat("/doc/api/v1/scanning/", documentClass, "/", docServId);
+            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.Patch);
+        }
+
+        /// <summary>
+        /// Create a document record for an existing document identified by a document service ID.
+        /// If scanning information is included in the request the scanning record matching the
+        /// consumerDocumentId will be updated and included in the response.
+        /// </summary>
+        /// <param name="data">Body of request. MUST be able to be cast to DocumentModel</param>
+        /// <param name="docClass">
+        ///     The document class of the document to be created
+        /// </param>
+        /// <param name="docServId">
+        ///     The unique identifier of an existing document service document
+        /// </param>
+        /// <returns></returns>
+        public static string CreateDocumentRecord(DocumentModel data, string docClass, string docServId)
         {
             // TODO - update how we pass information back to the API 
             //     - verification & checking that the data should be changed
 
-            string endpoint = "/doc/api/v1/documents/" + docServId;
-            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.Patch);
+            string endpoint = String.Concat("/doc/api/v1/documents/", docClass, "/", docServId);
+            return APIRequest.MakeKeyRequest((object)data, endpoint, RestSharp.Method.Post);
         }
 
         /// <summary>

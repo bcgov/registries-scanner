@@ -30,7 +30,9 @@ namespace RegScan
         /// <returns>The current highest BatchID for the box</returns>
         public static int GetBatchID(string accessionNumber)
         {
-            int batchID = 0;
+            // Default to the first batch (1) if no other batch IDs are
+            // associated with this accession number
+            int batchID = 1;
             string endpoint = String.Concat("/doc/api/v1/scanning/batchid/", accessionNumber);
 
             var payload = APIRequest.MakeKeyRequest(endpoint, RestSharp.Method.Get);
@@ -41,6 +43,9 @@ namespace RegScan
                 if (obj.ContainsKey("batchId"))
                     batchID = obj["batchId"].Value<int>();
             }
+            if (batchID < 1)
+                batchID = 1;
+
             return batchID;
         }
 

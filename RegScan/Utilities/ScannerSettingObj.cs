@@ -12,10 +12,10 @@ namespace RegScan
         private static Device _currentScanner;
 
         // Default values for scanner settings.
-        private const bool _defaultUseDocumentFeeder = false;
+        private const bool _defaultUseDocumentFeeder = true;
         private const bool _defaultUseDuplex = false;
-        private bool _showTwainUI = true;
-        private bool _showProgress = true;
+        private bool _showTwainUI = false;
+        private bool _showProgress = false;
 
         // Indicators if certain settings can be used by the current scanner
         private bool _canUseDocumentFeeder;
