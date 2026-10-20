@@ -1102,7 +1102,7 @@ namespace RegScan
             }
 
             _image0 = null;
-            //showProgressBar();
+            showProgressBar();
             if (testCheckBox.Checked)
             {
                 Bitmap image = UtilityObj.ReadFileAsImage(String.Concat(ConfigKeys.LOGPATH, "\\", "temp.bmp"));
@@ -1111,7 +1111,7 @@ namespace RegScan
                 ProcessCompleted();
 
                 // Clear program bar.
-                //hideProgressBar();
+                hideProgressBar();
             }
             else
             {
