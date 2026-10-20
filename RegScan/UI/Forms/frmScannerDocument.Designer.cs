@@ -42,9 +42,6 @@
             this.maskedTextBoxSequenceNumber = new System.Windows.Forms.MaskedTextBox();
             this.groupBoxNotes = new System.Windows.Forms.GroupBox();
             this.txtDocumentNotes = new System.Windows.Forms.TextBox();
-            this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnCancelScan = new System.Windows.Forms.Button();
             this.groupBoxRecordClassification = new System.Windows.Forms.GroupBox();
             this.panelDocType = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -80,19 +77,22 @@
             this.panelBarcode = new System.Windows.Forms.FlowLayoutPanel();
             this.lblBarcode = new System.Windows.Forms.Label();
             this.txtBarCode = new System.Windows.Forms.TextBox();
+            this.imageBox = new RegScan.ImageBox();
+            this.panelRejectSaveScan = new System.Windows.Forms.TableLayoutPanel();
+            this.btnCancelScan = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.panelImageControls = new System.Windows.Forms.Panel();
             this.btnRotateImg = new System.Windows.Forms.Button();
             this.btnImagePDF = new System.Windows.Forms.Button();
-            this.btnPrevImage = new System.Windows.Forms.Button();
             this.btnDeleteImage = new System.Windows.Forms.Button();
+            this.btnPrevImage = new System.Windows.Forms.Button();
             this.panelImageControl = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPageDisplay = new System.Windows.Forms.TableLayoutPanel();
-            this.lblCurImage = new System.Windows.Forms.Label();
             this.lblTotalImage = new System.Windows.Forms.Label();
-            this.btnNextImage = new System.Windows.Forms.Button();
             this.lblDisplayImgOf = new System.Windows.Forms.Label();
+            this.btnNextImage = new System.Windows.Forms.Button();
+            this.lblCurImage = new System.Windows.Forms.Label();
             this.tableLayoutForm = new System.Windows.Forms.TableLayoutPanel();
-            this.imageBox = new RegScan.ImageBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -102,7 +102,6 @@
             this.flowLayoutPanelSchedule.SuspendLayout();
             this.flowLayoutPanelSequence.SuspendLayout();
             this.groupBoxNotes.SuspendLayout();
-            this.panelRejectSaveScan.SuspendLayout();
             this.groupBoxRecordClassification.SuspendLayout();
             this.panelDocType.SuspendLayout();
             this.panelDocClass.SuspendLayout();
@@ -115,6 +114,7 @@
             this.panelPages.SuspendLayout();
             this.panelLegalEntity.SuspendLayout();
             this.panelBarcode.SuspendLayout();
+            this.panelRejectSaveScan.SuspendLayout();
             this.panelImageControls.SuspendLayout();
             this.panelImageControl.SuspendLayout();
             this.tableLayoutPageDisplay.SuspendLayout();
@@ -311,59 +311,6 @@
             this.txtDocumentNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtDocumentNotes.Size = new System.Drawing.Size(385, 102);
             this.txtDocumentNotes.TabIndex = 104;
-            // 
-            // panelRejectSaveScan
-            // 
-            this.panelRejectSaveScan.ColumnCount = 5;
-            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
-            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.85714F));
-            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
-            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.85714F));
-            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
-            this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 1, 0);
-            this.panelRejectSaveScan.Controls.Add(this.btnSave, 3, 0);
-            this.panelRejectSaveScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRejectSaveScan.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.panelRejectSaveScan.Location = new System.Drawing.Point(2, 2);
-            this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(2);
-            this.panelRejectSaveScan.Name = "panelRejectSaveScan";
-            this.panelRejectSaveScan.RowCount = 1;
-            this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.panelRejectSaveScan.Size = new System.Drawing.Size(386, 39);
-            this.panelRejectSaveScan.TabIndex = 60;
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.Color.Green;
-            this.btnSave.Location = new System.Drawing.Point(204, 0);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(159, 39);
-            this.btnSave.TabIndex = 3;
-            this.btnSave.Text = "Save Scan";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnCancelScan
-            // 
-            this.btnCancelScan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancelScan.BackColor = System.Drawing.Color.White;
-            this.btnCancelScan.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelScan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
-            this.btnCancelScan.Location = new System.Drawing.Point(21, 0);
-            this.btnCancelScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnCancelScan.Name = "btnCancelScan";
-            this.btnCancelScan.Size = new System.Drawing.Size(159, 39);
-            this.btnCancelScan.TabIndex = 4;
-            this.btnCancelScan.Text = "Reject Scan";
-            this.btnCancelScan.UseVisualStyleBackColor = false;
-            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
             // groupBoxRecordClassification
             // 
@@ -608,6 +555,7 @@
             this.testCheckBox.TabIndex = 35;
             this.testCheckBox.Text = "TESTING";
             this.testCheckBox.UseVisualStyleBackColor = true;
+            this.testCheckBox.Visible = false;
             // 
             // groupBoxDocumentRecord
             // 
@@ -805,6 +753,69 @@
             this.txtBarCode.TabIndex = 67;
             this.txtBarCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // imageBox
+            // 
+            this.imageBox.AutoScroll = true;
+            this.imageBox.AutoSize = false;
+            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(744, 821);
+            this.imageBox.TabIndex = 0;
+            // 
+            // panelRejectSaveScan
+            // 
+            this.panelRejectSaveScan.ColumnCount = 5;
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.85714F));
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.85714F));
+            this.panelRejectSaveScan.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
+            this.panelRejectSaveScan.Controls.Add(this.btnCancelScan, 1, 0);
+            this.panelRejectSaveScan.Controls.Add(this.btnSave, 3, 0);
+            this.panelRejectSaveScan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelRejectSaveScan.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.panelRejectSaveScan.Location = new System.Drawing.Point(2, 2);
+            this.panelRejectSaveScan.Margin = new System.Windows.Forms.Padding(2);
+            this.panelRejectSaveScan.Name = "panelRejectSaveScan";
+            this.panelRejectSaveScan.RowCount = 1;
+            this.panelRejectSaveScan.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.panelRejectSaveScan.Size = new System.Drawing.Size(386, 39);
+            this.panelRejectSaveScan.TabIndex = 60;
+            // 
+            // btnCancelScan
+            // 
+            this.btnCancelScan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancelScan.BackColor = System.Drawing.Color.White;
+            this.btnCancelScan.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancelScan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(62)))), ((int)(((byte)(57)))));
+            this.btnCancelScan.Location = new System.Drawing.Point(21, 0);
+            this.btnCancelScan.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnCancelScan.Name = "btnCancelScan";
+            this.btnCancelScan.Size = new System.Drawing.Size(159, 39);
+            this.btnCancelScan.TabIndex = 4;
+            this.btnCancelScan.Text = "Reject Scan";
+            this.btnCancelScan.UseVisualStyleBackColor = false;
+            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.Green;
+            this.btnSave.Location = new System.Drawing.Point(204, 0);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(159, 39);
+            this.btnSave.TabIndex = 3;
+            this.btnSave.Text = "Save Scan";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // panelImageControls
             // 
             this.panelImageControls.Controls.Add(this.btnRotateImg);
@@ -842,6 +853,19 @@
             this.btnImagePDF.UseVisualStyleBackColor = true;
             this.btnImagePDF.Click += new System.EventHandler(this.btnImagePDF_Click);
             // 
+            // btnDeleteImage
+            // 
+            this.btnDeleteImage.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDeleteImage.ForeColor = System.Drawing.Color.Black;
+            this.btnDeleteImage.Location = new System.Drawing.Point(12, 3);
+            this.btnDeleteImage.Margin = new System.Windows.Forms.Padding(2, 0, 8, 0);
+            this.btnDeleteImage.Name = "btnDeleteImage";
+            this.btnDeleteImage.Size = new System.Drawing.Size(136, 31);
+            this.btnDeleteImage.TabIndex = 4;
+            this.btnDeleteImage.Text = "Delete Image";
+            this.btnDeleteImage.UseVisualStyleBackColor = true;
+            this.btnDeleteImage.Click += new System.EventHandler(this.btnDeleteImage_Click);
+            // 
             // btnPrevImage
             // 
             this.btnPrevImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -856,19 +880,6 @@
             this.btnPrevImage.TabIndex = 7;
             this.btnPrevImage.UseVisualStyleBackColor = true;
             this.btnPrevImage.Click += new System.EventHandler(this.btnPrevImage_Click);
-            // 
-            // btnDeleteImage
-            // 
-            this.btnDeleteImage.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDeleteImage.ForeColor = System.Drawing.Color.Black;
-            this.btnDeleteImage.Location = new System.Drawing.Point(12, 3);
-            this.btnDeleteImage.Margin = new System.Windows.Forms.Padding(2, 0, 8, 0);
-            this.btnDeleteImage.Name = "btnDeleteImage";
-            this.btnDeleteImage.Size = new System.Drawing.Size(136, 31);
-            this.btnDeleteImage.TabIndex = 4;
-            this.btnDeleteImage.Text = "Delete Image";
-            this.btnDeleteImage.UseVisualStyleBackColor = true;
-            this.btnDeleteImage.Click += new System.EventHandler(this.btnDeleteImage_Click);
             // 
             // panelImageControl
             // 
@@ -915,22 +926,6 @@
             this.tableLayoutPageDisplay.Size = new System.Drawing.Size(318, 43);
             this.tableLayoutPageDisplay.TabIndex = 94;
             // 
-            // lblCurImage
-            // 
-            this.lblCurImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCurImage.AutoSize = true;
-            this.lblCurImage.BackColor = System.Drawing.Color.Transparent;
-            this.lblCurImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurImage.Location = new System.Drawing.Point(66, 0);
-            this.lblCurImage.Name = "lblCurImage";
-            this.lblCurImage.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.lblCurImage.Size = new System.Drawing.Size(69, 43);
-            this.lblCurImage.TabIndex = 96;
-            this.lblCurImage.Text = "0";
-            this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lblTotalImage
             // 
             this.lblTotalImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -944,6 +939,20 @@
             this.lblTotalImage.TabIndex = 96;
             this.lblTotalImage.Text = "0";
             this.lblTotalImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblDisplayImgOf
+            // 
+            this.lblDisplayImgOf.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDisplayImgOf.AutoSize = true;
+            this.lblDisplayImgOf.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDisplayImgOf.Location = new System.Drawing.Point(190, 0);
+            this.lblDisplayImgOf.Name = "lblDisplayImgOf";
+            this.lblDisplayImgOf.Size = new System.Drawing.Size(34, 43);
+            this.lblDisplayImgOf.TabIndex = 95;
+            this.lblDisplayImgOf.Text = "of";
+            this.lblDisplayImgOf.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnNextImage
             // 
@@ -960,19 +969,21 @@
             this.btnNextImage.UseVisualStyleBackColor = true;
             this.btnNextImage.Click += new System.EventHandler(this.btnlNextImage_Click);
             // 
-            // lblDisplayImgOf
+            // lblCurImage
             // 
-            this.lblDisplayImgOf.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lblCurImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDisplayImgOf.AutoSize = true;
-            this.lblDisplayImgOf.Font = new System.Drawing.Font("BC Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisplayImgOf.Location = new System.Drawing.Point(190, 0);
-            this.lblDisplayImgOf.Name = "lblDisplayImgOf";
-            this.lblDisplayImgOf.Size = new System.Drawing.Size(34, 43);
-            this.lblDisplayImgOf.TabIndex = 95;
-            this.lblDisplayImgOf.Text = "of";
-            this.lblDisplayImgOf.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCurImage.AutoSize = true;
+            this.lblCurImage.BackColor = System.Drawing.Color.Transparent;
+            this.lblCurImage.Font = new System.Drawing.Font("BC Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurImage.Location = new System.Drawing.Point(66, 0);
+            this.lblCurImage.Name = "lblCurImage";
+            this.lblCurImage.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.lblCurImage.Size = new System.Drawing.Size(69, 43);
+            this.lblCurImage.TabIndex = 96;
+            this.lblCurImage.Text = "0";
+            this.lblCurImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutForm
             // 
@@ -991,16 +1002,6 @@
             this.tableLayoutForm.Size = new System.Drawing.Size(1190, 866);
             this.tableLayoutForm.TabIndex = 94;
             // 
-            // imageBox
-            // 
-            this.imageBox.AutoScroll = true;
-            this.imageBox.AutoSize = false;
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(744, 821);
-            this.imageBox.TabIndex = 0;
-            // 
             // frmScannerDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1018,6 +1019,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Document Scanner";
             this.Activated += new System.EventHandler(this.frmScanDocument_Activated);
+            this.Load += new System.EventHandler(this.frmScanDocument_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -1031,7 +1033,6 @@
             this.flowLayoutPanelSequence.PerformLayout();
             this.groupBoxNotes.ResumeLayout(false);
             this.groupBoxNotes.PerformLayout();
-            this.panelRejectSaveScan.ResumeLayout(false);
             this.groupBoxRecordClassification.ResumeLayout(false);
             this.panelDocType.ResumeLayout(false);
             this.panelDocType.PerformLayout();
@@ -1054,6 +1055,7 @@
             this.panelLegalEntity.PerformLayout();
             this.panelBarcode.ResumeLayout(false);
             this.panelBarcode.PerformLayout();
+            this.panelRejectSaveScan.ResumeLayout(false);
             this.panelImageControls.ResumeLayout(false);
             this.panelImageControl.ResumeLayout(false);
             this.tableLayoutPageDisplay.ResumeLayout(false);
